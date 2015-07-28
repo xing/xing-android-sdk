@@ -18,5 +18,9 @@
 *.exec
 *.ec
 
-#ignore wear for now
+# ignore wear for now
 wear/
+
+# ignore sdk specific properties
+# contains singning configuration
+sdk/gradle.properties
