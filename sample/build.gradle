@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2015 XING AG (http://xing.com/)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+apply plugin: 'com.android.application'
+
+Properties local_properties = new Properties()
+File localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    local_properties.load(localPropertiesFile.newDataInputStream())
+}
+
+android {
+    compileSdkVersion project.ext.COMPILE_SDK_VERSION
+    buildToolsVersion project.ext.BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        applicationId project.ext.GROUP_ID + ".sample"
+
+        minSdkVersion project.ext.MIN_SDK_VERSION
+        targetSdkVersion project.ext.TARGET_SDK_VERSION
+
+        versionCode project.ext.VERSION_CODE
+        versionName project.ext.VERSION
+
+        /**
+         * === KEYS ===
+         * Define in your local.properties file the next two keys:
+         *      - oauth_consumer_key
+         *      - oauth_consumer_secret
+         *
+         * to obtain them visit https://dev.xing.com/
+         */
+        buildConfigField "String", "OAUTH_CONSUMER_KEY", "\"" + (local_properties.oauth_consumer_key ?: "") + "\""
+        buildConfigField "String", "OAUTH_CONSUMER_SECRET", "\"" + (local_properties.oauth_consumer_secret ?: "") + "\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile project(':sdk')
+
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+}
