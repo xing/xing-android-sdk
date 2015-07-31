@@ -54,12 +54,15 @@ allprojects {
         TARGET_SDK_VERSION = 22
 
         GROUP_ID = 'com.xing.android'
-        VERSION = '0.9.0' + snapshotSuffix()
+        VERSION = '1.0.0' + snapshotSuffix()
         VERSION_CODE = 1
     }
 }
 
 /** Applies a '-SNAPSHOT' suffix if the build is not in release mode */
 def snapshotSuffix() {
-    hasProperty('releaseBuild') && releaseBuild ? '' : '-SNAPSHOT'
+    hasProperty('releaseBuild') && "true".equals(releaseBuild) ? '' : '-SNAPSHOT'
 }
+
+/** Just print out the version */
+println VERSION
