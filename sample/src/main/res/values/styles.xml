@@ -24,7 +24,7 @@
 
     <!-- Base application theme. -->
     <!--<style name="AppTheme" parent="android:Theme.Material.Light">-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
@@ -36,6 +36,15 @@
         <!-- colorPrimaryDark is used for the status bar (with the
              battery, clock, etc). -->
         <item name="colorPrimaryDark">@color/semitransp_petrol_dark</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+    </style>
+
+    <style name="AppTheme.Petrol">
+        <item name="android:windowBackground">@color/petrol</item>
     </style>
 
     <style name="XINGSDKSampleToolbarStyle" parent="Theme.AppCompat.NoActionBar">
