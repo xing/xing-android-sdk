@@ -22,11 +22,16 @@
 
 package com.xing.android.sdk.sample;
 
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private Toast infoToast;
+
+    protected void showToast(@StringRes int resId) {
+        showToast(getString(resId));
+    }
 
     protected void showToast(String message) {
         if (infoToast == null) {

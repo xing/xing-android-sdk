@@ -36,10 +36,15 @@
         <!-- colorPrimaryDark is used for the status bar (with the
              battery, clock, etc). -->
         <item name="colorPrimaryDark">@color/semitransp_petrol_dark</item>
-        <item name="android:background">@color/petrol</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
+    </style>
+
+    <style name="AppTheme.Petrol">
+        <item name="android:windowBackground">@color/petrol</item>
     </style>
 
     <style name="XINGSDKSampleToolbarStyle" parent="Theme.AppCompat.NoActionBar">
