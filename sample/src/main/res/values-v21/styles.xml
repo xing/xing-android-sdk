@@ -24,18 +24,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--<style name="AppTheme" parent="android:Theme.Material.Light">-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:statusBarColor">@color/semitransp_petrol_dark</item>
-
-        <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
-        <item name="editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
-
-        <item name="colorPrimary">@color/petrol</item>
-
-        <!-- colorPrimaryDark is used for the status bar (with the
-             battery, clock, etc). -->
-        <item name="colorPrimaryDark">@color/semitransp_petrol_dark</item>
     </style>
 </resources>
