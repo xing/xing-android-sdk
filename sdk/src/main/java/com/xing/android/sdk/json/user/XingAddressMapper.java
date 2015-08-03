@@ -20,10 +20,14 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.json.user;import android.util.JsonReader;
+package com.xing.android.sdk.json.user;
+
+import android.util.JsonReader;
 import android.util.JsonToken;
+import android.util.Log;
 
 import com.xing.android.sdk.model.user.XingAddress;
+import com.xing.android.sdk.model.user.XingPhone;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,93 +37,111 @@ import java.util.List;
  * Parser that gets the XingAddress from a JsonReader
  *
  * @author david.gonzalez
- * */
+ */
 public final class XingAddressMapper {
+    private final static String TAG = "XingAddressMapper";
+
     /**
      * Extracts the XingAddress out of the JsonReader
      *
      * @param reader The JsonReader containing the TimeZone
      * @return The XingAddress object
      * @throws IOException
-     * */
+     */
     public static XingAddress parseXingAddress(JsonReader reader) throws IOException {
         XingAddress xingaddress = new XingAddress();
         reader.beginObject();
-        while(reader.hasNext()) {
-            switch(reader.nextName()) {
-                case "email":{
-                    if(reader.peek() == JsonToken.NULL) {
+        while (reader.hasNext()) {
+            switch (reader.nextName()) {
+                case "email": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setEmail(reader.nextString());
                     }
                     break;
                 }
-                case "city":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "city": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setCity(reader.nextString());
                     }
                     break;
                 }
-                case "country":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "country": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setCountry(reader.nextString());
                     }
                     break;
                 }
-                case "fax":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "fax": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingaddress.setFax(reader.nextString());
+                        String rawFax = reader.nextString();
+                        try {
+                            xingaddress.setFax(rawFax);
+                        } catch (XingPhone.InvalidPhoneException e) {
+                            Log.d(TAG, rawFax + " is not a valid XING phone number");
+                        }
                     }
                     break;
                 }
-                case "mobile_phone":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "mobile_phone": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingaddress.setMobilePhone(reader.nextString());
+                        final String rawMobilePhone = reader.nextString();
+                        try {
+                            xingaddress.setMobilePhone(rawMobilePhone);
+                        } catch (XingPhone.InvalidPhoneException e) {
+                            Log.d(TAG, rawMobilePhone + " is not a valid XING phone number");
+                        }
                     }
                     break;
                 }
-                case "phone":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "phone": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingaddress.setPhone(reader.nextString());
+                        final String rawPhone = reader.nextString();
+                        try {
+                            xingaddress.setPhone(rawPhone);
+                        } catch (XingPhone.InvalidPhoneException e) {
+                            Log.d(TAG, rawPhone + " is not a valid XING phone number");
+                        }
                     }
                     break;
                 }
-                case "province":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "province": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setProvince(reader.nextString());
                     }
                     break;
                 }
-                case "street":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "street": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setStreet(reader.nextString());
                     }
                     break;
                 }
-                case "zip_code":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "zip_code": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         xingaddress.setZipCode(reader.nextString());
                     }
                     break;
                 }
-                default: reader.skipValue();
+                default:
+                    reader.skipValue();
             }
         }
         reader.endObject();
@@ -132,11 +154,11 @@ public final class XingAddressMapper {
      * @param reader The JsonReader
      * @return A list with TimeZone objects
      * @throws IOException
-     * */
-    public static List<XingAddress> parseXingAddressList (JsonReader reader) throws IOException {
+     */
+    public static List<XingAddress> parseXingAddressList(JsonReader reader) throws IOException {
         List<XingAddress> xingAddressList = new ArrayList<>(0);
         reader.beginArray();
-        while(reader.hasNext()) {
+        while (reader.hasNext()) {
             xingAddressList.add(parseXingAddress(reader));
         }
         reader.endArray();

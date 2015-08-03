@@ -77,6 +77,48 @@ public class XingAddressMapperTest extends ParserUnitTestBase {
             TEST_ADDRESS_1 + ", " +
             TEST_ADDRESS_2 + "]";
 
+    private static final String TEST_ADDRESS_INVALID_PHONE_1 = "{\n" +
+            "        \"city\": \"Hamburg\",\n" +
+            "        \"country\": \"DE\",\n" +
+            "        \"zip_code\": \"20357\",\n" +
+            "        \"street\": \"Privatstraße 1\",\n" +
+            "        \"phone\": \"49 40|1234560\",\n" +
+            "        \"fax\": \"12|34|54323\",\n" +
+            "        \"province\": \"Hamburg\",\n" +
+            "        \"email\": \"max@mustermann.de\",\n" +
+            "        \"mobile_phone\": \"49|0155|1234567\"\n" +
+            "      }";
+
+    private static final String TEST_ADDRESS_INVALID_PHONE_2 = "{\n" +
+            "        \"city\": \"Hamburg\",\n" +
+            "        \"country\": \"DE\",\n" +
+            "        \"zip_code\": \"20357\",\n" +
+            "        \"street\": \"Privatstraße 1\",\n" +
+            "        \"phone\": \"49||1234560\",\n" +
+            "        \"fax\": \"|123|\",\n" +
+            "        \"province\": \"Hamburg\",\n" +
+            "        \"email\": \"max@mustermann.de\",\n" +
+            "        \"mobile_phone\": \"|0155-1234567\"\n" +
+            "      }";
+
+    private static final String TEST_ADDRESS_INVALID_PHONE_3 = "{\n" +
+            "        \"city\": \"Hamburg\",\n" +
+            "        \"country\": \"DE\",\n" +
+            "        \"zip_code\": \"20357\",\n" +
+            "        \"street\": \"Privatstraße 1\",\n" +
+            "        \"phone\": \"||1234560\",\n" +
+            "        \"fax\": \"\",\n" +
+            "        \"province\": \"Hamburg\",\n" +
+            "        \"email\": \"max@mustermann.de\",\n" +
+            "        \"mobile_phone\": \"49|0155|\"\n" +
+            "      }";
+
+    private static final String TEST_INVALID_PHONE_ADDRESSES = "[" +
+            TEST_ADDRESS_INVALID_PHONE_1 + ", " +
+            TEST_ADDRESS_1 + ", " +
+            TEST_ADDRESS_INVALID_PHONE_2 + ", " +
+            TEST_ADDRESS_2 + ", " +
+            TEST_ADDRESS_INVALID_PHONE_3 + "]";
 
     @Test
     public void parseAddressWithNoFax() throws Exception {
@@ -120,5 +162,34 @@ public class XingAddressMapperTest extends ParserUnitTestBase {
         XingAddress addressFromParcel = createNewObjectViaParcelFlow(address, XingAddress.CREATOR);
         assertEquals(address.hashCode(), addressFromParcel.hashCode());
         assertEquals(address, addressFromParcel);
+    }
+
+    @Test
+    public void parseAddressInvalidPhoneNumber1() throws Exception {
+        XingAddress address = XingAddressMapper
+                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_1));
+        assertNotNull(address);
+    }
+
+    @Test
+    public void parseAddressInvalidPhoneNumber2() throws Exception {
+        XingAddress address = XingAddressMapper
+                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_2));
+        assertNotNull(address);
+    }
+
+    @Test
+    public void parseAddressInvalidPhoneNumber3() throws Exception {
+        XingAddress address = XingAddressMapper
+                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_3));
+        assertNotNull(address);
+    }
+
+    @Test
+    public void parseListOfInvalidAddresses() throws Exception {
+        List<XingAddress> addresses = XingAddressMapper
+                .parseXingAddressList(getReaderForJson(TEST_INVALID_PHONE_ADDRESSES));
+        assertNotNull(addresses);
+        assertEquals(addresses.size(), 5);
     }
 }
