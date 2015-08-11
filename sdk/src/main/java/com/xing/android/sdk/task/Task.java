@@ -22,6 +22,7 @@
 package com.xing.android.sdk.task;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Abstraction for task execution
@@ -31,14 +32,18 @@ import android.support.annotation.NonNull;
 public abstract class Task<T> {
 
     private final Object mTag;
+    @Nullable
     private final OnTaskFinishedListener<T> mListener;
+    @Nullable
     private final PrioritizedRunnable.Priority mPriority;
 
-    public Task(@NonNull Object tag, @NonNull OnTaskFinishedListener<T> listener) {
+    public Task(@NonNull Object tag, @Nullable OnTaskFinishedListener<T> listener) {
         this(tag, listener, null);
     }
 
-    public Task(@NonNull Object tag, @NonNull OnTaskFinishedListener<T> listener, PrioritizedRunnable.Priority priority) {
+    public Task(@NonNull Object tag,
+                @Nullable OnTaskFinishedListener<T> listener,
+                @Nullable PrioritizedRunnable.Priority priority) {
         mTag = tag;
         mListener = listener;
         mPriority = priority;
@@ -58,10 +63,12 @@ public abstract class Task<T> {
         return mTag;
     }
 
+    @Nullable
     public OnTaskFinishedListener<T> getListener() {
         return mListener;
     }
 
+    @Nullable
     public PrioritizedRunnable.Priority getPriority() {
         return mPriority;
     }
