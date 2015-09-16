@@ -1,7 +1,7 @@
 # XING Android SDK
 ---
 
-[![Build Status](https://travis-ci.org/xing/xing-android-sdk.svg)](https://travis-ci.org/xing/xing-android-sdk)
+[![Build Status](https://travis-ci.org/xing/xing-android-sdk.svg?branch=master)](https://travis-ci.org/xing/xing-android-sdk)
 
 Add all the power of the XING platform to your Android app using the XING Android SDK.
 
