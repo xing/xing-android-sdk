@@ -33,7 +33,6 @@ android {
 
     defaultConfig {
         minSdkVersion project.ext.MIN_SDK_VERSION
-        targetSdkVersion project.ext.TARGET_SDK_VERSION
 
         versionCode project.ext.VERSION_CODE
         versionName project.ext.VERSION
@@ -69,7 +68,7 @@ dependencies {
     compile 'oauth.signpost:signpost-core:1.2.1.2@jar'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
-    provided 'com.android.support:support-annotations:22.2.0'
+    provided 'com.android.support:support-annotations:23.0.1'
 
     testCompile 'com.squareup.okhttp:mockwebserver:2.3.0'
     testCompile 'junit:junit:4.12'
