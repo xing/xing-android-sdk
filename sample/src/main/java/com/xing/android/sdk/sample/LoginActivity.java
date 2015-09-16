@@ -24,15 +24,16 @@ package com.xing.android.sdk.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.login.LoginHelper;
 import com.xing.android.sdk.login.OauthCallbackActivity;
 import com.xing.android.sdk.network.oauth.OauthAuthenticatorHelper;
+import com.xing.android.sdk.sample.prefs.Prefs;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -41,13 +42,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.petrol)));
-
-        findViewById(R.id.button_login).setOnClickListener(this);
+        final Button loginButton = (Button) findViewById(R.id.button_login);
+        loginButton.setOnClickListener(this);
 
         if (TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_KEY) ||
                 TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_SECRET)) {
-            showToast("Your consumer key and/or secret is missing");
+            final TextView missingCredentialsTV = (TextView) findViewById(R.id.missingCredentials);
+            loginButton.setEnabled(false);
+            missingCredentialsTV.setVisibility(View.VISIBLE);
+            showToast(R.string.missing_credentials);
         }
     }
 
@@ -61,7 +64,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void handleLogin() {
-        //TODO implement
         LoginHelper.login(BuildConfig.OAUTH_CONSUMER_KEY, BuildConfig.OAUTH_CONSUMER_SECRET, this);
     }
 
@@ -91,9 +93,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 finish();
                 break;
+
             case Activity.RESULT_CANCELED:
                 showToast("error");
                 break;
+
             case OauthCallbackActivity.RESULT_BACK:
                 //Back pressed
                 break;
