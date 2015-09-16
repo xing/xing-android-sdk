@@ -12,7 +12,7 @@ jdk:
   - oraclejdk7
 
 script:
-  - ./gradlew clean test
+  - ./gradlew clean test --stacktrace
 
 after_success:
   - .buildscript/deploy_snapshot.sh
