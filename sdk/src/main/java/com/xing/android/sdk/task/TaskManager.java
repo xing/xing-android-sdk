@@ -28,7 +28,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -37,35 +37,38 @@ import java.util.concurrent.Future;
  * @author david.gonzalez
  */
 public class TaskManager {
+    private static final int CACHE_INITIAL_CAPACITY = 10;
 
-    private final RunnableExecutor mExecutor;
-    private final Map<Object, List<Future>> mFutures = new HashMap<>();
-    private final Map<Object, List<TaggedRunnable>> mRunnables = new HashMap<>();
+    final RunnableExecutor executor;
+    final Map<Object, List<Future>> futures;
+    final Map<Object, List<TaggedRunnable>> runnables;
 
     public TaskManager(@NonNull RunnableExecutor executor) {
-        mExecutor = executor;
+        this.executor = executor;
+        futures = new LinkedHashMap<>(CACHE_INITIAL_CAPACITY);
+        runnables = new LinkedHashMap<>(CACHE_INITIAL_CAPACITY);
     }
 
     public RunnableExecutor getExecutor() {
-        return mExecutor;
+        return executor;
     }
 
     public void addTaggedFuture(@NonNull Object key, @NonNull Future future) {
-        if (!mFutures.containsKey(key)) {
-            mFutures.put(key, new ArrayList<Future>(0));
+        if (!futures.containsKey(key)) {
+            futures.put(key, new ArrayList<Future>(0));
         }
 
-        mFutures.get(key).add(future);
+        futures.get(key).add(future);
     }
 
     public void addTaggedRunnable(@NonNull TaggedRunnable runnable) {
         Object key = runnable.tag;
 
-        if (!mRunnables.containsKey(key)) {
-            mRunnables.put(key, new ArrayList<TaggedRunnable>(0));
+        if (!runnables.containsKey(key)) {
+            runnables.put(key, new ArrayList<TaggedRunnable>(0));
         }
 
-        mRunnables.get(key).add(runnable);
+        runnables.get(key).add(runnable);
     }
 
     /**
@@ -74,13 +77,13 @@ public class TaskManager {
      * @param key Key of the tasks which the listener has to be removed.
      */
     public void stopListening(@NonNull Object key) {
-        List<TaggedRunnable> runnables = mRunnables.get(key);
-        if (runnables != null) {
-            for (int runnablesIterator = 0, numRunnables = runnables.size(); runnablesIterator < numRunnables; runnablesIterator++) {
-                runnables.get(runnablesIterator).stopListening();
+        List<TaggedRunnable> subscriptions = runnables.get(key);
+        if (subscriptions != null) {
+            for (int counter = 0, size = subscriptions.size(); counter < size; counter++) {
+                subscriptions.get(counter).stopListening();
             }
-            mFutures.remove(key);
-            mRunnables.remove(key);
+            futures.remove(key);
+            runnables.remove(key);
         }
     }
 
@@ -90,18 +93,18 @@ public class TaskManager {
      * @param key Key of the tasks to be canceled.
      */
     public void cancelExecution(@NonNull Object key) {
-        List<Future> futures = mFutures.get(key);
+        List<Future> futures = this.futures.get(key);
         if (futures != null) {
-            cancelTasks(mFutures.get(key));
+            cancelTasks(this.futures.get(key));
         }
-        mFutures.remove(key);
-        mRunnables.remove(key);
+        this.futures.remove(key);
+        runnables.remove(key);
     }
 
     public <T> Future executeAsync(final Task<T> task) {
         final Handler handler = new Handler(Looper.getMainLooper());
 
-        return mExecutor.execute(new TaggedRunnable<T>(task.getTag(), task.getListener()) {
+        return executor.execute(new TaggedRunnable<T>(task.getTag(), task.getListener()) {
             @Override
             public void run() {
                 try {
@@ -112,17 +115,22 @@ public class TaskManager {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (mListener != null) {
-                                mListener.onSuccess(result);
+                            if (listener != null) {
+                                listener.onSuccess(result);
                             }
                         }
                     });
                 } catch (final Exception exception) {
+                    // We should not notify the listener if the thread was interrupted
+                    if (exception instanceof InterruptedException) {
+                        return;
+                    }
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (mListener != null) {
-                                mListener.onError(exception);
+                            if (listener != null) {
+                                listener.onError(exception);
                             }
                         }
                     });
@@ -137,7 +145,7 @@ public class TaskManager {
      *
      * @param tasks List of tasks to be cancelled.
      */
-    private static void cancelTasks(@NonNull List<Future> tasks) {
+    static void cancelTasks(@NonNull List<Future> tasks) {
         Future task;
         for (int iterator = 0, numTasks = tasks.size(); iterator < numTasks; iterator++) {
             task = tasks.get(iterator);

@@ -57,13 +57,11 @@ public class RequestExecutor {
     private final AbsUrlFactory mUrlFactory;
     private final Map<String, RequestConfig> mRequestConfigurations;
 
-    protected RequestExecutor(@NonNull final RequestConfig requestConfig) {
+    protected RequestExecutor(@NonNull RequestConfig requestConfig) {
         this(requestConfig, new DefaultUrlFactory());
     }
 
-    protected RequestExecutor(
-            @NonNull final RequestConfig requestConfig,
-            @NonNull final AbsUrlFactory factory) {
+    protected RequestExecutor(@NonNull RequestConfig requestConfig, @NonNull AbsUrlFactory factory) {
         mRequestConfig = requestConfig;
         mUrlFactory = factory;
         mRequestConfigurations = new HashMap<>();
@@ -126,7 +124,8 @@ public class RequestExecutor {
      * @throws NetworkException               In case an network/execution error occurred or the server returned an unexpected response.
      * @throws OauthSigner.XingOauthException In case the {@link OauthSigner} was not initialized properly.
      */
-    public String execute(@NonNull String tag, @NonNull Request request) throws NetworkException, OauthSigner.XingOauthException {
+    public String execute(@NonNull String tag,
+            @NonNull Request request) throws NetworkException, OauthSigner.XingOauthException {
         RequestConfig requestConfig = mRequestConfigurations.get(tag);
         if (requestConfig == null) {
             throw new IllegalArgumentException("no saved request configuration for the specified tag");
@@ -154,7 +153,8 @@ public class RequestExecutor {
      * @throws NetworkException               In case an network/execution error occurred or the server returned an unexpected response.
      * @throws OauthSigner.XingOauthException In case the {@link OauthSigner} was not initialized properly.
      */
-    public String execute(Request request, RequestConfig requestConfig) throws NetworkException, OauthSigner.XingOauthException {
+    public String execute(Request request,
+            RequestConfig requestConfig) throws NetworkException, OauthSigner.XingOauthException {
         HttpURLConnection connection = null;
         try {
 

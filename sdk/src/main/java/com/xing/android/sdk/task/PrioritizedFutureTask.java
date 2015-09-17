@@ -22,12 +22,14 @@
 
 package com.xing.android.sdk.task;
 
+import android.support.annotation.Nullable;
+
 import java.util.concurrent.FutureTask;
 
 public class PrioritizedFutureTask<T> extends FutureTask<T> {
     private final PrioritizedRunnable.Priority mPriority;
 
-    public PrioritizedFutureTask(final Runnable runnable, T result) {
+    public PrioritizedFutureTask(Runnable runnable, @Nullable T result) {
         super(runnable, result);
         if (runnable instanceof PrioritizedRunnable) {
             mPriority = ((PrioritizedRunnable) runnable).getPriority();

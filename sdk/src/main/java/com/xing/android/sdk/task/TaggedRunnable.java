@@ -22,19 +22,21 @@
 
 package com.xing.android.sdk.task;
 
+import android.support.annotation.Nullable;
+
 /**
  * @author david.gonzalez
  */
 public abstract class TaggedRunnable<T> implements Runnable {
     final Object tag;
-    protected OnTaskFinishedListener<T> mListener;
+    protected OnTaskFinishedListener<T> listener;
 
-    public TaggedRunnable(Object tag, OnTaskFinishedListener<T> listener){
+    public TaggedRunnable(Object tag, @Nullable OnTaskFinishedListener<T> listener) {
         this.tag = tag;
-        mListener = listener;
+        this.listener = listener;
     }
 
     public void stopListening() {
-        mListener = null;
+        listener = null;
     }
 }

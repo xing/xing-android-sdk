@@ -214,7 +214,7 @@ jacoco {
 }
 
 /** Create a test coverage report */
-task jacocoReport(type: JacocoReport, dependsOn: 'testDebug') {
+task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     group = 'reporting'
     description = 'Generate Jacoco coverage reports after running tests.'
 
@@ -232,7 +232,7 @@ task jacocoReport(type: JacocoReport, dependsOn: 'testDebug') {
     )
 
     sourceDirectories = files('src/main/java')
-    executionData = files('build/jacoco/testDebug.exec')
+    executionData = files('build/jacoco/testDebugUnitTest.exec')
 
     doFirst {
         files('build/intermediates/classes/debug').getFiles().each { file ->
