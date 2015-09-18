@@ -139,8 +139,11 @@ public class ExperienceCompany implements Serializable, Parcelable {
         mEndDate = (XingCalendar) in.readSerializable();
         int tmpMFormOfEmployment = in.readInt();
         mFormOfEmployment = tmpMFormOfEmployment == -1 ? null : FormOfEmployment.values()[tmpMFormOfEmployment];
-        int tmpMIndustry = in.readInt();
-        mIndustry = tmpMIndustry == -1 ? null : Industry.values()[tmpMIndustry];
+        int industryId = in.readInt();
+        String industryType = in.readString();
+        if (industryId > -1) {
+            mIndustry = new Industry(industryId, industryType);
+        }
         mName = in.readString();
         mTitle = in.readString();
         mUntilNow = (Boolean) in.readValue(Boolean.class.getClassLoader());
@@ -164,8 +167,8 @@ public class ExperienceCompany implements Serializable, Parcelable {
             return false;
         }
 
-        ExperienceCompany that = (ExperienceCompany) obj;
-        return hashCode() == that.hashCode();
+        ExperienceCompany experienceCompany = (ExperienceCompany) obj;
+        return hashCode() == experienceCompany.hashCode();
     }
 
     @Override
@@ -200,7 +203,8 @@ public class ExperienceCompany implements Serializable, Parcelable {
         dest.writeString(mDescription);
         dest.writeSerializable(mEndDate);
         dest.writeInt(mFormOfEmployment == null ? -1 : mFormOfEmployment.ordinal());
-        dest.writeInt(mIndustry == null ? -1 : mIndustry.ordinal());
+        dest.writeInt(mIndustry == null ? -1 : mIndustry.getId());
+        dest.writeString(mIndustry == null ? "" : mIndustry.getTypeName());
         dest.writeString(mName);
         dest.writeString(mTitle);
         dest.writeValue(mUntilNow);
@@ -379,15 +383,6 @@ public class ExperienceCompany implements Serializable, Parcelable {
     public void setIndustry(Industry industry) {
         mIndustry = industry;
     }
-    
-    /**
-     * Set company industry.
-     *
-     * @param industry industry of company.
-     */
-    public void setIndustry(String industry) {
-        mIndustry = EnumMapper.parseEnumFromString(Industry.values(), industry);
-    }
 
     /**
      * Return name of company.
@@ -464,7 +459,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      *
      * @param url company URL.
      */
-    public void setUrl(Uri url) {
+    public void setUrl(@Nullable Uri url) {
         if (url != null && url.toString().length() > URL_LIMIT) {
             throwArgumentToLong("Url", URL_LIMIT);
         } else {

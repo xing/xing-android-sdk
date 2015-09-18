@@ -22,12 +22,14 @@
 
 package com.xing.android.sdk.json.user;
 
+import android.support.annotation.NonNull;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
 import com.xing.android.sdk.json.ParserUtils;
 import com.xing.android.sdk.model.CalendarUtils;
 import com.xing.android.sdk.model.user.ExperienceCompany;
+import com.xing.android.sdk.model.user.Industry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -116,11 +118,11 @@ public final class ExperienceCompanyMapper {
                     }
                     break;
                 }
-                case "industry": {
+                case "industries": {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        experienceCompany.setIndustry(reader.nextString());
+                        parseIndustry(reader, experienceCompany);
                     }
                     break;
                 }
@@ -162,6 +164,26 @@ public final class ExperienceCompanyMapper {
         }
         reader.endObject();
         return experienceCompany;
+    }
+
+    private static void parseIndustry(@NonNull JsonReader reader, @NonNull ExperienceCompany experienceCompany) throws
+            IOException {
+        reader.beginArray();
+
+        if (reader.peek() == JsonToken.BEGIN_OBJECT) {
+            int industryId;
+            String industryType;
+
+            reader.beginObject();
+            reader.nextName();
+            industryId = reader.nextInt();
+            reader.nextName();
+            industryType = reader.nextString();
+            experienceCompany.setIndustry(new Industry(industryId, industryType));
+            reader.endObject();
+        }
+
+        reader.endArray();
     }
 
     /**

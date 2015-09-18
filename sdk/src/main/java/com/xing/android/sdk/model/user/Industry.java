@@ -22,47 +22,157 @@
 
 package com.xing.android.sdk.model.user;
 
-import com.xing.android.sdk.model.JsonEnum;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Possible Industries.
- * <p/>
- * @author serj.lotutovici
+ * Represent the industry contained in a {@link ExperienceCompany}
+ *
+ * @author angelo.marchesin
  */
-public enum Industry implements JsonEnum {
-    ACADEMIA, ACCOUNTING, AEROSPACE, AGRICULTURE, AIRLINES, ALTERNATIVE_MEDICINE,
-    APPAREL_AND_FASHION, ARCHITECTURE_AND_PLANNING, ARTS_AND_CRAFTS, AUTOMOTIVE, BANKING,
-    BIOTECHNOLOGY, BROADCAST_MEDIA, BUILDING_MATERIALS, BUSINESS_SUPPLIES_AND_EQUIPMENT,
-    CHEMICALS, CIVIC_AND_SOCIAL_ORGANIZATIONS, CIVIL_ENGINEERING, CIVIL_SERVICE, COMPOSITES,
-    COMPUTER_AND_NETWORK_SECURITY, COMPUTER_GAMES, COMPUTER_HARDWARE, COMPUTER_NETWORKING,
-    COMPUTER_SOFTWARE, CONSTRUCTION, CONSULTING, CONSUMER_ELECTRONICS, CONSUMER_GOODS,
-    CONSUMER_SERVICES, COSMETICS, DAYCARE, DEFENSE_MILITARY, DESIGN, EDUCATION, ELEARNING,
-    ELECTRICAL_ENGINEERING, ENERGY, ENTERTAINMENT, ENVIRONMENTAL_SERVICES, EVENTS_SERVICES,
-    FACILITIES_SERVICES, FACILITY_MANAGEMENT, FINANCIAL_SERVICES, FISHERY, FOOD, FUNDRAISING,
-    FURNITURE, GARDENING_LANDSCAPING, GEOLOGY, GLASS_AND_CERAMICS, GRAPHIC_DESIGN,
-    HEALTH_AND_FITNESS, HOSPITALITY, HUMAN_RESOURCES, IMPORT_AND_EXPORT, INDUSTRIAL_AUTOMATION,
-    INFORMATION_SERVICES, INFORMATION_TECHNOLOGY_AND_SERVICES, INSURANCE, INTERNATIONAL_AFFAIRS,
-    INTERNATIONAL_TRADE_AND_DEVELOPMENT, INTERNET, INVESTMENT_BANKING, JOURNALISM,
-    LEGAL_SERVICES, LEISURE_TRAVEL_AND_TOURISM, LIBRARIES, LOGISTICS_AND_SUPPLY_CHAIN,
-    LUXURY_GOODS_AND_JEWELRY, MACHINERY, MANAGEMENT_CONSULTING, MARITIME,
-    MARKETING_AND_ADVERTISING, MARKET_RESEARCH, MECHANICAL_INDUSTRIAL_ENGINEERING,
-    MEDIA_PRODUCTION, MEDICAL_DEVICES, MEDICAL_SERVICES, MEDICINAL_PRODUCTS, METAL_METALWORKING,
-    METROLOGY_CONTROL_ENGINEERING, MINING_AND_METALS, MOTION_PICTURES,
-    MUSEUMS_AND_CULTURAL_INSTITUTIONS, MUSIC, NANOTECHNOLOGY, NON_PROFIT_ORGANIZATION,
-    NURSING_AND_PERSONAL_CARE, OIL_AND_ENERGY, ONLINE_MEDIA, OTHERS, OUTSOURCING_OFFSHORING,
-    PACKAGING_AND_CONTAINERS, PAPER_AND_FOREST_PRODUCTS, PHOTOGRAPHY, PLASTICS, POLITICS,
-    PRINTING, PRINT_MEDIA, PROCESS_MANAGEMENT, PROFESSIONAL_TRAINING_AND_COACHING,
-    PSYCHOLOGY_PSYCHOTHERAPY, PUBLIC_HEALTH, PUBLIC_RELATIONS_AND_COMMUNICATIONS, PUBLISHING,
-    RAILROAD, REAL_ESTATE, RECREATIONAL_FACILITIES_AND_SERVICES, RECYCLING_AND_WASTE_MANAGEMENT,
-    RENEWABLES_AND_ENVIRONMENT, RESEARCH, RESTAURANTS_AND_FOOD_SERVICE, RETAIL,
-    SECURITY_AND_INVESTIGATIONS, SEMICONDUCTORS, SHIPBUILDING, SPORTS, STAFFING_AND_RECRUITING,
-    TAX_ACCOUNTANCY_AUDITING, TELECOMMUNICATION, TEXTILES, THEATER_STAGE_CINEMA, TIMBER,
-    TRAFFIC_ENGINEERING, TRANSLATION_AND_LOCALIZATION, TRANSPORT,
-    VENTURE_CAPITAL_AND_PRIVATE_EQUITY, VETERINARY, WELFARE_AND_COMMUNITY_HEALTH, WHOLESALE,
-    WINE_AND_SPIRITS, WRITING_AND_EDITING, PHARMACEUTICALS;
+@SuppressWarnings("unused")
+public class Industry implements Serializable, Parcelable {
+
+    private static final long serialVersionUID = 6164637739744149347L;
+    private static final float FIRST_CATEGORY_CONVERSION = 10000f;
+
+    /**
+     * Creator object for the Parcelable contract
+     */
+    public static final Creator<Industry> CREATOR = new Creator<Industry>() {
+        @Override
+        public Industry createFromParcel(Parcel source) {
+            return new Industry(source);
+        }
+
+        @Override
+        public Industry[] newArray(int size) {
+            return new Industry[size];
+        }
+    };
+
+    private final int mId;
+    private List<Segment> mSegments;
+    private String mTypeName;
+
+    public static Industry newInstanceFromCompoundId(int compoundId) {
+        Segment segment = new Segment(compoundId, "");
+        return new Industry(extractFirstCategoryIndex(compoundId), "", Collections.singletonList(segment));
+    }
+
+    private static int extractFirstCategoryIndex(int encodedId) {
+        return (int) (Math.floor(encodedId / FIRST_CATEGORY_CONVERSION) * FIRST_CATEGORY_CONVERSION);
+    }
+
+    public Industry(Parcel source) {
+        mId = source.readInt();
+        mTypeName = source.readString();
+        source.readList(mSegments, List.class.getClassLoader());
+    }
+
+    public Industry(int id, String type) {
+        this(id, type, null);
+    }
+
+    public Industry(int id, @NonNull String typeName, @Nullable List<Segment> segments) {
+        mId = id;
+        mTypeName = typeName;
+        mSegments = segments;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public String getTypeName() {
+        return mTypeName;
+    }
+
+    public void setTypeName(String typeName) {
+        mTypeName = typeName;
+    }
 
     @Override
-    public String getJsonValue() {
-        return name();
+    public String toString() {
+        return mTypeName;
+    }
+
+    @Nullable
+    public List<Segment> getSegments() {
+        return mSegments;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof Industry && mId == ((Industry) object).mId;
+    }
+
+    @Override
+    public int hashCode() {
+        return mTypeName.hashCode();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mTypeName);
+        dest.writeList(mSegments);
+    }
+
+    /**
+     * Represent a segment contained in the {@link Industry}'s list
+     *
+     * @author angelo.marchesin
+     */
+    public static class Segment implements Serializable {
+
+        private static final long serialVersionUID = -3150915425802346415L;
+
+        private final int mId;
+        private String mTypeName;
+
+        public Segment(int id, String typeName) {
+            mId = id;
+            mTypeName = typeName;
+        }
+
+        public int getId() {
+            return mId;
+        }
+
+        public String getTypeName() {
+            return mTypeName;
+        }
+
+        public void setTypeName(String typeName) {
+            mTypeName = typeName;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            return object instanceof Segment && mId == ((Segment) object).mId;
+        }
+
+        @Override
+        public int hashCode() {
+            return mTypeName.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return mTypeName;
+        }
     }
 }
