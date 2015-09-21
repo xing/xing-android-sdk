@@ -179,7 +179,7 @@ public class XingUserMapperTest extends ParserUnitTestBase {
             "            \"begin_date\": \"2009-04\",\n" +
             "            \"description\": null,\n" +
             "            \"end_date\": \"2010-07\",\n" +
-            "            \"industry\": \"ALTERNATIVE_MEDICINE\",\n" +
+            "            \"industries\": [{\"id\": 210400, \"localized_name\": \"Alternative medicine\"}],\n" +
             "            \"form_of_employment\": \"OWNER\",\n" +
             "            \"until_now\": false\n" +
             "          },\n" +
@@ -194,7 +194,7 @@ public class XingUserMapperTest extends ParserUnitTestBase {
             "            \"begin_date\": \"2007\",\n" +
             "            \"description\": null,\n" +
             "            \"end_date\": \"2008\",\n" +
-            "            \"industry\": \"APPAREL_AND_FASHION\",\n" +
+            "            \"industries\": [{\"id\": 20400, \"localized_name\": \"Fashion and textiles\"}],\n" +
             "            \"form_of_employment\": \"PART_TIME_EMPLOYEE\",\n" +
             "            \"until_now\": false\n" +
             "          },\n" +

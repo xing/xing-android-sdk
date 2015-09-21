@@ -33,6 +33,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.xing.android.sdk.model.IndustriesLoader;
+import com.xing.android.sdk.model.user.Industry;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.DownloadImageTask;
 import com.xing.android.sdk.model.user.XingAddress;

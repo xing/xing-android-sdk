@@ -61,10 +61,12 @@ public class ExperienceCompanyMapperTest extends ParserUnitTestBase {
             "          \"begin_date\": \"2010-01\",\n" +
             "          \"description\": null,\n" +
             "          \"end_date\": null,\n" +
-            "          \"industry\": \"AEROSPACE\",\n" +
+            "          \"industries\": [{\"id\": 10400, \"localized_name\": \"Architecture\" }],\n" +
             "          \"form_of_employment\": \"FULL_TIME_EMPLOYEE\",\n" +
             "          \"until_now\": true\n" +
             "        }";
+    public static final int INDUSTRY_ID = 10400;
+    public static final String INDUSTRY_NAME = "Architecture";
 
     @Test
     public void parseExperienceCompany() throws Exception {
@@ -81,7 +83,7 @@ public class ExperienceCompanyMapperTest extends ParserUnitTestBase {
         assertEquals("XINGAG", experienceCompany.getTag());
         assertEquals(null, experienceCompany.getDescription());
         assertEquals(null, experienceCompany.getEndDate());
-        assertEquals(Industry.AEROSPACE, experienceCompany.getIndustry());
+        assertEquals(new Industry(INDUSTRY_ID, INDUSTRY_NAME), experienceCompany.getIndustry());
         assertEquals(FormOfEmployment.FULL_TIME_EMPLOYEE, experienceCompany.getFormOfEmployment());
         assertTrue(experienceCompany.getUntilNow());
     }
