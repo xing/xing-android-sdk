@@ -10,11 +10,11 @@ the XING Web Services. Basically this SDK provides a standalone RequestExecutor,
 
 #### Currently the following resources are available as Tasks in the XING Android SDK:
 
-- [User Profiles](<https://dev.xing.com/docs/resources#user-profiles>)
-- [Contacts](<https://dev.xing.com/docs/resources#contacts>)
-- [Profile Visits](<https://dev.xing.com/docs/resources#profile-visits>)
-- [Contact Requests](<https://dev.xing.com/docs/resources#contact-requests>)
-- [Contact Path](<https://dev.xing.com/docs/resources#contact-path>)
+- [User Profiles](https://dev.xing.com/docs/resources#user-profiles)
+- [Contacts](https://dev.xing.com/docs/resources#contacts)
+- [Profile Visits](https://dev.xing.com/docs/resources#profile-visits)
+- [Contact Requests](https://dev.xing.com/docs/resources#contact-requests)
+- [Contact Path](https://dev.xing.com/docs/resources#contact-path)
 
 
 How to get Started
@@ -39,6 +39,8 @@ or by using Maven:
 </dependency>
 ```
 
+Snapshots of the development version are available in [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/xing/android/sdk/).
+
 ## 2. Add OAuth credentials to your project
 
 Add your **OAuth Consumer Key** and **OAuth Consumer Secret** to your *local.properties* file.
@@ -61,9 +63,10 @@ You are also free to provide this information in any other way. For example usin
 
 To build your first app with the XING Android SDK check out the [Get started page](GETTINGSTARTED.md)
 
-## Contributing
+Contributing
+==========
 
-
+## How to contribute
 If you have an idea how to improve the XING Android SDK, feel free to either suggest your idea using the issues, or send us a Pull Request. If you do the latter please make sure you observe the rules for contributing below.
 
 1. Fork [this](https://github.com/xing/xing-android-sdk) repository
@@ -75,7 +78,6 @@ If you have an idea how to improve the XING Android SDK, feel free to either sug
 7. Wait for us to review your feature, discuss internal and eventually accept your Pull Request
 8. Enjoy using your feature inside the XING Android SDK
 
-
 ## Contact
 If you have any problems or feedback, feel free to contact us:
 
@@ -83,10 +85,8 @@ If you have any problems or feedback, feel free to contact us:
 * <https://dev.xing.com>
 
 ## Libraries used
-
-
-* OkHttp <https://github.com/square/okhttp>
-* Signpost <https://github.com/mttkay/signpost>
+* [OkHttp](https://github.com/square/okhttp) by Square
+* [Signpost](https://github.com/mttkay/signpost) by Matthias Käppler
 
 
 ## License
