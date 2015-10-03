@@ -48,26 +48,28 @@ public class UserDetailsTask extends Task<XingUser> {
     private final List<XingUserField> mFields;
 
     /**
-     * @param userId   Id of the user whose details are being returned
-     * @param fields   The requested fields for the user object to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userId Id of the user whose details are being returned
+     * @param fields The requested fields for the user object to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public UserDetailsTask(@Nullable String userId, @Nullable List<XingUserField> fields,
-                           @NonNull Object tag, @NonNull OnTaskFinishedListener<XingUser> listener) {
+    public UserDetailsTask(@Nullable String userId, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<XingUser> listener) {
         this(userId, fields, tag, listener, null);
     }
 
     /**
-     * @param userId   Id of the user whose details are being returned
-     * @param fields   The requested fields for the user object to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userId Id of the user whose details are being returned
+     * @param fields The requested fields for the user object to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public UserDetailsTask(@Nullable String userId, @Nullable List<XingUserField> fields,
-                           @NonNull Object tag, @NonNull OnTaskFinishedListener<XingUser> listener,
-                           @Nullable Priority priority) {
+    public UserDetailsTask(@Nullable String userId, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<XingUser> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
         mFields = fields;
@@ -77,9 +79,11 @@ public class UserDetailsTask extends Task<XingUser> {
      * Executes the {@link UserProfilesRequests#details(String, List)} request and deserialize the result.
      *
      * @return XingUser object with the information of the user with the id received on the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public XingUser run() throws Exception {

@@ -52,6 +52,19 @@ public class OauthCallbackActivity extends Activity {
     private WebView webView;
     private OauthAuthenticatorHelper helper;
 
+    /**
+     * Clear all cookies.
+     */
+    @SuppressWarnings("deprecation")
+    private static void clearCookies() {
+        CookieManager cookieManager = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.removeAllCookies(null);
+        } else {
+            cookieManager.removeAllCookie();
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +95,10 @@ public class OauthCallbackActivity extends Activity {
         new OauthRequestTokenTask(this, helper).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    /**
-     * clear all cookies
-     */
-    @SuppressWarnings("deprecation")
-    private static void clearCookies() {
-        CookieManager cookieManager = CookieManager.getInstance();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.removeAllCookies(null);
-        } else {
-            cookieManager.removeAllCookie();
-        }
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_BACK);
+        super.onBackPressed();
     }
 
     /**
@@ -122,7 +128,7 @@ public class OauthCallbackActivity extends Activity {
         protected String doInBackground(Void... voids) {
             String url;
             try {
-                url = helper.retriveRequestTokenUrl();
+                url = helper.retrieveRequestTokenUrl();
             } catch (Exception ex) {
                 url = null;
             }
@@ -146,12 +152,6 @@ public class OauthCallbackActivity extends Activity {
                 }
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_BACK);
-        super.onBackPressed();
     }
 
     /**

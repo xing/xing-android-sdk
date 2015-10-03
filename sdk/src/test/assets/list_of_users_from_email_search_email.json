@@ -1,23 +1,20 @@
 {
-   "results" :
+  "results": {
+    "items": [
       {
-         "items" :
-            [
-               {
-                  "email" : "existing_user@xing.com",
-                  "hash" : null,
-                  "user" :
-                     {
-                        "id" : "10368_ddec16"
-                     }
-               },
-               null,
-               {
-                  "email" : "unknown_user@xing.com",
-                  "hash" : null,
-                  "user" : null
-               }
-            ],
-         "total" : 2
+        "email": "existing_user@xing.com",
+        "hash": null,
+        "user": {
+          "id": "10368_ddec16"
+        }
+      },
+      null,
+      {
+        "email": "unknown_user@xing.com",
+        "hash": null,
+        "user": null
       }
+    ],
+    "total": 2
+  }
 }

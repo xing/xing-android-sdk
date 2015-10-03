@@ -32,18 +32,14 @@ import java.io.Serializable;
 
 /**
  * Represents a contact request.
- * <p/>
+ *
  * @author ciprian.ursu
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">Contact Request</a>
  */
 @SuppressWarnings("unused")
 public class ContactPetition implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 1792283724323281L;
-
-    /**
-     * Creator object for the Parcelable contract
-     */
+    /** Creator object for the Parcelable contract. */
     public static final Creator<ContactPetition> CREATOR = new Creator<ContactPetition>() {
         @Override
         public ContactPetition createFromParcel(Parcel source) {
@@ -56,31 +52,21 @@ public class ContactPetition implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * ID of sender.
-     */
+    /** ID of sender. */
     private String mSenderId;
-    /**
-     * Sender user object.
-     */
+    /** Sender user object. */
     private XingUser mSender;
-    /**
-     * Message from sender.
-     */
+    /** Message from sender. */
     private String mMessage;
-    /**
-     * Date of contact request.
-     */
+    /** Date of contact request. */
     private XingCalendar mReceivedAt;
 
-    /**
-     * Create a simple Contact object with empty fields.
-     */
+    /** Create a simple Contact object with empty fields. */
     public ContactPetition() {
     }
 
     /**
-     * Create {@link ContactPetition} from {@link Parcel}
+     * Create {@link ContactPetition} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
@@ -89,6 +75,42 @@ public class ContactPetition implements Serializable, Parcelable {
         mSender = (XingUser) in.readSerializable();
         mMessage = in.readString();
         mReceivedAt = (XingCalendar) in.readSerializable();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeString(mSenderId);
+        dest.writeSerializable(mSender);
+        dest.writeString(mMessage);
+        dest.writeSerializable(mReceivedAt);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ContactPetition)) {
+            return false;
+        }
+
+        final ContactPetition that = (ContactPetition) obj;
+        return ((that.mSenderId != null) && (mSenderId != null)) && that.mSenderId.equals(mSenderId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mSenderId != null ? mSenderId.hashCode() : 0;
+        result = 31 * result + (mSender != null ? mSender.hashCode() : 0);
+        result = 31 * result + (mMessage != null ? mMessage.hashCode() : 0);
+        result = 31 * result + (mReceivedAt != null ? mReceivedAt.hashCode() : 0);
+        return result;
     }
 
     /**
@@ -161,32 +183,5 @@ public class ContactPetition implements Serializable, Parcelable {
      */
     public void setSender(final XingUser sender) {
         mSender = sender;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int i) {
-        dest.writeString(mSenderId);
-        dest.writeSerializable(mSender);
-        dest.writeString(mMessage);
-        dest.writeSerializable(mReceivedAt);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (!(obj instanceof ContactPetition)) {
-            return false;
-        }
-
-        final ContactPetition that = (ContactPetition) obj;
-        return ((that.mSenderId != null) && (mSenderId != null)) && that.mSenderId.equals(mSenderId);
     }
 }

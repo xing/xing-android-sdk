@@ -45,8 +45,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class TaskManagerTest {
 
     @Test
@@ -67,7 +66,6 @@ public class TaskManagerTest {
         manager.addTaggedFuture(tag, mock(Future.class));
         assertEquals(1, manager.futures.size());
         assertEquals(2, manager.futures.get(tag).size());
-
 
         TaggedRunnable runnable1 = new MockTaggedRunnable(tag);
         manager.addTaggedRunnable(runnable1);

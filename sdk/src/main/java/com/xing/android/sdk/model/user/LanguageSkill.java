@@ -27,6 +27,7 @@ import com.xing.android.sdk.model.JsonEnum;
 /**
  * Possible language skill.
  * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages</a>
  */

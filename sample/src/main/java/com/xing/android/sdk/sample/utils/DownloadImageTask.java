@@ -25,6 +25,7 @@ package com.xing.android.sdk.sample.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -32,7 +33,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 
 /**
- * Downloads an Image from an URL asynchronously to the specified ImageView
+ * Downloads an Image from an URL asynchronously to the specified ImageView.
  *
  * @author daniel.hartwich
  */
@@ -40,23 +41,24 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
 
     public DownloadImageTask(ImageView bmImage) {
-        this.imageViewReference = new WeakReference<>(bmImage);
+        imageViewReference = new WeakReference<>(bmImage);
     }
 
+    @Nullable
     @Override
     protected Bitmap doInBackground(String... urls) {
-        Bitmap mIcon = null;
+        Bitmap icon = null;
         try {
-            mIcon = BitmapFactory.decodeStream(new URL(urls[0]).openStream());
+            icon = BitmapFactory.decodeStream(new URL(urls[0]).openStream());
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
         }
-        return mIcon;
+        return icon;
     }
 
     @Override
-    protected void onPostExecute(Bitmap result) {
-        if (imageViewReference.get() != null) {
+    protected void onPostExecute(@Nullable Bitmap result) {
+        if (imageViewReference.get() != null && result != null) {
             imageViewReference.get().setImageBitmap(result);
         }
     }

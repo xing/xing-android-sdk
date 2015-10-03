@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Informative annotation that describes that a param or method is optional
+ * Informative annotation that describes that a param or method is optional.
  *
  * @author serj.lotutovici
  */

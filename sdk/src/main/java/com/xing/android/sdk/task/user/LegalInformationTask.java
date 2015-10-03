@@ -40,24 +40,26 @@ public class LegalInformationTask extends Task<String> {
     private final String mUserId;
 
     /**
-     * @param userId   The userId for which the legal information should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userId The userId for which the legal information should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
     public LegalInformationTask(@NonNull String userId, @NonNull Object tag,
-                                @NonNull OnTaskFinishedListener<String> listener) {
+            @NonNull OnTaskFinishedListener<String> listener) {
         this(userId, tag, listener, null);
     }
 
     /**
-     * @param userId   The userId for which the legal information should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userId The userId for which the legal information should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
     public LegalInformationTask(@NonNull String userId, @NonNull Object tag,
-                                @NonNull OnTaskFinishedListener<String> listener,
-                                @Nullable Priority priority) {
+            @NonNull OnTaskFinishedListener<String> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
     }
@@ -66,9 +68,11 @@ public class LegalInformationTask extends Task<String> {
      * Executes the {@link UserProfilesRequests#legalInformation(String)}  request and deserialize the result.
      *
      * @return Legal information of the userId received on the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public String run() throws Exception {

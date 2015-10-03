@@ -33,18 +33,22 @@ import com.xing.android.sdk.network.oauth.OauthAuthenticatorHelper;
  * @author david.gonzalez
  */
 public final class LoginHelper {
-
     /**
      * Performs login using OAuth 1.
      *
-     * @param oauthConsumerKey    Consumer key for the OAuth authentication process.
+     * @param oauthConsumerKey Consumer key for the OAuth authentication process.
      * @param oauthConsumerSecret Consumer secret for the OAuth authentication process.
-     * @param activity            Activity that will receive the result of the login. In case of success, token and token secret will be included on an intent.
+     * @param activity Activity that will receive the result of the login. In case of success, token and token secret
+     * will be included on an intent.
      */
     public static void login(String oauthConsumerKey, String oauthConsumerSecret, Activity activity) {
         Intent intent = new Intent(activity, OauthCallbackActivity.class);
         intent.putExtra(OauthAuthenticatorHelper.CONSUMER_KEY, oauthConsumerKey);
         intent.putExtra(OauthAuthenticatorHelper.CONSUMER_SECRET, oauthConsumerSecret);
         activity.startActivityForResult(intent, OauthCallbackActivity.REQUEST_CODE);
+    }
+
+    private LoginHelper() {
+        throw new AssertionError("No instances.");
     }
 }

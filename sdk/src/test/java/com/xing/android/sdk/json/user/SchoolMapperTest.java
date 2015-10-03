@@ -47,8 +47,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class SchoolMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_SCHOOL_1 = "{\n" +

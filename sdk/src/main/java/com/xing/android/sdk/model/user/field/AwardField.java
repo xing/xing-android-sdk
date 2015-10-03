@@ -27,6 +27,7 @@ import com.xing.android.sdk.json.Field;
 /**
  * Represents an awards fields.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */

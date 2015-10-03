@@ -27,9 +27,6 @@ package com.xing.android.sdk.json.user;
  */
 public final class UserParserTestValueStubs {
 
-    private UserParserTestValueStubs() {
-    }
-
     static final String LIST_OF_FULL_USERS = "{\n" +
             "   \"users\" :\n" +
             "      [\n" +
@@ -248,19 +245,37 @@ public final class UserParserTestValueStubs {
             "            \"photo_urls\" :\n" +
             "               {\n" +
             "                  \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
-            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
-            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
+            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n"
+            +
+            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75"
+            + ".jpg\",\n"
+            +
+            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n"
+            +
             "                  \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
-            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
-            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
-            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
-            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n"
+            +
+            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n"
+            +
+            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n"
+            +
+            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n"
+            +
+            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128"
+            + ".jpg\",\n"
+            +
+            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192"
+            + ".jpg\",\n"
+            +
+            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256"
+            + ".jpg\",\n"
+            +
+            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".1024x1024.jpg\",\n"
+            +
+            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original"
+            + ".jpg\"\n"
+            +
             "               }\n" +
             "         },\n" +
             "         {\n" +
@@ -478,19 +493,37 @@ public final class UserParserTestValueStubs {
             "            \"photo_urls\" :\n" +
             "               {\n" +
             "                  \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
-            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
-            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
+            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n"
+            +
+            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75"
+            + ".jpg\",\n"
+            +
+            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n"
+            +
             "                  \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
-            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
-            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
-            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
-            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n"
+            +
+            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n"
+            +
+            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n"
+            +
+            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n"
+            +
+            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128"
+            + ".jpg\",\n"
+            +
+            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192"
+            + ".jpg\",\n"
+            +
+            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256"
+            + ".jpg\",\n"
+            +
+            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".1024x1024.jpg\",\n"
+            +
+            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original"
+            + ".jpg\"\n"
+            +
             "               }\n" +
             "         },\n" +
             "         {\n" +
@@ -708,24 +741,41 @@ public final class UserParserTestValueStubs {
             "            \"photo_urls\" :\n" +
             "               {\n" +
             "                  \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
-            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
-            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
+            "                  \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n"
+            +
+            "                  \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75"
+            + ".jpg\",\n"
+            +
+            "                  \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n"
+            +
             "                  \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
-            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
-            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
-            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
-            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "                  \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n"
+            +
+            "                  \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n"
+            +
+            "                  \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n"
+            +
+            "                  \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n"
+            +
+            "                  \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128"
+            + ".jpg\",\n"
+            +
+            "                  \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192"
+            + ".jpg\",\n"
+            +
+            "                  \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256"
+            + ".jpg\",\n"
+            +
+            "                  \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".1024x1024.jpg\",\n"
+            +
+            "                  \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original"
+            + ".jpg\"\n"
+            +
             "               }\n" +
             "         }\n" +
             "      ]\n" +
             "}";
-
     static final String LIST_OF_USERS_FROM_EMAIL_SEARCH_EMAIL = "{\n" +
             "   \"results\" :\n" +
             "      {\n" +
@@ -749,7 +799,6 @@ public final class UserParserTestValueStubs {
             "         \"total\" : 2\n" +
             "      }\n" +
             "}";
-
     static final String LIST_OF_USERS_FROM_EMAIL_SEARCH_HASH = "{\n" +
             "   \"results\" :\n" +
             "      {\n" +
@@ -772,7 +821,6 @@ public final class UserParserTestValueStubs {
             "         \"total\" : 2\n" +
             "      }\n" +
             "}";
-
     static final String LIST_OF_USERS_FROM_FIND = "{\n" +
             "   \"users\" :\n" +
             "      {\n" +
@@ -786,20 +834,48 @@ public final class UserParserTestValueStubs {
             "                        \"permalink\" : \"https://www.xing.com/profile/Max_Mustermann\",\n" +
             "                        \"photo_urls\" :\n" +
             "                           {\n" +
-            "                              \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
-            "                              \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "                              \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
-            "                              \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
-            "                              \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
-            "                              \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
-            "                              \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
-            "                              \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
-            "                              \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "                              \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "                              \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "                              \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "                              \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "                              \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "                              \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".140x185.jpg\",\n"
+            +
+            "                              \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".70x93.jpg\",\n"
+            +
+            "                              \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.57x75.jpg\",\n"
+            +
+            "                              \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".18x24.jpg\",\n"
+            +
+            "                              \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40"
+            + ".jpg\",\n"
+            +
+            "                              \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".32x32.jpg\",\n"
+            +
+            "                              \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".48x48.jpg\",\n"
+            +
+            "                              \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".64x64.jpg\",\n"
+            +
+            "                              \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".96x96.jpg\",\n"
+            +
+            "                              \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.128x128.jpg\",\n"
+            +
+            "                              \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.192x192.jpg\",\n"
+            +
+            "                              \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.256x256.jpg\",\n"
+            +
+            "                              \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a"
+            + ".123456,1.1024x1024.jpg\",\n"
+            +
+            "                              \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a"
+            + ".123456,1.original.jpg\"\n"
+            +
             "                           }\n" +
             "                     }\n" +
             "               },\n" +
@@ -811,20 +887,48 @@ public final class UserParserTestValueStubs {
             "                        \"permalink\" : \"https://www.xing.com/profile/Max_Mustermann\",\n" +
             "                        \"photo_urls\" :\n" +
             "                           {\n" +
-            "                              \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
-            "                              \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "                              \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
-            "                              \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
-            "                              \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
-            "                              \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
-            "                              \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
-            "                              \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
-            "                              \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "                              \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "                              \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "                              \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "                              \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "                              \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "                              \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".140x185.jpg\",\n"
+            +
+            "                              \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".70x93.jpg\",\n"
+            +
+            "                              \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.57x75.jpg\",\n"
+            +
+            "                              \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".18x24.jpg\",\n"
+            +
+            "                              \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40"
+            + ".jpg\",\n"
+            +
+            "                              \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".32x32.jpg\",\n"
+            +
+            "                              \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".48x48.jpg\",\n"
+            +
+            "                              \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".64x64.jpg\",\n"
+            +
+            "                              \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1"
+            + ".96x96.jpg\",\n"
+            +
+            "                              \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.128x128.jpg\",\n"
+            +
+            "                              \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.192x192.jpg\",\n"
+            +
+            "                              \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,"
+            + "1.256x256.jpg\",\n"
+            +
+            "                              \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a"
+            + ".123456,1.1024x1024.jpg\",\n"
+            +
+            "                              \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a"
+            + ".123456,1.original.jpg\"\n"
+            +
             "                           }\n" +
             "                     }\n" +
             "               }\n" +
@@ -832,7 +936,6 @@ public final class UserParserTestValueStubs {
             "         \"total\" : 2\n" +
             "      }\n" +
             "}";
-
     static final String USER_FROM_ID_CARD = "{\n" +
             "   \"id_card\" :\n" +
             "      {\n" +
@@ -843,19 +946,28 @@ public final class UserParserTestValueStubs {
             "            {\n" +
             "               \"large\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg\",\n" +
             "               \"maxi_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg\",\n" +
-            "               \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n" +
+            "               \"medium_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg\",\n"
+            +
             "               \"mini_thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg\",\n" +
             "               \"thumb\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg\",\n" +
             "               \"size_32x32\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg\",\n" +
             "               \"size_48x48\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg\",\n" +
             "               \"size_64x64\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg\",\n" +
             "               \"size_96x96\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg\",\n" +
-            "               \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n" +
-            "               \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n" +
-            "               \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n" +
-            "               \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n" +
-            "               \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n" +
+            "               \"size_128x128\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg\",\n"
+            +
+            "               \"size_192x192\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg\",\n"
+            +
+            "               \"size_256x256\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg\",\n"
+            +
+            "               \"size_1024x1024\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg\",\n"
+            +
+            "               \"size_original\" : \"http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg\"\n"
+            +
             "            }\n" +
             "      }\n" +
             "}";
+
+    private UserParserTestValueStubs() {
+    }
 }

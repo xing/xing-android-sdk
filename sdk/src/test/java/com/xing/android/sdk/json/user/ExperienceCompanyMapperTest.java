@@ -46,8 +46,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class ExperienceCompanyMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_COMPANY = "{\n" +
@@ -70,7 +69,8 @@ public class ExperienceCompanyMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parseExperienceCompany() throws Exception {
-        ExperienceCompany experienceCompany = ExperienceCompanyMapper.parseExperienceCompany(getReaderForJson(TEST_COMPANY));
+        ExperienceCompany experienceCompany =
+                ExperienceCompanyMapper.parseExperienceCompany(getReaderForJson(TEST_COMPANY));
         assertEquals("1_abcdef", experienceCompany.getId());
         assertEquals("XING AG", experienceCompany.getName());
         assertEquals("Softwareentwickler", experienceCompany.getTitle());

@@ -25,12 +25,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
- * Abstraction for task execution
+ * Abstraction for task execution.
  *
  * @author david.gonzalez
  */
 public abstract class Task<T> {
-
     private final Object mTag;
     @Nullable
     private final OnTaskFinishedListener<T> mListener;
@@ -41,9 +40,8 @@ public abstract class Task<T> {
         this(tag, listener, null);
     }
 
-    public Task(@NonNull Object tag,
-                @Nullable OnTaskFinishedListener<T> listener,
-                @Nullable PrioritizedRunnable.Priority priority) {
+    public Task(@NonNull Object tag, @Nullable OnTaskFinishedListener<T> listener,
+            @Nullable PrioritizedRunnable.Priority priority) {
         mTag = tag;
         mListener = listener;
         mPriority = priority;
@@ -52,9 +50,10 @@ public abstract class Task<T> {
     /**
      * Run the task. This method is executed synchronously.
      * To execute this in an asynchronous fashion pass the task object to {@link TaskManager#executeAsync(Task)}
-     * or {@link com.xing.android.sdk.network.XingController#executeAsync(Task)}
+     * or {@link com.xing.android.sdk.network.XingController#executeAsync(Task)}.
      *
      * @return The result that this {@link Task} may produce (also can be null)
+     *
      * @throws Exception Will not handle eny exception will pass to a higher handler class
      */
     public abstract T run() throws Exception;

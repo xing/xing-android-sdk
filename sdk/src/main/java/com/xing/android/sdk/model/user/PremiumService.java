@@ -28,7 +28,7 @@ import com.xing.android.sdk.model.JsonEnum;
 
 /**
  * Premium Services.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/me">Premium Services</a>
  */
@@ -37,9 +37,7 @@ public enum PremiumService implements JsonEnum {
     PRIVATE_MESSAGES("PRIVATEMESSAGES"),
     NO_ADVERTISING("NOADVERTISING");
 
-    /**
-     * The json representation of this instance
-     */
+    /** The json representation of this instance. */
     private final String jsonName;
 
     PremiumService(@NonNull final String name) {

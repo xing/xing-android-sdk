@@ -31,18 +31,13 @@ public abstract class PaginatedWithOffsetTask<T extends Collection> extends Task
     protected int mOffset;
     protected int mLimit;
 
-    public PaginatedWithOffsetTask(@Nullable Integer limit,
-                                   @Nullable Integer offset,
-                                   @NonNull Object tag,
-                                   @NonNull OnTaskFinishedListener<T> listener) {
+    public PaginatedWithOffsetTask(@Nullable Integer limit, @Nullable Integer offset, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<T> listener) {
         this(offset, limit, tag, listener, null);
     }
 
-    public PaginatedWithOffsetTask(@Nullable Integer limit,
-                                   @Nullable Integer offset,
-                                   @NonNull Object tag,
-                                   @NonNull OnTaskFinishedListener<T> listener,
-                                   @Nullable PrioritizedRunnable.Priority priority) {
+    public PaginatedWithOffsetTask(@Nullable Integer limit, @Nullable Integer offset, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<T> listener, @Nullable PrioritizedRunnable.Priority priority) {
         super(tag, listener, priority);
         mLimit = limit == null || limit < 0 ? 10 : limit;
         mOffset = offset == null || offset < 0 ? 0 : offset;

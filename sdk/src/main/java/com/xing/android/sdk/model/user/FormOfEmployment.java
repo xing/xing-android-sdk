@@ -27,6 +27,7 @@ import com.xing.android.sdk.model.JsonEnum;
 /**
  * Possible values for the form of employment.
  * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */

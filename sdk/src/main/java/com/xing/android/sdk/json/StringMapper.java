@@ -30,10 +30,10 @@ import java.util.List;
 
 /**
  * A String parser that just cycles through a JsonReader object and
- * reads every String that is inside
+ * reads every String that is inside.
  *
  * @author david.gonzalez
- * */
+ */
 public final class StringMapper {
     public static List<String> parseStringList(JsonReader reader) throws IOException {
         List<String> stringList = new ArrayList<>(0);
@@ -43,5 +43,9 @@ public final class StringMapper {
         }
         reader.endArray();
         return stringList;
+    }
+
+    private StringMapper() {
+        throw new AssertionError("No instance.");
     }
 }

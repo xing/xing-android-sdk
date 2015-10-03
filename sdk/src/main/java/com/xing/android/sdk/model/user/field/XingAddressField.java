@@ -42,7 +42,7 @@ public final class XingAddressField extends Field {
     public static final XingAddressField PROVINCE = new XingAddressField("province");
     public static final XingAddressField STREET = new XingAddressField("street");
     public static final XingAddressField ZIP_CODE = new XingAddressField("zip_code");
-    
+
     private XingAddressField(String name) {
         super(name);
     }

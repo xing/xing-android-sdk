@@ -33,37 +33,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.xing.android.sdk.sample.adapters.ContactsRecyclerAdapter;
-import com.xing.android.sdk.sample.utils.EndlessRecyclerOnScrollListener;
-import com.xing.android.sdk.sample.utils.RecyclerItemClickListener;
 import com.xing.android.sdk.model.user.XingUser;
 import com.xing.android.sdk.model.user.field.XingUserField;
 import com.xing.android.sdk.network.XingController;
+import com.xing.android.sdk.sample.adapters.ContactsRecyclerAdapter;
+import com.xing.android.sdk.sample.utils.EndlessRecyclerOnScrollListener;
+import com.xing.android.sdk.sample.utils.RecyclerItemClickListener;
 import com.xing.android.sdk.task.OnTaskFinishedListener;
 import com.xing.android.sdk.task.contact.ContactsTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsActivity extends BaseActivity implements
-        OnTaskFinishedListener<List<XingUser>>,
+public class ContactsActivity extends BaseActivity implements OnTaskFinishedListener<List<XingUser>>,
         RecyclerItemClickListener.OnItemClickListener {
-
-    private ContactsRecyclerAdapter adapter;
-
-    //Boolean to see if the load more functionality should be triggered
-    private boolean shouldLoadMore = true;
-
     //The amount of contacts that should be loaded at a time
     private static final int CONTACT_BATCH_SIZE = 20;
-
     private static final String ME = "me";
-
     //Parameter to sort contacts by last name, currently this is the only field supported
     private static final String SORT_LAST_NAME = "last_name";
 
+    private ContactsRecyclerAdapter adapter;
     private ContactsTask mContactsTask;
     private XingController mXingController;
+    //Boolean to see if the load more functionality should be triggered
+    private boolean shouldLoadMore = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +82,8 @@ public class ContactsActivity extends BaseActivity implements
         contactUserFields.add(XingUserField.PROFESSIONAL_EXPERIENCE);
         contactUserFields.add(XingUserField.EDUCATIONAL_BACKGROUND);
 
-        mContactsTask = new ContactsTask(ME, null, CONTACT_BATCH_SIZE, null, SORT_LAST_NAME, contactUserFields, this, this);
+        mContactsTask =
+                new ContactsTask(ME, null, CONTACT_BATCH_SIZE, null, SORT_LAST_NAME, contactUserFields, this, this);
         mXingController = XingController.getInstance();
 
         //Executing the ContactsTask with the parameters specified above
@@ -104,8 +99,7 @@ public class ContactsActivity extends BaseActivity implements
 
         //Adding the onScrollListener to the recyclerView
         // in order to get notified when the user reaches the end of the list
-        recyclerView.addOnScrollListener(
-                new EndlessRecyclerOnScrollListener(layoutManager) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
                     @Override
                     public void onLoadMore(int currentPage) {
                         loadMore();

@@ -25,7 +25,6 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.xing.android.sdk.model.XingCalendar;
@@ -36,18 +35,14 @@ import java.util.List;
 
 /**
  * Represents a school.
- * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School</a>
  */
 public class School implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -700850712160641923L;
-
-    /**
-     * Creator object for Parcelable contract
-     */
-    public static Creator<School> CREATOR = new Creator<School>() {
+    /** Creator object for Parcelable contract. */
+    public static final Creator<School> CREATOR = new Creator<School>() {
         @Override
         public School createFromParcel(Parcel parcel) {
             return new School(parcel);
@@ -59,33 +54,19 @@ public class School implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * School ID.
-     */
+    /** School ID. */
     private String mId;
-    /**
-     * Name of school.
-     */
+    /** Name of school. */
     private String mName;
-    /**
-     * Degree.
-     */
+    /** Degree. */
     private String mDegree;
-    /**
-     * Additional notes such as specialized subjects.
-     */
+    /** Additional notes such as specialized subjects. */
     private List<String> mNotes;
-    /**
-     * Describes the field of study.
-     */
+    /** Describes the field of study. */
     private String mSubject;
-    /**
-     * Start date.
-     */
+    /** Start date. */
     private XingCalendar mBeginDate;
-    /**
-     * End date.
-     */
+    /** End date. */
     private XingCalendar mEndDate;
 
     /**
@@ -99,14 +80,12 @@ public class School implements Serializable, Parcelable {
         mName = name;
     }
 
-    /**
-     * Create a simple School object with empty fields.
-     */
+    /** Create a simple School object with empty fields. */
     public School() {
     }
 
     /**
-     * Create {@link Award} from {@link Parcel}
+     * Create {@link Award} from {@link Parcel}.
      *
      * @param parcel Input {@link Parcel}
      */

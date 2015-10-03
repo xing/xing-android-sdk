@@ -36,39 +36,22 @@ import java.text.MessageFormat;
 import java.util.List;
 
 /**
- * Provides basic utility helper methods that allow to manipulate {@link Uri}'s,
- * {@link InputStream}'s and {@link String}'s when preparing, executing and handling requests
+ * Provides basic utility helper methods that allow to manipulate {@link Uri}'s, {@link InputStream}'s and {@link
+ * String}'s when preparing, executing and handling requests.
  */
 public final class RequestUtils {
-
-    /**
-     * Key for the parameter limit. Used all across the api.
-     */
+    /** Key for the parameter limit. Used all across the api. */
     public static final String LIMIT_PARAM = "limit";
-
-    /**
-     * Key for the parameter offset. Used all across the api.
-     */
+    /** Key for the parameter offset. Used all across the api. */
     public static final String OFFSET_PARAM = "offset";
-
-    /**
-     * Key for the parameter user_fields. Used all across the api.
-     */
+    /** Key for the parameter user_fields. Used all across the api. */
     public static final String USER_FIELDS_PARAM = "user_fields";
-
-    /**
-     * Key for the parameter user_fields. Used all across the api.
-     */
+    /** Key for the parameter user_fields. Used all across the api. */
     public static final String SINCE_PARAM = "since";
-
-    /**
-     * Key for the parameter strip_html. Used all across the api.
-     */
+    /** Key for the parameter strip_html. Used all across the api. */
     public static final String STRIP_HTML_PARAM = "strip_html";
 
-    /**
-     * Block usage as object class
-     */
+    /** Block usage as object class. */
     private RequestUtils() {
     }
 
@@ -76,9 +59,10 @@ public final class RequestUtils {
      * Appends the <code>params</code> to the <code>builder</code>, creating one if it doesn't exist.
      *
      * @param builder Contains the url where the params will be added.
-     * @param params  Params to be added to the url.
+     * @param params Params to be added to the url.
      */
-    public static void appendParamsToBuilder(@NonNull Uri.Builder builder, @Nullable List<Pair<String, String>> params) {
+    public static void appendParamsToBuilder(@NonNull Uri.Builder builder,
+            @Nullable List<Pair<String, String>> params) {
         if (params != null) {
             for (Pair<String, String> param : params) {
                 if (!TextUtils.isEmpty(param.first) && !TextUtils.isEmpty(param.second)) {
@@ -89,10 +73,11 @@ public final class RequestUtils {
     }
 
     /**
-     * Reads an InputStream and converts it to a String
+     * Reads an InputStream and converts it to a String.
      *
      * @param in The stream to read
      * @return The string value read from the stream
+     *
      * @throws IOException
      */
     @SuppressWarnings({"TryFinallyCanBeTryWithResources", "resource"})
@@ -121,7 +106,7 @@ public final class RequestUtils {
     }
 
     /**
-     * Formats the path with arguments, and returns a resulting uri
+     * Formats the path with arguments, and returns a resulting uri.
      *
      * @param path The path with arguments
      * @param args The arguments to add to the path

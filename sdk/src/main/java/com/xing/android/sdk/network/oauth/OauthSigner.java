@@ -32,23 +32,19 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
  */
 @SuppressWarnings("ClassWithOnlyPrivateConstructors")
 public class OauthSigner {
-    private final OAuthConsumer mOauthConsumer;
     private static OauthSigner sInstance;
-
-    /**
-     * Initializes the instance of the OauthSigner.
-     * @param consumerKey
-     * @param consumerSecret
-     * @param token
-     * @param tokenSecret
-     */
-    public static void init(String consumerKey, String consumerSecret, String token, String tokenSecret) {
-        sInstance = new OauthSigner(consumerKey, consumerSecret, token, tokenSecret);
-    }
+    private final OAuthConsumer mOauthConsumer;
 
     private OauthSigner(String consumerKey, String consumerSecret, String token, String tokenSecret) {
         mOauthConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
         mOauthConsumer.setTokenWithSecret(token, tokenSecret);
+    }
+
+    /**
+     * Initializes the instance of the OauthSigner.
+     */
+    public static void init(String consumerKey, String consumerSecret, String token, String tokenSecret) {
+        sInstance = new OauthSigner(consumerKey, consumerSecret, token, tokenSecret);
     }
 
     public static OauthSigner getInstance() {
@@ -64,7 +60,6 @@ public class OauthSigner {
     }
 
     public static class XingOauthException extends Exception {
-
         private static final long serialVersionUID = -6242176995187584643L;
 
         private final String mMessage;

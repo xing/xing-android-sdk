@@ -41,20 +41,23 @@ import java.util.List;
 public class IdsTask extends Task<List<String>> {
 
     /**
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
     public IdsTask(@NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener) {
         this(tag, listener, null);
     }
 
     /**
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}.
      */
     public IdsTask(@NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener,
-                   @Nullable Priority priority) {
+            @Nullable Priority priority) {
         super(tag, listener, priority);
     }
 
@@ -62,9 +65,11 @@ public class IdsTask extends Task<List<String>> {
      * Executes the {@link ContactsRequests#contactIds()} request and deserialize the result.
      *
      * @return List of ids of the contacts.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<String> run() throws Exception {

@@ -34,27 +34,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The ProfileVisitParser's function is to parse the JSON request response
+ * The ProfileVisitParser's function is to parse the JSON request response.
  *
  * @author daniel.hartwich
- * */
+ */
 @SuppressWarnings("unused")
 public final class ProfileVisitMapper {
-
     /**
-     * Parse the Detail response and get the visits list so that the visits can be unwrapped
-     * by further parsing
+     * Parse the Detail response and get the visits list so that the visits can be unwrapped by further parsing.
+     *
      * @param response The json that should be parsed
      * @return A list of ProfileVisits of a user
+     *
      * @throws IOException
-     * */
+     */
     @Nullable
     public static List<ProfileVisit> parseDetailsResponse(String response) throws IOException {
         List<ProfileVisit> visits = null;
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.beginObject();
-        while(reader.hasNext()){
-            switch (reader.nextName()){
+        while (reader.hasNext()) {
+            switch (reader.nextName()) {
                 case "visits": {
                     visits = parseProfileVisitList(reader);
                 }
@@ -65,11 +65,13 @@ public final class ProfileVisitMapper {
     }
 
     /**
-     * Parse the details from the ProfileVisit JsonReader
+     * Parse the details from the ProfileVisit JsonReader.
+     *
      * @param reader The JsonReader containing all the information about a visit
      * @return A single ProfileVisit object filled with information about the visitor
+     *
      * @throws IOException
-     * */
+     */
     public static ProfileVisit parseProfileVisit(JsonReader reader) throws IOException {
         ProfileVisit profilevisit = new ProfileVisit();
         reader.beginObject();
@@ -178,21 +180,25 @@ public final class ProfileVisitMapper {
     }
 
     /**
-     * Parses a Json String to get all the ProfileVisits of a User
+     * Parses a Json String to get all the ProfileVisits of a User.
+     *
      * @param json The json string that should be parsed
      * @return A list of ProfileVisit objects
+     *
      * @throws IOException
-     * */
+     */
     public static List<ProfileVisit> parseProfileVisitList(String json) throws IOException {
         return parseProfileVisitList(new JsonReader(new StringReader(json)));
     }
 
     /**
-     * Initiates the parsing of the profile visits
+     * Initiates the parsing of the profile visits.
+     *
      * @param reader The JsonReader
      * @return A list of ProfileVisits of a user
+     *
      * @throws IOException
-     * */
+     */
     public static List<ProfileVisit> parseProfileVisitList(JsonReader reader) throws IOException {
         List<ProfileVisit> profileVisitList = new ArrayList<>(0);
         reader.beginArray();
@@ -201,5 +207,9 @@ public final class ProfileVisitMapper {
         }
         reader.endArray();
         return profileVisitList;
+    }
+
+    private ProfileVisitMapper() {
+        throw new AssertionError("No instances.");
     }
 }

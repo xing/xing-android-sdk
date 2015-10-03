@@ -64,40 +64,39 @@ public final class ContactPathsRequests {
     /**
      * Creates and executes the paths request.
      *
-     * @param userId      Id of the user whose contact path(s) are to be returned.
+     * @param userId Id of the user whose contact path(s) are to be returned.
      * @param otherUserId Id of any other XING user.
-     * @param allPaths    Specifies whether this call returns just one contact path (default) or all contact paths. Possible values are true or false. Default: false.
-     * @param userFields  List of attributes to be returned for any user of the path.
+     * @param allPaths Specifies whether this call returns just one contact path (default) or all contact paths.
+     * Possible values are true or false. Default: false.
+     * @param userFields List of attributes to be returned for any user of the path.
      * @return Result of the execution fo the request, in Json format.
-     * @throws NetworkException               Error produced during the network connection.
+     *
+     * @throws NetworkException Error produced during the network connection.
      * @throws OauthSigner.XingOauthException Error because of an Oauth problem.
-     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths">https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths</a>
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths">https://dev.xing
+     * .com/docs/get/users/:user_id/network/:other_user_id/paths</a>
      */
-    public static String paths(@NonNull String userId, @NonNull String otherUserId,
-                               @Nullable Boolean allPaths,
-                               @Nullable List<XingUserField> userFields)
-            throws NetworkException, OauthSigner.XingOauthException {
+    public static String paths(@NonNull String userId, @NonNull String otherUserId, @Nullable Boolean allPaths,
+            @Nullable List<XingUserField> userFields) throws NetworkException, OauthSigner.XingOauthException {
 
-        return XingController.getInstance().execute(buildPathsRequest(userId, otherUserId,
-                allPaths, userFields));
+        return XingController.getInstance().execute(buildPathsRequest(userId, otherUserId, allPaths, userFields));
     }
 
     /**
      * Creates the paths request.
      *
-     * @param userId      Id of the user whose contact path(s) are to be returned.
+     * @param userId Id of the user whose contact path(s) are to be returned.
      * @param otherUserId Id of any other XING user.
-     * @param allPaths    Specifies whether this call returns just one contact path (default) or all contact paths. Possible values are true or false. Default: false.
-     * @param userFields  List of attributes to be returned for any user of the path.
+     * @param allPaths Specifies whether this call returns just one contact path (default) or all contact paths.
+     * Possible values are true or false. Default: false.
+     * @param userFields List of attributes to be returned for any user of the path.
      * @return Request object ready to be executed.
      */
-    public static Request buildPathsRequest(@NonNull String userId,
-                                            @NonNull String otherUserId,
-                                            @Nullable Boolean allPaths,
-                                            @Nullable List<XingUserField> userFields) {
+    public static Request buildPathsRequest(@NonNull String userId, @NonNull String otherUserId,
+            @Nullable Boolean allPaths, @Nullable List<XingUserField> userFields) {
 
-        return new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse(CONTACT_PATH_RESOURCE.format(new Object[]{userId, otherUserId})))
+        return new Request.Builder(Request.Method.GET).setUri(
+                Uri.parse(CONTACT_PATH_RESOURCE.format(new Object[]{userId, otherUserId})))
                 .addParams(buildPathsParams(allPaths, userFields))
                 .build();
     }
@@ -105,12 +104,13 @@ public final class ContactPathsRequests {
     /**
      * Creates the list of params for the paths request.
      *
-     * @param allPaths   Specifies whether this call returns just one contact path (default) or all contact paths. Possible values are true or false. Default: false.
+     * @param allPaths Specifies whether this call returns just one contact path (default) or all contact paths.
+     * Possible values are true or false. Default: false.
      * @param userFields List of attributes to be returned for any user of the path.
      * @return List with the params for the path request, as name-value pair.
      */
     private static List<Pair<String, String>> buildPathsParams(@Nullable Boolean allPaths,
-                                                               @Nullable List<XingUserField> userFields) {
+            @Nullable List<XingUserField> userFields) {
         List<Pair<String, String>> params = new ArrayList<>(2);
 
         if (allPaths != null) {
@@ -118,8 +118,7 @@ public final class ContactPathsRequests {
         }
 
         if (userFields != null && !userFields.isEmpty()) {
-            params.add(new Pair<>(RequestUtils.USER_FIELDS_PARAM,
-                    FieldUtils.formatFieldsToString(userFields)));
+            params.add(new Pair<>(RequestUtils.USER_FIELDS_PARAM, FieldUtils.formatFieldsToString(userFields)));
         }
 
         return params;

@@ -42,12 +42,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final Button loginButton = (Button) findViewById(R.id.button_login);
+        Button loginButton = (Button) findViewById(R.id.button_login);
         loginButton.setOnClickListener(this);
 
-        if (TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_KEY) ||
-                TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_SECRET)) {
-            final TextView missingCredentialsTV = (TextView) findViewById(R.id.missingCredentials);
+        if (TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_KEY) || TextUtils.isEmpty(BuildConfig.OAUTH_CONSUMER_SECRET)) {
+            TextView missingCredentialsTV = (TextView) findViewById(R.id.missingCredentials);
             loginButton.setEnabled(false);
             missingCredentialsTV.setVisibility(View.VISIBLE);
             showToast(R.string.missing_credentials);
@@ -85,12 +84,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Bundle extras = data.getExtras();
                 Prefs prefs = Prefs.getInstance(getApplicationContext());
                 prefs.setOauthToken(extras.getString(OauthAuthenticatorHelper.TOKEN));
-                prefs.setOauthSecret(extras
-                        .getString(OauthAuthenticatorHelper.TOKEN_SECRET));
+                prefs.setOauthSecret(extras.getString(OauthAuthenticatorHelper.TOKEN_SECRET));
                 SdkSampleApplication.getInstance().onUserLoggedIn();
                 startActivity(new Intent(this, ProfileActivity.class).
-                        setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                        setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 finish();
                 break;
 

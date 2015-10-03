@@ -33,7 +33,6 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
-
 /**
  * @author david.gonzalez
  */
@@ -49,19 +48,16 @@ public final class OauthAuthenticatorHelper {
     /**
      * Initializes the instance of OAuthAuthenticatorHelper.
      *
-     * @param context        Context that allows the class to create the callback url from resources.
-     * @param consumerKey    Consumer key of the app in the server.
+     * @param context Context that allows the class to create the callback url from resources.
+     * @param consumerKey Consumer key of the app in the server.
      * @param consumerSecret Consumer secret of the app in the server.
      */
     public OauthAuthenticatorHelper(Context context, String consumerKey, String consumerSecret) {
         mConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        mProvider = new DefaultOAuthProvider(
-                context.getString(R.string.requestTokenUrl),
-                context.getString(R.string.accessTokenUrl),
-                context.getString(R.string.authorizeUrl));
+        mProvider = new DefaultOAuthProvider(context.getString(R.string.requestTokenUrl),
+                context.getString(R.string.accessTokenUrl), context.getString(R.string.authorizeUrl));
         mCallbackUrl = buildCallback(context);
     }
-
 
     /**
      * Creates the url that will be used by the server as callback.
@@ -73,16 +69,14 @@ public final class OauthAuthenticatorHelper {
         return context.getString(R.string.xingsdk) + "://" + context.getString(R.string.callback);
     }
 
-
     /**
-     * Retrive the url with request token
+     * Retrieve the url with request token.
      *
      * @throws Exception signpost exception.
      */
-    public String retriveRequestTokenUrl() throws Exception {
+    public String retrieveRequestTokenUrl() throws Exception {
         return mProvider.retrieveRequestToken(mConsumer, mCallbackUrl);
     }
-
 
     /**
      * @param uri Uri that contains the oauth_verifier, necessary for retrieve the access token.

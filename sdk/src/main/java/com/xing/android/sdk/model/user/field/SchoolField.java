@@ -27,6 +27,7 @@ import com.xing.android.sdk.json.Field;
 /**
  * Represents a school.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School</a>
  */

@@ -33,13 +33,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xing.android.sdk.model.IndustriesLoader;
-import com.xing.android.sdk.model.user.Industry;
-import com.xing.android.sdk.sample.prefs.Prefs;
-import com.xing.android.sdk.sample.utils.DownloadImageTask;
 import com.xing.android.sdk.model.user.XingAddress;
 import com.xing.android.sdk.model.user.XingUser;
 import com.xing.android.sdk.network.XingController;
+import com.xing.android.sdk.sample.prefs.Prefs;
+import com.xing.android.sdk.sample.utils.DownloadImageTask;
 import com.xing.android.sdk.task.OnTaskFinishedListener;
 import com.xing.android.sdk.task.profile_visits.CreateVisitTask;
 import com.xing.android.sdk.task.user.MeTask;
@@ -47,9 +45,7 @@ import com.xing.android.sdk.task.user.UserDetailsTask;
 
 import java.util.List;
 
-public class ProfileActivity extends BaseActivity implements
-        OnTaskFinishedListener<XingUser> {
-
+public class ProfileActivity extends BaseActivity implements OnTaskFinishedListener<XingUser> {
     private TextView userDisplayNameView;
     private TextView userPositionView;
     private TextView userCompanyView;
@@ -69,7 +65,6 @@ public class ProfileActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
 
         userDisplayNameView = (TextView) findViewById(R.id.user_display_name);
@@ -122,8 +117,7 @@ public class ProfileActivity extends BaseActivity implements
             case R.id.action_logout:
                 Prefs.getInstance(this).logout();
                 startActivity(new Intent(this, MainActivity.class).
-                        setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                        setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 return true;
             case R.id.action_visitors:
                 startActivity(new Intent(this, VisitorsActivity.class));
@@ -142,9 +136,8 @@ public class ProfileActivity extends BaseActivity implements
             //Save the user id to the preferences since it might be needed in other parts of the app
             if (!TextUtils.isEmpty(mUserId)) {
                 Prefs.getInstance(this).setUserId(result.getId());
-                CreateVisitTask visitTask = new CreateVisitTask(result.getId(),
-                        this,
-                        new OnTaskFinishedListener<Void>() {
+                CreateVisitTask visitTask =
+                        new CreateVisitTask(result.getId(), this, new OnTaskFinishedListener<Void>() {
                             @Override
                             public void onSuccess(@Nullable Void result) {
                             }
@@ -183,7 +176,7 @@ public class ProfileActivity extends BaseActivity implements
     }
 
     /**
-     * Takes a List of Strings and returns one String with # seperated by ,
+     * Takes a List of Strings and returns one String with '#' separated by a comma(,).
      *
      * @return hashedTaggedString String with all strings of a list
      */
@@ -192,37 +185,29 @@ public class ProfileActivity extends BaseActivity implements
         int size = list == null ? 0 : list.size();
         for (int i = 0; i < size; i++) {
             if (i == size - 1) {
-                hashTaggedString.
-                        append('#').
-                        append(list.get(i));
+                hashTaggedString.append('#').append(list.get(i));
             } else {
-                hashTaggedString.
-                        append('#').
-                        append(list.get(i)).
-                        append(", ");
+                hashTaggedString.append('#').append(list.get(i)).append(", ");
             }
         }
         return hashTaggedString.toString();
     }
 
     /**
-     * Takes a XingAddress and returns a 3 line String with an address
-     * Be aware that the country field only returns the country code (Germany => DE)
+     * Takes a XingAddress and returns a 3 line String with an address.
+     * Be aware that the country field only returns the country code (Germany => DE).
      */
     private static String formatAddress(XingAddress address) {
         if (address != null) {
             StringBuilder sb = new StringBuilder();
             if (!TextUtils.isEmpty(address.getStreet())) {
-                sb.append(address.getStreet())
-                        .append('\n');
+                sb.append(address.getStreet()).append('\n');
             }
             if (!TextUtils.isEmpty(address.getZipCode())) {
-                sb.append(address.getZipCode())
-                        .append(' ');
+                sb.append(address.getZipCode()).append(' ');
             }
             if (!TextUtils.isEmpty(address.getCity())) {
-                sb.append(address.getCity())
-                        .append('\n');
+                sb.append(address.getCity()).append('\n');
             }
             if (!TextUtils.isEmpty(address.getCountry())) {
                 sb.append(address.getCountry());

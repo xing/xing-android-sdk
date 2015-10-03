@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Informative annotation that describes that a parameter is required
+ * Informative annotation that describes that a parameter is required.
  *
  * @author serj.lotutovici
  */

@@ -43,12 +43,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class XingPhoneTest {
 
     @Test
-    public void testIsValidCountryCode_nullCountryCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_nullCountryCode()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, new Object[]{null});
@@ -57,7 +57,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_emptyCountryCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_emptyCountryCode()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "");
@@ -66,7 +67,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_notNumeric() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_notNumeric()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "notNumeric");
@@ -75,7 +77,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_onlyNumbers() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_onlyNumbers()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "34");
@@ -84,7 +87,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_wrongSymbol() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_wrongSymbol()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "-34");
@@ -93,7 +97,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_onlySymbol() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_onlySymbol()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "+");
@@ -102,7 +107,8 @@ public class XingPhoneTest {
     }
 
     @Test
-    public void testIsValidCountryCode_symbolAndNumbers() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testIsValidCountryCode_symbolAndNumbers()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = XingPhone.class.getDeclaredMethod("isValidCountryCode", String.class);
         method.setAccessible(true);
         boolean valid = (boolean) method.invoke(null, "+34");

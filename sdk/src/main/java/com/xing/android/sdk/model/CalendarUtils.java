@@ -38,8 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Data format utilities that help convert received dates form json to calendar instances
- * <p/>
+ * Data format utilities that help convert received dates form json to calendar instances.
+ *
  * Currently supporting the next formats:
  * <li>"yyyy-MM"</li>
  * <li>"yyyy"</li>
@@ -53,7 +53,6 @@ import java.util.Map;
  */
 @SuppressLint("SimpleDateFormat")
 public final class CalendarUtils {
-
     private static final String REG_EX_YEAR = "^(19|20)\\d{2}";
     private static final String REG_EX_YEAR_MONTH = "^(19|20)\\d{2}-\\d{2}$";
     private static final String REG_EX_YEAR_MONTH_DAY = "^(19|20)\\d{2}-\\d{2}-\\d{2}$";
@@ -66,12 +65,9 @@ public final class CalendarUtils {
     private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
     private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
 
-
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
 
-    /**
-     * A processing map for the date string to calendar conversion
-     */
+    /** A processing map for the date string to calendar conversion. */
     private static final Map<String, DateFormat> DATE_FORMAT_MAP = new HashMap<>(5);
 
     static {
@@ -82,15 +78,8 @@ public final class CalendarUtils {
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT));
     }
 
-
     /**
-     * Private constructor for utility class
-     */
-    private CalendarUtils() {
-    }
-
-    /**
-     * Parse the string to a calendar instance
+     * Parse the string to a calendar instance.
      *
      * @param dateStr The string to parse
      * @return A calendar instance with the encoded date, or null if nothing can be extracted
@@ -129,17 +118,16 @@ public final class CalendarUtils {
             clearCalendarByRegEx(calendar, ((SimpleDateFormat) format).toPattern());
 
             return calendar;
-
         } catch (ParseException ex) {
             return null;
         }
     }
 
     /**
-     * Clear unused calendar fields by regular expression
+     * Clear unused calendar fields by regular expression.
      *
      * @param calendar The calendar to clear
-     * @param regEx    The reg ex
+     * @param regEx The reg ex
      */
     private static void clearCalendarByRegEx(XingCalendar calendar, String regEx) {
         switch (regEx) {
@@ -159,18 +147,19 @@ public final class CalendarUtils {
     }
 
     /**
-     * Converts a XingCalendar object into a String with the format "yyyy-MM-ddThh:mm:ssZ". Useful
-     * to save dates into the database, easily convertible to XingCalendar again with
-     * com.xing.android.sdk.model.DateUtils.parseCalendarFromString(String );
+     * Converts a XingCalendar object into a String with the format "yyyy-MM-ddThh:mm:ssZ". Useful to save dates into
+     * the database, easily convertible to XingCalendar again with {@link com.xing.android.sdk.model.CalendarUtils
+     * .parseCalendarFromString(String)}.
+     *
      * It is possible to do the same with a DateFormat, but due to the issues on DateFormat on API 15
      * and the simplicity of the implementation, it's better to use our own one.
      *
      * @param calendar The XingCalendar to convert.
      * @return The String with the timestamp.
      */
+    @Nullable
     public static String calendarToTimestamp(@NonNull XingCalendar calendar) {
         String output = null;
-
         if (calendar.isSet(Calendar.YEAR)) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(calendar.get(Calendar.YEAR));
@@ -191,10 +180,8 @@ public final class CalendarUtils {
                     }
                 }
             }
-
             output = stringBuilder.toString();
         }
-
         return output;
     }
 
@@ -206,7 +193,12 @@ public final class CalendarUtils {
      * @return True if has all the fields set, false otherwise.
      */
     private static boolean isFilledToTime(@NonNull XingCalendar calendar) {
-        return calendar.isSet(Calendar.HOUR_OF_DAY) && calendar.isSet(Calendar.MINUTE) && calendar.isSet(Calendar.SECOND);
+        return calendar.isSet(Calendar.HOUR_OF_DAY) && calendar.isSet(Calendar.MINUTE) && calendar.isSet(
+                Calendar.SECOND);
+    }
+
+    private CalendarUtils() {
+        throw new AssertionError("No instances.");
     }
 }
 

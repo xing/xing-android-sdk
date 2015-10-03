@@ -59,8 +59,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class RequestExecutorTest {
 
     RequestExecutor testExecutor;
@@ -82,7 +81,8 @@ public class RequestExecutorTest {
         mockAdapter = mock(RequestConfig.class);
         when(mockAdapter.getOauthSigner()).thenReturn(mockSigner);
         when(mockAdapter.getCommonHeaders()).thenReturn(null);
-        when(mockAdapter.getBaseUri()).thenReturn(new Uri.Builder().scheme("https").authority("blabla.test.com").build());
+        when(mockAdapter.getBaseUri()).thenReturn(
+                new Uri.Builder().scheme("https").authority("blabla.test.com").build());
 
         Logger logger = Logger.getLogger(MockWebServer.class.getName());
         Handler[] handlers = logger.getHandlers();
@@ -103,14 +103,9 @@ public class RequestExecutorTest {
 
     @Test
     public void executeThrowsNetworkExceptionOn400() throws Exception {
-        mockServer.enqueue(new MockResponse()
-                        .setResponseCode(400)
-                        .setBody("Mock error message")
-        );
+        mockServer.enqueue(new MockResponse().setResponseCode(400).setBody("Mock error message"));
 
-        Request testRequest = new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse("/test/error"))
-                .build();
+        Request testRequest = new Request.Builder(Request.Method.GET).setUri(Uri.parse("/test/error")).build();
 
         try {
             testExecutor.execute(testRequest);
@@ -123,14 +118,9 @@ public class RequestExecutorTest {
 
     @Test
     public void executeThrowsNetworkExceptionOn600() throws Exception {
-        mockServer.enqueue(new MockResponse()
-                        .setResponseCode(600)
-                        .setBody("Second Mock error message")
-        );
+        mockServer.enqueue(new MockResponse().setResponseCode(600).setBody("Second Mock error message"));
 
-        Request testRequest = new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse("/test/error2"))
-                .build();
+        Request testRequest = new Request.Builder(Request.Method.GET).setUri(Uri.parse("/test/error2")).build();
 
         try {
             testExecutor.execute(testRequest);
@@ -155,9 +145,7 @@ public class RequestExecutorTest {
 
         mockServer.enqueue(new MockResponse());
 
-        Request testRequest = new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse("/test/this_will_fail"))
-                .build();
+        Request testRequest = new Request.Builder(Request.Method.GET).setUri(Uri.parse("/test/this_will_fail")).build();
 
         try {
             testExecutor.execute(testRequest);
@@ -181,22 +169,17 @@ public class RequestExecutorTest {
 
         mockServer.enqueue(new MockResponse());
 
-        Request testRequest = new Request.Builder(Request.Method.POST)
-                .setUri(Uri.parse("/test/auth_will_fail"))
-                .build();
+        Request testRequest =
+                new Request.Builder(Request.Method.POST).setUri(Uri.parse("/test/auth_will_fail")).build();
 
         testExecutor.execute(testRequest);
     }
 
     @Test
     public void executeReturnsStringResponse() throws Exception {
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody("Response OK"));
+        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("Response OK"));
 
-        Request testRequest = new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse("/"))
-                .build();
+        Request testRequest = new Request.Builder(Request.Method.GET).setUri(Uri.parse("/")).build();
 
         String response = testExecutor.execute(testRequest);
         assertEquals("Response OK", response);
@@ -204,8 +187,7 @@ public class RequestExecutorTest {
 
     @Test
     public void addExtraConfig() throws Exception {
-        RequestConfig requestConfig = new DefaultRequestConfig.Builder()
-                .setConsumerKey("dsf")
+        RequestConfig requestConfig = new DefaultRequestConfig.Builder().setConsumerKey("dsf")
                 .setConsumerSecret("ds")
                 .setToken("dsf")
                 .setTokenSecret("dfdf")
@@ -213,13 +195,11 @@ public class RequestExecutorTest {
 
         RequestExecutor requestExecutor = new RequestExecutor(requestConfig);
 
-        RequestConfig loggedOutRequestConfig = new DefaultRequestConfig.Builder()
-                .setLoggedOut(true)
-                .addParam("key", "value")
-                .build();
+        RequestConfig loggedOutRequestConfig =
+                new DefaultRequestConfig.Builder().setLoggedOut(true).addParam("key", "value").build();
 
         requestExecutor.addRequestConfig("LoggedOut", loggedOutRequestConfig);
 
-//        assertEquals(1, requestExecutor.);
+        //        assertEquals(1, requestExecutor.);
     }
 }

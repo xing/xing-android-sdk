@@ -45,26 +45,28 @@ public class AssignedTagsTask extends Task<List<String>> {
     private final String mContactId;
 
     /**
-     * @param userId    ID of the user who assigned the tags.
+     * @param userId ID of the user who assigned the tags.
      * @param contactId ID of the users contact
-     * @param tag       Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener  Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public AssignedTagsTask(@NonNull String userId, @NonNull String contactId,
-                            @NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener) {
+    public AssignedTagsTask(@NonNull String userId, @NonNull String contactId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<String>> listener) {
         this(userId, contactId, tag, listener, null);
     }
 
     /**
-     * @param userId    ID of the user who assigned the tags.
+     * @param userId ID of the user who assigned the tags.
      * @param contactId ID of the users contact
-     * @param tag       Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener  Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority  Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public AssignedTagsTask(@NonNull String userId, @NonNull String contactId,
-                            @NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener,
-                            @Nullable Priority priority) {
+    public AssignedTagsTask(@NonNull String userId, @NonNull String contactId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<String>> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
         mContactId = contactId;
@@ -74,13 +76,16 @@ public class AssignedTagsTask extends Task<List<String>> {
      * Executes the {@link ContactsRequests#assignedTags(String, String)} request and deserialize the result.
      *
      * @return List of tags.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<String> run() throws Exception {
-        String response = XingController.getInstance().execute(ContactsRequests.buildAssignedTagsRequest(mUserId, mContactId));
+        String response =
+                XingController.getInstance().execute(ContactsRequests.buildAssignedTagsRequest(mUserId, mContactId));
         return ContactsMapper.parseAssignedTags(response);
     }
 }

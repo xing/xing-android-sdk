@@ -46,30 +46,28 @@ public class FindByEmailsTask extends Task<List<FoundXingUser>> {
     private final List<XingUserField> mFields;
 
     /**
-     * @param emails   emails The list of emails to search with
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param emails emails The list of emails to search with
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public FindByEmailsTask(@NonNull List<String> emails,
-                            @Nullable List<XingUserField> fields,
-                            @NonNull Object tag,
-                            @NonNull OnTaskFinishedListener<List<FoundXingUser>> listener) {
+    public FindByEmailsTask(@NonNull List<String> emails, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<FoundXingUser>> listener) {
         this(emails, fields, tag, listener, null);
     }
 
     /**
-     * @param emails   emails The list of emails to search with
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param emails emails The list of emails to search with
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public FindByEmailsTask(@NonNull List<String> emails,
-                            @Nullable List<XingUserField> fields,
-                            @NonNull Object tag,
-                            @NonNull OnTaskFinishedListener<List<FoundXingUser>> listener,
-                            @Nullable Priority priority) {
+    public FindByEmailsTask(@NonNull List<String> emails, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<FoundXingUser>> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mEmails = emails;
         mFields = fields;
@@ -79,9 +77,11 @@ public class FindByEmailsTask extends Task<List<FoundXingUser>> {
      * Executes the {@link UserProfilesRequests#findByEmail(List, List)}   request and deserialize the result.
      *
      * @return List of xing users founded based on the emails.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<FoundXingUser> run() throws Exception {

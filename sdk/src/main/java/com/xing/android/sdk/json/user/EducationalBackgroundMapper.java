@@ -20,90 +20,97 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.json.user;import android.util.JsonReader;
+package com.xing.android.sdk.json.user;
+
+import android.util.JsonReader;
 import android.util.JsonToken;
 
-import com.xing.android.sdk.model.user.EducationalBackground;
 import com.xing.android.sdk.json.StringMapper;
+import com.xing.android.sdk.model.user.EducationalBackground;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parser that provides methods to get the educational background information of a user
+ * Parser that provides methods to get the educational background information of a user.
  *
  * @author david.gonzalez
- * */
+ */
 @SuppressWarnings("unused")
 public final class EducationalBackgroundMapper {
-
     /**
-     * Parses the Educational Background of a user
+     * Parses the Educational Background of a user.
      *
-     * @param reader  A JsonReader object that contains the educational background
+     * @param reader A JsonReader object that contains the educational background
      * @return The educational background of a user
+     *
      * @throws IOException
      */
     public static EducationalBackground parseEducationalBackground(JsonReader reader) throws IOException {
         EducationalBackground educationalbackground = new EducationalBackground();
         reader.beginObject();
-        while(reader.hasNext()) {
-            switch(reader.nextName()) {
-                case "degree":{
-                    if(reader.peek() == JsonToken.NULL) {
+        while (reader.hasNext()) {
+            switch (reader.nextName()) {
+                case "degree": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         educationalbackground.setDegree(reader.nextString());
                     }
                     break;
                 }
-                case "primary_school":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "primary_school": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         educationalbackground.setPrimarySchool(SchoolMapper.parseSchool(reader));
                     }
                     break;
                 }
-                case "schools":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "schools": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         educationalbackground.setSchools(SchoolMapper.parseSchoolList(reader));
                     }
                     break;
                 }
-                case "qualifications":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "qualifications": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         educationalbackground.setQualifications(StringMapper.parseStringList(reader));
                     }
                     break;
                 }
-                default: reader.skipValue();
+                default:
+                    reader.skipValue();
             }
         }
         reader.endObject();
         return educationalbackground;
     }
 
-
     /**
-     * Gets a list of contact requests
+     * Gets a list of contact requests.
      *
-     * @param reader  A JsonReader object that contains the education backgrounds
+     * @param reader A JsonReader object that contains the education backgrounds
      * @return A list of EducationalBackground objects
+     *
      * @throws IOException
      */
-    public static List<EducationalBackground> parseEducationalBackgroundList (JsonReader reader) throws IOException {
+    public static List<EducationalBackground> parseEducationalBackgroundList(JsonReader reader) throws IOException {
         List<EducationalBackground> educationalBackgroundList = new ArrayList<>(0);
         reader.beginArray();
-        while(reader.hasNext()) {
+        while (reader.hasNext()) {
             educationalBackgroundList.add(parseEducationalBackground(reader));
         }
         reader.endArray();
         return educationalBackgroundList;
+    }
+
+    private EducationalBackgroundMapper() {
+        throw new AssertionError("No inspections.");
     }
 }

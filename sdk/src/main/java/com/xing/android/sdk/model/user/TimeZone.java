@@ -29,16 +29,12 @@ import java.io.Serializable;
 
 /**
  * Timezone.
- * <p/>
+ *
  * @author serj.lotutovici
  */
 public class TimeZone implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -9131199441954044707L;
-
-    /**
-     * Creator object for Parcelable contract
-     */
+    /** Creator object for Parcelable contract. */
     public static final Creator<TimeZone> CREATOR = new Creator<TimeZone>() {
         @Override
         public TimeZone createFromParcel(Parcel source) {
@@ -51,29 +47,45 @@ public class TimeZone implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * Name of timezone.
-     */
+    /** Name of timezone. */
     private String mName;
-    /**
-     * Offset.
-     */
+    /** Offset. */
     private float mUtcOffset;
 
-    /**
-     * Create a simple TimeZone object with empty fields.
-     */
+    /** Create a simple TimeZone object with empty fields. */
     public TimeZone() {
     }
 
     /**
-     * Create {@link TimeZone} from {@link Parcel}
+     * Create {@link TimeZone} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
     private TimeZone(Parcel in) {
         this.mName = in.readString();
         this.mUtcOffset = in.readFloat();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TimeZone)) {
+            return false;
+        }
+
+        TimeZone timeZone = (TimeZone) o;
+
+        return Float.compare(timeZone.mUtcOffset, mUtcOffset) == 0 && !(mName != null ? !mName.equals(timeZone.mName)
+                : timeZone.mName != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mName != null ? mName.hashCode() : 0;
+        result = 31 * result + (mUtcOffset != +0.0f ? Float.floatToIntBits(mUtcOffset) : 0);
+        return result;
     }
 
     @Override
@@ -121,27 +133,5 @@ public class TimeZone implements Serializable, Parcelable {
      */
     public void setUtcOffset(float utcOffset) {
         mUtcOffset = utcOffset;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TimeZone)) {
-            return false;
-        }
-
-        TimeZone timeZone = (TimeZone) o;
-
-        return Float.compare(timeZone.mUtcOffset, mUtcOffset) == 0 && !(mName != null ? !mName.equals(timeZone.mName) : timeZone.mName != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mName != null ? mName.hashCode() : 0;
-        result = 31 * result + (mUtcOffset != +0.0f ? Float.floatToIntBits(mUtcOffset) : 0);
-        return result;
     }
 }

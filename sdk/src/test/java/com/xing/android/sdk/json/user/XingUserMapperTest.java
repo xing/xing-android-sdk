@@ -54,8 +54,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class XingUserMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_XING_USER = "{\n" +
@@ -456,5 +455,4 @@ public class XingUserMapperTest extends ParserUnitTestBase {
         assertEquals(user.hashCode(), userFromParcel.hashCode());
         assertTrue(user.equals(userFromParcel));
     }
-
 }

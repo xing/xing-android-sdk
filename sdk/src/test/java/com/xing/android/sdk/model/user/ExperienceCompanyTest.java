@@ -39,14 +39,15 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class ExperienceCompanyTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addLongUrlToCompany() throws Exception {
         ExperienceCompany experienceCompany = new ExperienceCompany();
-        experienceCompany.setUrl(ParserUtils.stringToUri("http://www.xing.com/gdrgdgdfbdfbdffdvfdggfdgdfhdfgdfbhdfgdfhdfgdfhrdfbfdghdbnfghfdbfdfdgfdbndfgrpgoitjghreigjfgiohremgiodfhmreigomreiohgrtmgoiregmrtiohgmeriogmthioergmtiohmrtiohmtoib"));
+        experienceCompany.setUrl(ParserUtils.stringToUri(
+                "http://www.xing"
+                        + ".com/gdrgdgdfbdfbdffdvfdggfdgdfhdfgdfbhdfgdfhdfgdfhrdfbfdghdbnfghfdbfdfdgfdbndfgrpgoitjghreigjfgiohremgiodfhmreigomreiohgrtmgoiregmrtiohgmeriogmthioergmtiohmrtiohmtoib"));
     }
 
     @Test

@@ -33,7 +33,8 @@ import com.xing.android.sdk.task.Task;
  * Executes {@link ContactPetitionRequests#revokeOrDenyContactPetition(String, String)}
  *
  * @author serj.lotutovici
- * @see <a href="https://dev.xing.com/docs/delete/users/:user_id/contact_requests/:id">https://dev.xing.com/docs/delete/users/:user_id/contact_requests/:id</a>
+ * @see <a href="https://dev.xing.com/docs/delete/users/:user_id/contact_requests/:id">https://dev.xing
+ * .com/docs/delete/users/:user_id/contact_requests/:id</a>
  */
 @SuppressWarnings("unused") // Public api
 public class RevokeOrDenyContactPetitionTask extends Task<Void> {
@@ -41,18 +42,13 @@ public class RevokeOrDenyContactPetitionTask extends Task<Void> {
     private final String mSenderId;
     private final String mRecipientId;
 
-    public RevokeOrDenyContactPetitionTask(@NonNull String senderId,
-                                           @NonNull String recipientId,
-                                           @NonNull Object tag,
-                                           @NonNull OnTaskFinishedListener<Void> listener) {
+    public RevokeOrDenyContactPetitionTask(@NonNull String senderId, @NonNull String recipientId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener) {
         this(senderId, recipientId, tag, listener, null);
     }
 
-    public RevokeOrDenyContactPetitionTask(@NonNull String senderId,
-                                           @NonNull String recipientId,
-                                           @NonNull Object tag,
-                                           @NonNull OnTaskFinishedListener<Void> listener,
-                                           PrioritizedRunnable.Priority priority) {
+    public RevokeOrDenyContactPetitionTask(@NonNull String senderId, @NonNull String recipientId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener, PrioritizedRunnable.Priority priority) {
         super(tag, listener, priority);
         mSenderId = senderId;
         mRecipientId = recipientId;

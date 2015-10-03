@@ -19,25 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.xing.android.sdk.sample;
 
 import android.app.Application;
 
+import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.Utils;
-import com.xing.android.sdk.network.XingController;
 
 /**
  * @author daniel.hartwich
  */
 public class SdkSampleApplication extends Application {
-    private Prefs prefs;
-    private boolean xingRequestControllerInitiated = false;
-
     /**
-     * Singleton instance of the Sample application
+     * Singleton instance of the Sample application.
      */
     private static SdkSampleApplication app;
+    private Prefs prefs;
+    private boolean xingRequestControllerInitiated = false;
 
     /**
      * @return the global Sample App instance
@@ -45,7 +45,6 @@ public class SdkSampleApplication extends Application {
     public static SdkSampleApplication getInstance() {
         return app;
     }
-
 
     @Override
     public void onCreate() {
@@ -58,7 +57,7 @@ public class SdkSampleApplication extends Application {
     }
 
     /**
-     * Handle the initialization process after the user logged in
+     * Handle the initialization process after the user logged in.
      */
     public void onUserLoggedIn() {
         if (!xingRequestControllerInitiated) {
@@ -67,7 +66,7 @@ public class SdkSampleApplication extends Application {
     }
 
     /**
-     * Initializing the XingRequest Controller using the oAuth Token and the oAuthSecret
+     * Initializing the XingRequest Controller using the oAuth Token and the oAuthSecret.
      */
     private void initializeXingRequestController() {
         XingController.setup()

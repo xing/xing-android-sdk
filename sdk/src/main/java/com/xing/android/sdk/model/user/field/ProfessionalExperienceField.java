@@ -27,12 +27,14 @@ import com.xing.android.sdk.json.Field;
 /**
  * Represents a users professional experience.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/me">Professional Experience</a>
  */
 @SuppressWarnings("unused")
 public class ProfessionalExperienceField extends Field {
-    public static final ProfessionalExperienceField PRIMARY_COMPANY = new ProfessionalExperienceField("primary_company");
+    public static final ProfessionalExperienceField PRIMARY_COMPANY =
+            new ProfessionalExperienceField("primary_company");
     public static final ProfessionalExperienceField COMPANIES = new ProfessionalExperienceField("companies");
     public static final ProfessionalExperienceField AWARDS = new ProfessionalExperienceField("awards");
 

@@ -48,6 +48,7 @@ public abstract class ParserUnitTestBase {
      *
      * @param json The json string to read
      * @return A new instance of json reader
+     *
      * @throws NullPointerException If the json string is null
      */
     protected JsonReader getReaderForJson(@NonNull final String json) {
@@ -60,12 +61,11 @@ public abstract class ParserUnitTestBase {
      *
      * @param initial The initial object
      * @param creator The {@link Parcelable.Creator} object for that class
-     * @param <T>     The type parameter for the object class
+     * @param <T> The type parameter for the object class
      * @return A new object read from the parcel
      */
     @NonNull
-    protected <T extends Parcelable> T createNewObjectViaParcelFlow(
-            @NonNull final T initial,
+    protected <T extends Parcelable> T createNewObjectViaParcelFlow(@NonNull final T initial,
             @NonNull final Parcelable.Creator<T> creator) {
 
         // Obtain a parcel and put the object in it
@@ -84,6 +84,7 @@ public abstract class ParserUnitTestBase {
      *
      * @param fileName The file name to read
      * @return A string value of the file contents, may be empty
+     *
      * @throws IOException If the the read is not possible or some other errors.
      * @deprecated Marked as deprecated until the a gradle related bug will be fixed in robolectric
      */
@@ -107,7 +108,6 @@ public abstract class ParserUnitTestBase {
                 json.append(line);
                 line = reader.readLine();
             }
-
         } finally {
             // We need to close the reader even if an exception was thrown
             if (reader != null) {

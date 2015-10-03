@@ -34,17 +34,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parses the contact petitions to gather information about a contact request
+ * Parses the contact petitions to gather information about a contact request.
  *
  * @author ciprian.ursu
- * */
+ */
 @SuppressWarnings("unused")
 public final class ContactPetitionsMapper {
     /**
-     * Parse the json string containing contact petition information
+     * Parse the json string containing contact petition information.
      *
      * @param json The json that was returned by the request
      * @return A ContactPetition object
+     *
      * @throws IOException
      */
     public static ContactPetition parseContactPetition(String json) throws IOException {
@@ -52,14 +53,15 @@ public final class ContactPetitionsMapper {
     }
 
     /**
-     * Parse the JsonReader object containing contact petition information
+     * Parse the JsonReader object containing contact petition information.
      *
      * @param reader The json reader that contains the json information
      * @return A ContactPetition object
+     *
      * @throws IOException
      */
     public static ContactPetition parseContactPetition(JsonReader reader) throws IOException {
-        ContactPetition contactrequest = new ContactPetition();
+        ContactPetition contactPetition = new ContactPetition();
         reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.nextName()) {
@@ -67,7 +69,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactrequest.setSenderId(reader.nextString());
+                        contactPetition.setSenderId(reader.nextString());
                     }
                     break;
                 }
@@ -75,7 +77,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactrequest.setReceivedAt(reader.nextString());
+                        contactPetition.setReceivedAt(reader.nextString());
                     }
                     break;
                 }
@@ -83,7 +85,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactrequest.setMessage(reader.nextString());
+                        contactPetition.setMessage(reader.nextString());
                     }
                     break;
                 }
@@ -91,7 +93,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactrequest.setSender(XingUserMapper.parseXingUser(reader));
+                        contactPetition.setSender(XingUserMapper.parseXingUser(reader));
                     }
                     break;
                 }
@@ -100,14 +102,15 @@ public final class ContactPetitionsMapper {
             }
         }
         reader.endObject();
-        return contactrequest;
+        return contactPetition;
     }
 
     /**
-     * Gets the recipient id of the sent contact request
+     * Gets the recipient id of the sent contact request.
      *
      * @param reader The json reader that contains the json information
      * @return A string containing the recipient id
+     *
      * @throws IOException
      */
     @Nullable
@@ -133,10 +136,11 @@ public final class ContactPetitionsMapper {
     }
 
     /**
-     * Gets a list of contact requests
+     * Gets a list of contact requests.
      *
      * @param json A String with JSON that contains a list of contact requests
      * @return A list of contact petitions
+     *
      * @throws IOException
      */
     public static List<ContactPetition> parseContactPetitionList(String json) throws IOException {
@@ -144,10 +148,11 @@ public final class ContactPetitionsMapper {
     }
 
     /**
-     * Gets a list of contact requests
+     * Gets a list of contact requests.
      *
      * @param reader The json reader that contains the json information
      * @return A list of contact petitions
+     *
      * @throws IOException
      */
     public static List<ContactPetition> parseContactPetitionList(JsonReader reader) throws IOException {
@@ -161,10 +166,11 @@ public final class ContactPetitionsMapper {
     }
 
     /**
-     * Gets a list of sent contact requests
+     * Gets a list of sent contact requests.
      *
      * @param json A String with JSON that contains a list of sent contact requests
      * @return A list of sent sent contact petitions ids
+     *
      * @throws IOException
      */
     public static List<String> parseSentContactRequestList(String json) throws IOException {
@@ -172,10 +178,11 @@ public final class ContactPetitionsMapper {
     }
 
     /**
-     * Gets a list of sent contact requests
+     * Gets a list of sent contact requests.
      *
      * @param reader The json reader that contains the json information
      * @return A list of sent sent contact petitions ids
+     *
      * @throws IOException
      */
     public static List<String> parseSentContactRequestList(JsonReader reader) throws IOException {
@@ -189,5 +196,9 @@ public final class ContactPetitionsMapper {
         }
         reader.endArray();
         return sentContactRequestList;
+    }
+
+    private ContactPetitionsMapper() {
+        throw new AssertionError("No instances.");
     }
 }

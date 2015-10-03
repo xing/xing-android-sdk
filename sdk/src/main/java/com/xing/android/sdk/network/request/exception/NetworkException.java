@@ -27,9 +27,8 @@ import android.text.TextUtils;
 // TODO documentation
 public class NetworkException extends Exception {
 
-    private static final long serialVersionUID = -1010785074029413729L;
-
     public static final int NULL_ERROR_CODE = -1;
+    private static final long serialVersionUID = -1010785074029413729L;
     private static final String ERROR_MESSAGE_STATUS_CODE_PART = "The HTTP Status Code is %1$d.";
     private static final String ERROR_MESSAGE_RESPONSE_PART = "The content of the response is %1$s.";
     private static final String ERROR_MESSAGE_REASON_PART = "The reason is %1$s.";

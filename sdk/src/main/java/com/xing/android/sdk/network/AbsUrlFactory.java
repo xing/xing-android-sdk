@@ -27,14 +27,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Factory abstraction to avoid using linear dependencies
+ * Factory abstraction to avoid using linear dependencies.
  *
  * @author serj.lotutovici
  */
 public interface AbsUrlFactory {
-
     /**
-     * Open an {@link HttpURLConnection} for the request
+     * Open an {@link HttpURLConnection} for the request.
      *
      * @param url The url to open
      */

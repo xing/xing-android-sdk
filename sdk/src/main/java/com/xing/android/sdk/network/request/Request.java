@@ -30,13 +30,12 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Basic representation of a HTTP/HTTPS request
+ * Basic representation of a HTTP/HTTPS request.
  *
  * @author serj.lotutovici
  */
 // TODO doc & tests?
 public class Request {
-
     protected Uri uri;
     protected Method method;
     protected String body;
@@ -95,12 +94,10 @@ public class Request {
 
         Request request = (Request) o;
 
-        return (body != null ? body.equals(request.body) : request.body == null) &&
-                (headers != null ? headers.equals(request.headers) : request.headers == null) &&
-                method == request.method &&
-                (params != null ? params.equals(request.params) : request.params == null) &&
-                uri.equals(request.uri);
-
+        return (body != null ? body.equals(request.body) : request.body == null)
+                && (headers != null ? headers.equals(request.headers) : request.headers == null)
+                && method == request.method && (params != null ? params.equals(request.params) : request.params == null)
+                && uri.equals(request.uri);
     }
 
     @Override
@@ -113,17 +110,11 @@ public class Request {
         return result;
     }
 
-    /**
-     * Represents the request method value wrapper
-     */
+    /** Represents the request method value wrapper. */
     public enum Method {
-
         GET("GET"),
-
         PUT("PUT"),
-
         POST("POST"),
-
         DELETE("DELETE");
 
         public final String value;
@@ -135,12 +126,11 @@ public class Request {
 
     @SuppressWarnings("unchecked")
     public static class Builder<T extends Builder> {
-
         private final Method method;
-        private Uri uri;
-        private String body;
         private final List<Pair<String, String>> params;
         private final List<Pair<String, String>> headers;
+        private Uri uri;
+        private String body;
 
         public Builder(Method method) {
             this.method = method;
@@ -188,7 +178,6 @@ public class Request {
             if (method == null) {
                 throw new IllegalArgumentException("Can't build request with no method");
             }
-
             if (uri == null) {
                 throw new IllegalArgumentException("Can't build request without url");
             }

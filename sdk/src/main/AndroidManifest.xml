@@ -21,8 +21,8 @@
   -->
 
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xing.android.sdk">
+<manifest package="com.xing.android.sdk"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

@@ -28,20 +28,13 @@ import java.util.List;
  * @author serj.lotutovici
  */
 public final class FieldUtils {
-
-    /**
-     * Private constructor for utility class
-     */
-    private FieldUtils() {
-    }
-
     /**
      * Format all list element to a simple string where all elements are divided by a comma.
      *
      * @param fields The list of fields
      * @return A string containing all fields divided by a comma
      */
-    public static String formatFieldsToString(final List<? extends Field> fields) {
+    public static String formatFieldsToString(List<? extends Field> fields) {
         StringBuilder output = new StringBuilder();
 
         if (fields != null && !fields.isEmpty()) {
@@ -56,5 +49,9 @@ public final class FieldUtils {
         }
 
         return output.toString();
+    }
+
+    private FieldUtils() {
+        throw new AssertionError("No instance.");
     }
 }

@@ -45,7 +45,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Central controller that manages the request execution
+ * Central controller that manages the request execution.
  *
  * @author david.gonzalez
  * @author serj.lotutovici
@@ -58,18 +58,13 @@ public class XingController {
     private final RequestExecutor mRequestExecutor;
     private final TaskManager mTaskManager;
 
-    /**
-     * Create instance of {@link XingController}
-     */
-    private XingController(@NonNull RequestExecutor requestExecutor,
-                           @NonNull TaskManager taskManager) {
+    /** Create instance of {@link XingController}. */
+    private XingController(@NonNull RequestExecutor requestExecutor, @NonNull TaskManager taskManager) {
         mRequestExecutor = requestExecutor;
         mTaskManager = taskManager;
     }
 
-    /**
-     * Get a {@link XingController} instance
-     */
+    /** Get a {@link XingController} instance. */
     public static XingController getInstance() {
         if (sController == null) {
             throw new InitializationException();
@@ -77,17 +72,12 @@ public class XingController {
         return sController;
     }
 
-    /**
-     * Reset {@link XingController}. The API will be unusable until
-     * {@link XingController#setup()} is called
-     */
+    /** Reset {@link XingController}. The API will be unusable until {@link XingController#setup()} is called. */
     public static void flush() {
         sController = null;
     }
 
-    /**
-     * Enable HTTP cache
-     */
+    /** Enable HTTP cache. */
     private static void enableCache(final Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Can not enabled HTTP cache with null context");
@@ -100,9 +90,7 @@ public class XingController {
         }
     }
 
-    /**
-     * Start the {@link XingController} setup
-     */
+    /** Start the {@link XingController} setup. */
     public static Setup setup() {
         return new Setup();
     }
@@ -115,17 +103,14 @@ public class XingController {
         return mTaskManager;
     }
 
-    /**
-     * Execute request
-     */
+    /** Execute request. */
     public String execute(Request request) throws NetworkException, OauthSigner.XingOauthException {
         return mRequestExecutor.execute(request);
     }
 
-    /**
-     * Execute request with the specific requestConfig
-     */
-    public String execute(Request request, RequestConfig requestConfig) throws NetworkException, OauthSigner.XingOauthException {
+    /** Execute request with the specific requestConfig. */
+    public String execute(Request request, RequestConfig requestConfig)
+            throws NetworkException, OauthSigner.XingOauthException {
         return mRequestExecutor.execute(request, requestConfig);
     }
 
@@ -152,9 +137,8 @@ public class XingController {
     }
 
     /**
-     * Setup builder like class for {@link XingController}
-     * To initialize the request controller 4 mandatory parameters should be set
-     * before calling {@link Setup#init()}
+     * Setup builder like class for {@link XingController}. To initialize the request controller 4 mandatory
+     * parameters should be set before calling {@link Setup#init()}.
      * <p/>
      * Usage:
      * <pre>
@@ -174,7 +158,8 @@ public class XingController {
      * access to experimental APIs or partner APIs) you can do it by using one of the following method:
      * <pre>
      *     XingRequestController.setup()
-     *          .addHeader("HEADER_KEY", "HEADER_VALUE") // ex. "Accept-Language:en_EN" -> key["Accept-Language"]; value["en_EN"]
+     *          .addHeader("HEADER_KEY", "HEADER_VALUE") // ex. "Accept-Language:en_EN" -> key["Accept-Language"];
+     * value["en_EN"]
      *          // or
      *          .addHeaders(aListOfHeaders)
      *          // ...
@@ -186,21 +171,18 @@ public class XingController {
      *
      * @author serj.lotutovici
      */
-    public final static class Setup {
-
+    public static final class Setup {
         RequestExecutor mExecutor;
         RunnableExecutor mRunnableExecutor;
         DefaultRequestConfig.Builder mDefaultRequestConfigBuilder;
 
-        /**
-         * Should not be instantiated from outside
-         */
+        /** Should not be instantiated from outside. */
         private Setup() {
             mDefaultRequestConfigBuilder = new DefaultRequestConfig.Builder();
         }
 
         /**
-         * Set a {@link RequestExecutor} instead of the default one
+         * Set a {@link RequestExecutor} instead of the default one.
          * <p/>
          * <b>Disclaimer: </b> Currently there is no appropriate way to use this method.
          * Please initialize the controller by passing to the {@link Setup}
@@ -212,12 +194,11 @@ public class XingController {
                 throw new IllegalArgumentException("Executor can not be null");
             }
             mExecutor = executor;
-
             return this;
         }
 
         /**
-         * Set a {@link RunnableExecutor} instead of the default one
+         * Set a {@link RunnableExecutor} instead of the default one.
          * <p/>
          * <b>Disclaimer: </b> Currently there is no appropriate way to use this method.
          * Please initialize the controller by passing to the {@link Setup}
@@ -229,117 +210,88 @@ public class XingController {
                 throw new IllegalArgumentException("RunnableExecutor can not be null");
             }
             mRunnableExecutor = runnableExecutor;
-
             return this;
         }
 
         /**
-         * Enable cache
+         * Enable cache.
          *
          * @param context Application context. Required in case enabled is true
          * @param enabled Flag that shows the status of the cache (pass true to enable)
          */
         @Optional
-        public final Setup cacheEnabled(Context context, boolean enabled) {
+        public Setup cacheEnabled(Context context, boolean enabled) {
             if (enabled) {
                 enableCache(context);
             }
-
             return this;
         }
 
-        /**
-         * Set consumer key
-         */
+        /** Set consumer key. */
         public Setup setConsumerKey(String consumerKey) {
             mDefaultRequestConfigBuilder.setConsumerKey(consumerKey);
-
             return this;
         }
 
-        /**
-         * Set consumer secret
-         */
+        /** Set consumer secret. */
         public Setup setConsumerSecret(String consumerSecret) {
             mDefaultRequestConfigBuilder.setConsumerSecret(consumerSecret);
-
             return this;
         }
 
-        /**
-         * Set token
-         */
+        /** Set token. */
         public Setup setToken(String token) {
             mDefaultRequestConfigBuilder.setToken(token);
-
             return this;
         }
 
-        /**
-         * Set token secret
-         */
+        /** Set token secret. */
         public Setup setTokenSecret(String tokenSecret) {
             mDefaultRequestConfigBuilder.setTokenSecret(tokenSecret);
-
             return this;
         }
 
-        /**
-         * Set loggedOut. This avoids the check of oauth values.
-         */
+        /** Set loggedOut. This avoids the check of oauth values. */
         public Setup setLoggedOut(boolean loggedOut) {
             mDefaultRequestConfigBuilder.setLoggedOut(loggedOut);
-
             return this;
         }
 
-        /**
-         * Add global param
-         */
+        /** Add global param. */
         @Optional
         public Setup addParam(String key, String value) {
             mDefaultRequestConfigBuilder.addParam(key, value);
-
             return this;
         }
 
-        /**
-         * Add global params
-         */
+        /** Add global params. */
         @Optional
         public Setup addParams(List<Pair<String, String>> params) {
             mDefaultRequestConfigBuilder.addParams(params);
-
             return this;
         }
 
-        /**
-         * Add global header
-         */
+        /** Add global header. */
         @Optional
         public Setup addHeader(String key, String value) {
             mDefaultRequestConfigBuilder.addHeader(key, value);
-
             return this;
         }
 
-        /**
-         * Add global headers
-         */
+        /** Add global header. */
         @Optional
         public Setup addHeaders(List<Pair<String, String>> headers) {
             mDefaultRequestConfigBuilder.addHeaders(headers);
-
             return this;
         }
 
         /**
-         * Validate the input and initialize the {@link XingController}
+         * Validate the input and initialize the {@link XingController}.
          *
          * @throws IllegalArgumentException In case one of mandatory parameters is not initialized
-         * @throws IllegalStateException    In case the controller was initialized and not flushed
+         * @throws IllegalStateException In case the controller was initialized and not flushed
          */
-        public final void init() {
+        public void init() {
             /* Check if request executor was set, if not initialize executor */
             if (mExecutor == null) {
                 mExecutor = new RequestExecutor(mDefaultRequestConfigBuilder.build());
@@ -348,18 +300,14 @@ public class XingController {
             /* Check if the background executor was set, if not initialize default */
             if (mRunnableExecutor == null) {
                 int numThreads = Runtime.getRuntime().availableProcessors() + 1;
-                mRunnableExecutor = new PrioritizedThreadPoolExecutor(
-                        numThreads,
-                        numThreads,
-                        0,
-                        TimeUnit.MILLISECONDS,
-                        new PriorityBlockingQueue<>(numThreads, new RunnableComparator())
-                );
+                mRunnableExecutor = new PrioritizedThreadPoolExecutor(numThreads, numThreads, 0, TimeUnit.MILLISECONDS,
+                        new PriorityBlockingQueue<>(numThreads, new RunnableComparator()));
             }
 
             synchronized (XingController.class) {
                 if (sController != null) {
-                    throw new IllegalStateException("A controller was initialized already, call XingRequestExecutor#flush() first");
+                    throw new IllegalStateException(
+                            "A controller was initialized already, call XingRequestExecutor#flush() first");
                 }
 
                 sController = new XingController(mExecutor, new TaskManager(mRunnableExecutor));
@@ -367,11 +315,8 @@ public class XingController {
         }
     }
 
-    /**
-     * Exception thrown when {@link XingController} not initialized
-     */
+    /** Exception thrown when {@link XingController} not initialized. */
     public static class InitializationException extends IllegalStateException {
-
         private static final long serialVersionUID = 2987179177751910361L;
 
         @Override

@@ -35,12 +35,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class ParserUtils {
-
-    private ParserUtils() {
-    }
-
     /**
-     * Convert string to Uri
+     * Convert string to Uri.
      *
      * @param url The url to convert
      * @return A new uri if the string is not null or empty, otherwise null
@@ -51,10 +47,11 @@ public final class ParserUtils {
     }
 
     /**
-     * Parses an array of strings
+     * Parses an array of strings.
      *
      * @param reader The json reader
      * @return A list of string parsed form the array
+     *
      * @throws IOException
      */
     public static List<String> parseArrayOfStrings(JsonReader reader) throws IOException {
@@ -74,10 +71,11 @@ public final class ParserUtils {
     }
 
     /**
-     * Parses an array of strings to a set
+     * Parses an array of strings to a set.
      *
      * @param reader The json reader
      * @return A set of strings that where represented as a json array
+     *
      * @throws IOException
      */
     public static Set<String> parseArrayOfStringsToSet(JsonReader reader) throws IOException {
@@ -97,14 +95,18 @@ public final class ParserUtils {
     }
 
     /**
-     * Check if the next reader token is null
+     * Check if the next reader token is null.
      *
      * @param reader The reader
      * @return {@code true} if the token is null, otherwise {@code false}
+     *
      * @throws IOException
      */
     public static boolean isNextTokenNull(JsonReader reader) throws IOException {
         return reader.peek() == JsonToken.NULL;
     }
 
+    private ParserUtils() {
+        throw new AssertionError("No instances.");
+    }
 }

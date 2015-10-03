@@ -39,8 +39,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class XingControllerTest {
 
     @Before
@@ -70,17 +69,12 @@ public class XingControllerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setupWithEmptyConsumerSecreteThrows() throws Exception {
-        XingController.setup()
-                .setConsumerKey("test_key")
-                .init();
+        XingController.setup().setConsumerKey("test_key").init();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void setupWithEmptyTokenThrows() throws Exception {
-        XingController.setup()
-                .setConsumerKey("test_key")
-                .setConsumerSecret("test_secret")
-                .init();
+        XingController.setup().setConsumerKey("test_key").setConsumerSecret("test_secret").init();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -105,13 +99,7 @@ public class XingControllerTest {
 
     @Test(expected = IllegalStateException.class)
     public void tryingToSetupControllerTwiceThrows() throws Exception {
-        XingController.setup()
-                .setExecutor(mock(RequestExecutor.class))
-                .setLoggedOut(true)
-                .init();
-        XingController.setup()
-                .setExecutor(mock(RequestExecutor.class))
-                .setLoggedOut(true)
-                .init();
+        XingController.setup().setExecutor(mock(RequestExecutor.class)).setLoggedOut(true).init();
+        XingController.setup().setExecutor(mock(RequestExecutor.class)).setLoggedOut(true).init();
     }
 }

@@ -41,7 +41,8 @@ import java.util.List;
  * Executes {@link UserProfilesRequests#find(List, Integer, Integer, List)}
  *
  * @author serj.lotutovici
- * @see <a href="https://dev.xing.com/docs/get/users/find_by_emails">https://dev.xing.com/docs/get/users/find_by_emails</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/find_by_emails">https://dev.xing
+ * .com/docs/get/users/find_by_emails</a>
  */
 @SuppressWarnings("unused") // Public api
 public class FindUsersByKeywordsTask extends PaginatedWithOffsetTask<List<XingUser>> {
@@ -49,22 +50,15 @@ public class FindUsersByKeywordsTask extends PaginatedWithOffsetTask<List<XingUs
     private final List<String> mKeywords;
     private final List<XingUserField> mFields;
 
-    public FindUsersByKeywordsTask(@Nullable List<String> keywords,
-                                   @Nullable List<XingUserField> fields,
-                                   @Nullable Integer limit,
-                                   @Nullable Integer offset,
-                                   @NonNull Object tag,
-                                   @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
+    public FindUsersByKeywordsTask(@Nullable List<String> keywords, @Nullable List<XingUserField> fields,
+            @Nullable Integer limit, @Nullable Integer offset, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
         this(keywords, fields, limit, offset, tag, listener, null);
     }
 
-    public FindUsersByKeywordsTask(@Nullable List<String> keywords,
-                                   @Nullable List<XingUserField> fields,
-                                   @Nullable Integer limit,
-                                   @Nullable Integer offset,
-                                   @NonNull Object tag,
-                                   @NonNull OnTaskFinishedListener<List<XingUser>> listener,
-                                   @Nullable PrioritizedRunnable.Priority priority) {
+    public FindUsersByKeywordsTask(@Nullable List<String> keywords, @Nullable List<XingUserField> fields,
+            @Nullable Integer limit, @Nullable Integer offset, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener, @Nullable PrioritizedRunnable.Priority priority) {
         super(limit, offset, tag, listener, priority);
         mKeywords = keywords;
         mFields = fields;

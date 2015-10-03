@@ -22,7 +22,8 @@
 
 package com.xing.android.sdk.task;
 
-/*  It is easier using an inheritance instead of an interface, however this allows to use other implementations of Runnable.*/
+/*  It is easier using an inheritance instead of an interface, however this allows to use other implementations of
+Runnable.*/
 public abstract class PrioritizedRunnable extends TaggedRunnable {
     private Priority mPriority;
 

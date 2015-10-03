@@ -35,12 +35,8 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused") // Public api
 public class XingAddress implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -6309755823721877973L;
-    
-    /**
-     * Creator object for Parcelable contract
-     */
+    /** Creator object for Parcelable contract. */
     public static final Creator<XingAddress> CREATOR = new Creator<XingAddress>() {
         @Override
         public XingAddress createFromParcel(Parcel source) {
@@ -63,14 +59,12 @@ public class XingAddress implements Serializable, Parcelable {
     private String mStreet;
     private String mZipCode;
 
-    /**
-     * Create a simple XingAddress object with empty fields.
-     */
+    /** Create a simple XingAddress object with empty fields. */
     public XingAddress() {
     }
 
     /**
-     * Create {@link XingAddress} from {@link Parcel}
+     * Create {@link XingAddress} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
@@ -159,13 +153,12 @@ public class XingAddress implements Serializable, Parcelable {
         return mFax;
     }
 
-    public void setFax(final XingPhone fax) {
-        mFax = fax;
+    public void setFax(final String fax) throws XingPhone.InvalidPhoneException {
+        mFax = XingPhone.createXingPhone(fax);
     }
 
-    public void setFax(final String fax)
-            throws XingPhone.InvalidPhoneException {
-        mFax = XingPhone.createXingPhone(fax);
+    public void setFax(final XingPhone fax) {
+        mFax = fax;
     }
 
     public void setFax(final String countryCode, final String areaCode, final String number)
@@ -177,12 +170,12 @@ public class XingAddress implements Serializable, Parcelable {
         return mMobilePhone;
     }
 
-    public void setMobilePhone(final XingPhone mobilePhone) {
-        mMobilePhone = mobilePhone;
-    }
-
     public void setMobilePhone(final String mobilePhone) throws XingPhone.InvalidPhoneException {
         mMobilePhone = XingPhone.createXingPhone(mobilePhone);
+    }
+
+    public void setMobilePhone(final XingPhone mobilePhone) {
+        mMobilePhone = mobilePhone;
     }
 
     public void setMobilePhone(final String countryCode, final String areaCode, final String number)
@@ -194,12 +187,12 @@ public class XingAddress implements Serializable, Parcelable {
         return mPhone;
     }
 
-    public void setPhone(final XingPhone phone) {
-        mPhone = phone;
-    }
-
     public void setPhone(final String phone) throws XingPhone.InvalidPhoneException {
         mPhone = XingPhone.createXingPhone(phone);
+    }
+
+    public void setPhone(final XingPhone phone) {
+        mPhone = phone;
     }
 
     public void setPhone(final String countryCode, final String areaCode, final String number)

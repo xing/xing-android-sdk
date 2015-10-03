@@ -41,41 +41,41 @@ public class CreateContactPetitionTask extends Task<Void> {
     private final String mMessage;
 
     /**
-     * @param userId   ID of the user receiving the contact petition.
-     * @param message  Message attached to the contact petition.
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userId ID of the user receiving the contact petition.
+     * @param message Message attached to the contact petition.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public CreateContactPetitionTask(@NonNull String userId,
-                                     @Nullable String message,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<Void> listener) {
+    public CreateContactPetitionTask(@NonNull String userId, @Nullable String message, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener) {
         this(userId, message, tag, listener, null);
     }
 
     /**
-     * @param userId   ID of the user receiving the contact petition.
-     * @param message  Message attached to the contact petition.
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userId ID of the user receiving the contact petition.
+     * @param message Message attached to the contact petition.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public CreateContactPetitionTask(@NonNull String userId,
-                                     @Nullable String message,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<Void> listener,
-                                     @Nullable Priority priority) {
+    public CreateContactPetitionTask(@NonNull String userId, @Nullable String message, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
         mMessage = message;
     }
 
     /**
-     * Executes the {@link ContactPetitionRequests#createContactPetition(String, String)  ContactPathRequests.createContactPetition} request.
+     * Executes the {@link ContactPetitionRequests#createContactPetition(String, String)
+     * ContactPathRequests.createContactPetition} request.
      *
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public Void run() throws Exception {

@@ -44,8 +44,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class AwardMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_AWARD_1 = "{\n" +
@@ -63,7 +62,6 @@ public class AwardMapperTest extends ParserUnitTestBase {
     private static final String TEST_AWARDS = "[" +
             TEST_AWARD_1 + ", \n" +
             TEST_AWARD_2 + "]";
-
 
     @Test
     public void parseAwardWithEmptyUrl() throws Exception {
@@ -104,5 +102,4 @@ public class AwardMapperTest extends ParserUnitTestBase {
         assertEquals(award.hashCode(), awardFromParcel.hashCode());
         assertEquals(award, awardFromParcel);
     }
-
 }

@@ -38,8 +38,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class ProfessionalExperienceMapperTest extends ParserUnitTestBase {
 
     public static final String TEST_EXPERIENCE = "{\n" +
@@ -131,7 +130,8 @@ public class ProfessionalExperienceMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parseProfessionalExperienceFromJson() throws Exception {
-        ProfessionalExperience professionalExperience = ProfessionalExperienceMapper.parseProfessionalExperience(getReaderForJson(TEST_EXPERIENCE));
+        ProfessionalExperience professionalExperience =
+                ProfessionalExperienceMapper.parseProfessionalExperience(getReaderForJson(TEST_EXPERIENCE));
         assertNotNull(professionalExperience);
         assertNotNull(professionalExperience.getPrimaryCompany());
 
@@ -145,13 +145,13 @@ public class ProfessionalExperienceMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parsePrefessionalExperienceAndPassItThroughParcelFlow() throws Exception {
-        ProfessionalExperience experience = ProfessionalExperienceMapper.parseProfessionalExperience(
-                getReaderForJson(TEST_EXPERIENCE)
-        );
+        ProfessionalExperience experience =
+                ProfessionalExperienceMapper.parseProfessionalExperience(getReaderForJson(TEST_EXPERIENCE));
         assertNotNull(experience);
 
         // Create copy object via parcel flow
-        ProfessionalExperience experienceFromParcel = createNewObjectViaParcelFlow(experience, ProfessionalExperience.CREATOR);
+        ProfessionalExperience experienceFromParcel =
+                createNewObjectViaParcelFlow(experience, ProfessionalExperience.CREATOR);
         assertEquals(experience.hashCode(), experienceFromParcel.hashCode());
         assertEquals(experience, experienceFromParcel);
     }

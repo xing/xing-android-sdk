@@ -22,13 +22,23 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.xing.android.sdk.sample.ProfileActivity">
-    <item android:id="@+id/action_contacts" android:title="@string/contacts_label"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.xing.android.sdk.sample.ProfileActivity">
+    <item
+        android:id="@+id/action_contacts"
+        android:title="@string/contacts_label"
         android:icon="@drawable/ic_contacts_white_24dp"
-        android:orderInCategory="100" app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_visitors" android:title="@string/visitors_label"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_visitors"
+        android:title="@string/visitors_label"
         android:icon="@drawable/ic_visibility_white_24dp"
-        android:orderInCategory="100" app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_logout" android:title="@string/logout_text"
-        android:orderInCategory="100" app:showAsAction="never"/>
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="@string/logout_text"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

@@ -34,23 +34,23 @@ import java.io.StringReader;
 import static com.xing.android.sdk.json.ParserUtils.isNextTokenNull;
 
 /**
- * This parser gets the Profile Message from a user
+ * This parser gets the Profile Message from a user.
  *
  * @author serj.lotutovici
  */
 @SuppressWarnings("unused")
 public final class ProfileMessageMapper {
-
     /**
-     * Parses the Professional Experience of a user
+     * Parses the Professional Experience of a user.
      *
-     * @param response  The JSON String response returned by the request
+     * @param response The JSON String response returned by the request
      * @return The profile message of a user
+     *
      * @throws IOException
      */
     @Nullable
     public static ProfileMessage parseDetailsResponseJson(String response) throws IOException {
-        ProfileMessage profileMessage= null;
+        ProfileMessage profileMessage = null;
         JsonReader reader = new JsonReader(new StringReader(response));
         reader.beginObject();
         while (reader.hasNext()) {
@@ -65,16 +65,16 @@ public final class ProfileMessageMapper {
     }
 
     /**
-     * Parse the content of a profile message
+     * Parse the content of a profile message.
      *
      * @param reader The JsonReader object containing the actual content of the profile message
      * @return A ProfileMessage object
+     *
      * @throws IOException
      */
     @Nullable
     public static ProfileMessage parseProfileMessage(JsonReader reader) throws IOException {
         ProfileMessage message = null;
-
         reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.nextName()) {
@@ -88,7 +88,6 @@ public final class ProfileMessageMapper {
                         }
                         message.setUpdatedAt(CalendarUtils.parseCalendarFromString(reader.nextString()));
                     }
-
                 }
                 break;
                 case "message": {
@@ -109,8 +108,10 @@ public final class ProfileMessageMapper {
             }
         }
         reader.endObject();
-
         return message;
     }
 
+    private ProfileMessageMapper() {
+        throw new AssertionError("No instances.");
+    }
 }

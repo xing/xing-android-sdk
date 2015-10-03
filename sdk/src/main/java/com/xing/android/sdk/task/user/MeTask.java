@@ -44,23 +44,26 @@ public class MeTask extends Task<XingUser> {
     private final List<XingUserField> mFields;
 
     /**
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
     public MeTask(@Nullable List<XingUserField> fields, @NonNull Object tag,
-                  @NonNull OnTaskFinishedListener<XingUser> listener) {
+            @NonNull OnTaskFinishedListener<XingUser> listener) {
         this(fields, tag, listener, null);
     }
 
     /**
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
     public MeTask(@Nullable List<XingUserField> fields, @NonNull Object tag,
-                  @NonNull OnTaskFinishedListener<XingUser> listener, @Nullable Priority priority) {
+            @NonNull OnTaskFinishedListener<XingUser> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mFields = fields;
     }
@@ -69,9 +72,11 @@ public class MeTask extends Task<XingUser> {
      * Executes the {@link UserProfilesRequests#detailsMe(List)}  request and deserialize the result.
      *
      * @return XingUser object with the information of the logged in user.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public XingUser run() throws Exception {

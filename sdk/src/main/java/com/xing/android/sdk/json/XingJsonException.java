@@ -25,11 +25,11 @@ package com.xing.android.sdk.json;
 import android.text.TextUtils;
 
 /**
- * An exception that gets thrown whenever something is wrong with the JSON
- * For example when a JSON can not be created because of the values inside
+ * An exception that gets thrown whenever something is wrong with the JSON.
+ * For example when a JSON can not be created because of the values inside.
  *
  * @author david.gonzalez
- * */
+ */
 public class XingJsonException extends Exception {
     private static final long serialVersionUID = -5873006148116122766L;
 
@@ -44,10 +44,10 @@ public class XingJsonException extends Exception {
     }
 
     /**
-     * Gets the message for the exception overriding the default implementation from the super class
+     * Gets the message for the exception overriding the default implementation from the super class.
      *
      * @return A String object, which is the message, describing where and why the exception occurred
-     * */
+     */
     @Override
     public String getMessage() {
         StringBuilder stringBuilder = new StringBuilder();

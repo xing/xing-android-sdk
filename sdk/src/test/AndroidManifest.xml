@@ -23,6 +23,6 @@
 
 <manifest package="com.xing.android.sdk">
 
-    <application/>
+    <application />
 
 </manifest>

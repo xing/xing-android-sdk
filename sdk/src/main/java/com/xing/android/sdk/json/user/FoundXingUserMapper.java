@@ -36,18 +36,19 @@ import java.util.List;
 import static com.xing.android.sdk.json.ParserUtils.isNextTokenNull;
 
 /**
- * The parser for the FoundXingUser model
+ * The parser for the FoundXingUser model.
  *
  * @author daniel.hartwich
  */
 public final class FoundXingUserMapper {
     /**
-     * Parses the initial JSON String searching for the "items" field before more parsing can be done
+     * Parses the initial JSON String searching for the "items" field before more parsing can be done.
      *
      * @param response A JSON String containing the found users that need to be parsed
      * @return A list of FoundXingUser objects
+     *
      * @throws IOException
-     * */
+     */
     @Nullable
     public static List<FoundXingUser> parseFoundXingUser(String response) throws IOException {
         List<FoundXingUser> foundXingUser = null;
@@ -82,18 +83,19 @@ public final class FoundXingUserMapper {
     }
 
     /**
-     * Parses the details of a FoundXingUser response
+     * Parses the details of a FoundXingUser response.
      *
      * @param reader A JsonReader containing the detail data of the FoundXingUser
      * @return The FoundXingUser object
+     *
      * @throws IOException
-     * */
+     */
     private static FoundXingUser parseFoundXingUserJson(JsonReader reader) throws IOException {
         FoundXingUser foundxinguser = new FoundXingUser();
         reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.nextName()) {
-                case "hash":{
+                case "hash": {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
@@ -126,19 +128,24 @@ public final class FoundXingUserMapper {
     }
 
     /**
-     * Parse a List of FoundXingUser objects
+     * Parse a List of FoundXingUser objects.
      *
      * @param reader A JsonReader containing the FoundXingUser objects
      * @return A list of FoundXingUser objects
+     *
      * @throws IOException
-     * */
+     */
     private static List<FoundXingUser> parseFoundXingUserList(JsonReader reader) throws IOException {
-        List<FoundXingUser> foundxinguserList = new ArrayList<>(0);
+        List<FoundXingUser> foundXingUserList = new ArrayList<>(0);
         reader.beginArray();
         while (reader.hasNext()) {
-            foundxinguserList.add(parseFoundXingUserJson(reader));
+            foundXingUserList.add(parseFoundXingUserJson(reader));
         }
         reader.endArray();
-        return foundxinguserList;
+        return foundXingUserList;
+    }
+
+    private FoundXingUserMapper() {
+        throw new AssertionError("No instances.");
     }
 }

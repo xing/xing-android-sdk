@@ -45,8 +45,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class XingAddressMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_ADDRESS_1 = "{\n" +
@@ -166,29 +165,26 @@ public class XingAddressMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parseAddressInvalidPhoneNumber1() throws Exception {
-        XingAddress address = XingAddressMapper
-                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_1));
+        XingAddress address = XingAddressMapper.parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_1));
         assertNotNull(address);
     }
 
     @Test
     public void parseAddressInvalidPhoneNumber2() throws Exception {
-        XingAddress address = XingAddressMapper
-                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_2));
+        XingAddress address = XingAddressMapper.parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_2));
         assertNotNull(address);
     }
 
     @Test
     public void parseAddressInvalidPhoneNumber3() throws Exception {
-        XingAddress address = XingAddressMapper
-                .parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_3));
+        XingAddress address = XingAddressMapper.parseXingAddress(getReaderForJson(TEST_ADDRESS_INVALID_PHONE_3));
         assertNotNull(address);
     }
 
     @Test
     public void parseListOfInvalidAddresses() throws Exception {
-        List<XingAddress> addresses = XingAddressMapper
-                .parseXingAddressList(getReaderForJson(TEST_INVALID_PHONE_ADDRESSES));
+        List<XingAddress> addresses =
+                XingAddressMapper.parseXingAddressList(getReaderForJson(TEST_INVALID_PHONE_ADDRESSES));
         assertNotNull(addresses);
         assertEquals(addresses.size(), 5);
     }
