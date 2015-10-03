@@ -38,24 +38,24 @@ public class CreateVisitTask extends Task<Void> {
     private final String mUserId;
 
     /**
-     * @param userId   Id of the visited user.
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
+     * @param userId Id of the visited user.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
      * @param listener Future object to allow cancel the task if necessary.
      */
     public CreateVisitTask(@NonNull String userId, @NonNull Object tag,
-                           @NonNull OnTaskFinishedListener<Void> listener) {
+            @NonNull OnTaskFinishedListener<Void> listener) {
         this(userId, tag, listener, null);
     }
 
     /**
-     * @param userId   Id of the visited user.
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
+     * @param userId Id of the visited user.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
      * @param listener Future object to allow cancel the task if necessary.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public CreateVisitTask(@NonNull String userId, @NonNull Object tag,
-                           @NonNull OnTaskFinishedListener<Void> listener,
-                           @Nullable Priority priority) {
+    public CreateVisitTask(@NonNull String userId, @NonNull Object tag, @NonNull OnTaskFinishedListener<Void> listener,
+            @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
     }
@@ -63,9 +63,10 @@ public class CreateVisitTask extends Task<Void> {
     /**
      * Creates a profile visit.
      *
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public Void run() throws Exception {

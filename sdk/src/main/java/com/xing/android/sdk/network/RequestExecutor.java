@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default request executor that creates an {@link HttpURLConnection}, signs the request
- * and executes it to the base api url
+ * Default request executor that creates an {@link HttpURLConnection}, signs the request and executes it to the base
+ * api url.
  *
  * @author david.gonzalez
  * @author serj.lotutovici
@@ -53,9 +53,9 @@ public class RequestExecutor {
     private static final int SMALLER_ERROR_CODE = 400;
     private static final int BIGGER_ERROR_CODE = 600;
 
-    private RequestConfig mRequestConfig;
     private final AbsUrlFactory mUrlFactory;
     private final Map<String, RequestConfig> mRequestConfigurations;
+    private RequestConfig mRequestConfig;
 
     protected RequestExecutor(@NonNull RequestConfig requestConfig) {
         this(requestConfig, new DefaultUrlFactory());
@@ -68,9 +68,24 @@ public class RequestExecutor {
     }
 
     /**
+     * Add headers to {@link HttpURLConnection}.
+     *
+     * @param connection The connection that requires headers
+     * @param headers Headers to add
+     */
+    private static void addHeadersToConnection(@Nullable final HttpURLConnection connection,
+            @Nullable final List<Pair<String, String>> headers) {
+        if (connection != null && headers != null) {
+            for (Pair<String, String> header : headers) {
+                connection.setRequestProperty(header.first, header.second);
+            }
+        }
+    }
+
+    /**
      * Saves the configuration with the tag, so can be easily used in future request just specifying the tag.
      *
-     * @param tag           Tag to identify the configuration.
+     * @param tag Tag to identify the configuration.
      * @param requestConfig Non-default configuration that can be used for executing requests.
      */
     public void addRequestConfig(@NonNull String tag, @NonNull RequestConfig requestConfig) {
@@ -114,18 +129,19 @@ public class RequestExecutor {
         mRequestConfig = config;
     }
 
-
     /**
-     * Execute the passed request
+     * Execute the passed request.
      *
-     * @param tag     The tag of the requestConfig that the requestExecutor should use.
+     * @param tag The tag of the requestConfig that the requestExecutor should use.
      * @param request The request to execute.
      * @return The string contents of the request response.
-     * @throws NetworkException               In case an network/execution error occurred or the server returned an unexpected response.
+     *
+     * @throws NetworkException In case an network/execution error occurred or the server returned an unexpected
+     * response.
      * @throws OauthSigner.XingOauthException In case the {@link OauthSigner} was not initialized properly.
      */
-    public String execute(@NonNull String tag,
-            @NonNull Request request) throws NetworkException, OauthSigner.XingOauthException {
+    public String execute(@NonNull String tag, @NonNull Request request)
+            throws NetworkException, OauthSigner.XingOauthException {
         RequestConfig requestConfig = mRequestConfigurations.get(tag);
         if (requestConfig == null) {
             throw new IllegalArgumentException("no saved request configuration for the specified tag");
@@ -135,11 +151,13 @@ public class RequestExecutor {
     }
 
     /**
-     * Execute the passed request
+     * Execute the passed request.
      *
      * @param request The request to execute.
      * @return The string contents of the request response.
-     * @throws NetworkException               In case an network/execution error occurred or the server returned an unexpected response.
+     *
+     * @throws NetworkException In case an network/execution error occurred or the server returned an unexpected
+     * response.
      * @throws OauthSigner.XingOauthException In case the {@link OauthSigner} was not initialized properly.
      */
     public String execute(Request request) throws NetworkException, OauthSigner.XingOauthException {
@@ -147,14 +165,16 @@ public class RequestExecutor {
     }
 
     /**
-     * @param request       The request to execute.
+     * @param request The request to execute.
      * @param requestConfig The request configuration that will be used fir this specific request.
      * @return The string contents of the request response.
-     * @throws NetworkException               In case an network/execution error occurred or the server returned an unexpected response.
+     *
+     * @throws NetworkException In case an network/execution error occurred or the server returned an unexpected
+     * response.
      * @throws OauthSigner.XingOauthException In case the {@link OauthSigner} was not initialized properly.
      */
-    public String execute(Request request,
-            RequestConfig requestConfig) throws NetworkException, OauthSigner.XingOauthException {
+    public String execute(Request request, RequestConfig requestConfig)
+            throws NetworkException, OauthSigner.XingOauthException {
         HttpURLConnection connection = null;
         try {
 
@@ -203,7 +223,8 @@ public class RequestExecutor {
             if (request.getMethod() == Request.Method.POST || request.getMethod() == Request.Method.PUT) {
                 if (!TextUtils.isEmpty(request.getBody())) {
                     connection.setFixedLengthStreamingMode(request.getBody().getBytes().length);
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+                    BufferedWriter bufferedWriter =
+                            new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
                     bufferedWriter.write(request.getBody());
                     bufferedWriter.flush();
                     bufferedWriter.close();
@@ -218,28 +239,11 @@ public class RequestExecutor {
             } else {
                 return RequestUtils.inputStreamToString(connection.getInputStream());
             }
-
         } catch (IOException ex) {
             throw new NetworkException(NetworkException.NULL_ERROR_CODE, null, ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();
-            }
-        }
-    }
-
-    /**
-     * Add headers to {@link HttpURLConnection}
-     *
-     * @param connection The connection that requires headers
-     * @param headers    Headers to add
-     */
-    private static void addHeadersToConnection(
-            @Nullable final HttpURLConnection connection,
-            @Nullable final List<Pair<String, String>> headers) {
-        if (connection != null && headers != null) {
-            for (Pair<String, String> header : headers) {
-                connection.setRequestProperty(header.first, header.second);
             }
         }
     }

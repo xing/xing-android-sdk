@@ -32,6 +32,7 @@ import java.util.TimeZone;
  * calendar.get(Calendar.YEAR) automatically fills the rest of the fields calling the internal method
  * complete(). This class avoid the call to the complete method, just returning the value.
  * <p/>
+ *
  * @author david.gonzalez
  */
 public class XingCalendar extends GregorianCalendar {
@@ -79,8 +80,7 @@ public class XingCalendar extends GregorianCalendar {
      * @param minute minute.
      * @param second second.
      */
-    public XingCalendar(int year, int month, int day, int hour,
-                        int minute, int second) {
+    public XingCalendar(int year, int month, int day, int hour, int minute, int second) {
         super(year, month, day, hour, minute, second);
     }
 

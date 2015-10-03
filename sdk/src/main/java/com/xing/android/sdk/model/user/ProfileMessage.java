@@ -24,7 +24,6 @@ package com.xing.android.sdk.model.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
 import com.xing.android.sdk.model.XingCalendar;
 
@@ -32,17 +31,13 @@ import java.io.Serializable;
 
 /**
  * Represents the profile message of a user.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/profile_message">User Profile Message</a>
  */
 public class ProfileMessage implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -132857097764920225L;
-
-    /**
-     * Creator object for Parcelable contract
-     */
+    /** Creator object for Parcelable contract. */
     public static final Creator<ProfileMessage> CREATOR = new Creator<ProfileMessage>() {
         @Override
         public ProfileMessage createFromParcel(Parcel source) {
@@ -55,23 +50,17 @@ public class ProfileMessage implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * Date message was updated.
-     */
+    /** Date message was updated. */
     private XingCalendar mUpdatedAt;
-    /**
-     * Message.
-     */
+    /** Message. */
     private String mMessage;
 
-    /**
-     * Create a simple Profile Message object with empty fields.
-     */
+    /** Create a simple Profile Message object with empty fields. */
     public ProfileMessage() {
     }
 
     /**
-     * Create {@link ProfileMessage} from {@link Parcel}
+     * Create {@link ProfileMessage} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */

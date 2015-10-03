@@ -31,17 +31,13 @@ import java.util.List;
 
 /**
  * Represents a users educational background.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
 public class EducationalBackground implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 2927900492592865436L;
-
-    /**
-     * Creator object for the Parcelable contract
-     */
+    /** Creator object for the Parcelable contract. */
     public static final Creator<EducationalBackground> CREATOR = new Creator<EducationalBackground>() {
         @Override
         public EducationalBackground createFromParcel(Parcel source) {
@@ -54,31 +50,21 @@ public class EducationalBackground implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * Educational degree.
-     */
+    /** Educational degree. */
     private String mDegree;
-    /**
-     * Primary school attended.
-     */
+    /** Primary school attended. */
     private School mPrimarySchool;
-    /**
-     * List of schools attended.
-     */
+    /** List of schools attended. */
     private List<School> mSchools;
-    /**
-     * List of qualifications.
-     */
+    /** List of qualifications. */
     private List<String> mQualifications;
 
-    /**
-     * Create a simple Educational Background object with empty fields.
-     */
+    /** Create a simple Educational Background object with empty fields. */
     public EducationalBackground() {
     }
 
     /**
-     * Create {@link EducationalBackground} from {@link Parcel}
+     * Create {@link EducationalBackground} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */

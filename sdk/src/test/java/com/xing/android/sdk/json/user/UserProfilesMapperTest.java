@@ -54,8 +54,7 @@ import static org.robolectric.annotation.Config.NONE;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = NONE
-)
+        manifest = NONE)
 public class UserProfilesMapperTest extends ParserUnitTestBase {
 
     private static final String LEGAL_INFO_JSON = "{\n" +
@@ -146,9 +145,7 @@ public class UserProfilesMapperTest extends ParserUnitTestBase {
         assertNotNull(json);
 
         // Get the map of users
-        Map<String, XingUser> users = UserProfilesMapper.parseUsersFromSearchByEmailRequest(
-                getReaderForJson(json)
-        );
+        Map<String, XingUser> users = UserProfilesMapper.parseUsersFromSearchByEmailRequest(getReaderForJson(json));
         assertNotNull(users);
         assertFalse(users.isEmpty());
         assertEquals(2, users.size());
@@ -165,9 +162,7 @@ public class UserProfilesMapperTest extends ParserUnitTestBase {
         assertNotNull(json);
 
         // Get the map of users
-        Map<String, XingUser> users = UserProfilesMapper.parseUsersFromSearchByEmailRequest(
-                getReaderForJson(json)
-        );
+        Map<String, XingUser> users = UserProfilesMapper.parseUsersFromSearchByEmailRequest(getReaderForJson(json));
         assertNotNull(users);
         assertFalse(users.isEmpty());
         assertEquals(2, users.size());

@@ -28,7 +28,7 @@ import com.xing.android.sdk.model.JsonEnum;
 
 /**
  * Possible languages.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages</a>
  */
@@ -57,9 +57,7 @@ public enum Language implements JsonEnum {
     AR("ar"),
     HE("he");
 
-    /**
-     * Language value received form the json
-     */
+    /** Language value received form the json. */
     private final String mName;
 
     Language(@NonNull final String name) {

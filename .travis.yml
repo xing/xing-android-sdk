@@ -10,9 +10,10 @@ android:
 
 jdk:
   - oraclejdk7
+  - oraclejdk8
 
 script:
-  - ./gradlew clean test --stacktrace
+  - ./gradlew clean check --stacktrace
 
 after_success:
   - .buildscript/deploy_snapshot.sh

@@ -20,7 +20,9 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.json.user;import android.util.JsonReader;
+package com.xing.android.sdk.json.user;
+
+import android.util.JsonReader;
 import android.util.JsonToken;
 
 import com.xing.android.sdk.model.user.ProfessionalExperience;
@@ -30,49 +32,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parser that provides methods to get the professional experience of a user
+ * Parser that provides methods to get the professional experience of a user.
  *
  * @author david.gonzalez
- * */
+ */
 @SuppressWarnings("unused")
 public final class ProfessionalExperienceMapper {
     /**
-     * Parses the Professional Experience of a user
+     * Parses the Professional Experience of a user.
      *
-     * @param reader  A JsonReader object that contains the educational background
+     * @param reader A JsonReader object that contains the educational background
      * @return The professional experience of a user
+     *
      * @throws IOException
      */
     public static ProfessionalExperience parseProfessionalExperience(JsonReader reader) throws IOException {
         ProfessionalExperience professionalexperience = new ProfessionalExperience();
         reader.beginObject();
-        while(reader.hasNext()) {
-            switch(reader.nextName()) {
-                case "primary_company":{
-                    if(reader.peek() == JsonToken.NULL) {
+        while (reader.hasNext()) {
+            switch (reader.nextName()) {
+                case "primary_company": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        professionalexperience.setPrimaryCompany(ExperienceCompanyMapper.parseExperienceCompany(reader));
+                        professionalexperience.setPrimaryCompany(
+                                ExperienceCompanyMapper.parseExperienceCompany(reader));
                     }
                     break;
                 }
-                case "companies":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "companies": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         professionalexperience.setCompanies(ExperienceCompanyMapper.parseExperienceCompanyList(reader));
                     }
                     break;
                 }
-                case "awards":{
-                    if(reader.peek() == JsonToken.NULL) {
+                case "awards": {
+                    if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
                         professionalexperience.setAwards(AwardMapper.parseAwardList(reader));
                     }
                     break;
                 }
-                default: reader.skipValue();
+                default:
+                    reader.skipValue();
             }
         }
         reader.endObject();
@@ -80,19 +85,24 @@ public final class ProfessionalExperienceMapper {
     }
 
     /**
-     * Gets a list of Professional experiences
+     * Gets a list of Professional experiences.
      *
-     * @param reader  A JsonReader object that contains the education backgrounds
+     * @param reader A JsonReader object that contains the education backgrounds
      * @return A list of ProfessionalExperience objects
+     *
      * @throws IOException
      */
-    public static List<ProfessionalExperience> parseProfessionalExperienceList (JsonReader reader) throws IOException {
+    public static List<ProfessionalExperience> parseProfessionalExperienceList(JsonReader reader) throws IOException {
         List<ProfessionalExperience> professionalExperienceList = new ArrayList<>(0);
         reader.beginArray();
-        while(reader.hasNext()) {
+        while (reader.hasNext()) {
             professionalExperienceList.add(parseProfessionalExperience(reader));
         }
         reader.endArray();
         return professionalExperienceList;
+    }
+
+    private ProfessionalExperienceMapper() {
+        throw new AssertionError("No instances.");
     }
 }

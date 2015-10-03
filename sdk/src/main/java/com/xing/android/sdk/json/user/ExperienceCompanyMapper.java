@@ -36,19 +36,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parser that Parses the ExperienceCompany object
+ * Parser that Parses the ExperienceCompany object.
  *
  * @author david.gonzalez
- * */
+ */
 @SuppressWarnings("unused")
 public final class ExperienceCompanyMapper {
     /**
-     * Parses the ExperienceCompany
+     * Parses the ExperienceCompany.
      *
      * @param reader The JsonReader object
      * @return A ExperienceCompany object
+     *
      * @throws IOException
-     * */
+     */
     public static ExperienceCompany parseExperienceCompany(JsonReader reader) throws IOException {
         ExperienceCompany experienceCompany = new ExperienceCompany();
         reader.beginObject();
@@ -146,6 +147,7 @@ public final class ExperienceCompanyMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
+                        //noinspection ConstantConditions
                         experienceCompany.setUrl(ParserUtils.stringToUri(reader.nextString()));
                     }
                     break;
@@ -188,12 +190,13 @@ public final class ExperienceCompanyMapper {
 
     /**
      * Parse the ExperienceCompany same as {@link ExperienceCompanyMapper#parseExperienceCompany(JsonReader)}
-     * but instead retuning a list
+     * but instead retuning a list.
      *
      * @param reader The JsonReader object
      * @return A list of ExperienceCompany objects
+     *
      * @throws IOException
-     * */
+     */
     public static List<ExperienceCompany> parseExperienceCompanyList(JsonReader reader) throws IOException {
         List<ExperienceCompany> experienceCompanyList = new ArrayList<>(0);
         reader.beginArray();
@@ -202,5 +205,9 @@ public final class ExperienceCompanyMapper {
         }
         reader.endArray();
         return experienceCompanyList;
+    }
+
+    private ExperienceCompanyMapper() {
+        throw new AssertionError("No instances.");
     }
 }

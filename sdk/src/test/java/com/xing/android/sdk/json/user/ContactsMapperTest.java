@@ -44,8 +44,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class ContactsMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_CONTACTS = "{\n" +
@@ -127,7 +126,6 @@ public class ContactsMapperTest extends ParserUnitTestBase {
             "    ]\n" +
             "  }\n" +
             '}';
-
 
     @Test
     public void parseContacts() throws Exception {

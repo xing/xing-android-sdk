@@ -21,7 +21,6 @@
  */
 package com.xing.android.sdk.task;
 
-
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -47,6 +46,21 @@ public class TaskManager {
         this.executor = executor;
         futures = new LinkedHashMap<>(CACHE_INITIAL_CAPACITY);
         runnables = new LinkedHashMap<>(CACHE_INITIAL_CAPACITY);
+    }
+
+    /**
+     * Cancels tasks even if they are been executed.
+     *
+     * @param tasks List of tasks to be cancelled.
+     */
+    static void cancelTasks(@NonNull List<Future> tasks) {
+        Future task;
+        for (int iterator = 0, numTasks = tasks.size(); iterator < numTasks; iterator++) {
+            task = tasks.get(iterator);
+            if (task != null) {
+                task.cancel(true);
+            }
+        }
     }
 
     public RunnableExecutor getExecutor() {
@@ -135,23 +149,7 @@ public class TaskManager {
                         }
                     });
                 }
-
             }
         }, this);
-    }
-
-    /**
-     * Cancels tasks even if they are been executed.
-     *
-     * @param tasks List of tasks to be cancelled.
-     */
-    static void cancelTasks(@NonNull List<Future> tasks) {
-        Future task;
-        for (int iterator = 0, numTasks = tasks.size(); iterator < numTasks; iterator++) {
-            task = tasks.get(iterator);
-            if (task != null) {
-                task.cancel(true);
-            }
-        }
     }
 }

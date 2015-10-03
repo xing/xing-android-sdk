@@ -25,6 +25,7 @@ package com.xing.android.sdk.json;
 /**
  * This class represents a json object field.
  * <p/>
+ *
  * @author serj.lotutovici
  */
 public abstract class Field {

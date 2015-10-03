@@ -41,26 +41,26 @@ public class UserIdCardTask extends Task<IdCard> {
     private final String mUserId;
 
     /**
-     * @param userId   The userId for which the IdCard should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userId The userId for which the IdCard should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public UserIdCardTask(@NonNull String userId,
-                          @NonNull Object tag,
-                          @NonNull OnTaskFinishedListener<IdCard> listener) {
+    public UserIdCardTask(@NonNull String userId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<IdCard> listener) {
         this(userId, tag, listener, null);
     }
 
     /**
-     * @param userId   The userId for which the IdCard should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userId The userId for which the IdCard should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public UserIdCardTask(@NonNull String userId,
-                          @NonNull Object tag,
-                          @NonNull OnTaskFinishedListener<IdCard> listener,
-                          @Nullable Priority priority) {
+    public UserIdCardTask(@NonNull String userId, @NonNull Object tag, @NonNull OnTaskFinishedListener<IdCard> listener,
+            @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
     }
@@ -69,9 +69,11 @@ public class UserIdCardTask extends Task<IdCard> {
      * Executes the {@link UserProfilesRequests#userIdCard(String)}  request and deserialize the result.
      *
      * @return IdCard of the userId received on the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public IdCard run() throws Exception {

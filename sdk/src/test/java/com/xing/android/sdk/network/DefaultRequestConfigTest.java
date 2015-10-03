@@ -43,8 +43,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class DefaultRequestConfigTest {
 
     @Test

@@ -29,6 +29,7 @@ import com.xing.android.sdk.model.XingCalendar;
 /**
  * Represents an profile visit.
  * <p/>
+ *
  * @author ciprian.ursu
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">Profile Visit</a>
  */

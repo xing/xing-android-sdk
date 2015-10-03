@@ -29,13 +29,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Default Url Factory that opens the {@link HttpURLConnection}
+ * Default Url Factory that opens the {@link HttpURLConnection}.
  *
  * @author serj.lotutovici
  */
 public class DefaultUrlFactory implements AbsUrlFactory {
-
-    /** {@link OkHttpClient} factory */
+    /** {@link OkHttpClient} factory. */
     private final OkUrlFactory mOkUrlFactory;
 
     public DefaultUrlFactory() {

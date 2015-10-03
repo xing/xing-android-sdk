@@ -34,30 +34,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.xing.android.sdk.model.user.ProfileVisit;
+import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.sample.adapters.VisitorsRecyclerAdapter;
 import com.xing.android.sdk.sample.utils.EndlessRecyclerOnScrollListener;
 import com.xing.android.sdk.sample.utils.RecyclerItemClickListener;
 import com.xing.android.sdk.sample.utils.RecyclerItemClickListener.OnItemClickListener;
-import com.xing.android.sdk.model.user.ProfileVisit;
-import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.task.OnTaskFinishedListener;
 import com.xing.android.sdk.task.profile_visits.VisitsTask;
 
 import java.util.List;
 
-public class VisitorsActivity extends BaseActivity implements
-        OnTaskFinishedListener<List<ProfileVisit>>, OnItemClickListener {
-
-    private VisitorsRecyclerAdapter adapter;
-
-    //Boolean to see if the load more functionality should be triggered
-    private boolean shouldLoadMore = true;
+public class VisitorsActivity extends BaseActivity implements OnTaskFinishedListener<List<ProfileVisit>>,
+        OnItemClickListener {
 
     //The amount of contacts that should be loaded at a time
     private static final int VISITS_BATCH_SIZE = 10;
-
     private static final String ME = "me";
-
+    private VisitorsRecyclerAdapter adapter;
+    //Boolean to see if the load more functionality should be triggered
+    private boolean shouldLoadMore = true;
     private VisitsTask mVisitsTask;
 
     @Override
@@ -89,8 +85,7 @@ public class VisitorsActivity extends BaseActivity implements
 
         //Adding the onScrollListener to the recyclerView
         // in order to get notified when the user reaches the end of the list
-        recyclerView.addOnScrollListener(
-                new EndlessRecyclerOnScrollListener(layoutManager) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
                     @Override
                     public void onLoadMore(int currentPage) {
                         loadMore();

@@ -42,8 +42,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class EducationalBackgroundMapperTest extends ParserUnitTestBase {
 
     private static final String TEST_BACKGROUND = "{\n" +
@@ -76,9 +75,8 @@ public class EducationalBackgroundMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parseEducationalBackground() throws Exception {
-        EducationalBackground background = EducationalBackgroundMapper.parseEducationalBackground(
-                getReaderForJson(TEST_BACKGROUND)
-        );
+        EducationalBackground background =
+                EducationalBackgroundMapper.parseEducationalBackground(getReaderForJson(TEST_BACKGROUND));
         assertNotNull(background);
         assertEquals(background.getDegree(), "MSc CE/CS");
 
@@ -99,13 +97,14 @@ public class EducationalBackgroundMapperTest extends ParserUnitTestBase {
 
     @Test
     public void parseEducationalBackgroundAndPassItThroughParcelFlow() throws Exception {
-        EducationalBackground background = EducationalBackgroundMapper.parseEducationalBackground(getReaderForJson(TEST_BACKGROUND));
+        EducationalBackground background =
+                EducationalBackgroundMapper.parseEducationalBackground(getReaderForJson(TEST_BACKGROUND));
         assertNotNull(background);
 
         // Create an object from parcel and compare with initial one
-        EducationalBackground backgroundFromParcel = createNewObjectViaParcelFlow(background, EducationalBackground.CREATOR);
+        EducationalBackground backgroundFromParcel =
+                createNewObjectViaParcelFlow(background, EducationalBackground.CREATOR);
         assertEquals(background.hashCode(), backgroundFromParcel.hashCode());
         assertEquals(background, backgroundFromParcel);
     }
-
 }

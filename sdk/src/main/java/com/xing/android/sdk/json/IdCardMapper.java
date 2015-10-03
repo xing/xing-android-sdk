@@ -32,19 +32,20 @@ import java.io.StringReader;
 import static com.xing.android.sdk.json.ParserUtils.isNextTokenNull;
 
 /**
- * Parses the response of the id card request into {@link IdCard}
+ * Parses the response of the id card request into {@link IdCard}.
  *
  * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/get/users/me/id_card">https://dev.xing.com/docs/get/users/me/id_card</a>
  */
 public final class IdCardMapper {
     /**
-     * Parses the IdCard returned by the {@link com.xing.android.sdk.task.user.UserIdCardTask}
+     * Parses the IdCard returned by the {@link com.xing.android.sdk.task.user.UserIdCardTask}.
      *
      * @param response The JSON String that will be parsed
      * @return An IdCard object for a user
+     *
      * @throws IOException
-     * */
+     */
     public static IdCard parseIdCard(String response) throws IOException {
         IdCard idCard = new IdCard();
         JsonReader reader = new JsonReader(new StringReader(response));
@@ -57,12 +58,13 @@ public final class IdCardMapper {
     }
 
     /**
-     * Parses the details from the IdCard JsonReader object
+     * Parses the details from the IdCard JsonReader object.
      *
      * @param reader The JsonReader object to be parsed
      * @return An IdCard object for a user
+     *
      * @throws IOException
-     * */
+     */
     public static IdCard parseIdCardJson(JsonReader reader) throws IOException {
         IdCard idCard = new IdCard();
         reader.beginObject();
@@ -106,5 +108,9 @@ public final class IdCardMapper {
         }
         reader.endObject();
         return idCard;
+    }
+
+    private IdCardMapper() {
+        throw new AssertionError("No instances.");
     }
 }

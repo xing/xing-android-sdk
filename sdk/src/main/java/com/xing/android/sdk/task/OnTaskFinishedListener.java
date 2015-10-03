@@ -25,7 +25,7 @@ package com.xing.android.sdk.task;
 import android.support.annotation.Nullable;
 
 public interface OnTaskFinishedListener<T> {
-    public void onSuccess(@Nullable T result);
+    void onSuccess(@Nullable T result);
 
-    public void onError(Exception exception);
+    void onError(Exception exception);
 }

@@ -33,18 +33,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This parser takes a JsonReader and gets the school information
+ * This parser takes a JsonReader and gets the school information.
  *
  * @author david.gonzalez
- * */
+ */
 public final class SchoolMapper {
     /**
-     * Extracts the detail information about a school
+     * Extracts the detail information about a school.
      *
      * @param reader A JsonReader object containing the detail information about a school
      * @return A School object
+     *
      * @throws IOException
-     * */
+     */
     public static School parseSchool(JsonReader reader) throws IOException {
         School school = new School();
         reader.beginObject();
@@ -115,11 +116,11 @@ public final class SchoolMapper {
     }
 
     /**
-     * Parses information about the schools
+     * Parses information about the schools.
      *
      * @param reader The JsonReader
      * @return A list of School objects
-     * */
+     */
     public static List<School> parseSchoolList(JsonReader reader) throws IOException {
         List<School> schoolList = new ArrayList<>(0);
         reader.beginArray();
@@ -128,5 +129,9 @@ public final class SchoolMapper {
         }
         reader.endArray();
         return schoolList;
+    }
+
+    private SchoolMapper() {
+        throw new AssertionError("No instances.");
     }
 }

@@ -32,19 +32,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parser that gets the Time Zone from a JsonReader
+ * Parser that gets the Time Zone from a JsonReader.
  *
  * @author david.gonzalez
- * */
+ */
 @SuppressWarnings("unused")
 public final class TimeZoneMapper {
     /**
-     * Extracts the TimeZone out of the JsonReader
+     * Extracts the TimeZone out of the JsonReader.
      *
      * @param reader The JsonReader containing the TimeZone
      * @return The TimeZone object
+     *
      * @throws IOException
-     * */
+     */
     public static TimeZone parseTimeZone(JsonReader reader) throws IOException {
         TimeZone timezone = new TimeZone();
         reader.beginObject();
@@ -75,12 +76,13 @@ public final class TimeZoneMapper {
     }
 
     /**
-     * Same as {@link TimeZoneMapper#parseTimeZone(JsonReader)} but for multiple TimeZones
+     * Same as {@link TimeZoneMapper#parseTimeZone(JsonReader)} but for multiple TimeZones.
      *
      * @param reader The JsonReader
      * @return A list with TimeZone objects
+     *
      * @throws IOException
-     * */
+     */
     public static List<TimeZone> parseTimeZoneList(JsonReader reader) throws IOException {
         List<TimeZone> timezoneList = new ArrayList<>(0);
         reader.beginArray();
@@ -89,5 +91,9 @@ public final class TimeZoneMapper {
         }
         reader.endArray();
         return timezoneList;
+    }
+
+    private TimeZoneMapper() {
+        throw new AssertionError("No instances.");
     }
 }

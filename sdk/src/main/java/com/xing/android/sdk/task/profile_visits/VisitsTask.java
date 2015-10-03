@@ -45,42 +45,34 @@ public class VisitsTask extends PaginatedWithOffsetTask<List<ProfileVisit>> {
     private final Boolean mStripHtml;
 
     /**
-     * @param userId    Id of the visited user.
-     * @param limit     Restrict the number of attachments to be returned. This must be a positive number. Default: 10
-     * @param offset    Offset. This must be a positive number. Default: 0
-     * @param since     Only returns visits more recent than the specified time stamp (ISO 8601).
+     * @param userId Id of the visited user.
+     * @param limit Restrict the number of attachments to be returned. This must be a positive number. Default: 10
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param since Only returns visits more recent than the specified time stamp (ISO 8601).
      * @param stripHtml Specifies whether the profile visit reason should be stripped of HTML (true) or not (false).
-     * @param tag       Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener  Future object to allow cancel the task if necessary.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Future object to allow cancel the task if necessary.
      */
-    public VisitsTask(@NonNull String userId,
-                      @Nullable Integer limit,
-                      @Nullable Integer offset,
-                      @Nullable XingCalendar since,
-                      @Nullable Boolean stripHtml,
-                      @NonNull Object tag,
-                      @NonNull OnTaskFinishedListener<List<ProfileVisit>> listener) {
+    public VisitsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable XingCalendar since, @Nullable Boolean stripHtml, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<ProfileVisit>> listener) {
         this(userId, limit, offset, since, stripHtml, tag, listener, null);
     }
 
     /**
-     * @param userId    Id of the visited user.
-     * @param limit     Restrict the number of attachments to be returned. This must be a positive number. Default: 10
-     * @param offset    Offset. This must be a positive number. Default: 0
-     * @param since     Only returns visits more recent than the specified time stamp (ISO 8601).
+     * @param userId Id of the visited user.
+     * @param limit Restrict the number of attachments to be returned. This must be a positive number. Default: 10
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param since Only returns visits more recent than the specified time stamp (ISO 8601).
      * @param stripHtml Specifies whether the profile visit reason should be stripped of HTML (true) or not (false).
-     * @param tag       Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener  Future object to allow cancel the task if necessary.
-     * @param priority  Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Future object to allow cancel the task if necessary.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public VisitsTask(@NonNull String userId,
-                      @Nullable Integer limit,
-                      @Nullable Integer offset,
-                      @Nullable XingCalendar since,
-                      @Nullable Boolean stripHtml,
-                      @NonNull Object tag,
-                      @NonNull OnTaskFinishedListener<List<ProfileVisit>> listener,
-                      @Nullable Priority priority) {
+    public VisitsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable XingCalendar since, @Nullable Boolean stripHtml, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<ProfileVisit>> listener, @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mSince = since;
@@ -92,14 +84,15 @@ public class VisitsTask extends PaginatedWithOffsetTask<List<ProfileVisit>> {
      * on the constructor.
      *
      * @return List of visits to the profile of the user with the id received as parameter.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<ProfileVisit> run() throws Exception {
-        String response = ProfileVisitsRequests.visits(mUserId, mLimit, mOffset,
-                mSince, mStripHtml);
+        String response = ProfileVisitsRequests.visits(mUserId, mLimit, mOffset, mSince, mStripHtml);
 
         return ProfileVisitMapper.parseDetailsResponse(response);
     }

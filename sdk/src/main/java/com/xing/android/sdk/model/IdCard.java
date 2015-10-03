@@ -27,6 +27,7 @@ import com.xing.android.sdk.model.user.XingPhotoUrls;
 /**
  * Representation of a users id card.
  * <p/>
+ *
  * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/get/users/me/id_card">Get your id card</a>
  */

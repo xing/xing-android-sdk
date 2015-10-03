@@ -26,9 +26,7 @@ import android.support.annotation.Nullable;
 import android.util.JsonReader;
 
 import com.xing.android.sdk.json.ParserUtils;
-import com.xing.android.sdk.model.XingCalendar;
 import com.xing.android.sdk.model.user.XingUser;
-import com.xing.android.sdk.network.request.ContactsRequests;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -38,11 +36,13 @@ import java.util.List;
 import static com.xing.android.sdk.json.ParserUtils.isNextTokenNull;
 
 /**
- * This parser takes the JSON response returned by the ContactsRequest
- * and returns a list of XingUser objects, namely the user's contacts
+ * This parser takes the JSON response returned by the {@linkplain com.xing.android.sdk.network.request
+ * .ContactsRequests} and returns a list of {@linkplain com.xing.android.sdk.model.user.XingUser} objects, namely the
+ * user's
+ * contacts.
  *
  * @author declan.mccormack
- * @see ContactsRequests#contacts
+ * @see {@linkplain com.xing.android.sdk.network.request.ContactsRequests#contacts)
  */
 public final class ContactsMapper {
     private static final String KEY_CONTACTS = "contacts";
@@ -53,11 +53,13 @@ public final class ContactsMapper {
     private static final String KEY_TAG = "tag";
 
     /**
-     * Parse the json string from 'v1/contacts request'
-     * For more information see {@link ContactsRequests#contacts(String, XingCalendar, Integer, Integer, String, List)}
+     * Parse the json string from 'v1/contacts request'.
+     * For more information see {@linkplain com.xing.android.sdk.network.request.ContactsRequests#contacts(String,
+     * com.xing.android.sdk.model.XingCalendar, Integer, Integer, String, List)}.
      *
      * @param json The json that was returned by the request
      * @return A list of received users
+     *
      * @throws IOException
      */
     @Nullable
@@ -66,11 +68,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse the json string from 'v1/contact_ids request'
-     * For more information see {@link com.xing.android.sdk.task.contact.IdsTask}
+     * Parse the json string from 'v1/contact_ids request'.
+     * For more information see {@linkplain com.xing.android.sdk.task.contact.IdsTask}.
      *
      * @param json The json that was returned by the request
      * @return A list with all contact ids
+     *
      * @throws IOException
      */
     @Nullable
@@ -92,11 +95,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse the assigned tags json returned by the Assigned Tags request
-     * For more information see {@link com.xing.android.sdk.task.contact.AssignedTagsTask}
+     * Parse the assigned tags json returned by the Assigned Tags request.
+     * For more information see {@linkplain com.xing.android.sdk.task.contact.AssignedTagsTask}.
      *
      * @param json The json that was returned by the request
      * @return A list of tags
+     *
      * @throws IOException
      */
     @Nullable
@@ -120,11 +124,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse the shared contactsjson returned by the v1/shared_contacts request
-     * For more information see {@link com.xing.android.sdk.task.contact.AssignedTagsTask}
+     * Parse the shared contacts json returned by the v1/shared_contacts request.
+     * For more information see {@linkplain com.xing.android.sdk.task.contact.AssignedTagsTask}.
      *
      * @param json The json with shared contacts that was returned by the request
      * @return A list of XingUser objects
+     *
      * @throws IOException
      */
     @Nullable
@@ -133,12 +138,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Helper method that does the actual parsing for the
-     * parseSharedContacts and parseContactsFromRequest methods
-     * For more information see {@link ContactsMapper#parseContactsFromRequest(String)}
+     * Helper method that does the actual parsing for the parseSharedContacts and parseContactsFromRequest methods.
+     * For more information see {@linkplain com.xing.android.sdk.json.user.ContactsMapper#parseContactsFromRequest
+     * (String)}.
      *
      * @param json The JSON request response that needs to be parsed
-     * @param key  The key to identify what should be parsed (Contacts or SharedContacts)
+     * @param key The key to identify what should be parsed (Contacts or SharedContacts)
      * @return A list of XingUser objects
      */
     @Nullable
@@ -162,11 +167,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse Contact Ids
+     * Parse Contact Ids.
      *
      * @param reader The JsonReader object containing the json with contact ids
      * @return A list of String objects containing the contact ids
-     * @see ContactsMapper#parseContactIds(String)
+     *
+     * @see com.xing.android.sdk.json.user.ContactsMapper#parseContactIds(String)
      */
     @Nullable
     private static List<String> parseContactIdsItems(JsonReader reader) throws IOException {
@@ -188,11 +194,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse assigned tags
+     * Parse assigned tags.
      *
      * @param reader The JsonReader object containing the json with assigned tags
      * @return A list of String objects containing the parsed assigned tags
-     * @see ContactsMapper#parseAssignedTags(String)
+     *
+     * @see {@linkplain com.xing.android.sdk.json.user.ContactsMapper#parseAssignedTags(String)}
      */
     @Nullable
     private static List<String> parseAssignedTagsItems(JsonReader reader) throws IOException {
@@ -214,11 +221,12 @@ public final class ContactsMapper {
     }
 
     /**
-     * Parse assigned tags helper
+     * Parse assigned tags helper.
      *
      * @param reader The JsonReader object containing the json with assigned tags
      * @return A list of String objects containing the parsed assigned tags
-     * @see ContactsMapper#parseAssignedTagsItems(JsonReader)
+     *
+     * @see {@linkplain com.xing.android.sdk.json.user.ContactsMapper#parseAssignedTagsItems(JsonReader)}
      */
     @Nullable
     private static List<String> parseAssignedTagsItemsTag(JsonReader reader) throws IOException {
@@ -241,5 +249,9 @@ public final class ContactsMapper {
         }
         reader.endArray();
         return response;
+    }
+
+    private ContactsMapper() {
+        throw new AssertionError("No instances.");
     }
 }

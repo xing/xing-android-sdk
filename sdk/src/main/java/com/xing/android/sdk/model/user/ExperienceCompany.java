@@ -42,12 +42,12 @@ import java.security.InvalidParameterException;
  */
 @SuppressWarnings("unused") // Public api
 public class ExperienceCompany implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -3976504576025888701L;
-
-    /**
-     * Creator object for the Parcelable contract
-     */
+    private static final int DESCRIPTION_LIMIT = 512;
+    private static final int NAME_LIMIT = 80;
+    private static final int TITLE_LIMIT = 80;
+    private static final int URL_LIMIT = 128;
+    /** Creator object for the Parcelable contract. */
     public static final Creator<ExperienceCompany> CREATOR = new Creator<ExperienceCompany>() {
         @Override
         public ExperienceCompany createFromParcel(Parcel source) {
@@ -60,63 +60,32 @@ public class ExperienceCompany implements Serializable, Parcelable {
         }
     };
 
-    private static final int DESCRIPTION_LIMIT = 512;
-    private static final int NAME_LIMIT = 80;
-    private static final int TITLE_LIMIT = 80;
-    private static final int URL_LIMIT = 128;
-
-    /**
-     * Company id.
-     */
+    /** Company id. */
     private String mId;
-    /**
-     * Career level.
-     */
+    /** Career level. */
     private CareerLevel mCareerLevel;
-    /**
-     * Company size.
-     */
+    /** Company size. */
     private CompanySize mCompanySize;
-    /**
-     * Company description.
-     */
+    /** Company description. */
     private String mDescription;
-    /**
-     * Employee status.
-     */
+    /** Employee status. */
     private FormOfEmployment mFormOfEmployment;
-    /**
-     * Industry of company.
-     */
+    /** Industry of company. */
     private Industry mIndustry;
-    /**
-     * Name of company.
-     */
+    /** Name of company. */
     private String mName;
-    /**
-     * Job title at company.
-     */
+    /** Job title at company. */
     private String mTitle;
-    /**
-     * Tags.
-     */
+    /** Tags. */
     private String mTag;
-    /**
-     * Currently working at company.
-     */
+    /** Currently working at company. */
     private boolean mUntilNow;
-    /**
-     * Company URL.
-     */
+    /** Company URL. */
     private Uri mUrl;
-    /**
-     * Begin date of employment.
-     */
+    /** Begin date of employment. */
     @Nullable
     private XingCalendar mBeginDate;
-    /**
-     * End date of employment.
-     */
+    /** End date of employment. */
     @Nullable
     private XingCalendar mEndDate;
 
@@ -124,7 +93,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
     }
 
     /**
-     * Create {@link ExperienceCompany} from {@link Parcel}
+     * Create {@link ExperienceCompany} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
@@ -151,11 +120,9 @@ public class ExperienceCompany implements Serializable, Parcelable {
         mTag = in.readString();
     }
 
-    /** Throw an exception with explicit message */
+    /** Throw an exception with explicit message. */
     private static void throwArgumentToLong(Object arg, int limit) {
-        throw new IllegalArgumentException(
-                String.format("%s too long. %d characters is the maximum.", arg, limit)
-        );
+        throw new IllegalArgumentException(String.format("%s too long. %d characters is the maximum.", arg, limit));
     }
 
     @Override
@@ -222,7 +189,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
     }
 
     /**
-     * Set id
+     * Set id.
      *
      * @param id id
      */
@@ -257,6 +224,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
     public CareerLevel getCareerLevel() {
         return mCareerLevel;
     }
+
     /**
      * Set career level.
      *
@@ -417,6 +385,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
 
     /**
      * Set job title.
+     *
      * @param title job title.
      */
     public void setTitle(String title) {
@@ -455,7 +424,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
     }
 
     /**
-     * Set company URL
+     * Set company URL.
      *
      * @param url company URL.
      */
@@ -474,12 +443,9 @@ public class ExperienceCompany implements Serializable, Parcelable {
      */
     public boolean isFilledForAddCompany() {
         boolean filled = true;
-
-        if (TextUtils.isEmpty(mName) || TextUtils.isEmpty(mTitle) || mIndustry == null ||
-                mFormOfEmployment == null) {
+        if (TextUtils.isEmpty(mName) || TextUtils.isEmpty(mTitle) || mIndustry == null || mFormOfEmployment == null) {
             filled = false;
         }
-
         return filled;
     }
 

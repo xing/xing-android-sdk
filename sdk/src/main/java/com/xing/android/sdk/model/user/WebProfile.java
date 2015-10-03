@@ -28,7 +28,7 @@ import com.xing.android.sdk.model.JsonEnum;
 
 /**
  * List of possible external web profiles.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/web_profiles/:profile">Web Profile</a>
  */
@@ -67,9 +67,7 @@ public enum WebProfile implements JsonEnum {
     YOUTUBE("youtube"),
     ZOOMINFO("zoominfo");
 
-    /**
-     * Name value that is received form the json response
-     */
+    /** Name value that is received form the json response. */
     private final String mName;
 
     WebProfile(@NonNull final String name) {

@@ -30,31 +30,24 @@ import com.xing.android.sdk.network.oauth.OauthSigner;
 import java.util.List;
 
 /**
- * Defines an adapter that provides required values for the request execution
+ * Defines an adapter that provides required values for the request execution.
  *
  * @author david.gonzalez
  */
 public interface RequestConfig {
-
-    /**
-     * Get base headers for the request
-     */
+    /** Get base headers for the request. */
     List<Pair<String, String>> getCommonHeaders();
 
-    /**
-     * Get request base uri
-     */
+    /** Get request base uri. */
     Uri getBaseUri();
 
-    /**
-     * Get {@link OauthSigner} instance
-     */
+    /** Get {@link OauthSigner} instance. */
     OauthSigner getOauthSigner();
 
     /**
      * Get params to be added on all the requests.
+     *
      * @return List of params in key-value pair format.
      */
     List<Pair<String, String>> getCommonParams();
-
 }

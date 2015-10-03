@@ -28,17 +28,17 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion project.ext.COMPILE_SDK_VERSION
-    buildToolsVersion project.ext.BUILD_TOOLS_VERSION
+    compileSdkVersion versions.COMPILE_SDK_VERSION
+    buildToolsVersion versions.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId project.ext.GROUP_ID + ".sample"
+        applicationId GROUP_ID + ".sample"
 
-        minSdkVersion project.ext.MIN_SDK_VERSION
-        targetSdkVersion project.ext.TARGET_SDK_VERSION
+        minSdkVersion versions.MIN_SDK_VERSION
+        targetSdkVersion versions.TARGET_SDK_VERSION
 
-        versionCode project.ext.VERSION_CODE
-        versionName project.ext.VERSION
+        versionCode = VERSION_CODE
+        versionName = VERSION
 
         /**
          * === KEYS ===
@@ -56,6 +56,11 @@ android {
         release {
             minifyEnabled false
         }
+    }
+
+    lintOptions {
+        abortOnError true
+        disable 'InvalidPackage'
     }
 
     packagingOptions {
@@ -76,10 +81,10 @@ android {
 dependencies {
     compile project(':sdk')
 
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:design:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile libraries.supportV4
+    compile libraries.supportAppCompat
+    compile libraries.supportDesign
+    compile libraries.supportCardView
+    compile libraries.supportRecyclerView
+    compile libraries.glide
 }

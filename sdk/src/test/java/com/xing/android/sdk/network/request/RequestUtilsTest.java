@@ -50,16 +50,12 @@ import static org.junit.Assert.fail;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class RequestUtilsTest {
 
     @Test
     public void appendParamsToBuilder() throws Exception {
-        Uri uriBase = new Uri.Builder()
-                .scheme("test")
-                .authority("test")
-                .build();
+        Uri uriBase = new Uri.Builder().scheme("test").authority("test").build();
 
         Uri.Builder builder = uriBase.buildUpon();
 
@@ -122,10 +118,7 @@ public class RequestUtilsTest {
         // Assert that null will be returned
         assertNull(RequestUtils.appendSegmentToUri(null, null));
 
-        Uri referenceUri = new Uri.Builder()
-                .scheme("test")
-                .authority("test")
-                .build();
+        Uri referenceUri = new Uri.Builder().scheme("test").authority("test").build();
 
         // Assert that uri wont be altered
         Uri uri = RequestUtils.appendSegmentToUri(referenceUri, null);
@@ -143,9 +136,7 @@ public class RequestUtilsTest {
         assertEquals("", RequestUtils.createCommaSeparatedStringFromStringList(Collections.<String>emptyList()));
 
         // Create example list
-        List<String> list = Arrays.asList(
-                "", "test", null, "test2", "test3"
-        );
+        List<String> list = Arrays.asList("", "test", null, "test2", "test3");
 
         // Assert we get a string formed only from non null strings
         String result = RequestUtils.createCommaSeparatedStringFromStringList(list);

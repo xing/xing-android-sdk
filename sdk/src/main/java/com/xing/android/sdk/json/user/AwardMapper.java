@@ -38,11 +38,12 @@ import java.util.List;
  */
 public final class AwardMapper {
     /**
-     *  Parser method to extract the single awards from a list of awards
+     * Parser method to extract the single awards from a list of awards.
      *
      * @param reader A JsonReaderObject containing only one object
      * @return An Award object
-     * #*/
+     * #
+     */
     public static Award parseAward(JsonReader reader) throws IOException {
         Award award = new Award();
         reader.beginObject();
@@ -81,11 +82,11 @@ public final class AwardMapper {
     }
 
     /**
-     * Parse a list of awards
+     * Parse a list of awards.
      *
      * @param reader A JsonReader object containing a list of awards
      * @return A list of Award objects
-     * */
+     */
     public static List<Award> parseAwardList(JsonReader reader) throws IOException {
         List<Award> awardList = new ArrayList<>(0);
         reader.beginArray();
@@ -94,5 +95,9 @@ public final class AwardMapper {
         }
         reader.endArray();
         return awardList;
+    }
+
+    private AwardMapper() {
+        throw new AssertionError("No instances.");
     }
 }

@@ -40,7 +40,8 @@ import java.util.List;
  * Requests for the profile visits section.
  *
  * @author david.gonzalez
- * @see <a href="https://dev.xing.com/docs/resources#profile-visits">https://dev.xing.com/docs/resources#profile-visits</a>
+ * @see <a href="https://dev.xing.com/docs/resources#profile-visits">https://dev.xing
+ * .com/docs/resources#profile-visits</a>
  */
 public final class ProfileVisitsRequests {
 
@@ -58,43 +59,37 @@ public final class ProfileVisitsRequests {
     /**
      * Creates and executes the visits request.
      *
-     * @param userId    Id of the user whose profile visits are to be returned.
-     * @param limit     Maximum number of responses.
-     * @param offset    Offset for the results. With an offset of 10, the results will start on the eleventh.
-     * @param since     Only returns visits more recent than the specified date.
+     * @param userId Id of the user whose profile visits are to be returned.
+     * @param limit Maximum number of responses.
+     * @param offset Offset for the results. With an offset of 10, the results will start on the eleventh.
+     * @param since Only returns visits more recent than the specified date.
      * @param stripHtml Specifies whether the profile visit reason should be stripped of HTML (true) or not (false).
      * @return Result of the execution of the request, in Json format.
-     * @throws NetworkException               Error produced during the network connection.
+     *
+     * @throws NetworkException Error produced during the network connection.
      * @throws OauthSigner.XingOauthException Error because of an Oauth problem.
-     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">https://dev.xing.com/docs/get/users/:user_id/visits</a>
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">https://dev.xing
+     * .com/docs/get/users/:user_id/visits</a>
      */
-    public static String visits(@NonNull String userId,
-                                @Nullable Integer limit,
-                                @Nullable Integer offset,
-                                @Nullable XingCalendar since,
-                                @Nullable Boolean stripHtml)
+    public static String visits(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable XingCalendar since, @Nullable Boolean stripHtml)
             throws NetworkException, OauthSigner.XingOauthException {
-        return XingController.getInstance().execute(buildVisitsRequest(userId, limit, offset,
-                since, stripHtml));
+        return XingController.getInstance().execute(buildVisitsRequest(userId, limit, offset, since, stripHtml));
     }
 
     /**
      * Creates the visits request.
      *
-     * @param userId    Id of the user whose profile visits are to be returned.
-     * @param limit     Maximum number of responses.
-     * @param offset    Offset for the results. With an offset of 10, the results will start on the eleventh.
-     * @param since     Only returns visits more recent than the specified date.
+     * @param userId Id of the user whose profile visits are to be returned.
+     * @param limit Maximum number of responses.
+     * @param offset Offset for the results. With an offset of 10, the results will start on the eleventh.
+     * @param since Only returns visits more recent than the specified date.
      * @param stripHtml Specifies whether the profile visit reason should be stripped of HTML (true) or not (false).
      * @return Request object ready to be executed.
      */
-    public static Request buildVisitsRequest(@NonNull String userId,
-                                             @Nullable Integer limit,
-                                             @Nullable Integer offset,
-                                             @Nullable XingCalendar since,
-                                             @Nullable Boolean stripHtml) {
-        return new Request.Builder(Request.Method.GET)
-                .setUri(Uri.parse(VISITS_RESOURCE.format(new String[]{userId})))
+    public static Request buildVisitsRequest(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable XingCalendar since, @Nullable Boolean stripHtml) {
+        return new Request.Builder(Request.Method.GET).setUri(Uri.parse(VISITS_RESOURCE.format(new String[]{userId})))
                 .addParams(buildVisitsParams(limit, offset, since, stripHtml))
                 .build();
     }
@@ -102,16 +97,14 @@ public final class ProfileVisitsRequests {
     /**
      * Creates the list of params for the recommendations request.
      *
-     * @param limit     Maximum number of responses.
-     * @param offset    Offset for the results. With an offset of 10, the results will start on the eleventh.
-     * @param since     Only returns visits more recent than the specified date.
+     * @param limit Maximum number of responses.
+     * @param offset Offset for the results. With an offset of 10, the results will start on the eleventh.
+     * @param since Only returns visits more recent than the specified date.
      * @param stripHtml Specifies whether the profile visit reason should be stripped of HTML (true) or not (false).
      * @return List with the params for the visits request, as name-value pair.
      */
-    public static List<Pair<String, String>> buildVisitsParams(@Nullable Integer limit,
-                                                               @Nullable Integer offset,
-                                                               @Nullable XingCalendar since,
-                                                               @Nullable Boolean stripHtml) {
+    public static List<Pair<String, String>> buildVisitsParams(@Nullable Integer limit, @Nullable Integer offset,
+            @Nullable XingCalendar since, @Nullable Boolean stripHtml) {
         List<Pair<String, String>> params = new ArrayList<>(4);
 
         if (limit != null && limit > 0) {
@@ -135,12 +128,13 @@ public final class ProfileVisitsRequests {
      *
      * @param userId Id of the visited user.
      * @return Result of the execution of the request, in Json format.
-     * @throws NetworkException               Error produced during the network connection.
+     *
+     * @throws NetworkException Error produced during the network connection.
      * @throws OauthSigner.XingOauthException Error because of an Oauth problem.
-     * @see <a href="https://dev.xing.com/docs/post/users/:user_id/visits">https://dev.xing.com/docs/post/users/:user_id/visits</a>
+     * @see <a href="https://dev.xing.com/docs/post/users/:user_id/visits">https://dev.xing
+     * .com/docs/post/users/:user_id/visits</a>
      */
-    public static String createVisit(@NonNull String userId)
-            throws NetworkException, OauthSigner.XingOauthException {
+    public static String createVisit(@NonNull String userId) throws NetworkException, OauthSigner.XingOauthException {
         return XingController.getInstance().execute(buildCreateVisitRequest(userId));
     }
 
@@ -151,8 +145,7 @@ public final class ProfileVisitsRequests {
      * @return Request object ready to be executed.
      */
     public static Request buildCreateVisitRequest(@NonNull String userId) {
-        return new Request.Builder(Request.Method.POST)
-                .setUri(Uri.parse(VISITS_RESOURCE.format(new Object[]{userId})))
+        return new Request.Builder(Request.Method.POST).setUri(Uri.parse(VISITS_RESOURCE.format(new Object[]{userId})))
                 .build();
     }
 }

@@ -34,18 +34,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parser that gets the XingAddress from a JsonReader
+ * Parser that gets the XingAddress from a JsonReader.
  *
  * @author david.gonzalez
  */
 public final class XingAddressMapper {
-    private final static String TAG = "XingAddressMapper";
+    private static final String TAG = "XingAddressMapper";
 
     /**
-     * Extracts the XingAddress out of the JsonReader
+     * Extracts the XingAddress out of the JsonReader.
      *
      * @param reader The JsonReader containing the TimeZone
      * @return The XingAddress object
+     *
      * @throws IOException
      */
     public static XingAddress parseXingAddress(JsonReader reader) throws IOException {
@@ -149,10 +150,11 @@ public final class XingAddressMapper {
     }
 
     /**
-     * Same as {@link XingAddressMapper#parseXingAddress(JsonReader)} but for multiple XingAddresses
+     * Same as {@link XingAddressMapper#parseXingAddress(JsonReader)} but for multiple XingAddresses.
      *
      * @param reader The JsonReader
      * @return A list with TimeZone objects
+     *
      * @throws IOException
      */
     public static List<XingAddress> parseXingAddressList(JsonReader reader) throws IOException {
@@ -163,5 +165,9 @@ public final class XingAddressMapper {
         }
         reader.endArray();
         return xingAddressList;
+    }
+
+    private XingAddressMapper() {
+        throw new AssertionError("No instances.");
     }
 }

@@ -49,46 +49,39 @@ public class ContactsTask extends PaginatedWithOffsetTask<List<XingUser>> {
     private final List<XingUserField> mFields;
 
     /**
-     * @param userId       ID of the user who assigned the tags.
+     * @param userId ID of the user who assigned the tags.
      * @param changedSince Filter contacts that changed since the specified date
-     * @param limit        Restrict the number of attachments to be returned. Default: 10.
-     * @param offset       Offset. This must be a positive number. Default: 0
-     * @param orderBy      Field that determines the ascending order of the returned list
-     * @param fields       List of user attributes to return
-     * @param tag          Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener     Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param limit Restrict the number of attachments to be returned. Default: 10.
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param orderBy Field that determines the ascending order of the returned list
+     * @param fields List of user attributes to return
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public ContactsTask(@NonNull String userId,
-                        @Nullable XingCalendar changedSince,
-                        @Nullable Integer limit,
-                        @Nullable Integer offset,
-                        @Nullable String orderBy,
-                        @Nullable List<XingUserField> fields,
-                        @NonNull Object tag,
-                        @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
+    public ContactsTask(@NonNull String userId, @Nullable XingCalendar changedSince, @Nullable Integer limit,
+            @Nullable Integer offset, @Nullable String orderBy, @Nullable List<XingUserField> fields,
+            @NonNull Object tag, @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
         this(userId, changedSince, limit, offset, orderBy, fields, tag, listener, null);
     }
 
     /**
-     * @param userId       ID of the user who assigned the tags.
+     * @param userId ID of the user who assigned the tags.
      * @param changedSince Filter contacts that changed since the specified date
-     * @param limit        Restrict the number of attachments to be returned. Default: 10.
-     * @param offset       Offset. This must be a positive number. Default: 0
-     * @param orderBy      Field that determines the ascending order of the returned list
-     * @param fields       List of user attributes to return
-     * @param tag          Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener     Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority     Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param limit Restrict the number of attachments to be returned. Default: 10.
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param orderBy Field that determines the ascending order of the returned list
+     * @param fields List of user attributes to return
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public ContactsTask(@NonNull String userId,
-                        @Nullable XingCalendar changedSince,
-                        @Nullable Integer limit,
-                        @Nullable Integer offset,
-                        @Nullable String orderBy,
-                        @Nullable List<XingUserField> fields,
-                        @NonNull Object tag,
-                        @NonNull OnTaskFinishedListener<List<XingUser>> listener,
-                        @Nullable Priority priority) {
+    public ContactsTask(@NonNull String userId, @Nullable XingCalendar changedSince, @Nullable Integer limit,
+            @Nullable Integer offset, @Nullable String orderBy, @Nullable List<XingUserField> fields,
+            @NonNull Object tag, @NonNull OnTaskFinishedListener<List<XingUser>> listener,
+            @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mChangedSince = changedSince;
@@ -97,17 +90,19 @@ public class ContactsTask extends PaginatedWithOffsetTask<List<XingUser>> {
     }
 
     /**
-     * Executes the {@link ContactsRequests#contacts(String, XingCalendar, Integer, Integer, String, List)} request and deserialize the result.
+     * Executes the {@link ContactsRequests#contacts(String, XingCalendar, Integer, Integer, String, List)} request and
+     * deserialize the result.
      *
      * @return List of the contacts.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<XingUser> run() throws Exception {
-        String response = ContactsRequests.contacts(mUserId, mChangedSince, mLimit,
-                mOffset, mOrderBy, mFields);
+        String response = ContactsRequests.contacts(mUserId, mChangedSince, mLimit, mOffset, mOrderBy, mFields);
         return ContactsMapper.parseContactsFromRequest(response);
     }
 }

@@ -27,18 +27,19 @@ import com.xing.android.sdk.json.Field;
 /**
  * Possible instant messaging accounts.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/me">Instant Messaging Accounts</a>
  */
 @SuppressWarnings("unused")
 public class MessagingAccountField extends Field {
-    public static MessagingAccountField SKYPE = new MessagingAccountField("skype");
-    public static MessagingAccountField ICQ = new MessagingAccountField("icq");
-    public static MessagingAccountField MSN = new MessagingAccountField("msn");
-    public static MessagingAccountField YAHOO = new MessagingAccountField("yahoo");
-    public static MessagingAccountField AIM = new MessagingAccountField("aim");
-    public static MessagingAccountField JABBER = new MessagingAccountField("jabber");
-    public static MessagingAccountField GOOGLE_TALK = new MessagingAccountField("googletalk");
+    public static final MessagingAccountField SKYPE = new MessagingAccountField("skype");
+    public static final MessagingAccountField ICQ = new MessagingAccountField("icq");
+    public static final MessagingAccountField MSN = new MessagingAccountField("msn");
+    public static final MessagingAccountField YAHOO = new MessagingAccountField("yahoo");
+    public static final MessagingAccountField AIM = new MessagingAccountField("aim");
+    public static final MessagingAccountField JABBER = new MessagingAccountField("jabber");
+    public static final MessagingAccountField GOOGLE_TALK = new MessagingAccountField("googletalk");
 
     private MessagingAccountField(String name) {
         super(name);

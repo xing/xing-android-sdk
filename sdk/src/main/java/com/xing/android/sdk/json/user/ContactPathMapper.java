@@ -39,20 +39,18 @@ public final class ContactPathMapper {
     private static final String CONTACT_PATHS_KEY = "contact_paths";
 
     /**
-     * Deserialize list of users form json
+     * Deserialize list of users form json.
      *
      * @param json The json to deserialize
      * @return A list of {@link XingUser}'s parsed form the json, otherwise null
+     *
      * @throws IOException
      */
     @Nullable
     public static List<List<XingUser>> deserializePaths(@NonNull String json) throws IOException {
         List<List<XingUser>> result = null;
-
         JsonReader jsonReader = new JsonReader(new StringReader(json));
-
         jsonReader.beginObject();
-
         while (jsonReader.hasNext()) {
             switch (jsonReader.nextName()) {
                 case CONTACT_PATHS_KEY: {
@@ -64,23 +62,21 @@ public final class ContactPathMapper {
                 }
             }
         }
-
         jsonReader.endObject();
-
         return result;
     }
 
     /**
-     * Deserializes the contact paths key
+     * Deserialize the contact paths key.
      *
      * @param jsonReader A JsonReader object to be parsed
      * @return A list of XingUser objects lists
+     *
      * @throws IOException
-     * */
+     */
     @Nullable
     private static List<List<XingUser>> deserializeContactPathsKey(JsonReader jsonReader) throws IOException {
         List<List<XingUser>> result = null;
-
         jsonReader.beginObject();
         while (jsonReader.hasNext()) {
             switch (jsonReader.nextName()) {
@@ -94,21 +90,20 @@ public final class ContactPathMapper {
             }
         }
         jsonReader.endObject();
-
         return result;
     }
 
     /**
-     * Deserializes the paths key
+     * Deserialize the paths key.
      *
      * @param jsonReader A JsonReader object to be parsed
      * @return A list of XingUser objects lists
+     *
      * @throws IOException
-     * */
+     */
     private static List<List<XingUser>> deserializePathsKey(JsonReader jsonReader) throws IOException {
         List<List<XingUser>> result = new ArrayList<>(0);
         jsonReader.beginArray();
-
         while (jsonReader.hasNext()) {
             jsonReader.beginObject();
 
@@ -122,9 +117,11 @@ public final class ContactPathMapper {
             }
             jsonReader.endObject();
         }
-
         jsonReader.endArray();
-
         return result;
+    }
+
+    private ContactPathMapper() {
+        throw new AssertionError("No instances.");
     }
 }

@@ -31,17 +31,13 @@ import java.util.List;
 
 /**
  * Represents a users professional experience.
- * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/me">Professional Experience</a>
  */
 public class ProfessionalExperience implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 5863766233252368533L;
-
-    /**
-     * Creator object for Parcelable contract
-     */
+    /** Creator object for Parcelable contract. */
     public static final Creator<ProfessionalExperience> CREATOR = new Creator<ProfessionalExperience>() {
         @Override
         public ProfessionalExperience createFromParcel(Parcel source) {
@@ -54,27 +50,19 @@ public class ProfessionalExperience implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * Primary company.
-     */
+    /** Primary company. */
     private ExperienceCompany mPrimaryCompany;
-    /**
-     * List of companies.
-     */
+    /** List of companies. */
     private List<ExperienceCompany> mCompanies;
-    /**
-     * List of awards.
-     */
+    /** List of awards. */
     private List<Award> mAwards;
 
-    /**
-     * Create a simple Professional experience object with empty fields.
-     */
+    /** Create a simple Professional experience object with empty fields. */
     public ProfessionalExperience() {
     }
 
     /**
-     * Create {@link ProfessionalExperience} from {@link Parcel}
+     * Create {@link ProfessionalExperience} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */

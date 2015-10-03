@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Java representation of a XING user object
+ * Java representation of a XING user object.
  *
  * @author david.gonzalez
  * @author serj.lotutovici
@@ -54,9 +54,8 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unused") // Public api
 public class XingUser implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 3037193617271688856L;
-
+    private static final Pattern COMMA_SEPARATOR = Pattern.compile(", ");
     public static final Creator<XingUser> CREATOR = new Creator<XingUser>() {
         @Override
         public XingUser createFromParcel(Parcel source) {
@@ -69,7 +68,6 @@ public class XingUser implements Serializable, Parcelable {
         }
     };
 
-    private static final Pattern COMMA_SEPARATOR = Pattern.compile(", ");
     private String mId;
     private String mFirstName;
     private String mLastName;
@@ -108,7 +106,7 @@ public class XingUser implements Serializable, Parcelable {
     }
 
     /**
-     * Create {@link XingUser} from {@link Parcel}
+     * Create {@link XingUser} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
@@ -162,6 +160,7 @@ public class XingUser implements Serializable, Parcelable {
      *
      * @param users List of users to read their ids. Can not be empty.
      * @return String with the ids, in a comma separated format.
+     *
      * @throws IllegalArgumentException if users is empty.
      */
     public static String getIdList(@NonNull final List<XingUser> users) {
@@ -223,33 +222,33 @@ public class XingUser implements Serializable, Parcelable {
 
     @Override
     public String toString() {
-        return "XingUser{" +
-                "mId='" + mId + '\'' +
-                ", mFirstName='" + mFirstName + '\'' +
-                ", mLastName='" + mLastName + '\'' +
-                ", mDisplayName='" + mDisplayName + '\'' +
-                ", mPageName='" + mPageName + '\'' +
-                ", mPermalink=" + mPermalink +
-                ", mEmploymentStatus=" + mEmploymentStatus +
-                ", mGender=" + mGender +
-                ", mBirthday=" + mBirthday +
-                ", mActiveEmail='" + mActiveEmail + '\'' +
-                ", mPremiumServices=" + mPremiumServices +
-                ", mBadges=" + mBadges +
-                ", mWants=" + mWants +
-                ", mHaves=" + mHaves +
-                ", mInterests=" + mInterests +
-                ", mOrganisationMember=" + mOrganisationMember +
-                ", mLanguages=" + mLanguages +
-                ", mPrivateAddress=" + mPrivateAddress +
-                ", mTimeZone=" + mTimeZone +
-                ", mBusinessAddress=" + mBusinessAddress +
-                ", mWebProfiles=" + mWebProfiles +
-                ", mInstantMessagingAccounts=" + mInstantMessagingAccounts +
-                ", mEducationBackground=" + mEducationBackground +
-                ", mProfessionalExperience=" + mProfessionalExperience +
-                ", mPhotoUrls=" + mPhotoUrls +
-                '}';
+        return "XingUser{"
+                + "mId='" + mId + '\''
+                + ", mFirstName='" + mFirstName + '\''
+                + ", mLastName='" + mLastName + '\''
+                + ", mDisplayName='" + mDisplayName + '\''
+                + ", mPageName='" + mPageName + '\''
+                + ", mPermalink=" + mPermalink
+                + ", mEmploymentStatus=" + mEmploymentStatus
+                + ", mGender=" + mGender
+                + ", mBirthday=" + mBirthday
+                + ", mActiveEmail='" + mActiveEmail + '\''
+                + ", mPremiumServices=" + mPremiumServices
+                + ", mBadges=" + mBadges
+                + ", mWants=" + mWants
+                + ", mHaves=" + mHaves
+                + ", mInterests=" + mInterests
+                + ", mOrganisationMember=" + mOrganisationMember
+                + ", mLanguages=" + mLanguages
+                + ", mPrivateAddress=" + mPrivateAddress
+                + ", mTimeZone=" + mTimeZone
+                + ", mBusinessAddress=" + mBusinessAddress
+                + ", mWebProfiles=" + mWebProfiles
+                + ", mInstantMessagingAccounts=" + mInstantMessagingAccounts
+                + ", mEducationBackground=" + mEducationBackground
+                + ", mProfessionalExperience=" + mProfessionalExperience
+                + ", mPhotoUrls=" + mPhotoUrls
+                + '}';
     }
 
     @Override
@@ -326,12 +325,12 @@ public class XingUser implements Serializable, Parcelable {
         return mGender;
     }
 
-    public void setGender(String gender) {
-        this.mGender = EnumMapper.parseEnumFromString(Gender.values(), gender);
-    }
-
     public void setGender(Gender gender) {
         this.mGender = gender;
+    }
+
+    public void setGender(String gender) {
+        this.mGender = EnumMapper.parseEnumFromString(Gender.values(), gender);
     }
 
     public String getPageName() {
@@ -346,6 +345,10 @@ public class XingUser implements Serializable, Parcelable {
         return mPermalink;
     }
 
+    public void setPermalink(Uri permalink) {
+        mPermalink = permalink;
+    }
+
     public void setPermalink(String permalink) {
         if (!Patterns.WEB_URL.matcher(permalink).matches()) {
             throw new InvalidParameterException(permalink + " is not an url.");
@@ -354,20 +357,16 @@ public class XingUser implements Serializable, Parcelable {
         }
     }
 
-    public void setPermalink(Uri permalink) {
-        mPermalink = permalink;
-    }
-
     public EmploymentStatus getEmploymentStatus() {
         return mEmploymentStatus;
     }
 
-    public void setEmploymentStatus(String employmentStatus) {
-        mEmploymentStatus = EmploymentStatus.valueOf(employmentStatus);
-    }
-
     public void setEmploymentStatus(EmploymentStatus employmentStatus) {
         mEmploymentStatus = employmentStatus;
+    }
+
+    public void setEmploymentStatus(String employmentStatus) {
+        mEmploymentStatus = EmploymentStatus.valueOf(employmentStatus);
     }
 
     public XingCalendar getBirthday() {
@@ -453,6 +452,10 @@ public class XingUser implements Serializable, Parcelable {
         return mWants;
     }
 
+    public void setWants(List<String> wants) {
+        mWants = wants;
+    }
+
     /**
      * Replace the current wants with the ones from the param.
      *
@@ -462,10 +465,6 @@ public class XingUser implements Serializable, Parcelable {
     public void setWants(String wants) {
         String[] wantsArray = COMMA_SEPARATOR.split(wants);
         mWants = Arrays.asList(wantsArray);
-    }
-
-    public void setWants(List<String> wants) {
-        mWants = wants;
     }
 
     /**
@@ -486,6 +485,10 @@ public class XingUser implements Serializable, Parcelable {
         return mHaves;
     }
 
+    public void setHaves(List<String> haves) {
+        mHaves = haves;
+    }
+
     /**
      * Replace the current haves with the ones from the param.
      *
@@ -495,10 +498,6 @@ public class XingUser implements Serializable, Parcelable {
     public void setHaves(String haves) {
         String[] havesArray = COMMA_SEPARATOR.split(haves);
         mHaves = Arrays.asList(havesArray);
-    }
-
-    public void setHaves(List<String> haves) {
-        mHaves = haves;
     }
 
     public void addHave(String have) {
@@ -513,6 +512,10 @@ public class XingUser implements Serializable, Parcelable {
         return mInterests;
     }
 
+    public void setInterests(List<String> interests) {
+        mInterests = interests;
+    }
+
     /**
      * Replace the current interests with the ones from the param.
      *
@@ -522,10 +525,6 @@ public class XingUser implements Serializable, Parcelable {
     public void setInterests(String interests) {
         String[] interestsArray = COMMA_SEPARATOR.split(interests);
         mInterests = Arrays.asList(interestsArray);
-    }
-
-    public void setInterests(List<String> interests) {
-        mInterests = interests;
     }
 
     public void addInterest(String interest) {
@@ -540,19 +539,20 @@ public class XingUser implements Serializable, Parcelable {
         return mOrganisationMember;
     }
 
+    public void setOrganisationMember(List<String> organisationMember) {
+        mOrganisationMember = organisationMember;
+    }
+
     /**
      * Replace the current organisationMember with the ones from the param.
      *
-     * @param organisationMember String with interests with the format organisationMember1, organisationMember2, organisationMember3, organisationMember4
+     * @param organisationMember String with interests with the format organisationMember1, organisationMember2,
+     * organisationMember3, organisationMember4
      */
 
     public void setOrganisationMember(String organisationMember) {
         String[] organisationMemberArray = COMMA_SEPARATOR.split(organisationMember);
         mOrganisationMember = Arrays.asList(organisationMemberArray);
-    }
-
-    public void setOrganisationMember(List<String> organisationMember) {
-        mOrganisationMember = organisationMember;
     }
 
     public void addOrganisationMember(String organisationMember) {
@@ -648,7 +648,6 @@ public class XingUser implements Serializable, Parcelable {
         }
 
         mWebProfiles.get(webProfile).add(accountName);
-
     }
 
     public EducationalBackground getEducationBackground() {
@@ -684,7 +683,7 @@ public class XingUser implements Serializable, Parcelable {
     }
 
     public void addInstantMessagingAccount(@NonNull final MessagingAccount account,
-                                           @Nullable final String accountValue) {
+            @Nullable final String accountValue) {
         if (mInstantMessagingAccounts == null) {
             mInstantMessagingAccounts = new EnumMap<>(MessagingAccount.class);
         }
@@ -723,7 +722,6 @@ public class XingUser implements Serializable, Parcelable {
                     primaryInstitution = primarySchool.getName();
                 }
             }
-
         }
 
         return primaryInstitution;
@@ -752,7 +750,6 @@ public class XingUser implements Serializable, Parcelable {
                     primaryOccupation = primarySchool.getDegree();
                 }
             }
-
         }
 
         return primaryOccupation;

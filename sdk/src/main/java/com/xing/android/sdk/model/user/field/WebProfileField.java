@@ -26,46 +26,45 @@ import com.xing.android.sdk.json.Field;
 
 /**
  * List of possible external web profiles.
- * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/put/users/me/web_profiles/:profile">Web Profile</a>
  */
 @SuppressWarnings("unused")
 public class WebProfileField extends Field {
-
-    public static WebProfileField AMAZON = new WebProfileField("amazon");
-    public static WebProfileField DELICIOUS = new WebProfileField("delicious");
-    public static WebProfileField DIGG = new WebProfileField("digg");
-    public static WebProfileField DOODLE = new WebProfileField("doodle");
-    public static WebProfileField DOPPLR = new WebProfileField("dopplr");
-    public static WebProfileField EBAY = new WebProfileField("ebay");
-    public static WebProfileField FACEBOOK = new WebProfileField("facebook");
-    public static WebProfileField FLICKR = new WebProfileField("flickr");
-    public static WebProfileField FOURSQUARE = new WebProfileField("foursquare");
-    public static WebProfileField GITHUB = new WebProfileField("github");
-    public static WebProfileField GOOGLE_PLUS = new WebProfileField("google+");
-    public static WebProfileField HOMEPAGE = new WebProfileField("homepage");
-    public static WebProfileField LAST_FM = new WebProfileField("last.fm");
-    public static WebProfileField LIFESTREAM_FM = new WebProfileField("lifestream.fm");
-    public static WebProfileField MINDMEISTER = new WebProfileField("mindmeister");
-    public static WebProfileField MR_WONG = new WebProfileField("mister wong");
-    public static WebProfileField OTHER = new WebProfileField("other");
-    public static WebProfileField PHOTOBUCKET = new WebProfileField("photobucket");
-    public static WebProfileField PLAZES = new WebProfileField("plazes");
-    public static WebProfileField QYPE = new WebProfileField("qype");
-    public static WebProfileField REDDIT = new WebProfileField("reddit");
-    public static WebProfileField SECOND_LIFE = new WebProfileField("second life");
-    public static WebProfileField SEVENLOAD = new WebProfileField("sevenload");
-    public static WebProfileField SLIDESHARE = new WebProfileField("slideshare");
-    public static WebProfileField SOURCEFORGE = new WebProfileField("sourceforge");
-    public static WebProfileField SPREED = new WebProfileField("spreed");
-    public static WebProfileField STUMPLE_UPON = new WebProfileField("stumble upon");
-    public static WebProfileField TWITTER = new WebProfileField("twitter");
-    public static WebProfileField VIMEO = new WebProfileField("vimeo");
-    public static WebProfileField WIKIPEDIA = new WebProfileField("wikipedia");
-    public static WebProfileField YELP = new WebProfileField("yelp");
-    public static WebProfileField YOUTUBE = new WebProfileField("youtube");
-    public static WebProfileField ZOOMINFO = new WebProfileField("zoominfo");
+    public static final WebProfileField AMAZON = new WebProfileField("amazon");
+    public static final WebProfileField DELICIOUS = new WebProfileField("delicious");
+    public static final WebProfileField DIGG = new WebProfileField("digg");
+    public static final WebProfileField DOODLE = new WebProfileField("doodle");
+    public static final WebProfileField DOPPLR = new WebProfileField("dopplr");
+    public static final WebProfileField EBAY = new WebProfileField("ebay");
+    public static final WebProfileField FACEBOOK = new WebProfileField("facebook");
+    public static final WebProfileField FLICKR = new WebProfileField("flickr");
+    public static final WebProfileField FOURSQUARE = new WebProfileField("foursquare");
+    public static final WebProfileField GITHUB = new WebProfileField("github");
+    public static final WebProfileField GOOGLE_PLUS = new WebProfileField("google+");
+    public static final WebProfileField HOMEPAGE = new WebProfileField("homepage");
+    public static final WebProfileField LAST_FM = new WebProfileField("last.fm");
+    public static final WebProfileField LIFESTREAM_FM = new WebProfileField("lifestream.fm");
+    public static final WebProfileField MINDMEISTER = new WebProfileField("mindmeister");
+    public static final WebProfileField MR_WONG = new WebProfileField("mister wong");
+    public static final WebProfileField OTHER = new WebProfileField("other");
+    public static final WebProfileField PHOTOBUCKET = new WebProfileField("photobucket");
+    public static final WebProfileField PLAZES = new WebProfileField("plazes");
+    public static final WebProfileField QYPE = new WebProfileField("qype");
+    public static final WebProfileField REDDIT = new WebProfileField("reddit");
+    public static final WebProfileField SECOND_LIFE = new WebProfileField("second life");
+    public static final WebProfileField SEVENLOAD = new WebProfileField("sevenload");
+    public static final WebProfileField SLIDESHARE = new WebProfileField("slideshare");
+    public static final WebProfileField SOURCEFORGE = new WebProfileField("sourceforge");
+    public static final WebProfileField SPREED = new WebProfileField("spreed");
+    public static final WebProfileField STUMPLE_UPON = new WebProfileField("stumble upon");
+    public static final WebProfileField TWITTER = new WebProfileField("twitter");
+    public static final WebProfileField VIMEO = new WebProfileField("vimeo");
+    public static final WebProfileField WIKIPEDIA = new WebProfileField("wikipedia");
+    public static final WebProfileField YELP = new WebProfileField("yelp");
+    public static final WebProfileField YOUTUBE = new WebProfileField("youtube");
+    public static final WebProfileField ZOOMINFO = new WebProfileField("zoominfo");
 
     private WebProfileField(String name) {
         super(name);

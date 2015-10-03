@@ -45,55 +45,55 @@ public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<C
     private final List<XingUserField> mUserFields;
 
     /**
-     * @param userId     ID of the user whose incoming contact petitions are to be returned.
-     * @param limit      Restricts the number of contact petitions to be returned. This must be a positive number. Default: 10.
-     * @param offset     Offset. This must be a positive number. Default: 0.
+     * @param userId ID of the user whose incoming contact petitions are to be returned.
+     * @param limit Restricts the number of contact petitions to be returned. This must be a positive number. Default:
+     * 10.
+     * @param offset Offset. This must be a positive number. Default: 0.
      * @param userFields List of user attributes to return.
-     * @param tag        Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener   Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public IncomingContactPetitionsTask(@NonNull String userId,
-                                        @Nullable Integer limit,
-                                        @Nullable Integer offset,
-                                        @Nullable List<XingUserField> userFields,
-                                        @NonNull Object tag,
-                                        @NonNull OnTaskFinishedListener<List<ContactPetition>> listener) {
+    public IncomingContactPetitionsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable List<XingUserField> userFields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<ContactPetition>> listener) {
         this(userId, limit, offset, userFields, tag, listener, null);
     }
 
     /**
-     * @param userId     ID of the user whose incoming contact petitions are to be returned.
-     * @param limit      Restricts the number of contact petitions to be returned. This must be a positive number. Default: 10.
-     * @param offset     Offset. This must be a positive number. Default: 0.
+     * @param userId ID of the user whose incoming contact petitions are to be returned.
+     * @param limit Restricts the number of contact petitions to be returned. This must be a positive number. Default:
+     * 10.
+     * @param offset Offset. This must be a positive number. Default: 0.
      * @param userFields List of user attributes to return.
-     * @param tag        Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener   Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority   Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public IncomingContactPetitionsTask(@NonNull String userId,
-                                        @Nullable Integer limit,
-                                        @Nullable Integer offset,
-                                        @Nullable List<XingUserField> userFields,
-                                        @NonNull Object tag,
-                                        @NonNull OnTaskFinishedListener<List<ContactPetition>> listener,
-                                        @Nullable Priority priority) {
+    public IncomingContactPetitionsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable List<XingUserField> userFields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<ContactPetition>> listener, @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mUserFields = userFields;
     }
 
     /**
-     * Executes the {@link ContactPetitionRequests#incomingContactPetitions(String, Integer, Integer, List)}  ContactPathRequests.incomingContactPetitions} request and deserialize the result.
+     * Executes the {@link ContactPetitionRequests#incomingContactPetitions(String, Integer, Integer, List)}
+     * ContactPathRequests.incomingContactPetitions} request and deserialize the result.
      *
      * @return List of incoming {@link ContactPetition contact petition}
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<ContactPetition> run() throws Exception {
-        String response = ContactPetitionRequests.incomingContactPetitions(mUserId,
-                mLimit, mOffset, mUserFields);
+        String response = ContactPetitionRequests.incomingContactPetitions(mUserId, mLimit, mOffset, mUserFields);
 
         return ContactPetitionsMapper.parseContactPetitionList(response);
     }

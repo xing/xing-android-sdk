@@ -25,18 +25,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
- * Contract for runnable execution
+ * Contract for runnable execution.
  *
  * @author serj.lotutovici
  */
 public interface RunnableExecutor extends ExecutorService {
-
     /**
-     * Execute the runnable and notify the task manager
+     * Execute the runnable and notify the task manager.
      *
      * @param runnable Runnable to execute
-     * @param manager  Task manager
+     * @param manager Task manager
      */
     <T> Future<T> execute(TaggedRunnable<T> runnable, TaskManager manager);
-
 }

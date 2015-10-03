@@ -45,30 +45,28 @@ public class UsersDetailsTask extends Task<List<XingUser>> {
     private final List<XingUserField> mFields;
 
     /**
-     * @param userIds  Ids of the users whose details are being returned
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userIds Ids of the users whose details are being returned
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public UsersDetailsTask(@Nullable List<String> userIds,
-                            @Nullable List<XingUserField> fields,
-                            @NonNull Object tag,
-                            @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
+    public UsersDetailsTask(@Nullable List<String> userIds, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
         this(userIds, fields, tag, listener, null);
     }
 
     /**
-     * @param userIds  Ids of the users whose details are being returned
-     * @param fields   The requested fields for the user objects to be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userIds Ids of the users whose details are being returned
+     * @param fields The requested fields for the user objects to be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public UsersDetailsTask(@Nullable List<String> userIds,
-                            @Nullable List<XingUserField> fields,
-                            @NonNull Object tag,
-                            @NonNull OnTaskFinishedListener<List<XingUser>> listener,
-                            @Nullable Priority priority) {
+    public UsersDetailsTask(@Nullable List<String> userIds, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserIds = userIds;
         mFields = fields;
@@ -78,9 +76,11 @@ public class UsersDetailsTask extends Task<List<XingUser>> {
      * Executes the {@link UserProfilesRequests#details(List, List)} request and deserialize the result.
      *
      * @return List of XingUser objects with the information of the users with the ids received on the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<XingUser> run() throws Exception {

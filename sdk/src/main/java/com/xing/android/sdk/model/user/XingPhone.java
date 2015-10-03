@@ -27,7 +27,6 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import java.io.Serializable;
-import java.security.InvalidParameterException;
 
 /**
  * Represents the phone of a user.
@@ -36,9 +35,8 @@ import java.security.InvalidParameterException;
  * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Address</a>
  */
 public class XingPhone implements Serializable, Parcelable {
-
     private static final long serialVersionUID = -973963783219359383L;
-
+    private static final char SEPARATOR = '|';
     public static final Creator<XingPhone> CREATOR = new Creator<XingPhone>() {
         @Override
         public XingPhone createFromParcel(Parcel parcel) {
@@ -51,8 +49,6 @@ public class XingPhone implements Serializable, Parcelable {
         }
     };
 
-    private static final char SEPARATOR = '|';
-
     private String mCountryCode;
     private String mAreaCode;
     private String mNumber;
@@ -60,11 +56,10 @@ public class XingPhone implements Serializable, Parcelable {
     /**
      * Constructor for Phone.
      *
-     * @param countryCode Code of the country. Must be numeric and can contain the symbol + at
-     *                    the beginning.
-     * @param areaCode    Code of the area. Must be numeric.
-     * @param number      Number. Must be numeric.
-     * @throws InvalidParameterException The conditions
+     * @param countryCode Code of the country. Must be numeric and can contain the symbol + at the beginning.
+     * @param areaCode Code of the area. Must be numeric.
+     * @param number Number. Must be numeric.
+     * @throws InvalidPhoneException The conditions
      */
     public XingPhone(String countryCode, String areaCode, String number) throws InvalidPhoneException {
         InvalidPhoneException exception = null;
@@ -99,15 +94,12 @@ public class XingPhone implements Serializable, Parcelable {
         }
     }
 
-    /**
-     * Private constructor used by getEmptyPhone.
-     */
+    /** Private constructor used by getEmptyPhone. */
     private XingPhone() {
-
     }
 
     /**
-     * Create {@link XingPhone} from {@link Parcel}
+     * Create {@link XingPhone} from {@link Parcel}.
      *
      * @param parcel Input {@link Parcel}
      */
@@ -233,7 +225,6 @@ public class XingPhone implements Serializable, Parcelable {
     }
 
     public static class InvalidPhoneException extends IllegalArgumentException {
-
         private static final long serialVersionUID = 6067569936834405505L;
 
         private String mCountryCode;
@@ -246,13 +237,16 @@ public class XingPhone implements Serializable, Parcelable {
             mNumber = null;
         }
 
-        /* the message is generated every time instead of in the constructor because of the possibility of changing the language in runtime.*/
+        /* the message is generated every time instead of in the constructor because of the possibility of changing
+        the language in runtime.*/
         @Override
         public String getMessage() {
             StringBuilder stringBuilder = new StringBuilder("The phone number is not valid.");
 
             if (!TextUtils.isEmpty(mCountryCode)) {
-                stringBuilder.append("The country code ").append(mCountryCode).append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
+                stringBuilder.append("The country code ")
+                        .append(mCountryCode)
+                        .append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
             }
 
             if (!TextUtils.isEmpty(mAreaCode)) {
@@ -265,6 +259,5 @@ public class XingPhone implements Serializable, Parcelable {
 
             return stringBuilder.toString();
         }
-
     }
 }

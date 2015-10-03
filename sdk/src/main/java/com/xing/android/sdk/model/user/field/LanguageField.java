@@ -27,6 +27,7 @@ import com.xing.android.sdk.json.Field;
 /**
  * Represents an awards fields.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
@@ -55,7 +56,6 @@ public class LanguageField extends Field {
     public static final LanguageField DA = new LanguageField("da");
     public static final LanguageField AR = new LanguageField("ar");
     public static final LanguageField HE = new LanguageField("he");
-
 
     private LanguageField(String name) {
         super(name);

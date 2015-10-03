@@ -35,12 +35,8 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused")
 public class XingPhotoUrls implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 1864837657156226558L;
-
-    /**
-     * Parcelable creator required by contract
-     */
+    /** Parcelable creator required by contract. */
     public static final Creator<XingPhotoUrls> CREATOR = new Creator<XingPhotoUrls>() {
 
         @Override
@@ -69,14 +65,12 @@ public class XingPhotoUrls implements Serializable, Parcelable {
     private Uri mPhotoSize1024Url;
     private Uri mPhotoSizeOriginalUrl;
 
-    /**
-     * Create a simple XingPhotoUrls object with empty fields.
-     */
+    /** Create a simple XingPhotoUrls object with empty fields. */
     public XingPhotoUrls() {
     }
 
     /**
-     * Create {@link XingPhotoUrls} from {@link Parcel}
+     * Create {@link XingPhotoUrls} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */

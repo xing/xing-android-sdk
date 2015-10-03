@@ -25,25 +25,25 @@ package com.xing.android.sdk.json;
 import android.support.annotation.Nullable;
 import android.util.JsonReader;
 
-
 import java.io.IOException;
 import java.io.StringReader;
 
 import static com.xing.android.sdk.json.ParserUtils.isNextTokenNull;
 
 /**
- * Parser for the Legal Information JSON response
+ * Parser for the Legal Information JSON response.
  *
  * @author daniel.hartwich
  */
 public final class LegalInformationMapper {
     /**
-     * Parses the Legalinformation response returned by {@link com.xing.android.sdk.task.user.LegalInformationTask}
+     * Parses the legal information response returned by {@link com.xing.android.sdk.task.user.LegalInformationTask}.
      *
      * @param response The legal information response in a JSON String
      * @return A String containing the legal information
+     *
      * @throws IOException
-     * */
+     */
     @Nullable
     public static String parseLegalInformation(String response) throws IOException {
         String legalInformation = null;
@@ -55,19 +55,20 @@ public final class LegalInformationMapper {
                     legalInformation = parseLegalInformationJson(reader);
                 }
             }
-
         }
         reader.endObject();
         return legalInformation;
     }
 
     /**
-     * Parses the content field of the Legal Information JSON
+     * Parses the content field of the Legal Information JSON.
      *
      * @param reader The JsoNReader object containing the content of the legal information
      * @return The content of the legal information inside a String
+     *
      * @throws IOException
-     * */
+     */
+    @Nullable
     private static String parseLegalInformationJson(JsonReader reader) throws IOException {
         String legalInformation = null;
         reader.beginObject();
@@ -87,5 +88,9 @@ public final class LegalInformationMapper {
         }
         reader.endObject();
         return legalInformation;
+    }
+
+    private LegalInformationMapper() {
+        throw new AssertionError("No instances.");
     }
 }

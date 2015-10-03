@@ -46,42 +46,34 @@ public class SharedContactsTask extends PaginatedWithOffsetTask<List<XingUser>> 
     private final List<XingUserField> mFields;
 
     /**
-     * @param userId   ID of the user who assigned the tags
-     * @param limit    Restrict the number of attachments to be returned. This must be a positive number. Default: 10
-     * @param offset   Offset. This must be a positive number. Default: 0
-     * @param orderBy  Field that determines the ascending order of the returned list
-     * @param fields   List of user attributes to return
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
+     * @param userId ID of the user who assigned the tags
+     * @param limit Restrict the number of attachments to be returned. This must be a positive number. Default: 10
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param orderBy Field that determines the ascending order of the returned list
+     * @param fields List of user attributes to return
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
      * @param listener Future object to allow cancel the task if necessary.
      */
-    public SharedContactsTask(@NonNull String userId,
-                              @Nullable Integer limit,
-                              @Nullable Integer offset,
-                              @Nullable String orderBy,
-                              @Nullable List<XingUserField> fields,
-                              @NonNull Object tag,
-                              @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
+    public SharedContactsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable String orderBy, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener) {
         this(userId, limit, offset, orderBy, fields, tag, listener, null);
     }
 
     /**
-     * @param userId   ID of the user who assigned the tags
-     * @param limit    Restrict the number of attachments to be returned. This must be a positive number. Default: 10
-     * @param offset   Offset. This must be a positive number. Default: 0
-     * @param orderBy  Field that determines the ascending order of the returned list
-     * @param fields   List of user attributes to return
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
+     * @param userId ID of the user who assigned the tags
+     * @param limit Restrict the number of attachments to be returned. This must be a positive number. Default: 10
+     * @param offset Offset. This must be a positive number. Default: 0
+     * @param orderBy Field that determines the ascending order of the returned list
+     * @param fields List of user attributes to return
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
      * @param listener Future object to allow cancel the task if necessary.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public SharedContactsTask(@NonNull String userId,
-                              @Nullable Integer limit,
-                              @Nullable Integer offset,
-                              @Nullable String orderBy,
-                              @Nullable List<XingUserField> fields,
-                              @NonNull Object tag,
-                              @NonNull OnTaskFinishedListener<List<XingUser>> listener,
-                              @Nullable Priority priority) {
+    public SharedContactsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable String orderBy, @Nullable List<XingUserField> fields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<XingUser>> listener, @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mOrderBy = orderBy;
@@ -89,17 +81,19 @@ public class SharedContactsTask extends PaginatedWithOffsetTask<List<XingUser>> 
     }
 
     /**
-     * Executes the {@link ContactsRequests#sharedContacts(String, Integer, Integer, String, List)} request and deserialize the result.
+     * Executes the {@link ContactsRequests#sharedContacts(String, Integer, Integer, String, List)} request and
+     * deserialize the result.
      *
      * @return List of shared contacts between the logged user and the user received on the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<XingUser> run() throws Exception {
-        String response = ContactsRequests.sharedContacts(mUserId, mLimit, mOffset,
-                mOrderBy, mFields);
+        String response = ContactsRequests.sharedContacts(mUserId, mLimit, mOffset, mOrderBy, mFields);
         return ContactsMapper.parseSharedContacts(response);
     }
 }

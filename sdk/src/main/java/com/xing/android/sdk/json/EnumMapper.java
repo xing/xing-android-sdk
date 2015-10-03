@@ -29,43 +29,36 @@ import android.text.TextUtils;
 import com.xing.android.sdk.model.JsonEnum;
 
 /**
- * Contains method for parsing enum from json
- * <p/>
+ * Contains method for parsing enum from json.
+ *
  * @author serj.lotutovici
  */
 public final class EnumMapper {
-
     /**
-     * Private constructor for utility class
-     */
-    private EnumMapper() {
-    }
-
-    /**
-     * Parse a {@link JsonEnum} from a string value received from server
+     * Parse a {@link JsonEnum} from a string value received from server.
      *
      * @param enums The enums to search in
      * @param value The string value to map to
-     * @param <T>   Generic type for json enums
+     * @param <T> Generic type for json enums
      * @return The enum corresponding to the string value, if the value is null or empty then null,
      * if no corresponding enum was found also null
      */
     @Nullable
-    public static <T extends JsonEnum> T parseEnumFromString(
-            @NonNull T[] enums,
-            @Nullable String value) {
+    public static <T extends JsonEnum> T parseEnumFromString(@NonNull T[] enums, @Nullable String value) {
 
         if (TextUtils.isEmpty(value)) {
             return null;
         } else {
-
             for (T e : enums) {
                 if (value.equals(e.getJsonValue())) {
                     return e;
                 }
             }
-
             return null;
         }
+    }
+
+    private EnumMapper() {
+        throw new AssertionError("No instances.");
     }
 }

@@ -48,38 +48,36 @@ public class PathsTask extends Task<List<List<XingUser>>> {
     private final List<XingUserField> mUserFields;
 
     /**
-     * @param userId      Id of the user whose contact path(s) are to be returned.
+     * @param userId Id of the user whose contact path(s) are to be returned.
      * @param otherUserId Id of any other XING user.
-     * @param allPaths    Specifies whether this call returns just one contact path (default) or all contact paths. Possible values are true or false. Default: false.
-     * @param userFields  List of attributes to be returned for any user of the path.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param allPaths Specifies whether this call returns just one contact path (default) or all contact paths.
+     * Possible values are true or false. Default: false.
+     * @param userFields List of attributes to be returned for any user of the path.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public PathsTask(@NonNull String userId,
-                     @NonNull String otherUserId,
-                     @Nullable Boolean allPaths,
-                     @Nullable List<XingUserField> userFields,
-                     @NonNull Object tag,
-                     @NonNull OnTaskFinishedListener<List<List<XingUser>>> listener) {
+    public PathsTask(@NonNull String userId, @NonNull String otherUserId, @Nullable Boolean allPaths,
+            @Nullable List<XingUserField> userFields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<List<XingUser>>> listener) {
         this(userId, otherUserId, allPaths, userFields, tag, listener, null);
     }
 
     /**
-     * @param userId      Id of the user whose contact path(s) are to be returned.
+     * @param userId Id of the user whose contact path(s) are to be returned.
      * @param otherUserId Id of any other XING user.
-     * @param allPaths    Specifies whether this call returns just one contact path (default) or all contact paths. Possible values are true or false. Default: false.
-     * @param userFields  List of attributes to be returned for any user of the path.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority    Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param allPaths Specifies whether this call returns just one contact path (default) or all contact paths.
+     * Possible values are true or false. Default: false.
+     * @param userFields List of attributes to be returned for any user of the path.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public PathsTask(@NonNull String userId,
-                     @NonNull String otherUserId,
-                     @Nullable Boolean allPaths,
-                     @Nullable List<XingUserField> userFields,
-                     @NonNull Object tag,
-                     @NonNull OnTaskFinishedListener<List<List<XingUser>>> listener,
-                     @Nullable Priority priority) {
+    public PathsTask(@NonNull String userId, @NonNull String otherUserId, @Nullable Boolean allPaths,
+            @Nullable List<XingUserField> userFields, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<List<List<XingUser>>> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
         mOtherUserId = otherUserId;
@@ -88,17 +86,20 @@ public class PathsTask extends Task<List<List<XingUser>>> {
     }
 
     /**
-     * Executes the {@link ContactPathsRequests#paths(String, String, Boolean, List) ContactPathRequests.paths} request and deserialize the result.
+     * Executes the {@link ContactPathsRequests#paths(String, String, Boolean, List) ContactPathRequests.paths} request
+     * and deserialize the result.
      *
-     * @return Paths from user to user. Every element on the list is a path. Every path is a list of {@link XingUser users}.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     * @return Paths from user to user. Every element on the list is a path. Every path is a list of {@link XingUser
+     * users}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<List<XingUser>> run() throws Exception {
-        String response = ContactPathsRequests.paths(mUserId, mOtherUserId,
-                mAllPaths, mUserFields);
+        String response = ContactPathsRequests.paths(mUserId, mOtherUserId, mAllPaths, mUserFields);
 
         return ContactPathMapper.deserializePaths(response);
     }

@@ -34,37 +34,36 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.xing.android.sdk.sample.R;
 import com.xing.android.sdk.model.user.ProfileVisit;
+import com.xing.android.sdk.sample.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The adapter for the recycler view that holds all contacts of a user
+ * The adapter for the recycler view that displays the users visitors.
  *
  * @author daniel.hartwich
  */
-public class VisitorsRecyclerAdapter extends
-        RecyclerView.Adapter<VisitorsRecyclerAdapter.ViewHolder> {
-
-    private List<ProfileVisit> items;
-    private int itemLayout;
-    private RequestManager glideRequestManager;
-    private LayoutInflater layoutInflater;
-    private final static String PLACEHOLDER_URL =
+public class VisitorsRecyclerAdapter extends RecyclerView.Adapter<VisitorsRecyclerAdapter.ViewHolder> {
+    private static final String PLACEHOLDER_URL =
             "https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.256x256.jpg";
 
-    public VisitorsRecyclerAdapter(Context ctx, int itemLayout) {
-        this.items = new ArrayList<>(0);
-        this.itemLayout = itemLayout;
-        this.glideRequestManager = Glide.with(ctx);
-        this.layoutInflater = LayoutInflater.from(ctx);
+    private final List<ProfileVisit> items;
+    private final int itemLayoutRes;
+    private final RequestManager glideRequestManager;
+    private final LayoutInflater layoutInflater;
+
+    public VisitorsRecyclerAdapter(Context ctx, int itemLayoutResId) {
+        items = new ArrayList<>(0);
+        itemLayoutRes = itemLayoutResId;
+        glideRequestManager = Glide.with(ctx);
+        layoutInflater = LayoutInflater.from(ctx);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(layoutInflater.inflate(itemLayout, parent, false));
+        return new ViewHolder(layoutInflater.inflate(itemLayoutRes, parent, false));
     }
 
     @Override
@@ -98,7 +97,7 @@ public class VisitorsRecyclerAdapter extends
         return items.size();
     }
 
-    public ProfileVisit getItem(int position){
+    public ProfileVisit getItem(int position) {
         return items.get(position);
     }
 
@@ -108,12 +107,6 @@ public class VisitorsRecyclerAdapter extends
             items.addAll(profileVisits);
             notifyItemRangeInserted(count, items.size());
         }
-    }
-
-    public void setItems(@Nullable List<ProfileVisit> profileVisits) {
-        items.clear();
-        addItems(profileVisits);
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

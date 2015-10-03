@@ -33,34 +33,34 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.xing.android.sdk.sample.R;
 import com.xing.android.sdk.model.user.XingUser;
+import com.xing.android.sdk.sample.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The adapter for the recycler view that holds all contacts of a user
+ * The adapter for the recycler view that displays all contacts of a user.
  *
  * @author daniel.hartwich
  */
 public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecyclerAdapter.ViewHolder> {
 
     private final ArrayList<XingUser> items;
-    private final int itemLayout;
+    private final int itemLayoutRes;
     private final RequestManager glideRequestManager;
     private final LayoutInflater layoutInflater;
 
-    public ContactsRecyclerAdapter(Context ctx, int itemLayout) {
-        this.items = new ArrayList<>(0);
-        this.itemLayout = itemLayout;
-        this.glideRequestManager = Glide.with(ctx);
-        this.layoutInflater = LayoutInflater.from(ctx);
+    public ContactsRecyclerAdapter(Context ctx, int itemLayoutResId) {
+        items = new ArrayList<>(0);
+        itemLayoutRes = itemLayoutResId;
+        glideRequestManager = Glide.with(ctx);
+        layoutInflater = LayoutInflater.from(ctx);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(layoutInflater.inflate(itemLayout, parent, false));
+        return new ViewHolder(layoutInflater.inflate(itemLayoutRes, parent, false));
     }
 
     @Override

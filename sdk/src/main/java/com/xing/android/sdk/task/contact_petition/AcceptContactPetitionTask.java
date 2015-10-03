@@ -40,41 +40,41 @@ public class AcceptContactPetitionTask extends Task<Void> {
     private final String mRecipientId;
 
     /**
-     * @param senderId    id of the sender of the petition.
+     * @param senderId id of the sender of the petition.
      * @param recipientId id of the recipient of the petition.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with a TRUE result in case of success, or with an exception in case of failure.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with a TRUE result in case of success, or with an exception in
+     * case of failure.
      */
-    public AcceptContactPetitionTask(@NonNull String senderId,
-                                     @NonNull String recipientId,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<Void> listener) {
+    public AcceptContactPetitionTask(@NonNull String senderId, @NonNull String recipientId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener) {
         this(senderId, recipientId, tag, listener, null);
     }
 
     /**
-     * @param senderId    id of the sender of the petition.
+     * @param senderId id of the sender of the petition.
      * @param recipientId id of the recipient of the petition.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with a TRUE result in case of success, or with an exception in case of failure.
-     * @param priority    Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with a TRUE result in case of success, or with an exception in
+     * case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public AcceptContactPetitionTask(@NonNull String senderId,
-                                     @NonNull String recipientId,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<Void> listener,
-                                     @Nullable Priority priority) {
+    public AcceptContactPetitionTask(@NonNull String senderId, @NonNull String recipientId, @NonNull Object tag,
+            @NonNull OnTaskFinishedListener<Void> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mSenderId = senderId;
         mRecipientId = recipientId;
     }
 
     /**
-     * Executes the {@link ContactPetitionRequests#acceptContactPetition(String, String) ContactPathRequests.acceptContactPetition} request.
+     * Executes the {@link ContactPetitionRequests#acceptContactPetition(String, String)
+     * ContactPathRequests.acceptContactPetition} request.
      *
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public Void run() throws Exception {

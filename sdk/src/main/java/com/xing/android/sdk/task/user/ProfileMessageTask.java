@@ -41,24 +41,26 @@ public class ProfileMessageTask extends Task<ProfileMessage> {
     private final String mUserId;
 
     /**
-     * @param userId   The userId for which the latest profile message should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param userId The userId for which the latest profile message should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
     public ProfileMessageTask(@Nullable String userId, @NonNull Object tag,
-                              @NonNull OnTaskFinishedListener<ProfileMessage> listener) {
+            @NonNull OnTaskFinishedListener<ProfileMessage> listener) {
         this(userId, tag, listener, null);
     }
 
     /**
-     * @param userId   The userId for which the latest profile message should be returned
-     * @param tag      Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param userId The userId for which the latest profile message should be returned
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
     public ProfileMessageTask(@Nullable String userId, @NonNull Object tag,
-                              @NonNull OnTaskFinishedListener<ProfileMessage> listener,
-                              @Nullable Priority priority) {
+            @NonNull OnTaskFinishedListener<ProfileMessage> listener, @Nullable Priority priority) {
         super(tag, listener, priority);
         mUserId = userId;
     }
@@ -67,9 +69,11 @@ public class ProfileMessageTask extends Task<ProfileMessage> {
      * Executes the {@link UserProfilesRequests#profileMessage(String)} request and deserialize the result.
      *
      * @return ProfileMessage object of the userId received in the constructor.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public ProfileMessage run() throws Exception {

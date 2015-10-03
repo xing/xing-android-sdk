@@ -34,17 +34,15 @@ import java.util.GregorianCalendar;
 /**
  * Represents an award of a user.
  * <p/>
+ *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
 @SuppressWarnings("unused")
 public class Award implements Serializable, Parcelable {
-
     private static final long serialVersionUID = 1792717237671423281L;
 
-    /**
-     * Creator object for Parcelable contract
-     */
+    /** Creator object for Parcelable contract. */
     public static final Creator<Award> CREATOR = new Creator<Award>() {
         @Override
         public Award createFromParcel(Parcel parcel) {
@@ -57,27 +55,19 @@ public class Award implements Serializable, Parcelable {
         }
     };
 
-    /**
-     * Name of the award.
-     */
+    /** Name of the award. */
     private String mName;
-    /**
-     * XWS returns only the year, but for compatibility with possible future changes we use Calendar.
-     */
+    /** XWS returns only the year, but for compatibility with possible future changes we use Calendar. */
     private Calendar mDateAwarded;
-    /**
-     * URL of the award.
-     */
+    /** URL of the award. */
     private Uri mUrl;
 
-    /**
-     * Create a simple Award object with empty fields.
-     */
+    /** Create a simple Award object with empty fields. */
     public Award() {
     }
 
     /**
-     * Create {@link Award} from {@link Parcel}
+     * Create {@link Award} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */

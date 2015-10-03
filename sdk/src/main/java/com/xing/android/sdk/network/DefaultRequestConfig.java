@@ -34,40 +34,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Default {@linkplain RequestConfig} used for request execution.
  */
 public class DefaultRequestConfig implements RequestConfig {
-
     private final OauthSigner mOauthSigner;
     private final Uri mUri;
     private final List<Pair<String, String>> mHeaders;
     private final List<Pair<String, String>> mParams;
 
     /**
-     * Create an instance of the default {@link RequestConfig}
+     * Create an instance of the default {@link RequestConfig}.
      *
      * @param builder The builder object to build with
      */
     DefaultRequestConfig(@NonNull DefaultRequestConfig.Builder builder) {
         if (!builder.loggedOut) {
             // Prepare oauth signer
-            OauthSigner.init(
-                    builder.consumerKey,
-                    builder.consumerSecret,
-                    builder.token,
-                    builder.tokenSecret
-            );
+            OauthSigner.init(builder.consumerKey, builder.consumerSecret, builder.token, builder.tokenSecret);
             mOauthSigner = OauthSigner.getInstance();
         } else {
             mOauthSigner = null;
         }
 
-        // Read headers
         mHeaders = builder.headers;
-
         mParams = builder.params;
-
-        // Prepare Uri
         mUri = new Uri.Builder().scheme("https").authority("api.xing.com").build();
     }
 
@@ -92,7 +82,6 @@ public class DefaultRequestConfig implements RequestConfig {
     }
 
     public static class Builder {
-
         private String consumerKey;
         private String consumerSecret;
         private String token;
@@ -101,50 +90,37 @@ public class DefaultRequestConfig implements RequestConfig {
         private List<Pair<String, String>> params;
         private boolean loggedOut = false;
 
-
-        /**
-         * Set consumer key
-         */
+        /** Set consumer key. */
         public Builder setConsumerKey(String consumerKey) {
             this.consumerKey = consumerKey;
             return this;
         }
 
-        /**
-         * Set consumer secret
-         */
+        /** Set consumer secret. */
         public Builder setConsumerSecret(String consumerSecret) {
             this.consumerSecret = consumerSecret;
             return this;
         }
 
-        /**
-         * Set token
-         */
+        /** Set token. */
         public Builder setToken(String token) {
             this.token = token;
             return this;
         }
 
-        /**
-         * Set token secret
-         */
+        /** Set token secret. */
         public Builder setTokenSecret(String tokenSecret) {
             this.tokenSecret = tokenSecret;
             return this;
         }
 
-        /**
-         * Set loggedOut. This avoids the check of oauth values.
-         */
+        /** Set loggedOut. This avoids the check of oauth values. */
         public Builder setLoggedOut(boolean loggedOut) {
             this.loggedOut = loggedOut;
             return this;
         }
 
-        /**
-         * Add global param
-         */
+        /** Add global param. */
         @Optional
         public Builder addParam(String key, String value) {
             if (params == null) {
@@ -155,9 +131,7 @@ public class DefaultRequestConfig implements RequestConfig {
             return this;
         }
 
-        /**
-         * Add global params
-         */
+        /** Add global params. */
         @Optional
         public Builder addParams(List<Pair<String, String>> params) {
             if (this.params == null) {
@@ -169,9 +143,7 @@ public class DefaultRequestConfig implements RequestConfig {
             return this;
         }
 
-        /**
-         * Add global header
-         */
+        /** Add global header. */
         @Optional
         public Builder addHeader(String key, String value) {
             if (headers == null) {
@@ -182,9 +154,7 @@ public class DefaultRequestConfig implements RequestConfig {
             return this;
         }
 
-        /**
-         * Add global headers
-         */
+        /** Add global headers. */
         @Optional
         public Builder addHeaders(List<Pair<String, String>> headers) {
             if (this.headers == null) {
@@ -196,22 +166,17 @@ public class DefaultRequestConfig implements RequestConfig {
             return this;
         }
 
-        /**
-         * Check if all required parameters are set
-         */
+        /** Check if all required parameters are set. */
         private void validateBuildParameters() {
             if (TextUtils.isEmpty(consumerKey)) {
                 throw new IllegalArgumentException("CONSUMER_KEY not set");
             }
-
             if (TextUtils.isEmpty(consumerSecret)) {
                 throw new IllegalArgumentException("CONSUMER_SECRET not set");
             }
-
             if (TextUtils.isEmpty(token)) {
                 throw new IllegalArgumentException("TOKEN not set, the user must be logged it");
             }
-
             if (TextUtils.isEmpty(tokenSecret)) {
                 throw new IllegalArgumentException("TOKEN_SECRET not set, the user must be logged it");
             }

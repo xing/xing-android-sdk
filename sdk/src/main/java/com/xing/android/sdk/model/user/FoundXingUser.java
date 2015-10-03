@@ -58,6 +58,4 @@ public class FoundXingUser {
     public void setUser(XingUser user) {
         this.user = user;
     }
-
-
 }

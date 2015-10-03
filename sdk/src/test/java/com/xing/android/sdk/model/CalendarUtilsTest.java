@@ -47,8 +47,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(
         sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE
-)
+        manifest = Config.NONE)
 public class CalendarUtilsTest {
 
     private static Locale preTestLocale;

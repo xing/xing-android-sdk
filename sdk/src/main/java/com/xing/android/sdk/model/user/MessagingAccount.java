@@ -28,7 +28,7 @@ import com.xing.android.sdk.model.JsonEnum;
 
 /**
  * Possible instant messaging accounts.
- * <p/>
+ *
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/me">Instant Messaging Accounts</a>
  */
@@ -41,9 +41,7 @@ public enum MessagingAccount implements JsonEnum {
     JABBER("jabber"),
     GOOGLE_TALK("googletalk");
 
-    /**
-     * The name value received from the json response
-     */
+    /** The name value received from the json response. */
     private final String mName;
 
     MessagingAccount(@NonNull final String accountName) {

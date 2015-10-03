@@ -29,11 +29,13 @@ public class RunnableComparator implements Comparator<Runnable> {
     public int compare(Runnable left, Runnable right) {
         int comparison;
 
-        PrioritizedRunnable.Priority leftPriority = left instanceof PrioritizedFutureTask ?
-                ((PrioritizedFutureTask) left).getPriority() : PrioritizedRunnable.Priority.IMMEDIATE;
+        PrioritizedRunnable.Priority leftPriority =
+                left instanceof PrioritizedFutureTask ? ((PrioritizedFutureTask) left).getPriority()
+                        : PrioritizedRunnable.Priority.IMMEDIATE;
 
-        PrioritizedRunnable.Priority rightPriority = right instanceof PrioritizedFutureTask ?
-                ((PrioritizedFutureTask) right).getPriority() : PrioritizedRunnable.Priority.IMMEDIATE;
+        PrioritizedRunnable.Priority rightPriority =
+                right instanceof PrioritizedFutureTask ? ((PrioritizedFutureTask) right).getPriority()
+                        : PrioritizedRunnable.Priority.IMMEDIATE;
 
         if (leftPriority.ordinal() < rightPriority.ordinal()) {
             comparison = -1;

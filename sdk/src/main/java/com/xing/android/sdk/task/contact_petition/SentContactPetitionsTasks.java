@@ -43,55 +43,54 @@ public class SentContactPetitionsTasks extends PaginatedWithOffsetTask<List<Stri
     private final String mRecipientId;
 
     /**
-     * @param userId      ID of the user who sent the contact petitions.
-     * @param limit       Restrict the number of contact requests to be returned. This must be a positive number. Default: 10.
-     * @param offset      Offset. This must be a positive number. Default: 0.
+     * @param userId ID of the user who sent the contact petitions.
+     * @param limit Restrict the number of contact requests to be returned. This must be a positive number. Default:
+     * 10.
+     * @param offset Offset. This must be a positive number. Default: 0.
      * @param recipientId Filter the contact petitions for a given user ID.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
      */
-    public SentContactPetitionsTasks(@NonNull String userId,
-                                     @Nullable Integer limit,
-                                     @Nullable Integer offset,
-                                     @Nullable String recipientId,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<List<String>> listener) {
+    public SentContactPetitionsTasks(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable String recipientId, @NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener) {
         this(userId, limit, offset, recipientId, tag, listener, null);
     }
 
     /**
-     * @param userId      ID of the user who sent the contact petitions.
-     * @param limit       Restrict the number of contact requests to be returned. This must be a positive number. Default: 10.
-     * @param offset      Offset. This must be a positive number. Default: 0.
+     * @param userId ID of the user who sent the contact petitions.
+     * @param limit Restrict the number of contact requests to be returned. This must be a positive number. Default:
+     * 10.
+     * @param offset Offset. This must be a positive number. Default: 0.
      * @param recipientId Filter the contact petitions for a given user ID.
-     * @param tag         Object that allows the task manager to cancel or stop listening ths task.
-     * @param listener    Observer that will be notified with the de-serialized result in case of success, or with an exception in case of failure.
-     * @param priority    Determines the position of the task on the queue of execution. It is a value of {@link Priority Priority}
+     * @param tag Object that allows the task manager to cancel or stop listening ths task.
+     * @param listener Observer that will be notified with the de-serialized result in case of success, or with an
+     * exception in case of failure.
+     * @param priority Determines the position of the task on the queue of execution. It is a value of {@link Priority
+     * Priority}
      */
-    public SentContactPetitionsTasks(@NonNull String userId,
-                                     @Nullable Integer limit,
-                                     @Nullable Integer offset,
-                                     @Nullable String recipientId,
-                                     @NonNull Object tag,
-                                     @NonNull OnTaskFinishedListener<List<String>> listener,
-                                     @Nullable Priority priority) {
+    public SentContactPetitionsTasks(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
+            @Nullable String recipientId, @NonNull Object tag, @NonNull OnTaskFinishedListener<List<String>> listener,
+            @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mRecipientId = recipientId;
     }
 
     /**
-     * Executes the {@link ContactPetitionRequests#sentContactPetitions(String, Integer, Integer, String)}  ContactPathRequests.sentContactPetitions} request and deserialize the result.
+     * Executes the {@link ContactPetitionRequests#sentContactPetitions(String, Integer, Integer, String)}
+     * ContactPathRequests.sentContactPetitions} request and deserialize the result.
      *
      * @return List of ids of the sent contact petition.
-     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException XingOauthException},
-     *                   {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
-     *                   or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
+     *
+     * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
+     * XingOauthException},
+     * {@link com.xing.android.sdk.network.request.exception.NetworkException NetworkException}
+     * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
     public List<String> run() throws Exception {
-        String response = ContactPetitionRequests.sentContactPetitions(mUserId,
-                mLimit, mOffset, mRecipientId);
+        String response = ContactPetitionRequests.sentContactPetitions(mUserId, mLimit, mOffset, mRecipientId);
 
         return ContactPetitionsMapper.parseSentContactRequestList(response);
     }

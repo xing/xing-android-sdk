@@ -23,10 +23,10 @@
 
 <resources>
 
-	<string name="requestTokenUrl">https://api.xing.com/v1/request_token</string>
-	<string name="authorizeUrl">https://api.xing.com/v1/authorize</string>
-	<string name="accessTokenUrl">https://api.xing.com/v1/access_token</string>
-	<string name="callback">callback</string>
-	<string name="xingsdk">xingsdk</string>
+    <string name="requestTokenUrl">https://api.xing.com/v1/request_token</string>
+    <string name="authorizeUrl">https://api.xing.com/v1/authorize</string>
+    <string name="accessTokenUrl">https://api.xing.com/v1/access_token</string>
+    <string name="callback">callback</string>
+    <string name="xingsdk">xingsdk</string>
 
 </resources>
