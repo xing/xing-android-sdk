@@ -8,6 +8,10 @@ Add all the power of the XING platform to your Android app using the XING Androi
 This library provides an Android implementation of the network layer infrastructure required to access
 the XING Web Services. Basically this SDK provides a standalone RequestExecutor, Module, Tasks and requests, which reflect the public XING API which can be found [here](https://dev.xing.com/docs/resources).
 
+## DISCLAIMER
+
+**Curently version 2.0 is under heavy development. This version may change/deprecate some API's currently present in the library. For more information please checkout the [github issues page](https://github.com/xing/xing-android-sdk/issues).
+
 #### Currently the following resources are available as Tasks in the XING Android SDK:
 
 - [User Profiles](https://dev.xing.com/docs/resources#user-profiles)
