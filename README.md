@@ -10,7 +10,7 @@ the XING Web Services. Basically this SDK provides a standalone RequestExecutor,
 
 ## DISCLAIMER
 
-**Curently version 2.0 is under heavy development. This version may change/deprecate some API's currently present in the library. For more information please checkout the [github issues page](https://github.com/xing/xing-android-sdk/issues).
+__Curently version 2.0 is under heavy development. This version may change/deprecate some API's currently present in the library. For more information please checkout the [github issues page](https://github.com/xing/xing-android-sdk/issues).__
 
 #### Currently the following resources are available as Tasks in the XING Android SDK:
 
