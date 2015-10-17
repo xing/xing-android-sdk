@@ -20,7 +20,28 @@
  * THE SOFTWARE.
  */
 
+package com.xing.android.sdk;
+
+import rx.Observable;
+
 /**
- * @deprecated This api is unsupported and will be removed after 2.x. See {@link com.xing.android.sdk.XingApi}.
+ * TODO docs.
+ *
+ * @author serj.lotutovici
  */
-package com.xing.android.sdk.json;
+public final class CallSpec<T> {
+    CallSpec() {
+    }
+
+    public Response<T> execute() {
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    public void enqueue(Callback<T> callback) {
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    public Observable<T> observe() {
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+}

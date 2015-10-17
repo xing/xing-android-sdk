@@ -23,5 +23,4 @@
 /**
  * @deprecated This api is unsupported and will be removed after 2.x. See {@link com.xing.android.sdk.XingApi}.
  */
-@Deprecated
 package com.xing.android.sdk.task;
