@@ -20,7 +20,28 @@
  * THE SOFTWARE.
  */
 
+package com.xing.android.sdk;
+
+import static com.xing.android.sdk.Utils.checkNotNull;
+
 /**
- * @deprecated This api is unsupported and will be removed after 2.x. See {@link com.xing.android.sdk.XingApi}.
+ * TODO docs.
+ *
+ * @author serj.lotutovici
  */
-package com.xing.android.sdk.json;
+public final class XingApi {
+    /** Return a {@link Resource} instance that specified by the provided class name. */
+    public <T extends Resource> T resource(Class<T> resource) {
+        checkNotNull(resource, "resource == null");
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    private XingApi() {
+    }
+
+    /**
+     * TODO docs.
+     */
+    public static final class Builder {
+    }
+}

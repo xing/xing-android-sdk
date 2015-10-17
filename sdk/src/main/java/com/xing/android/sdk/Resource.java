@@ -20,7 +20,12 @@
  * THE SOFTWARE.
  */
 
+package com.xing.android.sdk;
+
 /**
- * @deprecated This api is unsupported and will be removed after 2.x. See {@link com.xing.android.sdk.XingApi}.
+ * TODO docs.
+ *
+ * @author serj.lotutovici
  */
-package com.xing.android.sdk.json;
+public class Resource {
+}
