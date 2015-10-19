@@ -71,6 +71,7 @@ allprojects {
 
                 // Test
                 junit              : 'junit:junit:4.12',
+                assertj            : 'org.assertj:assertj-core:1.7.0',
                 mockito            : 'org.mockito:mockito-all:1.10.19',
                 robolectric        : 'org.robolectric:robolectric:3.0',
                 mockWebServer      : 'com.squareup.okhttp:mockwebserver:2.5.0',
