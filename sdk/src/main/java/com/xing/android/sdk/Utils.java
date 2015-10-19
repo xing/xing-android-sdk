@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2015 XING AG (http://xing.com/)
  * Copyright (C) 2012 Square, Inc.
  * Copyright (C) 2007 The Guava Authors
  *
@@ -25,11 +26,25 @@ import okio.Buffer;
 import okio.BufferedSource;
 
 final class Utils {
+    /**
+     * Check if the object instance is not null. This will method throws a NPE if case the condition is not met,
+     * otherwise the same (non-altered) instance of the object will be returned.
+     */
     static <T> T checkNotNull(T object, String message) {
         if (object == null) {
             throw new NullPointerException(message);
         }
         return object;
+    }
+
+    /**
+     * Checks if the object instance is null. This will throw an {@link IllegalStateException} if the condition is
+     * not met.
+     */
+    static <T> void stateNotNull(T object, String message) {
+        if (object == null) {
+            throw new IllegalStateException(message);
+        }
     }
 
     static void closeQuietly(Closeable closeable) {

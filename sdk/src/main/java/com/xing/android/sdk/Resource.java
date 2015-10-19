@@ -27,5 +27,11 @@ package com.xing.android.sdk;
  *
  * @author serj.lotutovici
  */
-public class Resource {
+public abstract class Resource {
+    final XingApi api;
+
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
+    protected Resource(XingApi api) {
+        this.api = api;
+    }
 }
