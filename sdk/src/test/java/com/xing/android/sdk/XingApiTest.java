@@ -24,6 +24,7 @@ package com.xing.android.sdk;
 
 import android.os.Build.VERSION_CODES;
 
+import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 
 import org.junit.Before;
@@ -140,6 +141,21 @@ public class XingApiTest {
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
             assertThat(expected.getMessage()).isEqualTo("client == null");
+        }
+
+        try {
+            builder.moshi(null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("moshi == null");
+        }
+
+        builder.moshi(new Moshi.Builder().build());
+        try {
+            builder.moshi(new Moshi.Builder().build());
+            fail("Only one Moshi should be allowed.");
+        } catch (IllegalStateException expected) {
+            assertThat(expected.getMessage()).isEqualTo("Only one instance of Moshi is allowed");
         }
 
         try {
