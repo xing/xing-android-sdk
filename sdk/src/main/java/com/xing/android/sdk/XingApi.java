@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.xing.android.sdk.Utils.checkNotNull;
+import static com.xing.android.sdk.Utils.stateNull;
 
 /**
  * TODO docs.
@@ -82,13 +83,12 @@ public final class XingApi {
         private OkHttpClient okHttpClient;
         private HttpUrl apiEndpoint;
         private Oauth1SigningInterceptor.Builder oauth1Builder;
-        private Moshi.Builder moshiBuilder; // TODO add ability to configure moshi.
+        private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
             oauth1Builder = new Oauth1SigningInterceptor.Builder();
-            moshiBuilder = new Moshi.Builder();
             loggedOut = false;
         }
 
@@ -136,6 +136,26 @@ public final class XingApi {
             return this;
         }
 
+        /**
+         * Adds a moshi instance to build on <b>top</b>.
+         * <p>
+         * <b>DISCLAIMER: </b> This will extract all custom adapter factories declared in the provided instance
+         * and create a builder to which internal declared factories will be added. Keep in mind that for {@link
+         * Moshi} the order of custom factories maters and the resulting object will favor factories from the
+         * provided {@linkplain Moshi moshi}, which can brake expected behaviour. This means that by adding your own
+         * {@link Moshi} you may override adapters declared internally by {@link XingApi}, but you should do that at
+         * your own risk.
+         * <p>
+         * <b>NOTE: </b> This method can be called only once, otherwise an exception will be thrown.
+         *
+         * @throws java.lang.IllegalStateException If the internal builder was already initialized.
+         */
+        public Builder moshi(Moshi moshi) {
+            stateNull(moshiBuilder, "Only one instance of Moshi is allowed");
+            moshiBuilder = checkNotNull(moshi, "moshi == null").newBuilder();
+            return this;
+        }
+
         public XingApi build() {
             // Setup the network client.
             OkHttpClient client;
@@ -148,6 +168,10 @@ public final class XingApi {
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {
                 client.networkInterceptors().add(oauth1Builder.build());
+            }
+
+            if (moshiBuilder == null) {
+                moshiBuilder = new Moshi.Builder();
             }
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());

@@ -38,11 +38,21 @@ final class Utils {
     }
 
     /**
-     * Checks if the object instance is null. This will throw an {@link IllegalStateException} if the condition is
+     * Checks if the object instance is not null. This will throw an {@link IllegalStateException} if the condition is
      * not met.
      */
     static <T> void stateNotNull(T object, String message) {
         if (object == null) {
+            throw new IllegalStateException(message);
+        }
+    }
+
+    /**
+     * Checks if the object is in null state. This will throw an {@link IllegalStateException} if the condition is
+     * not met.
+     */
+    static <T> void stateNull(T object, String message) {
+        if (object != null) {
             throw new IllegalStateException(message);
         }
     }
