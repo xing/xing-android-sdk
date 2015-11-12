@@ -31,7 +31,7 @@ Add the SDK as a dependency:
 Either through Gradle:
 
 ```gradle
-compile 'com.xing.android:sdk:1.0.0'
+compile 'com.xing.android:sdk:1.0.1'
 ```
 or by using Maven:
 
@@ -39,7 +39,7 @@ or by using Maven:
 <dependency>
   <groupId>com.xing.android</groupId>
   <artifactId>sdk</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
