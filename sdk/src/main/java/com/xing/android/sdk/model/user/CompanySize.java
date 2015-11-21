@@ -43,7 +43,7 @@ public enum CompanySize implements JsonEnum {
     SIZE_501_1000("501-1000"),
     SIZE_1001_5000("1001-5000"),
     SIZE_5001_10000("5001-10000"),
-    SIZE_10001PLUS("1001+");
+    SIZE_10001PLUS("10001+");
 
     private final String mText;
 
