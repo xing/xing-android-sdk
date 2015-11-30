@@ -20,25 +20,21 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.internal;
 
-import com.xing.android.sdk.internal.Http;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * TODO docs.
+ * Informative annotation that describes that a parameter or a method is experimental.
  *
  * @author serj.lotutovici
  */
-public abstract class Resource {
-    final XingApi api;
-
-    /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected Resource(XingApi api) {
-        this.api = api;
-    }
-
-    // TODO (DanielH) Implement all internal methods required for building specs.
-    protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
-    }
+@Documented
+@Target({ElementType.METHOD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.CLASS)
+public @interface Experimental {
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.android.sdk;
 
 /**
@@ -26,7 +27,8 @@ package com.xing.android.sdk;
  */
 public interface Callback<T> {
     /** Successful HTTP response. */
-    void onResponse(Response<T> response);
+    //TODO Refactor callback for two type parameters
+    void onResponse(Response<T, Object> response);
 
     /** Invoked when a network or unexpected exception occurred during the HTTP request. */
     void onFailure(Throwable t);

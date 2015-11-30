@@ -20,25 +20,27 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.internal;
 
-import com.xing.android.sdk.internal.Http;
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static com.xing.android.sdk.internal.Http.HTTP_DELETE;
+import static com.xing.android.sdk.internal.Http.HTTP_GET;
+import static com.xing.android.sdk.internal.Http.HTTP_POST;
+import static com.xing.android.sdk.internal.Http.HTTP_PUT;
 
 /**
  * TODO docs.
  *
  * @author serj.lotutovici
  */
-public abstract class Resource {
-    final XingApi api;
-
-    /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected Resource(XingApi api) {
-        this.api = api;
-    }
-
-    // TODO (DanielH) Implement all internal methods required for building specs.
-    protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
-    }
+@StringDef({HTTP_GET, HTTP_POST, HTTP_PUT, HTTP_DELETE})
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.PARAMETER)
+public @interface HttpMethod {
 }

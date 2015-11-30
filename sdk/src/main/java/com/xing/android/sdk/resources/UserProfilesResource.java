@@ -20,25 +20,25 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.resources;
 
-import com.xing.android.sdk.internal.Http;
+import com.xing.android.sdk.Resource;
+import com.xing.android.sdk.XingApi;
 
 /**
- * TODO docs.
- *
  * @author serj.lotutovici
  */
-public abstract class Resource {
-    final XingApi api;
-
+public class UserProfilesResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected Resource(XingApi api) {
-        this.api = api;
+    protected UserProfilesResource(XingApi api) {
+        super(api);
     }
 
-    // TODO (DanielH) Implement all internal methods required for building specs.
-    protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
-    }
+    // TODO Use this as an example.
+    //    public CallSpec<XingUser, Object> getUsersById(String... ids) {
+    //        return this.<XingUser, Object>newGetSpec("/v1/users/{ids}")
+    //              .pathParam("ids", "")
+    //              .responseType(XingUser.class)
+    //              .build();
+    //    }
 }
