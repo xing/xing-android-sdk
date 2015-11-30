@@ -20,21 +20,20 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.network.info;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.xing.android.sdk.internal;
 
 /**
- * Informative annotation that describes that a parameter or a method is experimental.
+ * TODO docs.
  *
  * @author serj.lotutovici
  */
-@Documented
-@Target({ElementType.METHOD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.CLASS)
-public @interface Experimental {
+public final class Http {
+    public static final String HTTP_GET = "GET";
+    public static final String HTTP_POST = "POST";
+    public static final String HTTP_PUT = "PUT";
+    public static final String HTTP_DELETE = "DELETE";
+
+    /** No instances. */
+    private Http() {
+    }
 }

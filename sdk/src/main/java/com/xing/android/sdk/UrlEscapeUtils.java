@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.android.sdk;
+
+import android.support.annotation.Nullable;
 
 import static com.xing.android.sdk.Utils.checkNotNull;
 
@@ -56,28 +59,28 @@ final class UrlEscapeUtils {
      * {@code c > SAFE_OCTETS.length} then it should be escaped.
      */
     private static final boolean[] SAFE_OCTETS =
-            createSafeOctets(SAFE_CHARS + "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789");
+          createSafeOctets(SAFE_CHARS + "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789");
 
     /**
      * Returns the escaped form of a given literal string.
      *
-     * @param string the literal string to be escaped
+     * @param str the literal string to be escaped
      * @return the escaped form of {@code string}
      *
      * @throws NullPointerException if {@code string} is null
      * @throws IllegalArgumentException if {@code string} contains badly formed UTF-16 or cannot be
      * escaped for any other reason
      */
-    public static String escape(String string) {
-        checkNotNull(string, "string == null");
-        int slen = string.length();
+    public static String escape(String str) {
+        checkNotNull(str, "str == null");
+        int slen = str.length();
         for (int index = 0; index < slen; index++) {
-            char c = string.charAt(index);
+            char c = str.charAt(index);
             if (c >= SAFE_OCTETS.length || !SAFE_OCTETS[c]) {
-                return escapeSlow(string, index);
+                return escapeSlow(str, index);
             }
         }
-        return string;
+        return str;
     }
 
     /**
@@ -98,6 +101,7 @@ final class UrlEscapeUtils {
         int end = s.length();
 
         // Get a destination buffer and setup some loop variables.
+        //noinspection MagicNumber
         char[] dest = new char[1024];
         int destIndex = 0;
         int unescapedChunkStart = 0;
@@ -152,6 +156,8 @@ final class UrlEscapeUtils {
     }
 
     /** Escapes the given Unicode code point in UTF-8. */
+    @SuppressWarnings("MagicNumber")
+    @Nullable
     static char[] escape(int cp) {
         // We should never get negative values here but if we do it will throw an
         // IndexOutOfBoundsException, so at least it will get spotted.
@@ -317,12 +323,16 @@ final class UrlEscapeUtils {
                     return Character.toCodePoint(c1, c2);
                 }
                 throw new IllegalArgumentException(
-                        "Expected low surrogate but got char '" + c2 + "' with value " + (int) c2 + " at index " + index
-                                + " in '" + seq + "'");
+                      "Expected low surrogate but got char '" + c2
+                            + "' with value " + (int) c2
+                            + " at index " + index
+                            + " in '" + seq + '\'');
             } else {
                 throw new IllegalArgumentException(
-                        "Unexpected low surrogate character '" + c1 + "' with value " + (int) c1 + " at index " + (index
-                                - 1) + " in '" + seq + "'");
+                      "Unexpected low surrogate character '" + c1
+                            + "' with value " + (int) c1
+                            + " at index " + (index - 1)
+                            + " in '" + seq + '\'');
             }
         }
         throw new IndexOutOfBoundsException("Index exceeds specified range");

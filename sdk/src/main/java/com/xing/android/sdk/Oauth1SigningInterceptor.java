@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.android.sdk;
 
 import com.squareup.okhttp.HttpUrl;
@@ -62,7 +63,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
     private final Clock clock;
 
     private Oauth1SigningInterceptor(String consumerKey, String consumerSecret, String accessToken, String accessSecret,
-            Random random, Clock clock) {
+          Random random, Clock clock) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
         this.accessToken = accessToken;
@@ -96,7 +97,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
         HttpUrl url = request.httpUrl();
         for (int i = 0; i < url.querySize(); i++) {
             parameters.put(UrlEscapeUtils.escape(url.queryParameterName(i)),
-                    UrlEscapeUtils.escape(url.queryParameterValue(i)));
+                  UrlEscapeUtils.escape(url.queryParameterValue(i)));
         }
 
         Buffer body = new Buffer();
@@ -155,13 +156,13 @@ final class Oauth1SigningInterceptor implements Interceptor {
         String signature = ByteString.of(result).base64();
 
         String authorization = "OAuth " //
-                + OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", " //
-                + OAUTH_NONCE + "=\"" + oauthNonce + "\", "  //
-                + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature) + "\", " //
-                + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", " //
-                + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "  //
-                + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", " //
-                + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + "\"";
+              + OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", " //
+              + OAUTH_NONCE + "=\"" + oauthNonce + "\", "  //
+              + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature) + "\", " //
+              + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", " //
+              + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "  //
+              + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", " //
+              + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + "\"";
 
         return request.newBuilder().addHeader("Authorization", authorization).build();
     }
