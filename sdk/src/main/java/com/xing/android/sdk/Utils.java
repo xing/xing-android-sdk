@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.android.sdk;
 
 import com.squareup.okhttp.ResponseBody;
@@ -65,6 +66,19 @@ final class Utils {
             closeable.close();
         } catch (IOException ignored) {
         }
+    }
+
+    /** Returns a {@link RuntimeException} with a formatted error message. */
+    static RuntimeException assertionError(String message, Object... args) {
+        return assertionError(null, message, args);
+    }
+
+    /** Returns a {@link RuntimeException} with a formatted error message. */
+    static RuntimeException assertionError(Throwable cause, String message, Object... args) {
+        message = String.format(message, args);
+        IllegalArgumentException error = new IllegalArgumentException(message);
+        error.initCause(cause);
+        return error;
     }
 
     /**

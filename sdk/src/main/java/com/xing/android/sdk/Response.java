@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.android.sdk;
 
 import com.squareup.okhttp.Headers;
@@ -25,48 +26,50 @@ import static com.google.gdata.util.common.base.Preconditions.checkNotNull;
 /**
  * TODO docs.
  */
-public final class Response<T> {
+public final class Response<RT, ET> {
+    // TODO (SerjLtt) Make response reflect error type.
+
     /**
      * TODO docs.
      */
-    public static <T> Response<T> success(T body) {
+    public static <RT> Response<RT, Object> success(RT body) {
         return success(body, new com.squareup.okhttp.Response.Builder() //
-                .code(200)
-                .protocol(Protocol.HTTP_1_1)
-                .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
-                .build());
+              .code(200)
+              .protocol(Protocol.HTTP_1_1)
+              .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
+              .build());
     }
 
     /**
      * TODO docs.
      */
-    public static <T> Response<T> success(T body, com.squareup.okhttp.Response rawResponse) {
+    public static <RT> Response<RT, Object> success(RT body, com.squareup.okhttp.Response rawResponse) {
         return new Response<>(rawResponse, body, null);
     }
 
     /**
      * TODO docs.
      */
-    public static <T> Response<T> error(int code, ResponseBody body) {
+    public static <RT> Response<RT, Object> error(int code, ResponseBody body) {
         return error(body, new com.squareup.okhttp.Response.Builder() //
-                .code(code)
-                .protocol(Protocol.HTTP_1_1)
-                .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
-                .build());
+              .code(code)
+              .protocol(Protocol.HTTP_1_1)
+              .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
+              .build());
     }
 
     /**
      * TODO docs.
      */
-    public static <T> Response<T> error(ResponseBody body, com.squareup.okhttp.Response rawResponse) {
+    public static <RT, ET> Response<RT, ET> error(ResponseBody body, com.squareup.okhttp.Response rawResponse) {
         return new Response<>(rawResponse, null, body);
     }
 
     private final com.squareup.okhttp.Response rawResponse;
-    private final T body;
+    private final RT body;
     private final ResponseBody errorBody;
 
-    private Response(com.squareup.okhttp.Response rawResponse, T body, ResponseBody errorBody) {
+    private Response(com.squareup.okhttp.Response rawResponse, RT body, ResponseBody errorBody) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
         this.body = body;
         this.errorBody = errorBody;
@@ -97,7 +100,7 @@ public final class Response<T> {
     }
 
     /** The deserialized response body of a {@linkplain #isSuccess() successful} response. */
-    public T body() {
+    public RT body() {
         return body;
     }
 
