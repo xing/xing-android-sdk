@@ -18,6 +18,8 @@
 
 package com.xing.android.sdk;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.Closeable;
@@ -54,7 +56,7 @@ final class Utils {
      */
     static <T> void stateNull(T object, String message) {
         if (object != null) {
-            throw new IllegalStateException(message);
+            throw stateError(message);
         }
     }
 
@@ -74,18 +76,23 @@ final class Utils {
     }
 
     /** Returns a {@link RuntimeException} with a formatted error message. */
-    static RuntimeException assertionError(Throwable cause, String message, Object... args) {
+    static RuntimeException assertionError(@Nullable Throwable cause, String message, Object... args) {
         message = String.format(message, args);
         IllegalArgumentException error = new IllegalArgumentException(message);
         error.initCause(cause);
         return error;
     }
 
+    static RuntimeException stateError(String message, Object... args) {
+        return new IllegalStateException(String.format(message, args));
+    }
+
     /**
      * Replace a {@link com.squareup.okhttp.Response} with an identical copy whose body is backed by a {@link Buffer}
      * rather than a {@link okio.Source}.
      */
-    static ResponseBody readBodyToBytesIfNecessary(final ResponseBody body) throws IOException {
+    @Nullable
+    static ResponseBody readBodyToBytesIfNecessary(ResponseBody body) throws IOException {
         if (body == null) {
             return null;
         }

@@ -40,6 +40,7 @@ import rx.Observable;
 
 import static com.xing.android.sdk.Utils.assertionError;
 import static com.xing.android.sdk.Utils.checkNotNull;
+import static com.xing.android.sdk.Utils.stateError;
 import static com.xing.android.sdk.Utils.stateNotNull;
 
 /**
@@ -53,8 +54,8 @@ public final class CallSpec<RT, ET> {
     // private final CompoundType compoundType;
 
     private CallSpec(Builder<RT, ET> builder) {
-        api = builder.api;
         this.builder = builder;
+        api = builder.api;
     }
 
     public Response<RT, ET> execute() {
@@ -67,6 +68,21 @@ public final class CallSpec<RT, ET> {
 
     public Observable<Response<RT, ET>> stream() {
         throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    public CallSpec<RT, ET> queryParam(String name, String value) {
+        builder.queryParam(name, value);
+        return this;
+    }
+
+    public CallSpec<RT, ET> formField(String name, String value) {
+        builder.formField(name, value);
+        return this;
+    }
+
+    public <U> CallSpec<RT, ET> body(Class<U> cls, U body) {
+        builder.body(cls, body);
+        return this;
     }
 
     //TODO (DanielH) Provide conversion methods for responses.
@@ -122,12 +138,7 @@ public final class CallSpec<RT, ET> {
         }
 
         public Builder<RT, ET> queryParam(String name, String value) {
-            if (resourcePath != null) {
-                // Do a one-time combination of the built relative URL and the base URL.
-                urlBuilder = apiEndpoint.resolve(resourcePath).newBuilder();
-                resourcePath = null;
-            }
-
+            if (resourcePath != null) buildUrlBuilder();
             urlBuilder.addQueryParameter(name, value);
             return this;
         }
@@ -161,13 +172,44 @@ public final class CallSpec<RT, ET> {
         }
 
         public CallSpec<RT, ET> build() {
+            if (!resourcePathParams.isEmpty()) {
+                throw stateError("Not all path params where set. Found %d unsatisfied parameter(s)",
+                      resourcePathParams.size());
+            }
+
+            if (urlBuilder == null) buildUrlBuilder();
+
             // TODO (SerjLtt) Validate that CallSpec has everything necessary for request execution.
             return new CallSpec<>(this);
         }
 
-        //TODO (SerjLtt) Build request.
         Request request() {
-            return null;
+            HttpUrl url = urlBuilder.build();
+
+            RequestBody body = this.body;
+            if (body == null) {
+                // Try to pull from one of the builders.
+                if (formEncodingBuilder != null) {
+                    body = formEncodingBuilder.build();
+                } else if (hasBody) {
+                    // Body is absent, make an empty body.
+                    //noinspection ZeroLengthArrayAllocation
+                    body = RequestBody.create(null, new byte[0]);
+                }
+            }
+
+            //TODO (SerjLtt) set content type.
+
+            return requestBuilder
+                  .url(url)
+                  .method(method, body)
+                  .build();
+        }
+
+        /** Do a one-time combination of the built relative URL and the base URL. */
+        private void buildUrlBuilder() {
+            urlBuilder = apiEndpoint.resolve(resourcePath).newBuilder();
+            resourcePath = null;
         }
 
         static String canonicalize(String input) {
@@ -189,6 +231,7 @@ public final class CallSpec<RT, ET> {
             return input;
         }
 
+        @SuppressWarnings("MagicNumber")
         static void canonicalize(Buffer out, String input, int pos, int limit) {
             Buffer utf8Buffer = null; // Lazily allocated.
             int codePoint;
@@ -239,7 +282,7 @@ public final class CallSpec<RT, ET> {
             // Verify URL replacement name is actually present in the URL path.
             if (!resourcePathParams.contains(name)) {
                 throw assertionError(
-                      "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has ben already set.",
+                      "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has been already set.",
                       resourcePath, name);
             }
         }
