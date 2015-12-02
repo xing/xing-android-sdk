@@ -30,7 +30,7 @@ import android.util.Pair;
 import com.xing.android.sdk.json.FieldUtils;
 import com.xing.android.sdk.model.user.field.XingUserField;
 import com.xing.android.sdk.network.XingController;
-import com.xing.android.sdk.internal.Experimental;
+import com.xing.android.sdk.network.info.Experimental;
 import com.xing.android.sdk.network.info.Optional;
 import com.xing.android.sdk.network.oauth.OauthSigner;
 import com.xing.android.sdk.network.request.exception.NetworkException;

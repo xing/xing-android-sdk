@@ -20,10 +20,21 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.resources;
+package com.xing.android.sdk.network.info;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author daniel.hartwich
+ * Informative annotation that describes that a parameter or a method is experimental.
+ *
+ * @author serj.lotutovici
  */
-public class JobsResource {
+@Documented
+@Target({ElementType.METHOD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.CLASS)
+public @interface Experimental {
 }
