@@ -22,8 +22,10 @@
 
 package com.xing.android.sdk.resources;
 
+import com.xing.android.sdk.CallSpec;
 import com.xing.android.sdk.Resource;
 import com.xing.android.sdk.XingApi;
+import com.xing.android.sdk.model.user.XingUser;
 
 /**
  * @author serj.lotutovici
@@ -34,11 +36,19 @@ public class UserProfilesResource extends Resource {
         super(api);
     }
 
+    //     TODO Use this as an example.
+    public CallSpec<XingUser, Object> getUsersById(String id) {
+        return this.<XingUser, Object>newGetSpec("/v1/users/{id}")
+              .pathParam("id", id)
+              .responseType(XingUser.class)
+              .build();
+    }
+
     // TODO Use this as an example.
-    //    public CallSpec<XingUser, Object> getUsersById(String... ids) {
-    //        return this.<XingUser, Object>newGetSpec("/v1/users/{ids}")
-    //              .pathParam("ids", "")
-    //              .responseType(XingUser.class)
-    //              .build();
-    //    }
+    public CallSpec<XingUser, Object> getOwnProfile() {
+        return this.<XingUser, Object>newGetSpec("/v1/users/me")
+              .responseType(XingUser.class)
+              .build();
+
+    }
 }

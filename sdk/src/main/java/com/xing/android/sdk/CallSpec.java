@@ -30,6 +30,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.xing.android.sdk.internal.HttpMethod;
 
+import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -99,6 +100,8 @@ public final class CallSpec<RT, ET> {
         private static final Pattern PARAM_NAME_REGEX = Pattern.compile(PARAM);
         private static final Pattern PARAM_URL_REGEX = Pattern.compile("\\{(" + PARAM + ")\\}");
 
+        static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");
+
         private final XingApi api;
         private final String method;
         private final HttpUrl apiEndpoint;
@@ -111,7 +114,7 @@ public final class CallSpec<RT, ET> {
         private FormEncodingBuilder formEncodingBuilder;
         private RequestBody body;
 
-        private Class<RT> responseCls;
+        private TypeDelegate responseDelegate;
         private Class<ET> errorCls;
 
         // For now block the possibility to build outside this package.
@@ -155,13 +158,22 @@ public final class CallSpec<RT, ET> {
 
         //TODO Avoid converting response body on main thread?
         public <U> Builder<RT, ET> body(Class<U> cls, U body) {
+            Buffer buffer = new Buffer();
             JsonAdapter<U> jsonAdapter = api.converter.adapter(cls);
-            return body(RequestBody.create(MediaType.parse("application/json"), jsonAdapter.toJson(body)));
+            try {
+                jsonAdapter.toJson(buffer, body);
+            } catch (IOException ignored) {
+                //Doesn't need to be handled. Buffer should not throw in this case.
+            }
+            return body(RequestBody.create(MEDIA_TYPE, buffer.readByteArray()));
         }
 
-        //TODO (DanielH) Add support for a generic tree type. This is mandatory.
         public Builder<RT, ET> responseType(Class<RT> responseType) {
-            responseCls = checkNotNull(responseType, "responseType == null");
+            return responseType(checkNotNull(TypeDelegate.single(responseType), "responseType == null"));
+        }
+
+        public Builder<RT, ET> responseType(TypeDelegate typeDelegate) {
+            responseDelegate = checkNotNull(typeDelegate, "typeDelegate == null");
             return this;
         }
 
