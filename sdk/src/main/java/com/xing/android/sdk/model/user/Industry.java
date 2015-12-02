@@ -41,7 +41,8 @@ import java.util.List;
 public class Industry implements Serializable, Parcelable {
     private static final long serialVersionUID = 6164637739744149347L;
     private static final float FIRST_CATEGORY_CONVERSION = 10000f;
-    /** Creator object for the Parcelable contract. */
+
+    /* Creator object for the Parcelable contract. */
     public static final Creator<Industry> CREATOR = new Creator<Industry>() {
         @Override
         public Industry createFromParcel(Parcel source) {

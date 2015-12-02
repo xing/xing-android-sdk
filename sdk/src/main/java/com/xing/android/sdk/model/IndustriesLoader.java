@@ -29,6 +29,7 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import java.io.ByteArrayInputStream;
 import com.xing.android.sdk.model.user.Industry;
 
 import java.io.InputStream;
@@ -51,6 +52,7 @@ public final class IndustriesLoader {
     private static final String LOCALIZED_NAME = "localized_name";
     private static final String SEGMENTS = "segments";
     private static final String INDUSTRIES_PATH_TO_FORMAT = "industries_%s.json";
+    private static final String UTF_8 = "UTF-8";
 
     /**
      * Parses and returns the new industry list models. These are composed by a list of {@link Industry} object, in
@@ -76,10 +78,29 @@ public final class IndustriesLoader {
         return industries;
     }
 
+    /**
+     * Parses and returns the new industry list models from a given JSON string.
+     *
+     * @param json    the JSON string to be parsed
+     * @return the list of industries completed with relative segments
+     */
+    @Nullable
+    public static List<Industry> getIndustriesList(@NonNull String json) {
+        List<Industry> industries = null;
+        try {
+            InputStream inputStream = new ByteArrayInputStream(json.getBytes(UTF_8));
+            JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
+            reader.setLenient(true);
+            industries = readJson(reader);
+        } catch (Exception exception) {
+            Log.e(TAG, exception.toString());
+        }
+        return industries;
+    }
+
     @Nullable
     static List<Industry> readJson(@NonNull JsonReader reader) throws Exception {
         List<Industry> industries = null;
-
         if (reader.hasNext()) {
             reader.beginObject();
             while (reader.hasNext()) {
@@ -92,7 +113,6 @@ public final class IndustriesLoader {
             }
             reader.endObject();
         }
-
         return industries;
     }
 
