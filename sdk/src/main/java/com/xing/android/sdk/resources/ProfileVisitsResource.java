@@ -20,37 +20,19 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.resources;
 
-import com.xing.android.sdk.internal.Http;
+import com.xing.android.sdk.Resource;
+import com.xing.android.sdk.XingApi;
 
 /**
- * TODO docs.
- *
- * @author serj.lotutovici
+ * @author daniel.hartwich
  */
-public abstract class Resource {
-    final XingApi api;
-
-    /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected Resource(XingApi api) {
-        this.api = api;
-    }
-
-    // TODO (DanielH) Implement all internal methods required for building specs.
-    protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
-    }
-
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_POST, resourcePath, true, true);
-    }
-
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_PUT, resourcePath, true, false);
-    }
-
-    protected <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_DELETE, resourcePath, false, false);
+public class ProfileVisitsResource extends Resource {
+    /**
+     * Creates a resource instance. This should be the only constructor declared by child classes.
+     */
+    protected ProfileVisitsResource(XingApi api) {
+        super(api);
     }
 }
