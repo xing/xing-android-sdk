@@ -20,12 +20,11 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.network.oauth;
+package com.xing.android.api.oauth;
 
 import android.content.Context;
 import android.net.Uri;
-
-import com.xing.android.sdk.R;
+import android.support.annotation.Nullable;
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
@@ -41,6 +40,7 @@ public final class OauthAuthenticatorHelper {
     public static final String CONSUMER_SECRET = "consumerSecret";
     public static final String TOKEN = "token";
     public static final String TOKEN_SECRET = "tokenSecret";
+
     private final OAuthConsumer mConsumer;
     private final OAuthProvider mProvider;
     private final String mCallbackUrl;
@@ -52,7 +52,7 @@ public final class OauthAuthenticatorHelper {
      * @param consumerKey Consumer key of the app in the server.
      * @param consumerSecret Consumer secret of the app in the server.
      */
-    public OauthAuthenticatorHelper(Context context, String consumerKey, String consumerSecret) {
+    public OauthAuthenticatorHelper(Context context, @Nullable String consumerKey, @Nullable String consumerSecret) {
         mConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
         mProvider = new DefaultOAuthProvider(context.getString(R.string.requestTokenUrl),
                 context.getString(R.string.accessTokenUrl), context.getString(R.string.authorizeUrl));
@@ -66,7 +66,7 @@ public final class OauthAuthenticatorHelper {
      * @return Url used by the server as a callback.
      */
     private static String buildCallback(Context context) {
-        return context.getString(R.string.xingsdk) + "://" + context.getString(R.string.callback);
+        return context.getString(R.string.xing_sdk) + "://" + context.getString(R.string.callback);
     }
 
     /**

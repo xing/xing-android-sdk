@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2015 XING AG (http://xing.com/)
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,13 +21,10 @@
   ~ THE SOFTWARE.
   -->
 
-
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    package="com.xing.android.sdk"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <application tools:ignore="GoogleAppIndexingWarning" />
-
-</manifest>
+<resources>
+    <string name="xing_sdk">xingsdk</string>
+    <string name="requestTokenUrl">https://api.xing.com/v1/request_token</string>
+    <string name="authorizeUrl">https://api.xing.com/v1/authorize</string>
+    <string name="accessTokenUrl">https://api.xing.com/v1/access_token</string>
+    <string name="callback">callback</string>
+</resources>
