@@ -68,14 +68,14 @@ public enum WebProfile implements JsonEnum {
     ZOOMINFO("zoominfo");
 
     /** Name value that is received form the json response. */
-    private final String mName;
+    private final String name;
 
-    WebProfile(@NonNull final String name) {
-        mName = name;
+    WebProfile(@NonNull String name) {
+        this.name = name;
     }
 
     @Override
     public String getJsonValue() {
-        return mName;
+        return name;
     }
 }

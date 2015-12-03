@@ -25,6 +25,8 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
+
 import java.io.Serializable;
 
 /**
@@ -49,15 +51,24 @@ public class XingAddress implements Serializable, Parcelable {
         }
     };
 
-    private String mCity;
-    private String mCountry;
-    private String mEmail;
-    private XingPhone mFax;
-    private XingPhone mMobilePhone;
-    private XingPhone mPhone;
-    private String mProvince;
-    private String mStreet;
-    private String mZipCode;
+    @Json(name = "city")
+    private String city;
+    @Json(name = "country")
+    private String country;
+    @Json(name = "email")
+    private String email;
+    @Json(name = "fax")
+    private XingPhone fax;
+    @Json(name = "mobile_phone")
+    private XingPhone mobilePhone;
+    @Json(name = "phone")
+    private XingPhone phone;
+    @Json(name = "province")
+    private String province;
+    @Json(name = "street")
+    private String street;
+    @Json(name = "zip_code")
+    private String zipCode;
 
     /** Create a simple XingAddress object with empty fields. */
     public XingAddress() {
@@ -69,15 +80,15 @@ public class XingAddress implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private XingAddress(Parcel in) {
-        mCity = in.readString();
-        mCountry = in.readString();
-        mEmail = in.readString();
-        mFax = in.readParcelable(XingPhone.class.getClassLoader());
-        mMobilePhone = in.readParcelable(XingPhone.class.getClassLoader());
-        mPhone = in.readParcelable(XingPhone.class.getClassLoader());
-        mProvince = in.readString();
-        mStreet = in.readString();
-        mZipCode = in.readString();
+        city = in.readString();
+        country = in.readString();
+        email = in.readString();
+        fax = in.readParcelable(XingPhone.class.getClassLoader());
+        mobilePhone = in.readParcelable(XingPhone.class.getClassLoader());
+        phone = in.readParcelable(XingPhone.class.getClassLoader());
+        province = in.readString();
+        street = in.readString();
+        zipCode = in.readString();
     }
 
     @Override
@@ -95,15 +106,15 @@ public class XingAddress implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        int result = mCity != null ? mCity.hashCode() : 0;
-        result = 31 * result + (mCountry != null ? mCountry.hashCode() : 0);
-        result = 31 * result + (mEmail != null ? mEmail.hashCode() : 0);
-        result = 31 * result + (mFax != null ? mFax.hashCode() : 0);
-        result = 31 * result + (mMobilePhone != null ? mMobilePhone.hashCode() : 0);
-        result = 31 * result + (mPhone != null ? mPhone.hashCode() : 0);
-        result = 31 * result + (mProvince != null ? mProvince.hashCode() : 0);
-        result = 31 * result + (mStreet != null ? mStreet.hashCode() : 0);
-        result = 31 * result + (mZipCode != null ? mZipCode.hashCode() : 0);
+        int result = city != null ? city.hashCode() : 0;
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (fax != null ? fax.hashCode() : 0);
+        result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (province != null ? province.hashCode() : 0);
+        result = 31 * result + (street != null ? street.hashCode() : 0);
+        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
         return result;
     }
 
@@ -114,113 +125,113 @@ public class XingAddress implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mCity);
-        dest.writeString(mCountry);
-        dest.writeString(mEmail);
-        dest.writeParcelable(mFax, flags);
-        dest.writeParcelable(mMobilePhone, flags);
-        dest.writeParcelable(mPhone, flags);
-        dest.writeString(mProvince);
-        dest.writeString(mStreet);
-        dest.writeString(mZipCode);
+        dest.writeString(city);
+        dest.writeString(country);
+        dest.writeString(email);
+        dest.writeParcelable(fax, flags);
+        dest.writeParcelable(mobilePhone, flags);
+        dest.writeParcelable(phone, flags);
+        dest.writeString(province);
+        dest.writeString(street);
+        dest.writeString(zipCode);
     }
 
     public String getCity() {
-        return mCity;
+        return city;
     }
 
-    public void setCity(final String city) {
-        mCity = city;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getCountry() {
-        return mCountry;
+        return country;
     }
 
-    public void setCountry(final String country) {
-        mCountry = country;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getEmail() {
-        return mEmail;
+        return email;
     }
 
-    public void setEmail(final String email) {
-        mEmail = email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public XingPhone getFax() {
-        return mFax;
+        return fax;
     }
 
-    public void setFax(final String fax) throws XingPhone.InvalidPhoneException {
-        mFax = XingPhone.createXingPhone(fax);
+    public void setFax(String fax) throws XingPhone.InvalidPhoneException {
+        this.fax = XingPhone.createXingPhone(fax);
     }
 
-    public void setFax(final XingPhone fax) {
-        mFax = fax;
+    public void setFax(XingPhone fax) {
+        this.fax = fax;
     }
 
-    public void setFax(final String countryCode, final String areaCode, final String number)
-            throws XingPhone.InvalidPhoneException {
-        mFax = new XingPhone(countryCode, areaCode, number);
+    public void setFax(String countryCode, String areaCode, String number)
+    throws XingPhone.InvalidPhoneException {
+        fax = new XingPhone(countryCode, areaCode, number);
     }
 
     public XingPhone getMobilePhone() {
-        return mMobilePhone;
+        return mobilePhone;
     }
 
-    public void setMobilePhone(final String mobilePhone) throws XingPhone.InvalidPhoneException {
-        mMobilePhone = XingPhone.createXingPhone(mobilePhone);
+    public void setMobilePhone(String mobilePhone) throws XingPhone.InvalidPhoneException {
+        this.mobilePhone = XingPhone.createXingPhone(mobilePhone);
     }
 
-    public void setMobilePhone(final XingPhone mobilePhone) {
-        mMobilePhone = mobilePhone;
+    public void setMobilePhone(XingPhone mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
-    public void setMobilePhone(final String countryCode, final String areaCode, final String number)
-            throws XingPhone.InvalidPhoneException {
-        mMobilePhone = new XingPhone(countryCode, areaCode, number);
+    public void setMobilePhone(String countryCode, String areaCode, String number)
+    throws XingPhone.InvalidPhoneException {
+        mobilePhone = new XingPhone(countryCode, areaCode, number);
     }
 
     public XingPhone getPhone() {
-        return mPhone;
+        return phone;
     }
 
-    public void setPhone(final String phone) throws XingPhone.InvalidPhoneException {
-        mPhone = XingPhone.createXingPhone(phone);
+    public void setPhone(String phone) throws XingPhone.InvalidPhoneException {
+        this.phone = XingPhone.createXingPhone(phone);
     }
 
-    public void setPhone(final XingPhone phone) {
-        mPhone = phone;
+    public void setPhone(XingPhone phone) {
+        this.phone = phone;
     }
 
-    public void setPhone(final String countryCode, final String areaCode, final String number)
-            throws XingPhone.InvalidPhoneException {
-        mPhone = new XingPhone(countryCode, areaCode, number);
+    public void setPhone(String countryCode, String areaCode, String number)
+    throws XingPhone.InvalidPhoneException {
+        phone = new XingPhone(countryCode, areaCode, number);
     }
 
     public String getProvince() {
-        return mProvince;
+        return province;
     }
 
-    public void setProvince(final String province) {
-        mProvince = province;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getStreet() {
-        return mStreet;
+        return street;
     }
 
-    public void setStreet(final String street) {
-        mStreet = street;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getZipCode() {
-        return mZipCode;
+        return zipCode;
     }
 
-    public void setZipCode(final String zipCode) {
-        mZipCode = zipCode;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 }

@@ -45,14 +45,14 @@ public enum CompanySize implements JsonEnum {
     SIZE_5001_10000("5001-10000"),
     SIZE_10001PLUS("10001+");
 
-    private final String mText;
+    private final String text;
 
-    CompanySize(@NonNull final String text) {
-        mText = text;
+    CompanySize(@NonNull String text) {
+        this.text = text;
     }
 
     @Override
     public String getJsonValue() {
-        return mText;
+        return text;
     }
 }

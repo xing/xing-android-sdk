@@ -25,6 +25,8 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +53,14 @@ public class ProfessionalExperience implements Serializable, Parcelable {
     };
 
     /** Primary company. */
-    private ExperienceCompany mPrimaryCompany;
+    @Json(name = "primary_company")
+    private ExperienceCompany primaryCompany;
     /** List of companies. */
-    private List<ExperienceCompany> mCompanies;
+    @Json(name = "companies")
+    private List<ExperienceCompany> companies;
     /** List of awards. */
-    private List<Award> mAwards;
+    @Json(name = "awards")
+    private List<Award> awards;
 
     /** Create a simple Professional experience object with empty fields. */
     public ProfessionalExperience() {
@@ -67,11 +72,11 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private ProfessionalExperience(Parcel in) {
-        mPrimaryCompany = in.readParcelable(ExperienceCompany.class.getClassLoader());
-        mCompanies = new ArrayList<>();
-        in.readTypedList(mCompanies, ExperienceCompany.CREATOR);
-        mAwards = new ArrayList<>();
-        in.readTypedList(mAwards, Award.CREATOR);
+        primaryCompany = in.readParcelable(ExperienceCompany.class.getClassLoader());
+        companies = new ArrayList<>(1);
+        in.readTypedList(companies, ExperienceCompany.CREATOR);
+        awards = new ArrayList<>(1);
+        in.readTypedList(awards, Award.CREATOR);
     }
 
     @Override
@@ -83,15 +88,15 @@ public class ProfessionalExperience implements Serializable, Parcelable {
             return false;
         }
 
-        ProfessionalExperience that = (ProfessionalExperience) obj;
-        return hashCode() == that.hashCode();
+        ProfessionalExperience professionalExperience = (ProfessionalExperience) obj;
+        return hashCode() == professionalExperience.hashCode();
     }
 
     @Override
     public int hashCode() {
-        int result = mPrimaryCompany != null ? mPrimaryCompany.hashCode() : 0;
-        result = 31 * result + (mCompanies != null ? mCompanies.hashCode() : 0);
-        result = 31 * result + (mAwards != null ? mAwards.hashCode() : 0);
+        int result = primaryCompany != null ? primaryCompany.hashCode() : 0;
+        result = 31 * result + (companies != null ? companies.hashCode() : 0);
+        result = 31 * result + (awards != null ? awards.hashCode() : 0);
         return result;
     }
 
@@ -102,9 +107,9 @@ public class ProfessionalExperience implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(mPrimaryCompany, 0);
-        dest.writeTypedList(mCompanies);
-        dest.writeTypedList(mAwards);
+        dest.writeParcelable(primaryCompany, 0);
+        dest.writeTypedList(companies);
+        dest.writeTypedList(awards);
     }
 
     /**
@@ -113,7 +118,7 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @return primary company.
      */
     public ExperienceCompany getPrimaryCompany() {
-        return mPrimaryCompany;
+        return primaryCompany;
     }
 
     /**
@@ -122,7 +127,7 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @param primaryCompany primary company.
      */
     public void setPrimaryCompany(ExperienceCompany primaryCompany) {
-        mPrimaryCompany = primaryCompany;
+        this.primaryCompany = primaryCompany;
     }
 
     /**
@@ -131,7 +136,7 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @return list of companies.
      */
     public List<ExperienceCompany> getCompanies() {
-        return mCompanies;
+        return companies;
     }
 
     /**
@@ -140,7 +145,7 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @param companies list of companies.
      */
     public void setCompanies(List<ExperienceCompany> companies) {
-        mCompanies = companies;
+        this.companies = companies;
     }
 
     /**
@@ -149,7 +154,7 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @return list of awards.
      */
     public List<Award> getAwards() {
-        return mAwards;
+        return awards;
     }
 
     /**
@@ -158,6 +163,6 @@ public class ProfessionalExperience implements Serializable, Parcelable {
      * @param awards list of awards.
      */
     public void setAwards(List<Award> awards) {
-        mAwards = awards;
+        this.awards = awards;
     }
 }

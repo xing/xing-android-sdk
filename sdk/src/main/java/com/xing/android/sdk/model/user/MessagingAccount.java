@@ -44,7 +44,7 @@ public enum MessagingAccount implements JsonEnum {
     /** The name value received from the json response. */
     private final String mName;
 
-    MessagingAccount(@NonNull final String accountName) {
+    MessagingAccount(@NonNull String accountName) {
         mName = accountName;
     }
 

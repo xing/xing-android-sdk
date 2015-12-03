@@ -51,9 +51,9 @@ public class ProfileMessage implements Serializable, Parcelable {
     };
 
     /** Date message was updated. */
-    private XingCalendar mUpdatedAt;
+    private XingCalendar updatedAt;
     /** Message. */
-    private String mMessage;
+    private String message;
 
     /** Create a simple Profile Message object with empty fields. */
     public ProfileMessage() {
@@ -65,8 +65,8 @@ public class ProfileMessage implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private ProfileMessage(Parcel in) {
-        this.mUpdatedAt = (XingCalendar) in.readSerializable();
-        this.mMessage = in.readString();
+        updatedAt = (XingCalendar) in.readSerializable();
+        message = in.readString();
     }
 
     @Override
@@ -76,8 +76,8 @@ public class ProfileMessage implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.mUpdatedAt);
-        dest.writeString(this.mMessage);
+        dest.writeSerializable(updatedAt);
+        dest.writeString(message);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ProfileMessage implements Serializable, Parcelable {
      * @return date message updated.
      */
     public XingCalendar getUpdatedAt() {
-        return mUpdatedAt;
+        return updatedAt;
     }
 
     /**
@@ -95,7 +95,7 @@ public class ProfileMessage implements Serializable, Parcelable {
      * @param updatedAt date message updated.
      */
     public void setUpdatedAt(XingCalendar updatedAt) {
-        mUpdatedAt = updatedAt;
+        this.updatedAt = updatedAt;
     }
 
     /**
@@ -104,7 +104,7 @@ public class ProfileMessage implements Serializable, Parcelable {
      * @return message
      */
     public String getMessage() {
-        return mMessage;
+        return message;
     }
 
     /**
@@ -113,6 +113,6 @@ public class ProfileMessage implements Serializable, Parcelable {
      * @param message message.
      */
     public void setMessage(String message) {
-        mMessage = message;
+        this.message = message;
     }
 }

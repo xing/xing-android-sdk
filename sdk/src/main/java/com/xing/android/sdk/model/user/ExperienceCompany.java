@@ -28,6 +28,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.json.EnumMapper;
 import com.xing.android.sdk.model.XingCalendar;
 
@@ -61,33 +62,46 @@ public class ExperienceCompany implements Serializable, Parcelable {
     };
 
     /** Company id. */
-    private String mId;
+    @Json(name = "id")
+    private String id;
     /** Career level. */
-    private CareerLevel mCareerLevel;
+    @Json(name = "career_level")
+    private CareerLevel careerLevel;
     /** Company size. */
-    private CompanySize mCompanySize;
+    @Json(name = "company_size")
+    private CompanySize companySize;
     /** Company description. */
-    private String mDescription;
+    @Json(name = "description")
+    private String description;
     /** Employee status. */
-    private FormOfEmployment mFormOfEmployment;
+    @Json(name = "form_of_employment")
+    private FormOfEmployment formOfEmployment;
     /** Industry of company. */
-    private Industry mIndustry;
+    @Json(name = "industry")
+    private Industry industry;
     /** Name of company. */
-    private String mName;
+    @Json(name = "name")
+    private String name;
     /** Job title at company. */
-    private String mTitle;
+    @Json(name = "title")
+    private String title;
     /** Tags. */
-    private String mTag;
+    @Json(name = "tag")
+    private String tag;
     /** Currently working at company. */
-    private boolean mUntilNow;
+    @Json(name = "until_now")
+    private boolean untilNow;
     /** Company URL. */
-    private Uri mUrl;
+    @Json(name = "url")
+    private Uri url;
     /** Begin date of employment. */
     @Nullable
-    private XingCalendar mBeginDate;
+    @Json(name = "begin_date")
+    private XingCalendar beginDate;
     /** End date of employment. */
     @Nullable
-    private XingCalendar mEndDate;
+    @Json(name = "end_date")
+    private XingCalendar endDate;
 
     public ExperienceCompany() {
     }
@@ -98,26 +112,26 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private ExperienceCompany(Parcel in) {
-        mId = in.readString();
-        mBeginDate = (XingCalendar) in.readSerializable();
+        id = in.readString();
+        beginDate = (XingCalendar) in.readSerializable();
         int tmpMCareerLevel = in.readInt();
-        mCareerLevel = tmpMCareerLevel == -1 ? null : CareerLevel.values()[tmpMCareerLevel];
+        careerLevel = tmpMCareerLevel == -1 ? null : CareerLevel.values()[tmpMCareerLevel];
         int tmpMCompanySize = in.readInt();
-        mCompanySize = tmpMCompanySize == -1 ? null : CompanySize.values()[tmpMCompanySize];
-        mDescription = in.readString();
-        mEndDate = (XingCalendar) in.readSerializable();
+        companySize = tmpMCompanySize == -1 ? null : CompanySize.values()[tmpMCompanySize];
+        description = in.readString();
+        endDate = (XingCalendar) in.readSerializable();
         int tmpMFormOfEmployment = in.readInt();
-        mFormOfEmployment = tmpMFormOfEmployment == -1 ? null : FormOfEmployment.values()[tmpMFormOfEmployment];
+        formOfEmployment = tmpMFormOfEmployment == -1 ? null : FormOfEmployment.values()[tmpMFormOfEmployment];
         int industryId = in.readInt();
         String industryType = in.readString();
         if (industryId > -1) {
-            mIndustry = new Industry(industryId, industryType);
+            industry = new Industry(industryId, industryType);
         }
-        mName = in.readString();
-        mTitle = in.readString();
-        mUntilNow = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        mUrl = in.readParcelable(Uri.class.getClassLoader());
-        mTag = in.readString();
+        name = in.readString();
+        title = in.readString();
+        untilNow = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        url = in.readParcelable(Uri.class.getClassLoader());
+        tag = in.readString();
     }
 
     /** Throw an exception with explicit message. */
@@ -140,19 +154,19 @@ public class ExperienceCompany implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        int result = mId != null ? mId.hashCode() : 0;
-        result = 31 * result + (mBeginDate != null ? mBeginDate.hashCode() : 0);
-        result = 31 * result + (mCareerLevel != null ? mCareerLevel.hashCode() : 0);
-        result = 31 * result + (mCompanySize != null ? mCompanySize.hashCode() : 0);
-        result = 31 * result + (mDescription != null ? mDescription.hashCode() : 0);
-        result = 31 * result + (mEndDate != null ? mEndDate.hashCode() : 0);
-        result = 31 * result + (mFormOfEmployment != null ? mFormOfEmployment.hashCode() : 0);
-        result = 31 * result + (mIndustry != null ? mIndustry.hashCode() : 0);
-        result = 31 * result + (mName != null ? mName.hashCode() : 0);
-        result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
-        result = 31 * result + (mUntilNow ? 1 : 0);
-        result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
-        result = 31 * result + (mTag != null ? mTag.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (beginDate != null ? beginDate.hashCode() : 0);
+        result = 31 * result + (careerLevel != null ? careerLevel.hashCode() : 0);
+        result = 31 * result + (companySize != null ? companySize.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (formOfEmployment != null ? formOfEmployment.hashCode() : 0);
+        result = 31 * result + (industry != null ? industry.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (untilNow ? 1 : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (tag != null ? tag.hashCode() : 0);
         return result;
     }
 
@@ -163,20 +177,20 @@ public class ExperienceCompany implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
-        dest.writeSerializable(mBeginDate);
-        dest.writeInt(mCareerLevel == null ? -1 : mCareerLevel.ordinal());
-        dest.writeInt(mCompanySize == null ? -1 : mCompanySize.ordinal());
-        dest.writeString(mDescription);
-        dest.writeSerializable(mEndDate);
-        dest.writeInt(mFormOfEmployment == null ? -1 : mFormOfEmployment.ordinal());
-        dest.writeInt(mIndustry == null ? -1 : mIndustry.getId());
-        dest.writeString(mIndustry == null ? "" : mIndustry.getTypeName());
-        dest.writeString(mName);
-        dest.writeString(mTitle);
-        dest.writeValue(mUntilNow);
-        dest.writeParcelable(mUrl, flags);
-        dest.writeString(mTag);
+        dest.writeString(id);
+        dest.writeSerializable(beginDate);
+        dest.writeInt(careerLevel == null ? -1 : careerLevel.ordinal());
+        dest.writeInt(companySize == null ? -1 : companySize.ordinal());
+        dest.writeString(description);
+        dest.writeSerializable(endDate);
+        dest.writeInt(formOfEmployment == null ? -1 : formOfEmployment.ordinal());
+        dest.writeInt(industry == null ? -1 : industry.getId());
+        dest.writeString(industry == null ? "" : industry.getTypeName());
+        dest.writeString(name);
+        dest.writeString(title);
+        dest.writeValue(untilNow);
+        dest.writeParcelable(url, flags);
+        dest.writeString(tag);
     }
 
     /**
@@ -185,7 +199,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return id
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -194,7 +208,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param id id
      */
     public void setId(String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -204,7 +218,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      */
     @Nullable
     public XingCalendar getBeginDate() {
-        return mBeginDate;
+        return beginDate;
     }
 
     /**
@@ -213,7 +227,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param beginDate begin date of employment.
      */
     public void setBeginDate(@Nullable XingCalendar beginDate) {
-        mBeginDate = beginDate;
+        this.beginDate = beginDate;
     }
 
     /**
@@ -222,7 +236,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return career level.
      */
     public CareerLevel getCareerLevel() {
-        return mCareerLevel;
+        return careerLevel;
     }
 
     /**
@@ -231,7 +245,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param careerLevel career level.
      */
     public void setCareerLevel(CareerLevel careerLevel) {
-        mCareerLevel = careerLevel;
+        this.careerLevel = careerLevel;
     }
 
     /**
@@ -240,7 +254,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param careerLevel career level.
      */
     public void setCareerLevel(String careerLevel) {
-        mCareerLevel = EnumMapper.parseEnumFromString(CareerLevel.values(), careerLevel);
+        this.careerLevel = EnumMapper.parseEnumFromString(CareerLevel.values(), careerLevel);
     }
 
     /**
@@ -249,7 +263,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return company size.
      */
     public CompanySize getCompanySize() {
-        return mCompanySize;
+        return companySize;
     }
 
     /**
@@ -258,7 +272,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param companySize company size.
      */
     public void setCompanySize(CompanySize companySize) {
-        mCompanySize = companySize;
+        this.companySize = companySize;
     }
 
     /**
@@ -267,11 +281,11 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param companySize company size.
      */
     public void setCompanySize(String companySize) {
-        mCompanySize = EnumMapper.parseEnumFromString(CompanySize.values(), companySize);
+        this.companySize = EnumMapper.parseEnumFromString(CompanySize.values(), companySize);
     }
 
     public String getDescription() {
-        return mDescription;
+        return description;
     }
 
     /**
@@ -284,7 +298,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
         if (description != null && description.length() > DESCRIPTION_LIMIT) {
             throwArgumentToLong("Description", DESCRIPTION_LIMIT);
         } else {
-            mDescription = description;
+            this.description = description;
         }
     }
 
@@ -295,7 +309,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      */
     @Nullable
     public XingCalendar getEndDate() {
-        return mEndDate;
+        return endDate;
     }
 
     /**
@@ -304,7 +318,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param endDate end date.
      */
     public void setEndDate(@Nullable XingCalendar endDate) {
-        mEndDate = endDate;
+        this.endDate = endDate;
     }
 
     /**
@@ -313,7 +327,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return form of employment.
      */
     public FormOfEmployment getFormOfEmployment() {
-        return mFormOfEmployment;
+        return formOfEmployment;
     }
 
     /**
@@ -322,7 +336,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param formOfEmployment form of employment.
      */
     public void setFormOfEmployment(FormOfEmployment formOfEmployment) {
-        mFormOfEmployment = formOfEmployment;
+        this.formOfEmployment = formOfEmployment;
     }
 
     /**
@@ -331,7 +345,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param formOfEmployment form of employment.
      */
     public void setFormOfEmployment(String formOfEmployment) {
-        mFormOfEmployment = EnumMapper.parseEnumFromString(FormOfEmployment.values(), formOfEmployment);
+        this.formOfEmployment = EnumMapper.parseEnumFromString(FormOfEmployment.values(), formOfEmployment);
     }
 
     /**
@@ -340,7 +354,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return industry of company.
      */
     public Industry getIndustry() {
-        return mIndustry;
+        return industry;
     }
 
     /**
@@ -349,7 +363,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param industry industry of company.
      */
     public void setIndustry(Industry industry) {
-        mIndustry = industry;
+        this.industry = industry;
     }
 
     /**
@@ -358,7 +372,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return name of company.
      */
     public String getName() {
-        return mName;
+        return name;
     }
 
     /**
@@ -370,7 +384,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
         if (name != null && name.length() > NAME_LIMIT) {
             throwArgumentToLong("Name", NAME_LIMIT);
         } else {
-            mName = name;
+            this.name = name;
         }
     }
 
@@ -380,7 +394,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return job title.
      */
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     /**
@@ -392,7 +406,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
         if (title != null && title.length() > TITLE_LIMIT) {
             throwArgumentToLong("Title", TITLE_LIMIT);
         } else {
-            mTitle = title;
+            this.title = title;
         }
     }
 
@@ -402,7 +416,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return true, if current position, otherwise false.
      */
     public boolean getUntilNow() {
-        return mUntilNow;
+        return untilNow;
     }
 
     /**
@@ -411,7 +425,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param untilNow true, if job is current position.
      */
     public void setUntilNow(boolean untilNow) {
-        mUntilNow = untilNow;
+        this.untilNow = untilNow;
     }
 
     /**
@@ -420,7 +434,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return company URL.
      */
     public Uri getUrl() {
-        return mUrl;
+        return url;
     }
 
     /**
@@ -432,7 +446,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
         if (url != null && url.toString().length() > URL_LIMIT) {
             throwArgumentToLong("Url", URL_LIMIT);
         } else {
-            mUrl = url;
+            this.url = url;
         }
     }
 
@@ -443,7 +457,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      */
     public boolean isFilledForAddCompany() {
         boolean filled = true;
-        if (TextUtils.isEmpty(mName) || TextUtils.isEmpty(mTitle) || mIndustry == null || mFormOfEmployment == null) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(title) || industry == null || formOfEmployment == null) {
             filled = false;
         }
         return filled;
@@ -455,7 +469,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @return tag.
      */
     public String getTag() {
-        return mTag;
+        return tag;
     }
 
     /**
@@ -464,6 +478,6 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param tag tag
      */
     public void setTag(String tag) {
-        mTag = tag;
+        this.tag = tag;
     }
 }
