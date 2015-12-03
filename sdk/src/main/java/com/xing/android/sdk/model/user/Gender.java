@@ -35,14 +35,14 @@ public enum Gender implements JsonEnum {
     MALE("m"),
     FEMALE("f");
 
-    private final String mGender;
+    private final String gender;
 
-    Gender(@NonNull final String gender) {
-        mGender = gender;
+    Gender(@NonNull String gender) {
+        this.gender = gender;
     }
 
     @Override
     public String getJsonValue() {
-        return mGender;
+        return gender;
     }
 }

@@ -53,13 +53,13 @@ public class ContactPetition implements Serializable, Parcelable {
     };
 
     /** ID of sender. */
-    private String mSenderId;
+    private String senderId;
     /** Sender user object. */
-    private XingUser mSender;
+    private XingUser sender;
     /** Message from sender. */
-    private String mMessage;
+    private String message;
     /** Date of contact request. */
-    private XingCalendar mReceivedAt;
+    private XingCalendar receivedAt;
 
     /** Create a simple Contact object with empty fields. */
     public ContactPetition() {
@@ -71,10 +71,10 @@ public class ContactPetition implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private ContactPetition(Parcel in) {
-        mSenderId = in.readString();
-        mSender = (XingUser) in.readSerializable();
-        mMessage = in.readString();
-        mReceivedAt = (XingCalendar) in.readSerializable();
+        senderId = in.readString();
+        sender = (XingUser) in.readSerializable();
+        message = in.readString();
+        receivedAt = (XingCalendar) in.readSerializable();
     }
 
     @Override
@@ -84,10 +84,10 @@ public class ContactPetition implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int i) {
-        dest.writeString(mSenderId);
-        dest.writeSerializable(mSender);
-        dest.writeString(mMessage);
-        dest.writeSerializable(mReceivedAt);
+        dest.writeString(senderId);
+        dest.writeSerializable(sender);
+        dest.writeString(message);
+        dest.writeSerializable(receivedAt);
     }
 
     @Override
@@ -100,16 +100,16 @@ public class ContactPetition implements Serializable, Parcelable {
             return false;
         }
 
-        final ContactPetition that = (ContactPetition) obj;
-        return ((that.mSenderId != null) && (mSenderId != null)) && that.mSenderId.equals(mSenderId);
+        ContactPetition contactPetition = (ContactPetition) obj;
+        return ((contactPetition.senderId != null) && (senderId != null)) && contactPetition.senderId.equals(senderId);
     }
 
     @Override
     public int hashCode() {
-        int result = mSenderId != null ? mSenderId.hashCode() : 0;
-        result = 31 * result + (mSender != null ? mSender.hashCode() : 0);
-        result = 31 * result + (mMessage != null ? mMessage.hashCode() : 0);
-        result = 31 * result + (mReceivedAt != null ? mReceivedAt.hashCode() : 0);
+        int result = senderId != null ? senderId.hashCode() : 0;
+        result = 31 * result + (sender != null ? sender.hashCode() : 0);
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (receivedAt != null ? receivedAt.hashCode() : 0);
         return result;
     }
 
@@ -119,7 +119,7 @@ public class ContactPetition implements Serializable, Parcelable {
      * @return sender id.
      */
     public String getSenderId() {
-        return mSenderId;
+        return senderId;
     }
 
     /**
@@ -127,8 +127,8 @@ public class ContactPetition implements Serializable, Parcelable {
      *
      * @param id sender id.
      */
-    public void setSenderId(final String id) {
-        mSenderId = id;
+    public void setSenderId(String id) {
+        senderId = id;
     }
 
     /**
@@ -137,7 +137,7 @@ public class ContactPetition implements Serializable, Parcelable {
      * @return Date of contact request.
      */
     public XingCalendar getReceivedAt() {
-        return mReceivedAt;
+        return receivedAt;
     }
 
     /**
@@ -145,8 +145,8 @@ public class ContactPetition implements Serializable, Parcelable {
      *
      * @param receivedAt Date of contact request.
      */
-    public void setReceivedAt(final String receivedAt) {
-        mReceivedAt = CalendarUtils.parseCalendarFromString(receivedAt);
+    public void setReceivedAt(String receivedAt) {
+        this.receivedAt = CalendarUtils.parseCalendarFromString(receivedAt);
     }
 
     /**
@@ -155,7 +155,7 @@ public class ContactPetition implements Serializable, Parcelable {
      * @return sender message.
      */
     public String getMessage() {
-        return mMessage;
+        return message;
     }
 
     /**
@@ -163,8 +163,8 @@ public class ContactPetition implements Serializable, Parcelable {
      *
      * @param message sender message.
      */
-    public void setMessage(final String message) {
-        mMessage = message;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**
@@ -173,7 +173,7 @@ public class ContactPetition implements Serializable, Parcelable {
      * @return sender user object.
      */
     public XingUser getSender() {
-        return mSender;
+        return sender;
     }
 
     /**
@@ -181,7 +181,7 @@ public class ContactPetition implements Serializable, Parcelable {
      *
      * @param sender sender user object.
      */
-    public void setSender(final XingUser sender) {
-        mSender = sender;
+    public void setSender(XingUser sender) {
+        this.sender = sender;
     }
 }

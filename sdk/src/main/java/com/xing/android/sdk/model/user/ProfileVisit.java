@@ -38,47 +38,47 @@ public class ProfileVisit {
     /**
      * Company name.
      */
-    private String mCompanyName;
+    private String companyName;
     /**
      * Reason for visit.
      */
-    private String mReason;
+    private String reason;
     /**
      * Encrypted date of visit.
      */
-    private String mVisitedAtEncrypted;
+    private String visitedAtEncrypted;
     /**
      * User photo.
      */
-    private XingPhotoUrls mPhotoUrls;
+    private XingPhotoUrls photoUrls;
     /**
      * User ID.
      */
-    private String mUserId;
+    private String userId;
     /**
      * User name.
      */
-    private String mDisplayName;
+    private String displayName;
     /**
      * User job title.
      */
-    private String mJobTitle;
+    private String jobTitle;
     /**
      * User contact path length.
      */
-    private Integer mContactPathLength;
+    private Integer contactPathLength;
     /**
      * Date of visit.
      */
-    private XingCalendar mVisitedAt;
+    private XingCalendar visitedAt;
     /**
      * Number of visits.
      */
-    private Integer mVisitCount;
+    private Integer visitCount;
     /**
      * Gender of user.
      */
-    private Gender mGender;
+    private Gender gender;
 
     /**
      * Return company name.
@@ -86,7 +86,7 @@ public class ProfileVisit {
      * @return company name.
      */
     public String getCompanyName() {
-        return mCompanyName;
+        return companyName;
     }
 
     /**
@@ -95,7 +95,7 @@ public class ProfileVisit {
      * @param companyName company name.
      */
     public void setCompanyName(String companyName) {
-        mCompanyName = companyName;
+        this.companyName = companyName;
     }
 
     /**
@@ -104,7 +104,7 @@ public class ProfileVisit {
      * @return reason for visit.
      */
     public String getReason() {
-        return mReason;
+        return reason;
     }
 
     /**
@@ -113,7 +113,7 @@ public class ProfileVisit {
      * @param reason reason for visit.
      */
     public void setReason(String reason) {
-        mReason = reason;
+        this.reason = reason;
     }
 
     /**
@@ -122,7 +122,7 @@ public class ProfileVisit {
      * @return encrypted date of visit.
      */
     public String getVisitedAtEncrypted() {
-        return mVisitedAtEncrypted;
+        return visitedAtEncrypted;
     }
 
     /**
@@ -131,7 +131,7 @@ public class ProfileVisit {
      * @param visitedAtEncrypted encrypted date of visit.
      */
     public void setVisitedAtEncrypted(String visitedAtEncrypted) {
-        mVisitedAtEncrypted = visitedAtEncrypted;
+        this.visitedAtEncrypted = visitedAtEncrypted;
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProfileVisit {
      * @return photo URLs of user.
      */
     public XingPhotoUrls getPhotoUrls() {
-        return mPhotoUrls;
+        return photoUrls;
     }
 
     /**
@@ -149,7 +149,7 @@ public class ProfileVisit {
      * @param photoUrls photo URLs of user.
      */
     public void setPhotoUrls(XingPhotoUrls photoUrls) {
-        mPhotoUrls = photoUrls;
+        this.photoUrls = photoUrls;
     }
 
     /**
@@ -158,7 +158,7 @@ public class ProfileVisit {
      * @return user ID.
      */
     public String getUserId() {
-        return mUserId;
+        return userId;
     }
 
     /**
@@ -167,7 +167,7 @@ public class ProfileVisit {
      * @param userId user ID.
      */
     public void setUserId(String userId) {
-        mUserId = userId;
+        this.userId = userId;
     }
 
     /**
@@ -176,7 +176,7 @@ public class ProfileVisit {
      * @return user name.
      */
     public String getDisplayName() {
-        return mDisplayName;
+        return displayName;
     }
 
     /**
@@ -185,7 +185,7 @@ public class ProfileVisit {
      * @param displayName user name.
      */
     public void setDisplayName(String displayName) {
-        mDisplayName = displayName;
+        this.displayName = displayName;
     }
 
     /**
@@ -194,7 +194,7 @@ public class ProfileVisit {
      * @return contact path length.
      */
     public Integer getContactPathLength() {
-        return mContactPathLength;
+        return contactPathLength;
     }
 
     /**
@@ -203,7 +203,7 @@ public class ProfileVisit {
      * @param contactPathLength contact path length.
      */
     public void setContactPathLength(Integer contactPathLength) {
-        mContactPathLength = contactPathLength;
+        this.contactPathLength = contactPathLength;
     }
 
     /**
@@ -212,7 +212,7 @@ public class ProfileVisit {
      * @return date of visit.
      */
     public XingCalendar getVisitedAt() {
-        return mVisitedAt;
+        return visitedAt;
     }
 
     /**
@@ -221,7 +221,7 @@ public class ProfileVisit {
      * @param visitedAt date of visit.
      */
     public void setVisitedAt(String visitedAt) {
-        mVisitedAt = CalendarUtils.parseCalendarFromString(visitedAt);
+        this.visitedAt = CalendarUtils.parseCalendarFromString(visitedAt);
     }
 
     /**
@@ -230,7 +230,7 @@ public class ProfileVisit {
      * @return visit count.
      */
     public Integer getVisitCount() {
-        return mVisitCount;
+        return visitCount;
     }
 
     /**
@@ -239,7 +239,7 @@ public class ProfileVisit {
      * @param visitCount visit count.
      */
     public void setVisitCount(Integer visitCount) {
-        mVisitCount = visitCount;
+        this.visitCount = visitCount;
     }
 
     /**
@@ -248,7 +248,7 @@ public class ProfileVisit {
      * @return gender of user.
      */
     public Gender getGender() {
-        return mGender;
+        return gender;
     }
 
     /**
@@ -257,7 +257,7 @@ public class ProfileVisit {
      * @param gender gender of user.
      */
     public void setGender(String gender) {
-        mGender = EnumMapper.parseEnumFromString(Gender.values(), gender);
+        this.gender = EnumMapper.parseEnumFromString(Gender.values(), gender);
     }
 
     /**
@@ -266,7 +266,7 @@ public class ProfileVisit {
      * @return job title.
      */
     public String getJobTitle() {
-        return mJobTitle;
+        return jobTitle;
     }
 
     /**
@@ -275,6 +275,6 @@ public class ProfileVisit {
      * @param jobTitle job title.
      */
     public void setJobTitle(String jobTitle) {
-        mJobTitle = jobTitle;
+        this.jobTitle = jobTitle;
     }
 }

@@ -58,14 +58,14 @@ public enum Language implements JsonEnum {
     HE("he");
 
     /** Language value received form the json. */
-    private final String mName;
+    private final String name;
 
-    Language(@NonNull final String name) {
-        mName = name;
+    Language(@NonNull String name) {
+        this.name = name;
     }
 
     @Override
     public String getJsonValue() {
-        return mName;
+        return name;
     }
 }

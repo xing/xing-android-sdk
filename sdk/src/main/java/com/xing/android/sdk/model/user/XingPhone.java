@@ -24,6 +24,7 @@ package com.xing.android.sdk.model.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.io.Serializable;
@@ -121,8 +122,9 @@ public class XingPhone implements Serializable, Parcelable {
         return emptyPhone;
     }
 
-    public static XingPhone createXingPhone(final String phoneString) throws InvalidPhoneException {
-        final String[] splitPhone = phoneString.split("\\|");
+    @Nullable
+    public static XingPhone createXingPhone(String phoneString) throws InvalidPhoneException {
+        String[] splitPhone = phoneString.split("\\|");
         if (splitPhone.length != 3) {
             return null;
         } else {
@@ -245,8 +247,8 @@ public class XingPhone implements Serializable, Parcelable {
 
             if (!TextUtils.isEmpty(mCountryCode)) {
                 stringBuilder.append("The country code ")
-                        .append(mCountryCode)
-                        .append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
+                      .append(mCountryCode)
+                      .append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
             }
 
             if (!TextUtils.isEmpty(mAreaCode)) {
