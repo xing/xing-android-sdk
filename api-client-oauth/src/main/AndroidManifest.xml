@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2015 XING AG (http://xing.com/)
   ~
@@ -21,12 +20,15 @@
   ~ THE SOFTWARE.
   -->
 
-<resources>
+<manifest
+    package="com.xing.android.api.oauth"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="requestTokenUrl">https://api.xing.com/v1/request_token</string>
-    <string name="authorizeUrl">https://api.xing.com/v1/authorize</string>
-    <string name="accessTokenUrl">https://api.xing.com/v1/access_token</string>
-    <string name="callback">callback</string>
-    <string name="xingsdk">xingsdk</string>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-</resources>
+    <application tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.xing.android.api.oauth.OauthCallbackActivity" />
+    </application>
+
+</manifest>

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.login;
+package com.xing.android.api.oauth;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,14 +29,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import com.xing.android.sdk.R;
-import com.xing.android.sdk.network.oauth.OauthAuthenticatorHelper;
 
 import java.lang.ref.WeakReference;
 
@@ -82,9 +80,9 @@ public class OauthCallbackActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (!TextUtils.isEmpty(url) && url.startsWith(getString(R.string.xingsdk))) {
+                if (!TextUtils.isEmpty(url) && url.startsWith(getString(R.string.xing_sdk))) {
                     new RetrieveAccessTokenTask(OauthCallbackActivity.this, helper).
-                            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Uri.parse(url));
+                          executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Uri.parse(url));
                     return true;
                 } else {
                     return false;
@@ -107,8 +105,8 @@ public class OauthCallbackActivity extends Activity {
     public void initializeOAuthAuthenticatorHelper() {
         Bundle extras = getIntent().getExtras();
         helper = new OauthAuthenticatorHelper(getApplicationContext(),
-                extras.getString(OauthAuthenticatorHelper.CONSUMER_KEY),
-                extras.getString(OauthAuthenticatorHelper.CONSUMER_SECRET));
+              extras.getString(OauthAuthenticatorHelper.CONSUMER_KEY),
+              extras.getString(OauthAuthenticatorHelper.CONSUMER_SECRET));
     }
 
     /**
@@ -124,6 +122,7 @@ public class OauthCallbackActivity extends Activity {
             this.helper = helper;
         }
 
+        @Nullable
         @Override
         protected String doInBackground(Void... voids) {
             String url;

@@ -20,28 +20,27 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.login;
+package com.xing.android.api.oauth;
 
 import android.app.Activity;
 import android.content.Intent;
-
-import com.xing.android.sdk.network.oauth.OauthAuthenticatorHelper;
 
 /**
  * Allows to perform authentication using OAuth 1.
  *
  * @author david.gonzalez
+ * @author daniel.hartwich
  */
 public final class LoginHelper {
     /**
      * Performs login using OAuth 1.
      *
-     * @param oauthConsumerKey Consumer key for the OAuth authentication process.
-     * @param oauthConsumerSecret Consumer secret for the OAuth authentication process.
      * @param activity Activity that will receive the result of the login. In case of success, token and token secret
      * will be included on an intent.
+     * @param oauthConsumerKey Consumer key for the OAuth authentication process.
+     * @param oauthConsumerSecret Consumer secret for the OAuth authentication process.
      */
-    public static void login(String oauthConsumerKey, String oauthConsumerSecret, Activity activity) {
+    public static void login(Activity activity, String oauthConsumerKey, String oauthConsumerSecret) {
         Intent intent = new Intent(activity, OauthCallbackActivity.class);
         intent.putExtra(OauthAuthenticatorHelper.CONSUMER_KEY, oauthConsumerKey);
         intent.putExtra(OauthAuthenticatorHelper.CONSUMER_SECRET, oauthConsumerSecret);

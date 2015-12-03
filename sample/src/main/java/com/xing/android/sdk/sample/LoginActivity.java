@@ -30,9 +30,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.xing.android.sdk.login.LoginHelper;
-import com.xing.android.sdk.login.OauthCallbackActivity;
-import com.xing.android.sdk.network.oauth.OauthAuthenticatorHelper;
+import com.xing.android.api.oauth.LoginHelper;
+import com.xing.android.api.oauth.OauthAuthenticatorHelper;
+import com.xing.android.api.oauth.OauthCallbackActivity;
 import com.xing.android.sdk.sample.prefs.Prefs;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -63,7 +63,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void handleLogin() {
-        LoginHelper.login(BuildConfig.OAUTH_CONSUMER_KEY, BuildConfig.OAUTH_CONSUMER_SECRET, this);
+        LoginHelper.login(this, BuildConfig.OAUTH_CONSUMER_KEY, BuildConfig.OAUTH_CONSUMER_SECRET);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 prefs.setOauthSecret(extras.getString(OauthAuthenticatorHelper.TOKEN_SECRET));
                 SdkSampleApplication.getInstance().onUserLoggedIn();
                 startActivity(new Intent(this, ProfileActivity.class).
-                        setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                      setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 finish();
                 break;
 
