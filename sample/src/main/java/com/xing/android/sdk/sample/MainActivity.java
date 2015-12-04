@@ -33,12 +33,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!Utils.isLoggedIn(this)) {
-            //If the user is not logged in, send him to the Login Screen
-            startActivity(new Intent(this, LoginActivity.class));
-        } else {
+        if (Utils.isLoggedIn(this)) {
             //If the user is logged in, send him directly to his Profile
             startActivity(new Intent(this, ProfileActivity.class));
+        } else {
+            //If the user is not logged in, send him to the Login Screen
+            startActivity(new Intent(this, LoginActivity.class));
         }
         finish();
     }

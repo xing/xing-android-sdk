@@ -30,9 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.xing.android.api.oauth.LoginHelper;
-import com.xing.android.api.oauth.OauthAuthenticatorHelper;
-import com.xing.android.api.oauth.OauthCallbackActivity;
+import com.xing.android.api.oauth.XingOauthActivity;
 import com.xing.android.sdk.sample.prefs.Prefs;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -57,20 +55,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_login:
-                handleLogin();
+                XingOauthActivity.startOauthProcess(this, BuildConfig.OAUTH_CONSUMER_KEY,
+                      BuildConfig.OAUTH_CONSUMER_SECRET);
                 break;
         }
-    }
-
-    private void handleLogin() {
-        LoginHelper.login(this, BuildConfig.OAUTH_CONSUMER_KEY, BuildConfig.OAUTH_CONSUMER_SECRET);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case OauthCallbackActivity.REQUEST_CODE: {
+            case XingOauthActivity.REQUEST_CODE: {
                 onLoginActivityResult(resultCode, data);
                 break;
             }
@@ -82,10 +77,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case Activity.RESULT_OK:
                 showToast("ok");
                 Bundle extras = data.getExtras();
-                Prefs prefs = Prefs.getInstance(getApplicationContext());
-                prefs.setOauthToken(extras.getString(OauthAuthenticatorHelper.TOKEN));
-                prefs.setOauthSecret(extras.getString(OauthAuthenticatorHelper.TOKEN_SECRET));
-                SdkSampleApplication.getInstance().onUserLoggedIn();
+                initializeXingController(extras);
                 startActivity(new Intent(this, ProfileActivity.class).
                       setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 finish();
@@ -95,9 +87,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 showToast("error");
                 break;
 
-            case OauthCallbackActivity.RESULT_BACK:
+            case XingOauthActivity.RESULT_BACK:
                 //Back pressed
                 break;
         }
+    }
+
+    private void initializeXingController(Bundle extras) {
+        String token = extras.getString(XingOauthActivity.TOKEN, "");
+        String tokenSecret = extras.getString(XingOauthActivity.TOKEN_SECRET, "");
+        Prefs.getInstance(this).setOauthToken(token);
+        Prefs.getInstance(this).setOauthSecret(tokenSecret);
+
+        SdkSampleApplication.initializeXingRequestController(token, tokenSecret);
     }
 }

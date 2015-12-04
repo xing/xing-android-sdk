@@ -42,13 +42,27 @@ import java.lang.ref.WeakReference;
  * Activity for the first step of the OAuth authentication process.
  *
  * @author david.gonzalez
+ * @author daniel.hartwich
  */
-public class OauthCallbackActivity extends Activity {
+public class XingOauthActivity extends Activity {
 
-    public static final int REQUEST_CODE = 3;
-    public static final int RESULT_BACK = 2;
+    public static final int REQUEST_CODE = 600;
+    public static final int RESULT_BACK = 601;
+    public static final String TOKEN = "token";
+    public static final String TOKEN_SECRET = "tokenSecret";
+
+    private static final String CONSUMER_KEY = "consumerKey";
+    private static final String CONSUMER_SECRET = "consumerSecret";
     private WebView webView;
-    private OauthAuthenticatorHelper helper;
+    private OauthHelper helper;
+
+
+    public static void startOauthProcess(Activity activity, String consumerKey, String consumerSecret) {
+        Intent intent = new Intent(activity, XingOauthActivity.class);
+        intent.putExtra(CONSUMER_KEY, consumerKey);
+        intent.putExtra(CONSUMER_SECRET, consumerSecret);
+        activity.startActivityForResult(intent, REQUEST_CODE);
+    }
 
     /**
      * Clear all cookies.
@@ -81,7 +95,7 @@ public class OauthCallbackActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (!TextUtils.isEmpty(url) && url.startsWith(getString(R.string.xing_sdk))) {
-                    new RetrieveAccessTokenTask(OauthCallbackActivity.this, helper).
+                    new RetrieveAccessTokenTask(XingOauthActivity.this, helper).
                           executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Uri.parse(url));
                     return true;
                 } else {
@@ -104,9 +118,9 @@ public class OauthCallbackActivity extends Activity {
      */
     public void initializeOAuthAuthenticatorHelper() {
         Bundle extras = getIntent().getExtras();
-        helper = new OauthAuthenticatorHelper(getApplicationContext(),
-              extras.getString(OauthAuthenticatorHelper.CONSUMER_KEY),
-              extras.getString(OauthAuthenticatorHelper.CONSUMER_SECRET));
+        helper = new OauthHelper(
+              extras.getString(CONSUMER_KEY),
+              extras.getString(CONSUMER_SECRET));
     }
 
     /**
@@ -114,10 +128,10 @@ public class OauthCallbackActivity extends Activity {
      */
     private static class OauthRequestTokenTask extends AsyncTask<Void, Void, String> {
 
-        private final OauthAuthenticatorHelper helper;
-        private final WeakReference<OauthCallbackActivity> activityRef;
+        private final OauthHelper helper;
+        private final WeakReference<XingOauthActivity> activityRef;
 
-        OauthRequestTokenTask(OauthCallbackActivity activity, OauthAuthenticatorHelper helper) {
+        OauthRequestTokenTask(XingOauthActivity activity, OauthHelper helper) {
             activityRef = new WeakReference<>(activity);
             this.helper = helper;
         }
@@ -137,7 +151,7 @@ public class OauthCallbackActivity extends Activity {
         @Override
         protected void onPostExecute(String url) {
             super.onPostExecute(url);
-            OauthCallbackActivity activity = activityRef.get();
+            XingOauthActivity activity = activityRef.get();
             if (TextUtils.isEmpty(url)) {
                 helper.clean();
                 if (activity != null) {
@@ -158,10 +172,10 @@ public class OauthCallbackActivity extends Activity {
      */
     private static class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Boolean> {
 
-        private final OauthAuthenticatorHelper helper;
-        private final WeakReference<OauthCallbackActivity> activityRef;
+        private final OauthHelper helper;
+        private final WeakReference<XingOauthActivity> activityRef;
 
-        RetrieveAccessTokenTask(OauthCallbackActivity activity, OauthAuthenticatorHelper helper) {
+        RetrieveAccessTokenTask(XingOauthActivity activity, OauthHelper helper) {
             activityRef = new WeakReference<>(activity);
             this.helper = helper;
         }
@@ -182,7 +196,7 @@ public class OauthCallbackActivity extends Activity {
             super.onPostExecute(result);
             Intent data = null;
             int activityResult;
-            OauthCallbackActivity activity = activityRef.get();
+            XingOauthActivity activity = activityRef.get();
 
             String token = helper.getToken();
             String tokenSecret = helper.getTokenSecret();
@@ -192,8 +206,8 @@ public class OauthCallbackActivity extends Activity {
                 activityResult = RESULT_CANCELED;
             } else {
                 data = new Intent();
-                data.putExtra(OauthAuthenticatorHelper.TOKEN, token);
-                data.putExtra(OauthAuthenticatorHelper.TOKEN_SECRET, tokenSecret);
+                data.putExtra(TOKEN, token);
+                data.putExtra(TOKEN_SECRET, tokenSecret);
                 activityResult = RESULT_OK;
             }
             if (activity != null) {
