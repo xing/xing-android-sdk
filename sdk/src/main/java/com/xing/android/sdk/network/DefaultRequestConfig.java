@@ -37,10 +37,10 @@ import java.util.List;
  * Default {@linkplain RequestConfig} used for request execution.
  */
 public class DefaultRequestConfig implements RequestConfig {
-    private final OauthSigner mOauthSigner;
-    private final Uri mUri;
-    private final List<Pair<String, String>> mHeaders;
-    private final List<Pair<String, String>> mParams;
+    private final OauthSigner oauthSigner;
+    private final Uri uri;
+    private final List<Pair<String, String>> headers;
+    private final List<Pair<String, String>> params;
 
     /**
      * Create an instance of the default {@link RequestConfig}.
@@ -51,34 +51,34 @@ public class DefaultRequestConfig implements RequestConfig {
         if (!builder.loggedOut) {
             // Prepare oauth signer
             OauthSigner.init(builder.consumerKey, builder.consumerSecret, builder.token, builder.tokenSecret);
-            mOauthSigner = OauthSigner.getInstance();
+            oauthSigner = OauthSigner.getInstance();
         } else {
-            mOauthSigner = null;
+            oauthSigner = null;
         }
 
-        mHeaders = builder.headers;
-        mParams = builder.params;
-        mUri = new Uri.Builder().scheme("https").authority("api.xing.com").build();
+        headers = builder.headers;
+        params = builder.params;
+        uri = new Uri.Builder().scheme("https").authority("api.xing.com").build();
     }
 
     @Override
     public List<Pair<String, String>> getCommonHeaders() {
-        return mHeaders;
+        return headers;
     }
 
     @Override
     public Uri getBaseUri() {
-        return mUri;
+        return uri;
     }
 
     @Override
     public OauthSigner getOauthSigner() {
-        return mOauthSigner;
+        return oauthSigner;
     }
 
     @Override
     public List<Pair<String, String>> getCommonParams() {
-        return mParams;
+        return params;
     }
 
     public static class Builder {
@@ -124,7 +124,7 @@ public class DefaultRequestConfig implements RequestConfig {
         @Optional
         public Builder addParam(String key, String value) {
             if (params == null) {
-                params = new ArrayList<>();
+                params = new ArrayList<>(1);
             }
             params.add(new Pair<>(key, value));
 
@@ -147,7 +147,7 @@ public class DefaultRequestConfig implements RequestConfig {
         @Optional
         public Builder addHeader(String key, String value) {
             if (headers == null) {
-                headers = new ArrayList<>();
+                headers = new ArrayList<>(1);
             }
             headers.add(new Pair<>(key, value));
 
@@ -175,10 +175,10 @@ public class DefaultRequestConfig implements RequestConfig {
                 throw new IllegalArgumentException("CONSUMER_SECRET not set");
             }
             if (TextUtils.isEmpty(token)) {
-                throw new IllegalArgumentException("TOKEN not set, the user must be logged it");
+                throw new IllegalArgumentException("TOKEN not set, the user must be logged in");
             }
             if (TextUtils.isEmpty(tokenSecret)) {
-                throw new IllegalArgumentException("TOKEN_SECRET not set, the user must be logged it");
+                throw new IllegalArgumentException("TOKEN_SECRET not set, the user must be logged in");
             }
         }
 

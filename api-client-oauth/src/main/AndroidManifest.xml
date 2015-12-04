@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.xing.android.api.oauth.OauthCallbackActivity" />
+        <activity android:name=".XingOauthActivity" />
     </application>
 
 </manifest>

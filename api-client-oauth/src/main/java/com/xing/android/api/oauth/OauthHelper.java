@@ -22,7 +22,6 @@
 
 package com.xing.android.api.oauth;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -34,39 +33,27 @@ import oauth.signpost.basic.DefaultOAuthProvider;
 
 /**
  * @author david.gonzalez
+ * @author daniel.hartwich
  */
-public final class OauthAuthenticatorHelper {
-    public static final String CONSUMER_KEY = "consumerKey";
-    public static final String CONSUMER_SECRET = "consumerSecret";
-    public static final String TOKEN = "token";
-    public static final String TOKEN_SECRET = "tokenSecret";
+class OauthHelper {
+    private static final String REQUEST_TOKEN_URL = "https://api.xing.com/v1/request_token";
+    private static final String ACCESS_TOKEN_URL = "https://api.xing.com/v1/access_token";
+    private static final String AUTHORIZE_URL = "https://api.xing.com/v1/authorize";
+    private static final String CALLBACK_URL = "xingsdk://callback";
 
-    private final OAuthConsumer mConsumer;
-    private final OAuthProvider mProvider;
-    private final String mCallbackUrl;
+    private final OAuthConsumer consumer;
+    private final OAuthProvider provider;
 
     /**
      * Initializes the instance of OAuthAuthenticatorHelper.
      *
-     * @param context Context that allows the class to create the callback url from resources.
      * @param consumerKey Consumer key of the app in the server.
      * @param consumerSecret Consumer secret of the app in the server.
      */
-    public OauthAuthenticatorHelper(Context context, @Nullable String consumerKey, @Nullable String consumerSecret) {
-        mConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        mProvider = new DefaultOAuthProvider(context.getString(R.string.requestTokenUrl),
-                context.getString(R.string.accessTokenUrl), context.getString(R.string.authorizeUrl));
-        mCallbackUrl = buildCallback(context);
-    }
-
-    /**
-     * Creates the url that will be used by the server as callback.
-     *
-     * @param context Context of the app.
-     * @return Url used by the server as a callback.
-     */
-    private static String buildCallback(Context context) {
-        return context.getString(R.string.xing_sdk) + "://" + context.getString(R.string.callback);
+    public OauthHelper(@Nullable String consumerKey, @Nullable String consumerSecret) {
+        //TODO Replace this with the OKHttp replacement
+        consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+        provider = new DefaultOAuthProvider(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, AUTHORIZE_URL);
     }
 
     /**
@@ -74,33 +61,32 @@ public final class OauthAuthenticatorHelper {
      *
      * @throws Exception signpost exception.
      */
-    public String retrieveRequestTokenUrl() throws Exception {
-        return mProvider.retrieveRequestToken(mConsumer, mCallbackUrl);
+    protected String retrieveRequestTokenUrl() throws Exception {
+        return provider.retrieveRequestToken(consumer, CALLBACK_URL);
     }
 
     /**
      * @param uri Uri that contains the oauth_verifier, necessary for retrieve the access token.
      * @throws Exception signpost exception.
      */
-    public void retrieveAccessToken(Uri uri) throws Exception {
+    protected void retrieveAccessToken(Uri uri) throws Exception {
         try {
             String oauthVerifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);
-
-            mProvider.retrieveAccessToken(mConsumer, oauthVerifier);
+            provider.retrieveAccessToken(consumer, oauthVerifier);
         } catch (Exception ex) {
             clean();
         }
     }
 
-    public String getToken() {
-        return mConsumer.getToken();
+    protected String getToken() {
+        return consumer.getToken();
     }
 
-    public String getTokenSecret() {
-        return mConsumer.getTokenSecret();
+    protected String getTokenSecret() {
+        return consumer.getTokenSecret();
     }
 
-    public void clean() {
-        mConsumer.setTokenWithSecret(null, null);
+    protected void clean() {
+        consumer.setTokenWithSecret(null, null);
     }
 }
