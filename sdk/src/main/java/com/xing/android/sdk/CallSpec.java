@@ -1,46 +1,48 @@
 /*
  * Copyright (c) 2015 XING AG (http://xing.com/)
+ * Copyright (C) 2015 Square, Inc.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.xing.android.sdk;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.okhttp.Call;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
 import com.xing.android.sdk.internal.HttpMethod;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okio.Buffer;
+import okio.BufferedSource;
+import okio.ForwardingSource;
+import okio.Okio;
 import rx.Observable;
 
 import static com.xing.android.sdk.Utils.assertionError;
 import static com.xing.android.sdk.Utils.checkNotNull;
+import static com.xing.android.sdk.Utils.closeQuietly;
 import static com.xing.android.sdk.Utils.stateError;
 import static com.xing.android.sdk.Utils.stateNotNull;
 
@@ -52,23 +54,68 @@ import static com.xing.android.sdk.Utils.stateNotNull;
 public final class CallSpec<RT, ET> {
     private final XingApi api;
     private final Builder<RT, ET> builder;
-    // private final CompoundType compoundType;
+    private final CompositeType responseType;
+    private final CompositeType errorType;
+
+    private volatile Call rawCall;
+    private boolean executed; // Guarded by this.
+    private volatile boolean canceled;
 
     private CallSpec(Builder<RT, ET> builder) {
         this.builder = builder;
         api = builder.api;
+        responseType = builder.responseType;
+        errorType = builder.errorType;
     }
 
-    public Response<RT, ET> execute() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    /**
+     * Synchronously executes the request and returns it's response.
+     *
+     * @throws IOException If a problem occurred while talking to the server.
+     * @throws RuntimeException If an unexpected error occurred during execution or while parsing response.
+     */
+    public Response<RT, ET> execute() throws IOException {
+        synchronized (this) {
+            if (executed) throw new IllegalStateException("Already executed.");
+            executed = true;
+        }
+
+        Call rawCall = createRawCall();
+        if (canceled) rawCall.cancel();
+        this.rawCall = rawCall;
+
+        return parseResponse(rawCall.execute());
     }
 
-    public void enqueue(Callback<RT> callback) {
+    public void enqueue(Callback<RT, ET> callback) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public Observable<Response<RT, ET>> stream() {
         throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    /**
+     * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain #enqueue(Callback)
+     * enqueued}. It is an error to execute or enqueue a call more than once.
+     */
+    public synchronized boolean isExecuted() {
+        return executed;
+    }
+
+    /** True if {@link #cancel()} was called. */
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    /**
+     * Cancel this call. An attempt will be made to cancel in-flight calls, and if the call has not yet been executed
+     * it never will be.
+     */
+    public void cancel() {
+        canceled = true;
+        Call rawCall = this.rawCall;
+        if (rawCall != null) rawCall.cancel();
     }
 
     public CallSpec<RT, ET> queryParam(String name, String value) {
@@ -86,7 +133,51 @@ public final class CallSpec<RT, ET> {
         return this;
     }
 
-    //TODO (DanielH) Provide conversion methods for responses.
+    /** Returns a raw {@link Call} pre-building the targeted request. */
+    private Call createRawCall() {
+        return api.client.newCall(builder.request());
+    }
+
+    /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
+    @SuppressWarnings("MagicNumber")
+    private Response<RT, ET> parseResponse(com.squareup.okhttp.Response rawResponse) throws IOException {
+        ResponseBody rawBody = rawResponse.body();
+
+        // Remove the body's source (the only stateful object) so we can pass the response along.
+        rawResponse = rawResponse.newBuilder()
+              .body(new NoContentResponseBody(rawBody.contentType(), rawBody.contentLength()))
+              .build();
+
+        int code = rawResponse.code();
+        if (code < 200 || code >= 300) {
+            try {
+                // Buffer the entire body to avoid future I/O.
+                ResponseBody bufferedBody = Utils.readBodyToBytesIfNecessary(rawBody);
+                ET errorBody = errorType.fromJson(api.converter, bufferedBody);
+                return Response.error(errorBody, rawResponse);
+            } finally {
+                closeQuietly(rawBody);
+            }
+        }
+
+        // No need to parse the response body since the response should not contain a body.
+        if (code == 204 || code == 205) {
+            return Response.success(null, rawResponse);
+        }
+
+        ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody(rawBody);
+        try {
+            RT body = responseType.fromJson(api.converter, catchingBody);
+            return Response.success(body, rawResponse);
+        } catch (RuntimeException e) {
+            // If the underlying source threw an exception, propagate that, rather than indicating it was
+            // a runtime exception.
+            catchingBody.throwIfCaught();
+            throw e;
+        } finally {
+            closeQuietly(catchingBody);
+        }
+    }
 
     /**
      * TODO docs.
@@ -100,36 +191,33 @@ public final class CallSpec<RT, ET> {
         private static final Pattern PARAM_NAME_REGEX = Pattern.compile(PARAM);
         private static final Pattern PARAM_URL_REGEX = Pattern.compile("\\{(" + PARAM + ")\\}");
 
-        static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");
+        static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=UTF-8");
 
         private final XingApi api;
-        private final String method;
+        private final HttpMethod httpMethod;
         private final HttpUrl apiEndpoint;
         private final Request.Builder requestBuilder;
         private final Set<String> resourcePathParams;
-        private final boolean hasBody;
 
         private String resourcePath;
         private HttpUrl.Builder urlBuilder;
         private FormEncodingBuilder formEncodingBuilder;
         private RequestBody body;
 
-        private TypeDelegate responseDelegate;
-        private Class<ET> errorCls;
+        private CompositeType responseType;
+        private CompositeType errorType;
 
         // For now block the possibility to build outside this package.
-        Builder(XingApi api, @HttpMethod String method, String resourcePath, boolean hasBody, boolean isFormEncoded) {
+        Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
             this.api = api;
-            this.method = checkNotNull(method, "method == null");
+            this.httpMethod = checkNotNull(httpMethod, "httpMethod == null");
             this.resourcePath = checkNotNull(resourcePath, "resourcePath == null");
-            this.hasBody = hasBody;
+
             resourcePathParams = parseResourcePathParams(resourcePath);
             apiEndpoint = api.apiEndpoint;
             requestBuilder = new Request.Builder();
 
-            if (isFormEncoded) {
-                formEncodingBuilder = new FormEncodingBuilder();
-            }
+            if (isFormEncoded) formEncodingBuilder = new FormEncodingBuilder();
         }
 
         public Builder<RT, ET> pathParam(String name, String value) {
@@ -163,23 +251,29 @@ public final class CallSpec<RT, ET> {
             try {
                 jsonAdapter.toJson(buffer, body);
             } catch (IOException ignored) {
-                //Doesn't need to be handled. Buffer should not throw in this case.
+                // Doesn't need to be handled. Buffer should not throw in this case.
             }
-            return body(RequestBody.create(MEDIA_TYPE, buffer.readByteArray()));
+            return body(RequestBody.create(MEDIA_TYPE_JSON, buffer.readByteArray()));
         }
 
-        public Builder<RT, ET> responseType(Class<RT> responseType) {
-            return responseType(checkNotNull(TypeDelegate.single(responseType), "responseType == null"));
+        public Builder<RT, ET> header(String name, String value) {
+            requestBuilder.header(name, value);
+            return this;
         }
 
-        public Builder<RT, ET> responseType(TypeDelegate typeDelegate) {
-            responseDelegate = checkNotNull(typeDelegate, "typeDelegate == null");
+        public Builder<RT, ET> responseAs(Class<RT> type, String... roots) {
+            responseType = CompositeType.single(checkNotNull(type, "type == null"), roots);
+            return this;
+        }
+
+        public Builder<RT, ET> responseAsList(Type type, String... roots) {
+            responseType = CompositeType.list(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         //TODO (DanielH) set a generic error type response if this is not set.
-        public Builder<RT, ET> errorType(Class<ET> errorType) {
-            errorCls = checkNotNull(errorType, "errorType == null");
+        public Builder<RT, ET> errorAs(Class<ET> type) {
+            errorType = CompositeType.single(checkNotNull(type, "type == null"));
             return this;
         }
 
@@ -190,8 +284,9 @@ public final class CallSpec<RT, ET> {
             }
 
             if (urlBuilder == null) buildUrlBuilder();
+            if (responseType == null) throw stateError("Response type is not set.");
+            if (errorType == null) errorType = CompositeType.single(Object.class); // FIXME need to make this secure.
 
-            // TODO (SerjLtt) Validate that CallSpec has everything necessary for request execution.
             return new CallSpec<>(this);
         }
 
@@ -203,7 +298,7 @@ public final class CallSpec<RT, ET> {
                 // Try to pull from one of the builders.
                 if (formEncodingBuilder != null) {
                     body = formEncodingBuilder.build();
-                } else if (hasBody) {
+                } else if (httpMethod.hasBody()) {
                     // Body is absent, make an empty body.
                     //noinspection ZeroLengthArrayAllocation
                     body = RequestBody.create(null, new byte[0]);
@@ -214,7 +309,7 @@ public final class CallSpec<RT, ET> {
 
             return requestBuilder
                   .url(url)
-                  .method(method, body)
+                  .method(httpMethod.method(), body)
                   .build();
         }
 
@@ -297,6 +392,86 @@ public final class CallSpec<RT, ET> {
                       "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has been already set.",
                       resourcePath, name);
             }
+        }
+    }
+
+    static final class NoContentResponseBody extends ResponseBody {
+        private final MediaType contentType;
+        private final long contentLength;
+
+        NoContentResponseBody(MediaType contentType, long contentLength) {
+            this.contentType = contentType;
+            this.contentLength = contentLength;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return contentType;
+        }
+
+        @Override
+        public long contentLength() {
+            return contentLength;
+        }
+
+        @Override
+        public BufferedSource source() {
+            throw new IllegalStateException("Cannot read raw response body of a parsed body.");
+        }
+    }
+
+    static final class ExceptionCatchingRequestBody extends ResponseBody {
+        private final ResponseBody delegate;
+        private IOException thrownException;
+
+        ExceptionCatchingRequestBody(ResponseBody delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return delegate.contentType();
+        }
+
+        @Override
+        public long contentLength() throws IOException {
+            try {
+                return delegate.contentLength();
+            } catch (IOException e) {
+                thrownException = e;
+                throw e;
+            }
+        }
+
+        @Override
+        public BufferedSource source() throws IOException {
+            BufferedSource delegateSource;
+            try {
+                delegateSource = delegate.source();
+            } catch (IOException e) {
+                thrownException = e;
+                throw e;
+            }
+            return Okio.buffer(new ForwardingSource(delegateSource) {
+                @Override
+                public long read(Buffer sink, long byteCount) throws IOException {
+                    try {
+                        return super.read(sink, byteCount);
+                    } catch (IOException e) {
+                        thrownException = e;
+                        throw e;
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void close() throws IOException {
+            delegate.close();
+        }
+
+        void throwIfCaught() throws IOException {
+            if (thrownException != null) throw thrownException;
         }
     }
 }

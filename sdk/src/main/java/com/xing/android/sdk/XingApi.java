@@ -40,13 +40,15 @@ import static com.xing.android.sdk.Utils.stateNull;
  * @author serj.lotutovici
  */
 public final class XingApi {
+    @SuppressWarnings("CollectionWithoutInitialCapacity")
     private final Map<Class<? extends Resource>, Resource> resourcesCache = new LinkedHashMap<>();
-    final OkHttpClient okHttpClient;
-    final Moshi converter;
-    final HttpUrl apiEndpoint;
 
-    private XingApi(OkHttpClient okHttpClient, HttpUrl apiEndpoint, Moshi converter) {
-        this.okHttpClient = okHttpClient;
+    final OkHttpClient client;
+    final HttpUrl apiEndpoint;
+    final Moshi converter;
+
+    private XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter) {
+        this.client = client;
         this.apiEndpoint = apiEndpoint;
         this.converter = converter;
     }
@@ -80,9 +82,9 @@ public final class XingApi {
      * TODO docs.
      */
     public static final class Builder {
-        private OkHttpClient okHttpClient;
+        private final Oauth1SigningInterceptor.Builder oauth1Builder;
+        private OkHttpClient client;
         private HttpUrl apiEndpoint;
-        private Oauth1SigningInterceptor.Builder oauth1Builder;
         private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
 
@@ -113,12 +115,12 @@ public final class XingApi {
         }
 
         public Builder loggedOut() {
-            this.loggedOut = true;
+            loggedOut = true;
             return this;
         }
 
         public Builder client(OkHttpClient client) {
-            this.okHttpClient = checkNotNull(client, "client == null");
+            this.client = checkNotNull(client, "client == null");
             return this;
         }
 
@@ -132,7 +134,7 @@ public final class XingApi {
         }
 
         Builder apiEndpoint(HttpUrl baseUrl) {
-            this.apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
+            apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
             return this;
         }
 
@@ -159,8 +161,8 @@ public final class XingApi {
         public XingApi build() {
             // Setup the network client.
             OkHttpClient client;
-            if (okHttpClient != null) {
-                client = okHttpClient;
+            if (this.client != null) {
+                client = this.client;
             } else {
                 client = new OkHttpClient();
             }

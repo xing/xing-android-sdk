@@ -40,15 +40,14 @@ public class UserProfilesResource extends Resource {
     public CallSpec<XingUser, Object> getUsersById(String id) {
         return this.<XingUser, Object>newGetSpec("/v1/users/{id}")
               .pathParam("id", id)
-              .responseType(XingUser.class)
+              .responseAs(XingUser.class)
               .build();
     }
 
     // TODO Use this as an example.
     public CallSpec<XingUser, Object> getOwnProfile() {
         return this.<XingUser, Object>newGetSpec("/v1/users/me")
-              .responseType(XingUser.class)
+              .responseAs(XingUser.class)
               .build();
-
     }
 }

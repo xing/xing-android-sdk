@@ -34,9 +34,7 @@ final class Utils {
      * otherwise the same (non-altered) instance of the object will be returned.
      */
     static <T> T checkNotNull(T object, String message) {
-        if (object == null) {
-            throw new NullPointerException(message);
-        }
+        if (object == null) throw new NullPointerException(message);
         return object;
     }
 
@@ -45,9 +43,7 @@ final class Utils {
      * not met.
      */
     static <T> void stateNotNull(T object, String message) {
-        if (object == null) {
-            throw new IllegalStateException(message);
-        }
+        if (object == null) throw new IllegalStateException(message);
     }
 
     /**
@@ -55,15 +51,11 @@ final class Utils {
      * not met.
      */
     static <T> void stateNull(T object, String message) {
-        if (object != null) {
-            throw stateError(message);
-        }
+        if (object != null) throw stateError(message);
     }
 
     static void closeQuietly(Closeable closeable) {
-        if (closeable == null) {
-            return;
-        }
+        if (closeable == null) return;
         try {
             closeable.close();
         } catch (IOException ignored) {
@@ -83,8 +75,22 @@ final class Utils {
         return error;
     }
 
+    /** Returns a state {@link RuntimeException} with a formatted error message. */
     static RuntimeException stateError(String message, Object... args) {
-        return new IllegalStateException(String.format(message, args));
+        return stateError(null, message, args);
+    }
+
+    /** Returns a state {@link RuntimeException} with a formatted error message. */
+    static RuntimeException stateError(@Nullable Throwable cause, String message, Object... args) {
+        message = String.format(message, args);
+        IllegalStateException error = new IllegalStateException(message);
+        error.initCause(cause);
+        return error;
+    }
+
+    /** Returns a {@link IOException} with a formatted message. */
+    static IOException ioError(String message, Object... args) {
+        return new IOException(String.format(message, args));
     }
 
     /**
@@ -93,9 +99,7 @@ final class Utils {
      */
     @Nullable
     static ResponseBody readBodyToBytesIfNecessary(ResponseBody body) throws IOException {
-        if (body == null) {
-            return null;
-        }
+        if (body == null) return null;
 
         BufferedSource source = body.source();
         Buffer buffer = new Buffer();

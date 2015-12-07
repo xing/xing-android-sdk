@@ -22,7 +22,7 @@
 
 package com.xing.android.sdk;
 
-import com.xing.android.sdk.internal.Http;
+import com.xing.android.sdk.internal.HttpMethod;
 
 /**
  * TODO docs.
@@ -39,18 +39,18 @@ public abstract class Resource {
 
     // TODO (DanielH) Implement all internal methods required for building specs.
     protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
+        return new CallSpec.Builder<>(api, HttpMethod.GET, resourcePath, false);
     }
 
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_POST, resourcePath, true, true);
+    protected <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(String resourcePath, boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.POST, resourcePath, isFormEncoded);
     }
 
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_PUT, resourcePath, true, false);
+    protected <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(String resourcePath, boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.PUT, resourcePath, isFormEncoded);
     }
 
     protected <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_DELETE, resourcePath, false, false);
+        return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
     }
 }

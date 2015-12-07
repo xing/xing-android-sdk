@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.fail;
  * @author daniel.hartwich
  */
 @SuppressWarnings({"ConstantConditions", "MagicNumber", "NullArgumentToVariableArgMethod"})
-public class TypeDelegateTest {
+public class CompositeTypeTest {
     private static final String SINGLE_TEST_CONTENT = "{\n"
           + "  \"str\": \"test\",\n"
           + "  \"val\": 42\n"
@@ -118,10 +118,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParsesSingleObjects() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class);
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_TEST_CONTENT);
+        CompositeType delegate = CompositeType.single(TestData.class);
 
-        TestData data = delegate.from(moshi, body);
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNotNull();
         assertThat(data.str).isEqualTo("test");
         assertThat(data.val).isEqualTo(42);
@@ -129,10 +129,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParsesSingleObjectsWithRoots() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_ONE_ROOT_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class, "findMe");
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_ONE_ROOT_TEST_CONTENT);
+        CompositeType delegate = CompositeType.single(TestData.class, "findMe");
 
-        TestData data = delegate.from(moshi, body);
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNotNull();
         assertThat(data.str).isEqualTo("test1");
         assertThat(data.val).isEqualTo(43);
@@ -140,10 +140,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParsesSingleObjectsWithMultipleRoots() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_MULTIPLE_ROOT_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class, "findMe", "andMe");
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_MULTIPLE_ROOT_TEST_CONTENT);
+        CompositeType delegate = CompositeType.single(TestData.class, "findMe", "andMe");
 
-        TestData data = delegate.from(moshi, body);
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNotNull();
         assertThat(data.str).isEqualTo("test2");
         assertThat(data.val).isEqualTo(44);
@@ -151,10 +151,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParseSingleObjectsWithNullObjectInside() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_MULTIPLE_ROOT_WITH_NULL_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class, "findMe", "andMe");
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_MULTIPLE_ROOT_WITH_NULL_TEST_CONTENT);
+        CompositeType delegate = CompositeType.single(TestData.class, "findMe", "andMe");
 
-        TestData data = delegate.from(moshi, body);
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNotNull();
         assertThat(data.str).isNullOrEmpty();
         assertThat(data.val).isEqualTo(0);
@@ -162,10 +162,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParseSingleObjectsWithRootsNull() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_MULTIPLE_ROOT_WITH_NULL_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class, null);
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_MULTIPLE_ROOT_WITH_NULL_TEST_CONTENT);
+        CompositeType delegate = CompositeType.single(TestData.class, null);
 
-        TestData data = delegate.from(moshi, body);
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNotNull();
         assertThat(data.str).isNullOrEmpty();
         assertThat(data.val).isEqualTo(0);
@@ -173,10 +173,10 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParseListObject() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, LIST_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.list(TestData.class, "content");
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, LIST_TEST_CONTENT);
+        CompositeType delegate = CompositeType.list(TestData.class, "content");
 
-        List<TestData> listData = delegate.from(moshi, body);
+        List<TestData> listData = delegate.fromJson(moshi, body);
         assertThat(listData).isNotNull();
         assertThat(listData).hasSize(3);
         assertThat(listData.get(0).str).isEqualTo("zero");
@@ -189,11 +189,11 @@ public class TypeDelegateTest {
 
     @Test
     public void typeDelegateParseListObjectWrongRoots() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, LIST_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.list(TestData.class, "asdasdasd");
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, LIST_TEST_CONTENT);
+        CompositeType delegate = CompositeType.list(TestData.class, "asdasdasd");
 
         try {
-            delegate.from(moshi, body);
+            delegate.fromJson(moshi, body);
             fail("This should not go here...");
         } catch (IOException ioe) {
             assertThat(ioe).hasMessage("Json does not match expected structure for roots [asdasdasd].");
@@ -202,10 +202,10 @@ public class TypeDelegateTest {
 
     @Test(expected = JsonDataException.class)
     public void typeDelegateParseListObjectWithoutRoot() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, LIST_TEST_CONTENT);
-        TypeDelegate delegate = TypeDelegate.list(TestData.class);
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, LIST_TEST_CONTENT);
+        CompositeType delegate = CompositeType.list(TestData.class);
 
-        List<TestData> listData = delegate.from(moshi, body);
+        List<TestData> listData = delegate.fromJson(moshi, body);
         assertThat(listData).isNotNull();
         assertThat(listData).hasSize(3);
         assertThat(listData.get(0).str).isEqualTo("zero");
@@ -218,16 +218,16 @@ public class TypeDelegateTest {
 
     @Test(expected = JsonDataException.class)
     public void typeDelegateParseListObjectMultipleRoots() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, LIST_TEST_CONTENT_MULTIPLE_ROOTS_RIGHT);
-        TypeDelegate delegate = TypeDelegate.list(TestData.class, "users", "companies");
-        delegate.from(moshi, body);
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, LIST_TEST_CONTENT_MULTIPLE_ROOTS_RIGHT);
+        CompositeType delegate = CompositeType.list(TestData.class, "users", "companies");
+        delegate.fromJson(moshi, body);
     }
 
     @Test
     public void typeDelegateObjectWithNull() throws Exception {
-        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE, SINGLE_TEST_WITH_NULL_OBJECT);
-        TypeDelegate delegate = TypeDelegate.single(TestData.class, "root");
-        TestData data = delegate.from(moshi, body);
+        ResponseBody body = ResponseBody.create(CallSpec.Builder.MEDIA_TYPE_JSON, SINGLE_TEST_WITH_NULL_OBJECT);
+        CompositeType delegate = CompositeType.single(TestData.class, "root");
+        TestData data = delegate.fromJson(moshi, body);
         assertThat(data).isNull();
     }
 

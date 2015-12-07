@@ -38,24 +38,28 @@ import java.util.List;
 
 import okio.BufferedSource;
 
+import static com.xing.android.sdk.Utils.closeQuietly;
+import static com.xing.android.sdk.Utils.ioError;
+
 /**
  * Defines the type of responses, while adding the possibility to add a root, as well as defining if the object is a
  * list or just a single object.
- * The TypeDelegate can be used when defining the response type when building the CallSpec for a Resource
+ * The {@link CompositeType} can be used when defining the response type when building the CallSpec for a Resource.
+ * <p>
  * This can be used as follows:
  * <pre>
  * {@code
- *  TypeDelegate delegate = TypeDelegate.single(YourReturnObject.class, [Root or List of roots where your object can be
+ *  CompositeType delegate = CompositeType.single(YourReturnObject.class, [Root or List of roots where your object can be
  *  found])
  *  // or for a list
- *  TypeDelegate delegate = TypeDelegate.list(YourReturnObject.class, [Root or List of roots where your object can be
+ *  CompositeType delegate = CompositeType.list(YourReturnObject.class, [Root or List of roots where your object can be
  *  found])
  *
  * //Example: Usage inside the UserProfilesResource
  * public CallSpec<XingUser, Object> getUsersById(String id) {
  *  return this.<XingUser, Object>newGetSpec("/v1/users/{id}")
  *      .pathParam("id", id)
- *      .responseType(TypeDelegate.list(XingUser.class, "users")
+ *      .responseAsList(XingUser.class, "users")
  *      .build();
  * }
  * }
@@ -65,33 +69,42 @@ import okio.BufferedSource;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public final class TypeDelegate {
-    public static TypeDelegate single(Class<?> classType, String... roots) {
-        return new TypeDelegate(classType, false, roots);
+final class CompositeType {
+    /**
+     * Returns a {@link CompositeType} that will expect a single object in the root tree.
+     */
+    public static CompositeType single(Class<?> classType, String... roots) {
+        return new CompositeType(classType, false, roots);
     }
 
-    public static TypeDelegate list(Class<?> classType, String... roots) {
-        return new TypeDelegate(classType, true, roots);
+    /**
+     * Returns a {@link CompositeType} that will expect a list of objects in the root tree.
+     */
+    public static CompositeType list(Type classType, String... roots) {
+        return new CompositeType(classType, true, roots);
     }
 
     private final Type classType;
     private final String[] roots;
     private final boolean isListType;
 
-    private TypeDelegate(Class<?> classType, boolean isListType, String... roots) {
+    private CompositeType(Type classType, boolean isListType, String... roots) {
         this.classType = classType;
         this.isListType = isListType;
         this.roots = roots;
     }
 
     /**
-     * Parses the ResponseBody, finds the provided root and returns the object.
+     * Parses the ResponseBody and closes it. This method goes through provided roots to retrieve the object.
      */
     @Nullable
-    public <T> T from(Moshi moshi, ResponseBody body) throws IOException {
-        Type type = getType();
-        BufferedSource source = body.source();
+    <T> T fromJson(Moshi moshi, @Nullable ResponseBody body) throws IOException {
+        if (body == null) return null;
 
+        // Determine which type is required.
+        Type type = isListType ? Types.newParameterizedType(List.class, classType) : classType;
+
+        BufferedSource source = body.source();
         JsonAdapter<T> adapter = moshi.adapter(type);
         try {
             if (roots != null && roots.length != 0) {
@@ -100,22 +113,8 @@ public final class TypeDelegate {
                 return adapter.fromJson(source);
             }
         } finally {
-            if (source != null) {
-                try {
-                    source.close();
-                } catch (IOException ignored) {
-                }
-            }
+            closeQuietly(body);
         }
-    }
-
-    /**
-     * Helper that gives you the Type, making a difference between list and "standalone" object.
-     *
-     * @return Type - The type that should be returned after parsing the given object.
-     */
-    public Type getType() {
-        return isListType ? Types.newParameterizedType(List.class, classType) : classType;
     }
 
     /**
@@ -124,7 +123,7 @@ public final class TypeDelegate {
      */
     @Nullable
     private static <T> T readRootLeafs(@NonNull JsonAdapter<T> adapter, @NonNull JsonReader reader,
-          @NonNull String[] roots, int index) throws IOException {
+                                       @NonNull String[] roots, int index) throws IOException {
         if (index == roots.length) {
             return adapter.fromJson(reader);
         } else {
@@ -149,8 +148,7 @@ public final class TypeDelegate {
                     // Ignore, in case we are closing early.
                 }
             }
-            throw new IOException(String.format("Json does not match expected structure for roots %s.",
-                  Arrays.asList(roots)));
+            throw ioError("Json does not match expected structure for roots %s.", Arrays.asList(roots));
         }
     }
 }

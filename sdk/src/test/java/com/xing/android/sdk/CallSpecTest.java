@@ -22,13 +22,16 @@
 
 package com.xing.android.sdk;
 
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.xing.android.sdk.internal.Http;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.xing.android.sdk.internal.HttpMethod;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import okio.Buffer;
@@ -40,12 +43,16 @@ import static org.assertj.core.api.Assertions.fail;
  * @author serj.lotutovici
  */
 public class CallSpecTest {
-    private XingApi mockApi;
+    @Rule
+    public final MockWebServer server = new MockWebServer();
+    public XingApi mockApi;
+    public HttpUrl httpUrl;
 
     @Before
     public void setUp() throws Exception {
+        httpUrl = server.url("/");
         mockApi = new XingApi.Builder()
-              .apiEndpoint("http://test.test")
+              .apiEndpoint(httpUrl)
               .loggedOut()
               .build();
     }
@@ -57,20 +64,21 @@ public class CallSpecTest {
 
     @Test
     public void builderAcceptsPathParams() throws Exception {
-        CallSpec.Builder<Object, Object> builder = builder(Http.HTTP_GET, "/{param1}/{param2}", false)
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{param1}/{param2}", false)
+              .responseAs(Object.class)
               .pathParam("param1", "test1")
               .pathParam("param2", "test2");
         builder.build();
 
         Request request = builder.request();
-        assertThat(request.method()).isEqualTo(Http.HTTP_GET);
-        assertThat(request.urlString()).isEqualTo("http://test.test/test1/test2");
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "test1/test2");
         assertThat(request.body()).isNull();
     }
 
     @Test
     public void builderFailsOnMalformedParams() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_GET, "/{%sdf}/", false);
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{%sdf}/", false);
         try {
             builder.pathParam("%sdf", "any");
             fail("Builder should fail on malformed params.");
@@ -83,7 +91,7 @@ public class CallSpecTest {
 
     @Test
     public void builderFailsIfPathParamNotExpected() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_GET, "/{test1}/", false);
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{test1}/", false);
         try {
             builder.pathParam("test2", "first");
             fail("Builder should fail on non expected params.");
@@ -96,7 +104,7 @@ public class CallSpecTest {
 
     @Test
     public void builderFailsIfPathParamsNotSet() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_GET, "/{test2}", false);
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{test2}", false);
         try {
             builder.build();
             fail("Builder should fail if path params not set.");
@@ -108,7 +116,7 @@ public class CallSpecTest {
 
     @Test
     public void builderFailsOnAddingPathParamsAfterQueryParams() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_GET, "/{test1}", false);
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{test1}", false);
         builder.queryParam("q", "test");
         try {
             builder.pathParam("test1", "test");
@@ -120,25 +128,25 @@ public class CallSpecTest {
 
     @Test
     public void builderAttachesQueryParams() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_GET, "", false).queryParam("q", "test1");
+        CallSpec.Builder builder = builder(HttpMethod.GET, "", false).responseAs(Object.class).queryParam("q", "test1");
         // Build the CallSpec so that we don't test this behaviour twice.
         builder.build().queryParam("w", "test2");
 
         Request request = builder.request();
-        assertThat(request.method()).isEqualTo(Http.HTTP_GET);
-        assertThat(request.urlString()).isEqualTo("http://test.test/?q=test1&w=test2");
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=test1&w=test2");
         assertThat(request.body()).isNull();
     }
 
     @Test
     public void builderAttachesFormFields() throws Exception {
-        CallSpec.Builder builder = builder(Http.HTTP_PUT, "", true).formField("f", "true");
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true).responseAs(Object.class).formField("f", "true");
         // Build the CallSpec so that we don't test this behaviour twice.
         builder.build().formField("e", "false");
 
         Request request = builder.request();
-        assertThat(request.method()).isEqualTo(Http.HTTP_PUT);
-        assertThat(request.urlString()).isEqualTo("http://test.test/");
+        assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
+        assertThat(request.httpUrl()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
 
         RequestBody body = request.body();
@@ -149,7 +157,27 @@ public class CallSpecTest {
         assertThat(buffer.readUtf8()).isEqualTo("f=true&e=false");
     }
 
-    private <RT, ET> CallSpec.Builder<RT, ET> builder(String http, String path, boolean formEncoded) {
-        return new CallSpec.Builder<>(mockApi, http, path, !http.equals(Http.HTTP_GET), formEncoded);
+    @Test
+    public void builderEnsuresEmptyBody() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", false).responseAs(Object.class);
+        // Build the CallSpec so that we can build the request.
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
+        assertThat(request.httpUrl()).isEqualTo(httpUrl);
+        assertThat(request.body()).isNotNull();
+
+        RequestBody body = request.body();
+        assertThat(body.contentType()).isNull();
+        assertThat(body.contentLength()).isEqualTo(0);
+
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        assertThat(buffer.readUtf8()).isEmpty();
+    }
+
+    private <RT, ET> CallSpec.Builder<RT, ET> builder(HttpMethod httpMethod, String path, boolean formEncoded) {
+        return new CallSpec.Builder<>(mockApi, httpMethod, path, formEncoded);
     }
 }
