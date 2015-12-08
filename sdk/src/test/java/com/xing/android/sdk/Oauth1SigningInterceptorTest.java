@@ -99,6 +99,26 @@ public final class Oauth1SigningInterceptorTest {
         assertAuthHeader(signed, "R8m%2BYY%2FZG5GJ%2F%2F3zCrE65DkTdCk%3D");
     }
 
+    @Test
+    public void urlQueryParams() throws IOException {
+        Request request = new Request.Builder()
+              .url("https://api.twitter.com/1.1/statuses/?keywords=JohnKramer")
+              .build();
+
+        Request signed = oauth1.signRequest(request);
+        assertAuthHeader(signed, "kGp3zke%2Fv6IfGi%2B6eVmORqej4Wg%3D");
+    }
+
+    @Test
+    public void urlQueryParamsWithSpace() throws IOException {
+        Request request = new Request.Builder()
+              .url("https://api.twitter.com/1.1/statuses/?keywords=John%20Kramer")
+              .build();
+
+        Request signed = oauth1.signRequest(request);
+        assertAuthHeader(signed, "Z3saYRlzqfBzE%2BWTEzZtolIhJkc%3D");
+    }
+
     /** Asserts that the provided request contains an expected header, with provided oauth signature. */
     private static void assertAuthHeader(Request request, String signature) {
         assertThat(request.header("Authorization")).isEqualTo(
