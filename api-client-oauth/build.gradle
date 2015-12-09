@@ -61,6 +61,20 @@ android {
 
 dependencies {
     provided libraries.supportAnnotations
+    provided project(':sdk')
+
     compile libraries.singpost
-    compile project(':sdk')
 }
+/*
+ *  ============== Artifacts publishing section ==============
+ */
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+ext {
+    POM_NAME = 'xing-android-sdk'
+    POM_ARTIFACT_ID = 'oauth'
+    POM_PACKAGING = 'aar'
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

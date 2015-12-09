@@ -66,6 +66,7 @@ android {
 dependencies {
     provided libraries.supportAnnotations
     provided libraries.rxjava
+
     compile libraries.singpost
     compile libraries.okio
     compile libraries.okhttp
