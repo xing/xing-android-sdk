@@ -98,13 +98,13 @@ public final class CallSpec<RT, ET> {
      * <p>
      * Note that the {@code callback} will be dropped after the call execution.
      */
-    public void enqueue(@Nullable final Callback<RT, ET> callback) {
+    public void enqueue(final Callback<RT, ET> callback) {
         synchronized (this) {
             if (executed) throw stateError("Call already executed");
             executed = true;
         }
 
-        com.squareup.okhttp.Call rawCall;
+        Call rawCall;
         try {
             rawCall = createRawCall();
         } catch (Throwable t) {
@@ -209,15 +209,20 @@ public final class CallSpec<RT, ET> {
               .body(new NoContentResponseBody(rawBody.contentType(), rawBody.contentLength()))
               .build();
 
+        ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody(rawBody);
         int code = rawResponse.code();
         if (code < 200 || code >= 300) {
             try {
                 // Buffer the entire body to avoid future I/O.
-                ResponseBody bufferedBody = Utils.readBodyToBytesIfNecessary(rawBody);
-                ET errorBody = errorType.fromJson(api.converter, bufferedBody);
+                ET errorBody = errorType.fromJson(api.converter, catchingBody);
                 return Response.error(errorBody, rawResponse);
+            } catch (RuntimeException e) {
+                // If the underlying source threw an exception, propagate that, rather than indicating it was
+                // a runtime exception.
+                catchingBody.throwIfCaught();
+                throw e;
             } finally {
-                closeQuietly(rawBody);
+                closeQuietly(catchingBody);
             }
         }
 
@@ -226,7 +231,6 @@ public final class CallSpec<RT, ET> {
             return Response.success(null, rawResponse);
         }
 
-        ExceptionCatchingRequestBody catchingBody = new ExceptionCatchingRequestBody(rawBody);
         try {
             RT body = responseType.fromJson(api.converter, catchingBody);
             return Response.success(body, rawResponse);
@@ -244,15 +248,12 @@ public final class CallSpec<RT, ET> {
      * TODO docs.
      */
     public static final class Builder<RT, ET> {
-        private static final char[] HEX_DIGITS =
-              {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        private static final String PATH_SEGMENT_ENCODE_SET = " \"<>^`{}|/\\?#";
         // Upper and lower characters, digits, underscores, and hyphens, starting with a character.
         private static final String PARAM = "[a-zA-Z][a-zA-Z0-9_-]*";
         private static final Pattern PARAM_NAME_REGEX = Pattern.compile(PARAM);
         private static final Pattern PARAM_URL_REGEX = Pattern.compile("\\{(" + PARAM + ")\\}");
 
-        static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=UTF-8");
+        static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
         private final XingApi api;
         private final HttpMethod httpMethod;
@@ -289,14 +290,14 @@ public final class CallSpec<RT, ET> {
             return this;
         }
 
-        public Builder<RT, ET> queryParam(String name, String value) {
+        public Builder<RT, ET> queryParam(String name, @Nullable Object value) {
             if (resourcePath != null) buildUrlBuilder();
-            urlBuilder.addEncodedQueryParameter(name, UrlEscapeUtils.escape(value));
+            urlBuilder.addEncodedQueryParameter(name, UrlEscapeUtils.escape(String.valueOf(value)));
             return this;
         }
 
-        public Builder<RT, ET> formField(String name, String value) {
-            formEncodingBuilder.add(name, value);
+        public Builder<RT, ET> formField(String name, @Nullable Object value) {
+            formEncodingBuilder.add(name, String.valueOf(value));
             return this;
         }
 
@@ -357,6 +358,7 @@ public final class CallSpec<RT, ET> {
         }
 
         Request request() {
+            if (urlBuilder == null) throw stateError("#request() can be called only after #build()");
             HttpUrl url = urlBuilder.build();
 
             RequestBody body = this.body;
@@ -383,55 +385,6 @@ public final class CallSpec<RT, ET> {
         private void buildUrlBuilder() {
             urlBuilder = apiEndpoint.resolve(resourcePath).newBuilder();
             resourcePath = null;
-        }
-
-        static String canonicalize(String input) {
-            int codePoint;
-            for (int i = 0, limit = input.length(); i < limit; i += Character.charCount(codePoint)) {
-                codePoint = input.codePointAt(i);
-                //noinspection MagicNumber
-                if (codePoint < 0x20 || codePoint >= 0x7f || PATH_SEGMENT_ENCODE_SET.indexOf(codePoint) != -1
-                      || codePoint == '%') {
-                    // Slow path: the character at i requires encoding!
-                    Buffer out = new Buffer();
-                    out.writeUtf8(input, 0, i);
-                    canonicalize(out, input, i, limit);
-                    return out.readUtf8();
-                }
-            }
-
-            // Fast path: no characters required encoding.
-            return input;
-        }
-
-        @SuppressWarnings("MagicNumber")
-        static void canonicalize(Buffer out, String input, int pos, int limit) {
-            Buffer utf8Buffer = null; // Lazily allocated.
-            int codePoint;
-            for (int i = pos; i < limit; i += Character.charCount(codePoint)) {
-                codePoint = input.codePointAt(i);
-                //noinspection StatementWithEmptyBody
-                if (codePoint == '\t' || codePoint == '\n' || codePoint == '\f' || codePoint == '\r') {
-                    // Skip this character.
-                } else //noinspection MagicNumber
-                    if (codePoint < 0x20 || codePoint >= 0x7f || PATH_SEGMENT_ENCODE_SET.indexOf(codePoint) != -1
-                          || codePoint == '%') {
-                        // Percent encode this character.
-                        if (utf8Buffer == null) {
-                            utf8Buffer = new Buffer();
-                        }
-                        utf8Buffer.writeUtf8CodePoint(codePoint);
-                        while (!utf8Buffer.exhausted()) {
-                            int b = utf8Buffer.readByte() & 0xff;
-                            out.writeByte('%');
-                            out.writeByte(HEX_DIGITS[(b >> 4) & 0xf]);
-                            out.writeByte(HEX_DIGITS[b & 0xf]);
-                        }
-                    } else {
-                        // This character doesn't need encoding. Just copy it over.
-                        out.writeUtf8CodePoint(codePoint);
-                    }
-            }
         }
 
         /**
