@@ -24,15 +24,20 @@ package com.xing.android.sdk;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.xing.android.sdk.internal.HttpMethod;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import okio.Buffer;
 
@@ -42,6 +47,7 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * @author serj.lotutovici
  */
+@SuppressWarnings("MagicNumber")
 public class CallSpecTest {
     @Rule
     public final MockWebServer server = new MockWebServer();
@@ -50,6 +56,9 @@ public class CallSpecTest {
 
     @Before
     public void setUp() throws Exception {
+        OkHttpClient client = new OkHttpClient();
+        //        client.set
+
         httpUrl = server.url("/");
         mockApi = new XingApi.Builder()
               .apiEndpoint(httpUrl)
@@ -175,6 +184,61 @@ public class CallSpecTest {
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
         assertThat(buffer.readUtf8()).isEmpty();
+    }
+
+    @Test
+    @Ignore // TODO Flaky test (fix)
+    public void specThrowsIfCanceled() throws Exception {
+        CallSpec spec = builder(HttpMethod.GET, "", false).responseAs(Object.class).build();
+        spec.cancel();
+
+        assertThat(spec.isCanceled()).isTrue();
+        try {
+            spec.execute();
+            fail("#execute() should throw");
+        } catch (IOException ex) {
+            assertThat(ex.getMessage()).isNotEmpty().isEqualTo("Canceled");
+        }
+
+        spec = builder(HttpMethod.GET, "", false).responseAs(Object.class).build();
+        spec.cancel();
+        try {
+            //noinspection unchecked
+            spec.enqueue(null);
+            fail("#enqueue() should throw");
+        } catch (Throwable th) {
+            assertThat(th.getMessage())
+                  .isInstanceOf(IOException.class)
+                  .isNotEmpty()
+                  .isEqualTo("Canceled");
+        }
+    }
+
+    @Test
+    public void specThrowsIfExecutedTwice() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(204));
+
+        CallSpec spec = builder(HttpMethod.DELETE, "", false).responseAs(Object.class).build();
+        Response response = spec.execute();
+
+        assertThat(response.code()).isEqualTo(204);
+        assertThat(response.body()).isNull();
+        assertThat(response.raw()).isNotNull();
+
+        try {
+            spec.execute();
+            fail("#execute() should throw");
+        } catch (IllegalStateException e) {
+            assertThat(e.getMessage()).isNotEmpty().isEqualTo("Call already executed");
+        }
+
+        try {
+            //noinspection unchecked
+            spec.enqueue(null);
+            fail("#enqueue() should throw");
+        } catch (IllegalStateException e) {
+            assertThat(e.getMessage()).isNotEmpty().isEqualTo("Call already executed");
+        }
     }
 
     private <RT, ET> CallSpec.Builder<RT, ET> builder(HttpMethod httpMethod, String path, boolean formEncoded) {

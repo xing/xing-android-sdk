@@ -17,6 +17,8 @@
 
 package com.xing.android.sdk;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -76,7 +78,7 @@ public final class CallSpec<RT, ET> {
      */
     public Response<RT, ET> execute() throws IOException {
         synchronized (this) {
-            if (executed) throw new IllegalStateException("Already executed.");
+            if (executed) throw stateError("Call already executed");
             executed = true;
         }
 
@@ -87,8 +89,67 @@ public final class CallSpec<RT, ET> {
         return parseResponse(rawCall.execute());
     }
 
-    public void enqueue(Callback<RT, ET> callback) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    /**
+     * Asynchronously send the request and notify {@code callback} of its response or if an error
+     * occurred talking to the server, creating the request, or processing the response.
+     * <p>
+     * This method is <i>null-safe</i>, which means that there will be no failure or error propagated if
+     * {@code callback} methods will throw an error.
+     * <p>
+     * Note that the {@code callback} will be dropped after the call execution.
+     */
+    public void enqueue(@Nullable final Callback<RT, ET> callback) {
+        synchronized (this) {
+            if (executed) throw stateError("Call already executed");
+            executed = true;
+        }
+
+        com.squareup.okhttp.Call rawCall;
+        try {
+            rawCall = createRawCall();
+        } catch (Throwable t) {
+            callback.onFailure(t);
+            return;
+        }
+        if (canceled) {
+            rawCall.cancel();
+        }
+        this.rawCall = rawCall;
+
+        rawCall.enqueue(new com.squareup.okhttp.Callback() {
+            private void callFailure(Throwable e) {
+                try {
+                    callback.onFailure(e);
+                } catch (Throwable t) {
+                    // TODO add some logging
+                }
+            }
+
+            private void callSuccess(Response<RT, ET> response) {
+                try {
+                    callback.onResponse(response);
+                } catch (Throwable t) {
+                    // TODO add some logging
+                }
+            }
+
+            @Override
+            public void onFailure(Request request, IOException e) {
+                callFailure(e);
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response rawResponse) {
+                Response<RT, ET> response;
+                try {
+                    response = parseResponse(rawResponse);
+                } catch (Throwable e) {
+                    callFailure(e);
+                    return;
+                }
+                callSuccess(response);
+            }
+        });
     }
 
     public Observable<Response<RT, ET>> stream() {
@@ -139,7 +200,7 @@ public final class CallSpec<RT, ET> {
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
-    @SuppressWarnings("MagicNumber")
+    @SuppressWarnings("MagicNumber") // These codes are specific to this method and to the http protocol.
     private Response<RT, ET> parseResponse(com.squareup.okhttp.Response rawResponse) throws IOException {
         ResponseBody rawBody = rawResponse.body();
 
