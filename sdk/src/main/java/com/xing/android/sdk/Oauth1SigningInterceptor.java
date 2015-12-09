@@ -27,10 +27,11 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -45,6 +46,8 @@ import static com.xing.android.sdk.Utils.stateNotNull;
  * Request {@link Interceptor} that handel's Oauth1 request signing.
  */
 final class Oauth1SigningInterceptor implements Interceptor {
+    private static final Pattern CHARACTER_PATTERN = Pattern.compile("\\W");
+    private static final int NUANCE_BYTES = 32;
     private static final String OAUTH_CONSUMER_KEY = "oauth_consumer_key";
     private static final String OAUTH_NONCE = "oauth_nonce";
     private static final String OAUTH_SIGNATURE = "oauth_signature";
@@ -78,9 +81,9 @@ final class Oauth1SigningInterceptor implements Interceptor {
     }
 
     public Request signRequest(Request request) throws IOException {
-        byte[] nonce = new byte[32];
+        byte[] nonce = new byte[NUANCE_BYTES];
         random.nextBytes(nonce);
-        String oauthNonce = ByteString.of(nonce).base64().replaceAll("\\W", "");
+        String oauthNonce = CHARACTER_PATTERN.matcher(ByteString.of(nonce).base64()).replaceAll("");
         String oauthTimestamp = clock.millis();
 
         String consumerKeyValue = UrlEscapeUtils.escape(consumerKey);
@@ -101,7 +104,6 @@ final class Oauth1SigningInterceptor implements Interceptor {
         }
 
         Buffer body = new Buffer();
-
         RequestBody requestBody = request.body();
         if (requestBody != null) {
             requestBody.writeTo(body);
@@ -132,7 +134,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
         base.writeByte('&');
 
         boolean first = true;
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        for (Entry<String, String> entry : parameters.entrySet()) {
             if (!first) {
                 base.writeUtf8(UrlEscapeUtils.escape("&"));
             }
@@ -142,8 +144,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
             base.writeUtf8(UrlEscapeUtils.escape(entry.getValue()));
         }
 
-        String signingKey = UrlEscapeUtils.escape(consumerSecret) + "&" + UrlEscapeUtils.escape(accessSecret);
-
+        String signingKey = UrlEscapeUtils.escape(consumerSecret) + '&' + UrlEscapeUtils.escape(accessSecret);
         SecretKeySpec keySpec = new SecretKeySpec(signingKey.getBytes(), "HmacSHA1");
         Mac mac;
         try {
@@ -162,7 +163,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
               + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", " //
               + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "  //
               + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", " //
-              + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + "\"";
+              + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + '"';
 
         return request.newBuilder().addHeader("Authorization", authorization).build();
     }
@@ -217,6 +218,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
     }
 
     /** Simple clock like class, to allow time mocking. */
+    @SuppressWarnings({"MethodMayBeStatic", "MagicNumber"}) // Required for mocking.
     static class Clock {
         /** Returns the current time in milliseconds divided by 1K. */
         public String millis() {

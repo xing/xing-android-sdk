@@ -47,8 +47,8 @@ final class UrlEscapeUtils {
     /** Url form parameter safe chars. */
     private static final String SAFE_CHARS = "-_.*";
 
-    /** This escaper represents spaces as '+'. */
-    private static final char[] PLUS_SIGN = {'+'};
+    /** This escaper represents spaces as "%20". */
+    private static final char[] PLUS_SIGN = {'%', '2', '0'};
 
     /** Percent escapers output upper case hex digits (uri escapers require this). */
     private static final char[] UPPER_HEX_DIGITS = "0123456789ABCDEF".toCharArray();

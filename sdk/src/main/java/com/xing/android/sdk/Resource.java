@@ -22,7 +22,7 @@
 
 package com.xing.android.sdk;
 
-import com.xing.android.sdk.internal.Http;
+import com.xing.android.sdk.internal.HttpMethod;
 
 /**
  * TODO docs.
@@ -30,7 +30,7 @@ import com.xing.android.sdk.internal.Http;
  * @author serj.lotutovici
  */
 public abstract class Resource {
-    final XingApi api;
+    protected final XingApi api;
 
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     protected Resource(XingApi api) {
@@ -38,19 +38,21 @@ public abstract class Resource {
     }
 
     // TODO (DanielH) Implement all internal methods required for building specs.
-    protected <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_GET, resourcePath, false, false);
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(XingApi api, String resourcePath) {
+        return new CallSpec.Builder<>(api, HttpMethod.GET, resourcePath, false);
     }
 
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_POST, resourcePath, true, true);
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(XingApi api, String resourcePath,
+          boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.POST, resourcePath, isFormEncoded);
     }
 
-    protected <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_PUT, resourcePath, true, false);
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(XingApi api, String resourcePath,
+          boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.PUT, resourcePath, isFormEncoded);
     }
 
-    protected <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(String resourcePath) {
-        return new CallSpec.Builder<>(api, Http.HTTP_DELETE, resourcePath, false, false);
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(XingApi api, String resourcePath) {
+        return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
     }
 }

@@ -22,38 +22,20 @@
 
 package com.xing.android.sdk.model.user;
 
-import android.os.Build;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.assertEquals;
+import com.squareup.moshi.Json;
 
 /**
- * @author david.gonzales
+ * @author daniel.hartwich
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(
-        sdk = Build.VERSION_CODES.LOLLIPOP,
-        manifest = Config.NONE)
-public class ExperienceCompanyTest {
+public class LegalInformation {
+    @Json(name = "content")
+    private String content;
 
-    @Test(expected = IllegalArgumentException.class)
-    @Ignore
-    public void addLongUrlToCompany() throws Exception {
-        ExperienceCompany experienceCompany = new ExperienceCompany();
-//        experienceCompany.setUrl(ParserUtils.stringToUri(
-//                "http://www.xing"
-//                        + ".com/gdrgdgdfbdfbdffdvfdggfdgdfhdfgdfbhdfgdfhdfgdfhrdfbfdghdbnfghfdbfdfdgfdbndfgrpgoitjghreigjfgiohremgiodfhmreigomreiohgrtmgoiregmrtiohgmeriogmthioergmtiohmrtiohmtoib"));
+    public String getContent() {
+        return content;
     }
 
-    @Test
-    public void setNullUrlToCompany() throws Exception {
-        ExperienceCompany experienceCompany = new ExperienceCompany();
-        experienceCompany.setUrl(null);
-        assertEquals(null, experienceCompany.getUrl());
+    public void setContent(String content) {
+        this.content = content;
     }
 }

@@ -79,10 +79,10 @@ public class UrlEscapeUtilsTest {
         assertEscaping("%27", '\'');
 
         // Plus for spaces
-        assertEscaping("+", ' ');
+        assertEscaping("%20", ' ');
         assertEscaping("%2B", '+');
 
-        assertEquals("safe+with+spaces", UrlEscapeUtils.escape("safe with spaces"));
+        assertEquals("safe%20with%20spaces", UrlEscapeUtils.escape("safe with spaces"));
         assertEquals("foo%40bar.com", UrlEscapeUtils.escape("foo@bar.com"));
     }
 

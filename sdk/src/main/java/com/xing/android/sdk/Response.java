@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2015 XING AG (http://xing.com/)
  * Copyright (C) 2015 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +17,9 @@
 
 package com.xing.android.sdk;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.Protocol;
-import com.squareup.okhttp.ResponseBody;
 
 import static com.google.gdata.util.common.base.Preconditions.checkNotNull;
 
@@ -27,49 +27,21 @@ import static com.google.gdata.util.common.base.Preconditions.checkNotNull;
  * TODO docs.
  */
 public final class Response<RT, ET> {
-    // TODO (SerjLtt) Make response reflect error type.
-
-    /**
-     * TODO docs.
-     */
-    public static <RT> Response<RT, Object> success(RT body) {
-        return success(body, new com.squareup.okhttp.Response.Builder() //
-              .code(200)
-              .protocol(Protocol.HTTP_1_1)
-              .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
-              .build());
-    }
-
-    /**
-     * TODO docs.
-     */
-    public static <RT> Response<RT, Object> success(RT body, com.squareup.okhttp.Response rawResponse) {
+    /** Returns a successful {@link Response} with a {@code null} error body. */
+    static <RT, ET> Response<RT, ET> success(@Nullable RT body, com.squareup.okhttp.Response rawResponse) {
         return new Response<>(rawResponse, body, null);
     }
 
-    /**
-     * TODO docs.
-     */
-    public static <RT> Response<RT, Object> error(int code, ResponseBody body) {
-        return error(body, new com.squareup.okhttp.Response.Builder() //
-              .code(code)
-              .protocol(Protocol.HTTP_1_1)
-              .request(new com.squareup.okhttp.Request.Builder().url(HttpUrl.parse("http://localhost")).build())
-              .build());
-    }
-
-    /**
-     * TODO docs.
-     */
-    public static <RT, ET> Response<RT, ET> error(ResponseBody body, com.squareup.okhttp.Response rawResponse) {
-        return new Response<>(rawResponse, null, body);
+    /** Returns a error {@link Response} with a {@code null} response body. */
+    static <RT, ET> Response<RT, ET> error(@Nullable ET errorBody, com.squareup.okhttp.Response rawResponse) {
+        return new Response<>(rawResponse, null, errorBody);
     }
 
     private final com.squareup.okhttp.Response rawResponse;
     private final RT body;
-    private final ResponseBody errorBody;
+    private final ET errorBody;
 
-    private Response(com.squareup.okhttp.Response rawResponse, RT body, ResponseBody errorBody) {
+    private Response(com.squareup.okhttp.Response rawResponse, @Nullable RT body, @Nullable ET errorBody) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
         this.body = body;
         this.errorBody = errorBody;
@@ -94,18 +66,20 @@ public final class Response<RT, ET> {
         return rawResponse.headers();
     }
 
-    /** {@code true} if {@link #code()} is in the range [200..300). */
+    /** {@code true} if {@link #code()} is in the range [200..300]. */
     public boolean isSuccess() {
         return rawResponse.isSuccessful();
     }
 
-    /** The deserialized response body of a {@linkplain #isSuccess() successful} response. */
+    /** The de-serialized response body of a {@linkplain #isSuccess() successful} response. */
+    @Nullable
     public RT body() {
         return body;
     }
 
     /** The raw response body of an {@linkplain #isSuccess() unsuccessful} response. */
-    public ResponseBody errorBody() {
+    @Nullable
+    public ET errorBody() {
         return errorBody;
     }
 }

@@ -20,51 +20,47 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.model.user;
+package com.xing.android.sdk;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.squareup.moshi.FromJson;
-import com.squareup.moshi.ToJson;
-import com.xing.android.sdk.model.JsonEnum;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.xing.android.sdk.model.user.MessagingAccount;
+
+import java.io.IOException;
 
 /**
- * Represents users gender.
- *
- * @author david.gonzalez
+ * @author daniel.hartwich
  */
-public enum Gender implements JsonEnum {
-    MALE("m"),
-    FEMALE("f");
-
-    private final String gender;
-
-    Gender(@NonNull String gender) {
-        this.gender = gender;
-    }
-
-    @Override
-    public String getJsonValue() {
-        return gender;
-    }
-
+public class MessagingAccountJsonAdapter extends JsonAdapter<MessagingAccount> {
     @Nullable
-    @FromJson
-    public Gender fromJson(String value) {
-        switch (value) {
-            case "m":
-                return MALE;
-            case "f":
-                return FEMALE;
+    @Override
+    public MessagingAccount fromJson(JsonReader reader) throws IOException {
+        String messagingAccount = reader.nextString();
+        switch (messagingAccount) {
+            case "aim":
+                return MessagingAccount.AIM;
+            case "icq":
+                return MessagingAccount.ICQ;
+            case "skype":
+                return MessagingAccount.SKYPE;
+            case "msn":
+                return MessagingAccount.MSN;
+            case "yahoo":
+                return MessagingAccount.YAHOO;
+            case "jabber":
+                return MessagingAccount.JABBER;
+            case "googletalk":
+                return MessagingAccount.GOOGLE_TALK;
             default:
                 return null;
         }
     }
 
-    @ToJson
-    public String toJson(Gender gender) {
-        return gender.gender;
+    @Override
+    public void toJson(JsonWriter writer, MessagingAccount value) throws IOException {
+        writer.value(value.getJsonValue());
     }
-
 }

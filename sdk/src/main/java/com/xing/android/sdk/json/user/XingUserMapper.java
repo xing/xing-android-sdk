@@ -192,7 +192,8 @@ public final class XingUserMapper {
                         break;
                     }
                     case "educational_background": {
-                        xinguser.setEducationBackground(EducationalBackgroundMapper.parseEducationalBackground(reader));
+                        //                        xinguser.setEducationBackground(EducationalBackgroundMapper
+                        // .parseEducationalBackground(reader));
                         break;
                     }
                     case "photo_urls": {
@@ -200,8 +201,8 @@ public final class XingUserMapper {
                         break;
                     }
                     case "professional_experience": {
-                        xinguser.setProfessionalExperience(
-                                ProfessionalExperienceMapper.parseProfessionalExperience(reader));
+                        //                        xinguser.setProfessionalExperience(
+                        // ProfessionalExperienceMapper.parseProfessionalExperience(reader));
                         break;
                     }
                     case "time_zone": {

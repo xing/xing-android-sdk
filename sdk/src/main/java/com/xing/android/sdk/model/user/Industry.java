@@ -54,6 +54,7 @@ public class Industry implements Serializable, Parcelable {
         }
     };
 
+
     private final int id;
     private List<Segment> segments;
     private String typeName;

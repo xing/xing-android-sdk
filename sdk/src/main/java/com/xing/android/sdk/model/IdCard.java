@@ -22,6 +22,7 @@
 
 package com.xing.android.sdk.model;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.model.user.XingPhotoUrls;
 
 /**
@@ -36,18 +37,25 @@ public class IdCard {
     /**
      * user id.
      */
+    @Json(name = "id")
     private String id;
+
     /**
      * user name.
      */
+    @Json(name = "display_name")
     private String displayName;
+
     /**
      * User profile url.
      */
+    @Json(name = "permalink")
     private String permalink;
+
     /**
      * User photo urls.
      */
+    @Json(name = "photo_urls")
     private XingPhotoUrls photoUrls;
 
     /**

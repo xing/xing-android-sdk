@@ -26,10 +26,7 @@ import android.support.annotation.NonNull;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
-import com.xing.android.sdk.json.ParserUtils;
-import com.xing.android.sdk.model.CalendarUtils;
 import com.xing.android.sdk.model.user.ExperienceCompany;
-import com.xing.android.sdk.model.user.Industry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,7 +72,7 @@ public final class ExperienceCompanyMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        experienceCompany.setBeginDate(CalendarUtils.parseCalendarFromString(reader.nextString()));
+                        experienceCompany.setBeginDate(reader.nextString());
                     }
                     break;
                 }
@@ -107,7 +104,7 @@ public final class ExperienceCompanyMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        experienceCompany.setEndDate(CalendarUtils.parseCalendarFromString(reader.nextString()));
+                        experienceCompany.setEndDate(reader.nextString());
                     }
                     break;
                 }
@@ -148,7 +145,7 @@ public final class ExperienceCompanyMapper {
                         reader.nextNull();
                     } else {
                         //noinspection ConstantConditions
-                        experienceCompany.setUrl(ParserUtils.stringToUri(reader.nextString()));
+                        experienceCompany.setUrl(reader.nextString());
                     }
                     break;
                 }
@@ -181,7 +178,7 @@ public final class ExperienceCompanyMapper {
             industryId = reader.nextInt();
             reader.nextName();
             industryType = reader.nextString();
-            experienceCompany.setIndustry(new Industry(industryId, industryType));
+//            experienceCompany.setIndustry(new Industry(industryId, industryType));
             reader.endObject();
         }
 

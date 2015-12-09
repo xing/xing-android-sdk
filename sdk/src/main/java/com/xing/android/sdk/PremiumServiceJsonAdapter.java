@@ -20,20 +20,39 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.internal;
+package com.xing.android.sdk;
+
+import android.support.annotation.Nullable;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.xing.android.sdk.model.user.PremiumService;
+
+import java.io.IOException;
 
 /**
- * TODO docs.
- *
- * @author serj.lotutovici
+ * @author daniel.hartwich
  */
-public final class Http {
-    public static final String HTTP_GET = "GET";
-    public static final String HTTP_POST = "POST";
-    public static final String HTTP_PUT = "PUT";
-    public static final String HTTP_DELETE = "DELETE";
+public class PremiumServiceJsonAdapter extends JsonAdapter<PremiumService> {
+    @Nullable
+    @Override
+    public PremiumService fromJson(JsonReader reader) throws IOException {
+        String premiumService = reader.nextString();
+        switch (premiumService) {
+            case "SEARCH":
+                return PremiumService.SEARCH;
+            case "PRIVATEMESSAGES":
+                return PremiumService.PRIVATE_MESSAGES;
+            case "NOADVERTISING":
+                return PremiumService.NO_ADVERTISING;
+            default:
+                return null;
+        }
+    }
 
-    /** No instances. */
-    private Http() {
+    @Override
+    public void toJson(JsonWriter writer, PremiumService value) throws IOException {
+        writer.value(value.getJsonValue());
     }
 }

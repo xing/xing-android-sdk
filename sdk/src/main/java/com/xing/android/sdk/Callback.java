@@ -23,12 +23,12 @@ package com.xing.android.sdk;
  * Callback methods are executed using the {@link CallSpec} callback executor. All Callbacks are executed on the
  * application's main (UI) thread.
  *
- * @param <T> Expected response type.
+ * @param <RT> Expected response type.
+ * @param <ET> Expected error type.
  */
-public interface Callback<T> {
+public interface Callback<RT, ET> {
     /** Successful HTTP response. */
-    //TODO Refactor callback for two type parameters
-    void onResponse(Response<T, Object> response);
+    void onResponse(Response<RT, ET> response);
 
     /** Invoked when a network or unexpected exception occurred during the HTTP request. */
     void onFailure(Throwable t);
