@@ -261,7 +261,12 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (response != null) {return response.body();} else {return null;}
+
+            if (response != null) {
+                return response.body();
+            } else {
+                return null;
+            }
         }
 
         @Override

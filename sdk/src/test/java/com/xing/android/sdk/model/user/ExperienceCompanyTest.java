@@ -24,6 +24,7 @@ package com.xing.android.sdk.model.user;
 
 import android.os.Build;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -41,6 +42,7 @@ import static org.junit.Assert.assertEquals;
 public class ExperienceCompanyTest {
 
     @Test(expected = IllegalArgumentException.class)
+    @Ignore
     public void addLongUrlToCompany() throws Exception {
         ExperienceCompany experienceCompany = new ExperienceCompany();
 //        experienceCompany.setUrl(ParserUtils.stringToUri(

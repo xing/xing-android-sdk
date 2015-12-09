@@ -1,4 +1,4 @@
-package com.xing.android.sdk;/*
+/*
  * Copyright (c) 2015 XING AG (http://xing.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,6 +19,8 @@ package com.xing.android.sdk;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+package com.xing.android.sdk;
 
 import android.support.annotation.Nullable;
 

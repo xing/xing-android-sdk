@@ -61,16 +61,13 @@ android {
 
 dependencies {
     provided libraries.supportAnnotations
-    provided project(':sdk')
 
+    compile project(':sdk')
     compile libraries.singpost
 }
 /*
  *  ============== Artifacts publishing section ==============
  */
-apply plugin: 'maven'
-apply plugin: 'signing'
-
 ext {
     POM_NAME = 'xing-android-sdk'
     POM_ARTIFACT_ID = 'oauth'
