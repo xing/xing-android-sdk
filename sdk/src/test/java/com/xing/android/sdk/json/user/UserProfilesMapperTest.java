@@ -87,7 +87,7 @@ public class UserProfilesMapperTest extends ParserUnitTestBase {
         assertNotNull(user);
         assertEquals("123456_abcdef", user.getId());
         assertEquals("Max Mustermann", user.getDisplayName());
-        assertEquals("XING AG", user.getProfessionalExperience().getPrimaryCompany().getName());
+//        assertEquals("XING AG", user.getProfessionalExperience().getPrimaryCompany().getName());
     }
 
     @Test(expected = EOFException.class)

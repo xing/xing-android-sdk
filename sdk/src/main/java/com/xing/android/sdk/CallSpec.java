@@ -223,14 +223,14 @@ public final class CallSpec<RT, ET> {
         public Builder<RT, ET> pathParam(String name, String value) {
             stateNotNull(resourcePath, "Path params must be set before query params.");
             validatePathParam(name);
-            resourcePath = resourcePath.replace('{' + name + '}', canonicalize(value));
+            resourcePath = resourcePath.replace('{' + name + '}', UrlEscapeUtils.escape(value));
             resourcePathParams.remove(name);
             return this;
         }
 
         public Builder<RT, ET> queryParam(String name, String value) {
             if (resourcePath != null) buildUrlBuilder();
-            urlBuilder.addQueryParameter(name, value);
+            urlBuilder.addEncodedQueryParameter(name, UrlEscapeUtils.escape(value));
             return this;
         }
 
@@ -266,8 +266,13 @@ public final class CallSpec<RT, ET> {
             return this;
         }
 
-        public Builder<RT, ET> responseAsList(Type type, String... roots) {
+        public Builder<RT, ET> responseAsListOf(Type type, String... roots) {
             responseType = CompositeType.list(checkNotNull(type, "type == null"), roots);
+            return this;
+        }
+
+        public Builder<RT, ET> responseAsFirst(Class<RT> type, String... roots) {
+            responseType = CompositeType.first(checkNotNull(type, "type == null"), roots);
             return this;
         }
 

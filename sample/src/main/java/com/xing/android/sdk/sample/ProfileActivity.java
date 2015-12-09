@@ -22,7 +22,9 @@
 
 package com.xing.android.sdk.sample;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -33,14 +35,18 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
+import com.xing.android.sdk.Response;
+import com.xing.android.sdk.XingApi;
+import com.xing.android.sdk.model.SearchResult;
 import com.xing.android.sdk.model.user.XingAddress;
 import com.xing.android.sdk.model.user.XingUser;
 import com.xing.android.sdk.network.XingController;
+import com.xing.android.sdk.resources.UserProfilesResource;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.DownloadImageTask;
 import com.xing.android.sdk.task.OnTaskFinishedListener;
 import com.xing.android.sdk.task.profile_visits.CreateVisitTask;
-import com.xing.android.sdk.task.user.MeTask;
 import com.xing.android.sdk.task.user.UserDetailsTask;
 
 import java.util.List;
@@ -58,6 +64,8 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
     private TextView userWants;
 
     private String mUserId = "";
+
+    private Response<XingUser, Object> response;
 
     public static final String EXTRA_USER_ID = "userid";
 
@@ -84,8 +92,7 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
                 XingController.getInstance().executeAsync(userDetailsTask);
             } else {
                 //Execute the task in order to get the users profile
-                MeTask meTask = new MeTask(null, this, this);
-                XingController.getInstance().executeAsync(meTask);
+                new OwnProfileTask().execute(this);
             }
         }
     }
@@ -117,7 +124,7 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
             case R.id.action_logout:
                 Prefs.getInstance(this).logout();
                 startActivity(new Intent(this, MainActivity.class).
-                        setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                      setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 return true;
             case R.id.action_visitors:
                 startActivity(new Intent(this, VisitorsActivity.class));
@@ -137,21 +144,21 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
             if (!TextUtils.isEmpty(mUserId)) {
                 Prefs.getInstance(this).setUserId(result.getId());
                 CreateVisitTask visitTask =
-                        new CreateVisitTask(result.getId(), this, new OnTaskFinishedListener<Void>() {
-                            @Override
-                            public void onSuccess(@Nullable Void result) {
-                            }
+                      new CreateVisitTask(result.getId(), this, new OnTaskFinishedListener<Void>() {
+                          @Override
+                          public void onSuccess(@Nullable Void result) {
+                          }
 
-                            @Override
-                            public void onError(Exception exception) {
-                            }
-                        });
+                          @Override
+                          public void onError(Exception exception) {
+                          }
+                      });
                 XingController.getInstance().executeAsync(visitTask);
             }
 
             if (result.getPhotoUrls().getPhotoSize256Url() != null) {
                 new DownloadImageTask(userProfilePictureView).
-                        execute(result.getPhotoUrls().getPhotoSize256Url().toString());
+                      execute(result.getPhotoUrls().getPhotoSize256Url().toString());
             }
 
             //After the request was succesfully executed update all fields with the appropriate values
@@ -160,9 +167,9 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
             populateTextView(userPositionView, result.getPrimaryOccupationName());
             populateTextView(userPrivateAddress, formatAddress(result.getPrivateAddress()));
             populateTextView(userWorkAddress, formatAddress(result.getBusinessAddress()));
-            populateTextView(userHaves, getHashTaggedString(result.getHaves()));
-            populateTextView(userInterests, getHashTaggedString(result.getInterests()));
-            populateTextView(userWants, getHashTaggedString(result.getWants()));
+            populateTextView(userHaves, result.getHaves());
+            populateTextView(userInterests, result.getInterests());
+            populateTextView(userWants, result.getWants());
         }
     }
 
@@ -222,5 +229,56 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
     protected void onStop() {
         super.onStop();
         XingController.getInstance().cancelExecution(this);
+    }
+
+    public class OwnProfileTask extends AsyncTask<Activity, Void, XingUser> {
+
+        @Nullable
+        @Override
+        protected XingUser doInBackground(Activity... params) {
+            XingApi api = new XingApi.Builder()
+                  .consumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
+                  .consumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
+                  .accessToken(Prefs.getInstance(ProfileActivity.this).getOauthToken())
+                  .accessSecret(Prefs.getInstance(ProfileActivity.this).getOauthSecret())
+                  .apiEndpoint("https://api.xing.com")
+                  .logLevel(Level.BODY)
+                  .build();
+            UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
+
+            Response<XingUser, Object> response = null;
+            try {
+                response = profilesResource.getYourProfile().execute();
+                Response<List<SearchResult>, Object> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
+                      .queryParam("user_fields", "display_name, id")
+                      .execute();
+                XingUser ss = xingUsers.body().get(0).getSearchResultItem();
+
+                Log.d("Search ResultUser", ss.toString());
+
+                Log.d("Search Request", xingUsers.body().toString());
+                return response.body();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (response != null) {return response.body();} else {return null;}
+        }
+
+        @Override
+        protected void onPostExecute(XingUser xingUser) {
+            super.onPostExecute(xingUser);
+            if (xingUser.getPhotoUrls().getPhotoSize256Url() != null) {
+                new DownloadImageTask(userProfilePictureView).
+                      execute(xingUser.getPhotoUrls().getPhotoSize256Url().toString());
+            }
+            populateTextView(userDisplayNameView, xingUser.getDisplayName());
+            populateTextView(userCompanyView, xingUser.getPrimaryInstitutionName());
+            populateTextView(userPositionView, xingUser.getPrimaryOccupationName());
+            populateTextView(userPrivateAddress, formatAddress(xingUser.getPrivateAddress()));
+            populateTextView(userWorkAddress, formatAddress(xingUser.getBusinessAddress()));
+            populateTextView(userHaves, xingUser.getHaves());
+            populateTextView(userInterests, xingUser.getInterests());
+            populateTextView(userWants, xingUser.getWants());
+        }
     }
 }

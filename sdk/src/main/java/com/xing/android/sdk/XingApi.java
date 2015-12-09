@@ -22,9 +22,21 @@
 
 package com.xing.android.sdk;
 
+import com.squareup.moshi.EnumMapJsonAdapter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Rfc3339DateJsonAdapter;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
+import com.xing.android.sdk.model.XingCalendar;
+import com.xing.android.sdk.model.user.CompanySize;
+import com.xing.android.sdk.model.user.Gender;
+import com.xing.android.sdk.model.user.Language;
+import com.xing.android.sdk.model.user.LanguageSkill;
+import com.xing.android.sdk.model.user.MessagingAccount;
+import com.xing.android.sdk.model.user.PremiumService;
+import com.xing.android.sdk.model.user.WebProfile;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -87,6 +99,7 @@ public final class XingApi {
         private HttpUrl apiEndpoint;
         private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
+        private Level level;
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
@@ -138,6 +151,11 @@ public final class XingApi {
             return this;
         }
 
+        public Builder logLevel(Level level) {
+            this.level = level;
+            return this;
+        }
+
         /**
          * Adds a moshi instance to build on <b>top</b>.
          * <p>
@@ -167,14 +185,30 @@ public final class XingApi {
                 client = new OkHttpClient();
             }
 
+            // Set the Logging Interceptor
+            if (level == null) level = Level.NONE;
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(level);
+            client.interceptors().add(loggingInterceptor);
+
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {
-                client.networkInterceptors().add(oauth1Builder.build());
+                client.interceptors().add(oauth1Builder.build());
             }
 
             if (moshiBuilder == null) {
                 moshiBuilder = new Moshi.Builder();
             }
+            //Adding the Custom JSON Adapters to Moshi
+            moshiBuilder.add(XingCalendar.class, new XingCalendarJsonAdapter(new Rfc3339DateJsonAdapter()));
+            moshiBuilder.add(MessagingAccount.class, new MessagingAccountJsonAdapter());
+            moshiBuilder.add(WebProfile.class, new WebProfileJsonAdapter());
+            moshiBuilder.add(Language.class, new LanguageJsonAdapter());
+            moshiBuilder.add(LanguageSkill.class, new LanguageSkillJsonAdapter());
+            moshiBuilder.add(Gender.class, new GenderJsonAdapter());
+            moshiBuilder.add(PremiumService.class, new PremiumServiceJsonAdapter());
+            moshiBuilder.add(CompanySize.class, new CompanySizeJsonAdapter());
+            moshiBuilder.add(EnumMapJsonAdapter.FACTORY);
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());
         }

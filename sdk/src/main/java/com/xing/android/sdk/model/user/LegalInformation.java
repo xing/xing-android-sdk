@@ -22,37 +22,20 @@
 
 package com.xing.android.sdk.model.user;
 
-import android.support.annotation.NonNull;
-
-import com.xing.android.sdk.model.JsonEnum;
+import com.squareup.moshi.Json;
 
 /**
- * Possible values for the company size.
- * <p/>
- *
- * @author serj.lotutovici
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @author daniel.hartwich
  */
-public enum CompanySize implements JsonEnum {
+public class LegalInformation {
+    @Json(name = "content")
+    private String content;
 
-    SIZE_1("1"),
-    SIZE_1_10("1-10"),
-    SIZE_11_50("11-50"),
-    SIZE_51_200("51-200"),
-    SIZE_201_500("201-500"),
-    SIZE_501_1000("501-1000"),
-    SIZE_1001_5000("1001-5000"),
-    SIZE_5001_10000("5001-10000"),
-    SIZE_10001PLUS("10001+");
-
-    private final String text;
-
-    CompanySize(@NonNull String text) {
-        this.text = text;
+    public String getContent() {
+        return content;
     }
 
-    @Override
-    public String getJsonValue() {
-        return text;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

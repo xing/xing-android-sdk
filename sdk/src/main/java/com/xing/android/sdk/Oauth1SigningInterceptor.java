@@ -104,7 +104,6 @@ final class Oauth1SigningInterceptor implements Interceptor {
         }
 
         Buffer body = new Buffer();
-
         RequestBody requestBody = request.body();
         if (requestBody != null) {
             requestBody.writeTo(body);
