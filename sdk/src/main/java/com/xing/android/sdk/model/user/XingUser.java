@@ -22,7 +22,6 @@
 
 package com.xing.android.sdk.model.user;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -38,7 +37,6 @@ import com.xing.android.sdk.network.request.RequestUtils;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -80,7 +78,7 @@ public class XingUser implements Serializable, Parcelable {
     @Json(name = "page_name")
     private String pageName;
     @Json(name = "permalink")
-    private Uri permalink;
+    private String permalink;
     @Json(name = "employment_status")
     private EmploymentStatus employmentStatus;
     @Json(name = "gender")
@@ -95,28 +93,34 @@ public class XingUser implements Serializable, Parcelable {
     private List<PremiumService> premiumServices;
     @Json(name = "badges")
     private List<Badge> badges;
+    // TODO Custom Adapter for Comma-Seperated values
     @Json(name = "wants")
-    private List<String> wants;
+    private String wants;
+    // TODO Custom Adapter for Comma-Seperated values
     @Json(name = "haves")
-    private List<String> haves;
+    private String haves;
+    // TODO Custom Adapter for Comma-Seperated values
     @Json(name = "interests")
-    private List<String> interests;
+    private String interests;
+    // TODO Custom Adapter for Comma-Seperated values
     @Json(name = "organisation_member")
-    private List<String> organisationMember;
-    //TODO Custom Adapter required?
+    private String organisationMember;
+    @Json(name = "languages")
     private EnumMap<Language, LanguageSkill> languages;
     @Json(name = "private_address")
     private XingAddress privateAddress;
     @Json(name = "business_address")
     private XingAddress businessAddress;
-    //TODO Custom Adapter required?
+    @Json(name = "web_profiles")
     private EnumMap<WebProfile, Set<String>> webProfiles;
-    //TODO Custom Adapter required?
+    @Json(name = "instant_messaging_accounts")
     private EnumMap<MessagingAccount, String> instantMessagingAccounts;
+    //    // TODO Handle Dates more correctly
     @Json(name = "professional_experience")
     private ProfessionalExperience professionalExperience;
-    @Json(name = "educational_background")
-    private EducationalBackground educationBackground;
+    //    // TODO Handle Dates more correctly
+    //    @Json(name = "educational_background")
+    //    private EducationalBackground educationBackground;
     @Json(name = "photo_urls")
     private XingPhotoUrls photoUrls;
 
@@ -143,7 +147,7 @@ public class XingUser implements Serializable, Parcelable {
         lastName = in.readString();
         displayName = in.readString();
         pageName = in.readString();
-        permalink = in.readParcelable(Uri.class.getClassLoader());
+        permalink = in.readString();
         int tmpMEmploymentStatus = in.readInt();
         employmentStatus = tmpMEmploymentStatus == -1 ? null : EmploymentStatus.values()[tmpMEmploymentStatus];
         int tmpMGender = in.readInt();
@@ -154,21 +158,18 @@ public class XingUser implements Serializable, Parcelable {
         in.readList(premiumServices, ArrayList.class.getClassLoader());
         badges = new ArrayList<>(0);
         in.readList(badges, ArrayList.class.getClassLoader());
-        wants = new ArrayList<>(0);
-        in.readStringList(wants);
-        haves = new ArrayList<>(0);
-        in.readStringList(haves);
-        interests = new ArrayList<>(0);
-        in.readStringList(interests);
-        organisationMember = new ArrayList<>(0);
-        in.readStringList(organisationMember);
+        wants = in.readString();
+        haves = in.readString();
+        interests = in.readString();
+        //        organisationMember = new ArrayList<>(0);
+        //        in.readStringList(organisationMember);
         languages = (EnumMap<Language, LanguageSkill>) in.readSerializable();
         privateAddress = in.readParcelable(XingAddress.class.getClassLoader());
         timeZone = in.readParcelable(TimeZone.class.getClassLoader());
         businessAddress = in.readParcelable(XingAddress.class.getClassLoader());
         webProfiles = (EnumMap<WebProfile, Set<String>>) in.readSerializable();
         instantMessagingAccounts = (EnumMap<MessagingAccount, String>) in.readSerializable();
-        educationBackground = in.readParcelable(EducationalBackground.class.getClassLoader());
+        //        educationBackground = in.readParcelable(EducationalBackground.class.getClassLoader());
         professionalExperience = in.readParcelable(ProfessionalExperience.class.getClassLoader());
         photoUrls = in.readParcelable(XingPhotoUrls.class.getClassLoader());
     }
@@ -240,7 +241,7 @@ public class XingUser implements Serializable, Parcelable {
         result = 31 * result + (businessAddress != null ? businessAddress.hashCode() : 0);
         result = 31 * result + (webProfiles != null ? webProfiles.hashCode() : 0);
         result = 31 * result + (instantMessagingAccounts != null ? instantMessagingAccounts.hashCode() : 0);
-        result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
+        //        result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
         result = 31 * result + (professionalExperience != null ? professionalExperience.hashCode() : 0);
         result = 31 * result + (photoUrls != null ? photoUrls.hashCode() : 0);
         return result;
@@ -271,7 +272,7 @@ public class XingUser implements Serializable, Parcelable {
               + ", businessAddress=" + businessAddress
               + ", webProfiles=" + webProfiles
               + ", instantMessagingAccounts=" + instantMessagingAccounts
-              + ", educationBackground=" + educationBackground
+              //              + ", educationBackground=" + educationBackground
               + ", professionalExperience=" + professionalExperience
               + ", photoUrls=" + photoUrls
               + '}';
@@ -289,24 +290,24 @@ public class XingUser implements Serializable, Parcelable {
         dest.writeString(lastName);
         dest.writeString(displayName);
         dest.writeString(pageName);
-        dest.writeParcelable(permalink, flags);
+        dest.writeString(permalink);
         dest.writeInt(employmentStatus == null ? -1 : employmentStatus.ordinal());
         dest.writeInt(gender == null ? -1 : gender.ordinal());
         dest.writeSerializable(birthday);
         dest.writeString(activeEmail);
         dest.writeList(premiumServices);
         dest.writeList(badges);
-        dest.writeStringList(wants);
-        dest.writeStringList(haves);
-        dest.writeStringList(interests);
-        dest.writeStringList(organisationMember);
+        dest.writeString(wants);
+        dest.writeString(haves);
+        dest.writeString(interests);
+        dest.writeString(organisationMember);
         dest.writeSerializable(languages);
         dest.writeParcelable(privateAddress, flags);
         dest.writeParcelable(timeZone, flags);
         dest.writeParcelable(businessAddress, flags);
         dest.writeSerializable(webProfiles);
         dest.writeSerializable(instantMessagingAccounts);
-        dest.writeParcelable(educationBackground, flags);
+        //        dest.writeParcelable(educationBackground, flags);
         dest.writeParcelable(professionalExperience, flags);
         dest.writeParcelable(photoUrls, flags);
     }
@@ -367,20 +368,16 @@ public class XingUser implements Serializable, Parcelable {
         this.pageName = pageName;
     }
 
-    public Uri getPermalink() {
+    public String getPermalink() {
         return permalink;
-    }
-
-    public void setPermalink(Uri permalink) {
-        this.permalink = permalink;
     }
 
     public void setPermalink(String permalink) {
         if (!Patterns.WEB_URL.matcher(permalink).matches()) {
             throw new InvalidParameterException(permalink + " is not an url.");
-        } else {
-            this.permalink = Uri.parse(permalink);
         }
+
+        this.permalink = permalink;
     }
 
     public EmploymentStatus getEmploymentStatus() {
@@ -474,120 +471,119 @@ public class XingUser implements Serializable, Parcelable {
         badges.add(badge);
     }
 
-    public List<String> getWants() {
+    public String getWants() {
         return wants;
     }
 
-    public void setWants(List<String> wants) {
+    public void setWants(String wants) {
         this.wants = wants;
     }
 
-    /**
-     * Replace the current wants with the ones from the param.
-     *
-     * @param wants String with wants with the format want1, want2, want3, want4
-     */
+    //    /**
+    //     * Replace the current wants with the ones from the param.
+    //     *
+    //     * @param wants String with wants with the format want1, want2, want3, want4
+    //     */
+    //
+    //    public void setWants(String wants) {
+    //        String[] wantsArray = COMMA_SEPARATOR.split(wants);
+    //        this.wants = Arrays.asList(wantsArray);
+    //    }
 
-    public void setWants(String wants) {
-        String[] wantsArray = COMMA_SEPARATOR.split(wants);
-        this.wants = Arrays.asList(wantsArray);
-    }
+    //    /**
+    //     * Adds a new want to the list of wants.
+    //     *
+    //     * @param want The new want to add to the list.
+    //     */
+    //    //TODO consider wants, haves and interests with commas, it can affect.
+    //    public void addWant(String want) {
+    //        if (wants == null) {
+    //            wants = new ArrayList<>(1);
+    //        }
+    //
+    //        wants.add(want);
+    //    }
 
-    /**
-     * Adds a new want to the list of wants.
-     *
-     * @param want The new want to add to the list.
-     */
-    //TODO consider wants, haves and interests with commas, it can affect.
-    public void addWant(String want) {
-        if (wants == null) {
-            wants = new ArrayList<>(1);
-        }
-
-        wants.add(want);
-    }
-
-    public List<String> getHaves() {
+    public String getHaves() {
         return haves;
     }
 
-    public void setHaves(List<String> haves) {
+    public void setHaves(String haves) {
         this.haves = haves;
     }
 
     /**
      * Replace the current haves with the ones from the param.
      *
-     * @param haves String with haves with the format have1, have2, have3, have4
+     * //     * @param haves String with haves with the format have1, have2, have3, have4
      */
 
-    public void setHaves(String haves) {
-        String[] havesArray = COMMA_SEPARATOR.split(haves);
-        this.haves = Arrays.asList(havesArray);
-    }
-
-    public void addHave(String have) {
-        if (haves == null) {
-            haves = new ArrayList<>(1);
-        }
-
-        haves.add(have);
-    }
-
-    public List<String> getInterests() {
+    //    public void setHaves(String haves) {
+    //        String[] havesArray = COMMA_SEPARATOR.split(haves);
+    //        this.haves = Arrays.asList(havesArray);
+    //    }
+    //
+    //    public void addHave(String have) {
+    //        if (haves == null) {
+    //            haves = new ArrayList<>(1);
+    //        }
+    //
+    //        haves.add(have);
+    //    }
+    public String getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(String interests) {
         this.interests = interests;
     }
+    //
+    //    /**
+    //     * Replace the current interests with the ones from the param.
+    //     *
+    //     * @param interests String with interests with the format interest1, interest2, interest3, interest4
+    //     */
+    //
+    //    public void setInterests(String interests) {
+    //        String[] interestsArray = COMMA_SEPARATOR.split(interests);
+    //        this.interests = Arrays.asList(interestsArray);
+    //    }
+    //
+    //    public void addInterest(String interest) {
+    //        if (interests == null) {
+    //            interests = new ArrayList<>(1);
+    //        }
+    //
+    //        interests.add(interest);
+    //    }
 
-    /**
-     * Replace the current interests with the ones from the param.
-     *
-     * @param interests String with interests with the format interest1, interest2, interest3, interest4
-     */
-
-    public void setInterests(String interests) {
-        String[] interestsArray = COMMA_SEPARATOR.split(interests);
-        this.interests = Arrays.asList(interestsArray);
-    }
-
-    public void addInterest(String interest) {
-        if (interests == null) {
-            interests = new ArrayList<>(1);
-        }
-
-        interests.add(interest);
-    }
-
-    public List<String> getOrganisationMember() {
+    public String getOrganisationMember() {
         return organisationMember;
     }
 
-    public void setOrganisationMember(List<String> organisationMember) {
+    public void setOrganisationMember(String organisationMember) {
         this.organisationMember = organisationMember;
     }
 
-    /**
-     * Replace the current organisationMember with the ones from the param.
-     *
-     * @param organisationMember String with interests with the format organisationMember1, organisationMember2,
-     * organisationMember3, organisationMember4
-     */
-
-    public void setOrganisationMember(String organisationMember) {
-        String[] organisationMemberArray = COMMA_SEPARATOR.split(organisationMember);
-        this.organisationMember = Arrays.asList(organisationMemberArray);
-    }
-
-    public void addOrganisationMember(String organisationMember) {
-        if (this.organisationMember == null) {
-            this.organisationMember = new ArrayList<>(1);
-        }
-
-        this.organisationMember.add(organisationMember);
-    }
+    //    /**
+    //     * Replace the current organisationMember with the ones from the param.
+    //     *
+    //     * @param organisationMember String with interests with the format organisationMember1, organisationMember2,
+    //     * organisationMember3, organisationMember4
+    //     */
+    //
+    //    public void setOrganisationMember(String organisationMember) {
+    //        String[] organisationMemberArray = COMMA_SEPARATOR.split(organisationMember);
+    //        this.organisationMember = Arrays.asList(organisationMemberArray);
+    //    }
+    //
+    //    public void addOrganisationMember(String organisationMember) {
+    //        if (this.organisationMember == null) {
+    //            this.organisationMember = new ArrayList<>(1);
+    //        }
+    //
+    //        this.organisationMember.add(organisationMember);
+    //    }
 
     public EnumMap<Language, LanguageSkill> getLanguages() {
         return languages;
@@ -643,7 +639,6 @@ public class XingUser implements Serializable, Parcelable {
     }
 
     public void setWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> profiles) {
-
         if (webProfiles == null) {
             webProfiles = new EnumMap<>(WebProfile.class);
         }
@@ -652,7 +647,6 @@ public class XingUser implements Serializable, Parcelable {
     }
 
     public void addWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> accounts) {
-
         if (webProfiles == null) {
             webProfiles = new EnumMap<>(WebProfile.class);
         }
@@ -667,7 +661,6 @@ public class XingUser implements Serializable, Parcelable {
     }
 
     public void addWebProfile(@NonNull WebProfile webProfile, @Nullable String accountName) {
-
         if (webProfiles == null) {
             webProfiles = new EnumMap<>(WebProfile.class);
         }
@@ -679,13 +672,13 @@ public class XingUser implements Serializable, Parcelable {
         webProfiles.get(webProfile).add(accountName);
     }
 
-    public EducationalBackground getEducationBackground() {
-        return educationBackground;
-    }
-
-    public void setEducationBackground(EducationalBackground educationBackground) {
-        this.educationBackground = educationBackground;
-    }
+    //    public EducationalBackground getEducationBackground() {
+    //        return educationBackground;
+    //    }
+    //
+    //    public void setEducationBackground(EducationalBackground educationBackground) {
+    //        this.educationBackground = educationBackground;
+    //    }
 
     public XingPhotoUrls getPhotoUrls() {
         return photoUrls;
@@ -711,8 +704,7 @@ public class XingUser implements Serializable, Parcelable {
         this.instantMessagingAccounts = instantMessagingAccounts;
     }
 
-    public void addInstantMessagingAccount(@NonNull MessagingAccount account,
-          @Nullable String accountValue) {
+    public void addInstantMessagingAccount(@NonNull MessagingAccount account, @Nullable String accountValue) {
         if (instantMessagingAccounts == null) {
             instantMessagingAccounts = new EnumMap<>(MessagingAccount.class);
         }
@@ -735,7 +727,7 @@ public class XingUser implements Serializable, Parcelable {
     public String getPrimaryInstitutionName() {
         String primaryInstitution = null;
 
-        // Check if we have a primary company
+        //         Check if we have a primary company
         if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
             ExperienceCompany company = professionalExperience.getPrimaryCompany();
             if (!TextUtils.isEmpty(company.getId()) || !TextUtils.isEmpty(company.getName())) {
@@ -743,15 +735,15 @@ public class XingUser implements Serializable, Parcelable {
             }
         }
 
-        // If the primary company not available try to use the primary school (the user may be a student)
-        if (TextUtils.isEmpty(primaryInstitution)) {
-            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-                School primarySchool = educationBackground.getPrimarySchool();
-                if (!TextUtils.isEmpty(primarySchool.getName())) {
-                    primaryInstitution = primarySchool.getName();
-                }
-            }
-        }
+        //        // If the primary company not available try to use the primary school (the user may be a student)
+        //        if (TextUtils.isEmpty(primaryInstitution)) {
+        //            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
+        //                School primarySchool = educationBackground.getPrimarySchool();
+        //                if (!TextUtils.isEmpty(primarySchool.getName())) {
+        //                    primaryInstitution = primarySchool.getName();
+        //                }
+        //            }
+        //        }
 
         return primaryInstitution;
     }
@@ -771,15 +763,15 @@ public class XingUser implements Serializable, Parcelable {
             }
         }
 
-        // If the primary company not available try to use the primary school (the user may be a student)
-        if (TextUtils.isEmpty(primaryOccupation)) {
-            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-                School primarySchool = educationBackground.getPrimarySchool();
-                if (!TextUtils.isEmpty(primarySchool.getDegree())) {
-                    primaryOccupation = primarySchool.getDegree();
-                }
-            }
-        }
+        //        // If the primary company not available try to use the primary school (the user may be a student)
+        //        if (TextUtils.isEmpty(primaryOccupation)) {
+        //            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
+        //                School primarySchool = educationBackground.getPrimarySchool();
+        //                if (!TextUtils.isEmpty(primarySchool.getDegree())) {
+        //                    primaryOccupation = primarySchool.getDegree();
+        //                }
+        //            }
+        //        }
 
         return primaryOccupation;
     }

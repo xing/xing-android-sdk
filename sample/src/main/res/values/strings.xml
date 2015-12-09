@@ -37,4 +37,5 @@
     <string name="visitors_label">Visits</string>
     <string name="logout_text">Logout</string>
     <string name="title_activity_visitors">Visitors</string>
+    <string name="title_activity_api_client">ApiClientActivity</string>
 </resources>

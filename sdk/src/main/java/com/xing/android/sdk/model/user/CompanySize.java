@@ -36,7 +36,7 @@ import com.xing.android.sdk.model.JsonEnum;
 public enum CompanySize implements JsonEnum {
 
     SIZE_1("1"),
-    SIZE1_10("1-10"),
+    SIZE_1_10("1-10"),
     SIZE_11_50("11-50"),
     SIZE_51_200("51-200"),
     SIZE_201_500("201-500"),

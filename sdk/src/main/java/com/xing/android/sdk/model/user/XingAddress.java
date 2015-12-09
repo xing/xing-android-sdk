@@ -60,7 +60,7 @@ public class XingAddress implements Serializable, Parcelable {
     @Json(name = "fax")
     private XingPhone fax;
     @Json(name = "mobile_phone")
-    private XingPhone mobilePhone;
+    private String mobilePhone;
     @Json(name = "phone")
     private XingPhone phone;
     @Json(name = "province")
@@ -129,7 +129,7 @@ public class XingAddress implements Serializable, Parcelable {
         dest.writeString(country);
         dest.writeString(email);
         dest.writeParcelable(fax, flags);
-        dest.writeParcelable(mobilePhone, flags);
+        dest.writeString(mobilePhone);
         dest.writeParcelable(phone, flags);
         dest.writeString(province);
         dest.writeString(street);
@@ -177,21 +177,12 @@ public class XingAddress implements Serializable, Parcelable {
         fax = new XingPhone(countryCode, areaCode, number);
     }
 
-    public XingPhone getMobilePhone() {
+    public String getMobilePhone() {
         return mobilePhone;
     }
 
-    public void setMobilePhone(String mobilePhone) throws XingPhone.InvalidPhoneException {
-        this.mobilePhone = XingPhone.createXingPhone(mobilePhone);
-    }
-
-    public void setMobilePhone(XingPhone mobilePhone) {
+    public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
-    }
-
-    public void setMobilePhone(String countryCode, String areaCode, String number)
-    throws XingPhone.InvalidPhoneException {
-        mobilePhone = new XingPhone(countryCode, areaCode, number);
     }
 
     public XingPhone getPhone() {

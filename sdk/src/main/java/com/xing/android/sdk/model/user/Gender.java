@@ -23,7 +23,10 @@
 package com.xing.android.sdk.model.user;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.squareup.moshi.FromJson;
+import com.squareup.moshi.ToJson;
 import com.xing.android.sdk.model.JsonEnum;
 
 /**
@@ -45,4 +48,23 @@ public enum Gender implements JsonEnum {
     public String getJsonValue() {
         return gender;
     }
+
+    @Nullable
+    @FromJson
+    public Gender fromJson(String value) {
+        switch (value) {
+            case "m":
+                return MALE;
+            case "f":
+                return FEMALE;
+            default:
+                return null;
+        }
+    }
+
+    @ToJson
+    public String toJson(Gender gender) {
+        return gender.gender;
+    }
+
 }

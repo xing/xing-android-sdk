@@ -25,7 +25,6 @@ package com.xing.android.sdk.json.user;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
-import com.xing.android.sdk.json.ParserUtils;
 import com.xing.android.sdk.model.user.XingPhotoUrls;
 
 import java.io.IOException;
@@ -56,7 +55,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoLargeUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoLargeUrl(reader.nextString());
                     }
                     break;
                 }
@@ -64,7 +63,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoMaxiThumbUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoMaxiThumbUrl(reader.nextString());
                     }
                     break;
                 }
@@ -72,7 +71,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoMediumThumbUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoMediumThumbUrl(reader.nextString());
                     }
                     break;
                 }
@@ -80,7 +79,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoMiniThumbUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoMiniThumbUrl(reader.nextString());
                     }
                     break;
                 }
@@ -88,7 +87,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoThumbUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoThumbUrl(reader.nextString());
                     }
                     break;
                 }
@@ -96,7 +95,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize32Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize32Url(reader.nextString());
                     }
                     break;
                 }
@@ -104,7 +103,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize48Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize48Url(reader.nextString());
                     }
                     break;
                 }
@@ -112,7 +111,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize64Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize64Url(reader.nextString());
                     }
                     break;
                 }
@@ -120,7 +119,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize96Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize96Url(reader.nextString());
                     }
                     break;
                 }
@@ -128,7 +127,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize128Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize128Url(reader.nextString());
                     }
                     break;
                 }
@@ -136,7 +135,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize192Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize192Url(reader.nextString());
                     }
                     break;
                 }
@@ -144,7 +143,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize256Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize256Url(reader.nextString());
                     }
                     break;
                 }
@@ -152,7 +151,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSize1024Url(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSize1024Url(reader.nextString());
                     }
                     break;
                 }
@@ -160,7 +159,7 @@ public final class XingPhotoUrlsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        xingphotourls.setPhotoSizeOriginalUrl(ParserUtils.stringToUri(reader.nextString()));
+                        xingphotourls.setPhotoSizeOriginalUrl(reader.nextString());
                     }
                     break;
                 }

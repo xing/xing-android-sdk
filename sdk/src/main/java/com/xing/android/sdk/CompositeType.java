@@ -49,7 +49,8 @@ import static com.xing.android.sdk.Utils.ioError;
  * This can be used as follows:
  * <pre>
  * {@code
- *  CompositeType delegate = CompositeType.single(YourReturnObject.class, [Root or List of roots where your object can be
+ *  CompositeType delegate = CompositeType.single(YourReturnObject.class, [Root or List of roots where your object can
+ * be
  *  found])
  *  // or for a list
  *  CompositeType delegate = CompositeType.list(YourReturnObject.class, [Root or List of roots where your object can be
@@ -74,23 +75,40 @@ final class CompositeType {
      * Returns a {@link CompositeType} that will expect a single object in the root tree.
      */
     public static CompositeType single(Class<?> classType, String... roots) {
-        return new CompositeType(classType, false, roots);
+        return new CompositeType(classType, Structure.SINGLE, roots);
     }
 
     /**
      * Returns a {@link CompositeType} that will expect a list of objects in the root tree.
      */
     public static CompositeType list(Type classType, String... roots) {
-        return new CompositeType(classType, true, roots);
+        return new CompositeType(classType, Structure.LIST, roots);
+    }
+
+    public static CompositeType first(Type classType, String... roots) {
+        return new CompositeType(classType, Structure.FIRST, roots);
     }
 
     private final Type classType;
     private final String[] roots;
-    private final boolean isListType;
+    private final Structure structure;
 
-    private CompositeType(Type classType, boolean isListType, String... roots) {
+    /**
+     * This enum defines the possible response types a user can expect.
+     * These are:
+     * SINGLE - A single object
+     * LIST - A list of objects
+     * FIRST - A single object wrapped in a list structure (happens often in profile resources)
+     */
+    enum Structure {
+        SINGLE,
+        LIST,
+        FIRST
+    }
+
+    private CompositeType(Type classType, Structure structure, String... roots) {
         this.classType = classType;
-        this.isListType = isListType;
+        this.structure = structure;
         this.roots = roots;
     }
 
@@ -102,16 +120,26 @@ final class CompositeType {
         if (body == null) return null;
 
         // Determine which type is required.
-        Type type = isListType ? Types.newParameterizedType(List.class, classType) : classType;
+        Type type = structure == Structure.SINGLE ? classType : Types.newParameterizedType(List.class, classType);
 
         BufferedSource source = body.source();
         JsonAdapter<T> adapter = moshi.adapter(type);
         try {
+            Object result;
             if (roots != null && roots.length != 0) {
-                return readRootLeafs(adapter, JsonReader.of(source), roots, 0);
+                result = readRootLeafs(adapter, JsonReader.of(source), roots, 0);
             } else {
-                return adapter.fromJson(source);
+                result = adapter.fromJson(source);
             }
+
+            if (structure == Structure.FIRST) {
+                //noinspection unchecked This is puts full responsibility on the caller.
+                List<T> list = (List<T>) result;
+                return list != null && !list.isEmpty() ? list.get(0) : null;
+            }
+
+            //noinspection unchecked
+            return (T) result;
         } finally {
             closeQuietly(body);
         }
@@ -123,7 +151,7 @@ final class CompositeType {
      */
     @Nullable
     private static <T> T readRootLeafs(@NonNull JsonAdapter<T> adapter, @NonNull JsonReader reader,
-                                       @NonNull String[] roots, int index) throws IOException {
+          @NonNull String[] roots, int index) throws IOException {
         if (index == roots.length) {
             return adapter.fromJson(reader);
         } else {

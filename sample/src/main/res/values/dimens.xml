@@ -28,4 +28,5 @@
     <dimen name="two_grid_unit">16dp</dimen>
     <dimen name="three_grid_unit">24dp</dimen>
     <dimen name="four_grid_unit">32dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
