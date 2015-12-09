@@ -26,10 +26,13 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.squareup.moshi.Json;
+import com.xing.android.sdk.model.XingCalendar;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Represents an award of a user.
@@ -56,11 +59,14 @@ public class Award implements Serializable, Parcelable {
     };
 
     /** Name of the award. */
-    private String mName;
+    @Json(name = "name")
+    private String name;
     /** XWS returns only the year, but for compatibility with possible future changes we use Calendar. */
-    private Calendar mDateAwarded;
+    @Json(name = "date_awarded")
+    private XingCalendar dateAwarded;
     /** URL of the award. */
-    private Uri mUrl;
+    @Json(name = "url")
+    private String url;
 
     /** Create a simple Award object with empty fields. */
     public Award() {
@@ -71,10 +77,10 @@ public class Award implements Serializable, Parcelable {
      *
      * @param in Input {@link Parcel}
      */
-    private Award(@NonNull final Parcel in) {
-        mName = in.readString();
-        mDateAwarded = (Calendar) in.readSerializable();
-        mUrl = in.readParcelable(Uri.class.getClassLoader());
+    private Award(@NonNull Parcel in) {
+        name = in.readString();
+        dateAwarded = (XingCalendar) in.readSerializable();
+        url = in.readParcelable(Uri.class.getClassLoader());
     }
 
     @Override
@@ -92,9 +98,9 @@ public class Award implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        int result = mName != null ? mName.hashCode() : 0;
-        result = 31 * result + (mDateAwarded != null ? mDateAwarded.hashCode() : 0);
-        result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (dateAwarded != null ? dateAwarded.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
 
@@ -105,9 +111,9 @@ public class Award implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(mName);
-        parcel.writeSerializable(mDateAwarded);
-        parcel.writeParcelable(mUrl, 0);
+        parcel.writeString(name);
+        parcel.writeSerializable(dateAwarded);
+        parcel.writeString(url);
     }
 
     /**
@@ -116,7 +122,7 @@ public class Award implements Serializable, Parcelable {
      * @return Name of award.
      */
     public String getName() {
-        return mName;
+        return name;
     }
 
     /**
@@ -125,7 +131,7 @@ public class Award implements Serializable, Parcelable {
      * @param name award name.
      */
     public void setName(String name) {
-        mName = name;
+        this.name = name;
     }
 
     /**
@@ -134,7 +140,7 @@ public class Award implements Serializable, Parcelable {
      * @return The year int value, if the award year is not set -1.
      */
     public int getYearOfDateAwarded() {
-        return mDateAwarded != null ? mDateAwarded.get(Calendar.YEAR) : -1;
+        return dateAwarded != null ? dateAwarded.get(Calendar.YEAR) : -1;
     }
 
     /**
@@ -142,8 +148,9 @@ public class Award implements Serializable, Parcelable {
      *
      * @return The year as a string, if the year is not set will return null.
      */
+    @Nullable
     public String getYearOfDateAwardedAsString() {
-        return mDateAwarded != null ? Integer.toString(mDateAwarded.get(Calendar.YEAR)) : null;
+        return dateAwarded != null ? Integer.toString(dateAwarded.get(Calendar.YEAR)) : null;
     }
 
     /**
@@ -151,8 +158,8 @@ public class Award implements Serializable, Parcelable {
      *
      * @param dateAwarded Date of award as calendar object.
      */
-    public void setDateAwarded(@NonNull final Calendar dateAwarded) {
-        mDateAwarded = dateAwarded;
+    public void setDateAwarded(@NonNull XingCalendar dateAwarded) {
+        this.dateAwarded = dateAwarded;
     }
 
     /**
@@ -160,8 +167,8 @@ public class Award implements Serializable, Parcelable {
      *
      * @param year The year as an int.
      */
-    public void setDateAwarded(final int year) {
-        mDateAwarded = new GregorianCalendar(year, 0, 1);
+    public void setDateAwarded(int year) {
+        dateAwarded = new XingCalendar(year, 0, 1);
     }
 
     /**
@@ -169,8 +176,8 @@ public class Award implements Serializable, Parcelable {
      *
      * @return award url.
      */
-    public Uri getUrl() {
-        return mUrl;
+    public String getUrl() {
+        return url;
     }
 
     /**
@@ -179,7 +186,7 @@ public class Award implements Serializable, Parcelable {
      * @param url URL of award as string.
      */
     public void setUrl(String url) {
-        mUrl = Uri.parse(url);
+        this.url = url;
     }
 
     /**
@@ -187,7 +194,8 @@ public class Award implements Serializable, Parcelable {
      *
      * @return award url as a string.
      */
+    @Nullable
     public String getUrlAsString() {
-        return mUrl != null ? mUrl.toString() : null;
+        return url != null ? url : null;
     }
 }

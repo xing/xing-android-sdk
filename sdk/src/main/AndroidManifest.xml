@@ -21,13 +21,12 @@
   -->
 
 
-<manifest package="com.xing.android.sdk"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    package="com.xing.android.sdk"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
-        <activity android:name=".login.OauthCallbackActivity" />
-    </application>
+    <application tools:ignore="GoogleAppIndexingWarning" />
 
 </manifest>

@@ -24,6 +24,7 @@ package com.xing.android.sdk.model.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.io.Serializable;
@@ -49,9 +50,9 @@ public class XingPhone implements Serializable, Parcelable {
         }
     };
 
-    private String mCountryCode;
-    private String mAreaCode;
-    private String mNumber;
+    private String countryCode;
+    private String areaCode;
+    private String number;
 
     /**
      * Constructor for Phone.
@@ -65,14 +66,14 @@ public class XingPhone implements Serializable, Parcelable {
         InvalidPhoneException exception = null;
 
         if (isValidCountryCode(countryCode)) {
-            mCountryCode = countryCode;
+            this.countryCode = countryCode;
         } else {
             exception = new InvalidPhoneException();
             exception.mCountryCode = countryCode;
         }
 
         if (TextUtils.isDigitsOnly(areaCode)) {
-            mAreaCode = areaCode;
+            this.areaCode = areaCode;
         } else {
             if (exception == null) {
                 exception = new InvalidPhoneException();
@@ -81,7 +82,7 @@ public class XingPhone implements Serializable, Parcelable {
         }
 
         if (TextUtils.isDigitsOnly(number)) {
-            mNumber = number;
+            this.number = number;
         } else {
             if (exception == null) {
                 exception = new InvalidPhoneException();
@@ -104,9 +105,9 @@ public class XingPhone implements Serializable, Parcelable {
      * @param parcel Input {@link Parcel}
      */
     public XingPhone(Parcel parcel) {
-        mCountryCode = parcel.readString();
-        mAreaCode = parcel.readString();
-        mNumber = parcel.readString();
+        countryCode = parcel.readString();
+        areaCode = parcel.readString();
+        number = parcel.readString();
     }
 
     /**
@@ -116,13 +117,14 @@ public class XingPhone implements Serializable, Parcelable {
      */
     public static XingPhone getEmptyPhone() {
         XingPhone emptyPhone = new XingPhone();
-        emptyPhone.mCountryCode = emptyPhone.mAreaCode = emptyPhone.mNumber = "";
+        emptyPhone.countryCode = emptyPhone.areaCode = emptyPhone.number = "";
 
         return emptyPhone;
     }
 
-    public static XingPhone createXingPhone(final String phoneString) throws InvalidPhoneException {
-        final String[] splitPhone = phoneString.split("\\|");
+    @Nullable
+    public static XingPhone createXingPhone(String phoneString) throws InvalidPhoneException {
+        String[] splitPhone = phoneString.split("\\|");
         if (splitPhone.length != 3) {
             return null;
         } else {
@@ -157,9 +159,9 @@ public class XingPhone implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mCountryCode);
-        dest.writeString(mAreaCode);
-        dest.writeString(mNumber);
+        dest.writeString(countryCode);
+        dest.writeString(areaCode);
+        dest.writeString(number);
     }
 
     @Override
@@ -177,27 +179,27 @@ public class XingPhone implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        int result = mCountryCode != null ? mCountryCode.hashCode() : 0;
-        result = 31 * result + (mAreaCode != null ? mAreaCode.hashCode() : 0);
-        result = 31 * result + (mNumber != null ? mNumber.hashCode() : 0);
+        int result = countryCode != null ? countryCode.hashCode() : 0;
+        result = 31 * result + (areaCode != null ? areaCode.hashCode() : 0);
+        result = 31 * result + (number != null ? number.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return mCountryCode + '|' + mAreaCode + '|' + mNumber;
+        return countryCode + '|' + areaCode + '|' + number;
     }
 
     public String getCountryCode() {
-        return mCountryCode;
+        return countryCode;
     }
 
     public String getAreaCode() {
-        return mAreaCode;
+        return areaCode;
     }
 
     public String getNumber() {
-        return mNumber;
+        return number;
     }
 
     /**
@@ -211,14 +213,14 @@ public class XingPhone implements Serializable, Parcelable {
         String empty = "";
 
         //  checking one is enough, it is not possible to have only one empty field.
-        if (empty.equals(mCountryCode)) {
+        if (empty.equals(countryCode)) {
             stringBuilder = new StringBuilder(empty);
         } else {
-            stringBuilder = new StringBuilder(mCountryCode);
+            stringBuilder = new StringBuilder(countryCode);
             stringBuilder.append(SEPARATOR);
-            stringBuilder.append(mAreaCode);
+            stringBuilder.append(areaCode);
             stringBuilder.append(SEPARATOR);
-            stringBuilder.append(mNumber);
+            stringBuilder.append(number);
         }
 
         return stringBuilder.toString();
@@ -245,8 +247,8 @@ public class XingPhone implements Serializable, Parcelable {
 
             if (!TextUtils.isEmpty(mCountryCode)) {
                 stringBuilder.append("The country code ")
-                        .append(mCountryCode)
-                        .append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
+                      .append(mCountryCode)
+                      .append(" is not valid. Must be numeric and can contain the symbol + at the beginning.");
             }
 
             if (!TextUtils.isEmpty(mAreaCode)) {

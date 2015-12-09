@@ -40,7 +40,7 @@ public enum PremiumService implements JsonEnum {
     /** The json representation of this instance. */
     private final String jsonName;
 
-    PremiumService(@NonNull final String name) {
+    PremiumService(@NonNull String name) {
         jsonName = name;
     }
 

@@ -30,7 +30,7 @@ import java.util.TimeZone;
  * This class has to be used instead of the normal Calendar. The reason is because when a Calendar
  * object has filled some fields (year and month, for example) but not others (day), calling the method
  * calendar.get(Calendar.YEAR) automatically fills the rest of the fields calling the internal method
- * complete(). This class avoid the call to the complete method, just returning the value.
+ * complete(). This class avoids the call to the complete method, just returning the value.
  * <p/>
  *
  * @author david.gonzalez

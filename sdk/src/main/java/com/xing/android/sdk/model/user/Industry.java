@@ -22,7 +22,6 @@
 
 package com.xing.android.sdk.model.user;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -55,9 +54,10 @@ public class Industry implements Serializable, Parcelable {
         }
     };
 
-    private final int mId;
-    private List<Segment> mSegments;
-    private String mTypeName;
+
+    private final int id;
+    private List<Segment> segments;
+    private String typeName;
 
     public static Industry newInstanceFromCompoundId(int compoundId) {
         Segment segment = new Segment(compoundId, "");
@@ -69,9 +69,9 @@ public class Industry implements Serializable, Parcelable {
     }
 
     public Industry(Parcel source) {
-        mId = source.readInt();
-        mTypeName = source.readString();
-        source.readList(mSegments, List.class.getClassLoader());
+        id = source.readInt();
+        typeName = source.readString();
+        source.readList(segments, List.class.getClassLoader());
     }
 
     public Industry(int id, String type) {
@@ -79,41 +79,41 @@ public class Industry implements Serializable, Parcelable {
     }
 
     public Industry(int id, @NonNull String typeName, @Nullable List<Segment> segments) {
-        mId = id;
-        mTypeName = typeName;
-        mSegments = segments;
+        this.id = id;
+        this.typeName = typeName;
+        this.segments = segments;
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
     public String getTypeName() {
-        return mTypeName;
+        return typeName;
     }
 
     public void setTypeName(String typeName) {
-        mTypeName = typeName;
+        this.typeName = typeName;
     }
 
     @Override
     public String toString() {
-        return mTypeName;
+        return typeName;
     }
 
     @Nullable
     public List<Segment> getSegments() {
-        return mSegments;
+        return segments;
     }
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof Industry && mId == ((Industry) object).mId;
+        return object instanceof Industry && id == ((Industry) object).id;
     }
 
     @Override
     public int hashCode() {
-        return mTypeName.hashCode();
+        return typeName.hashCode();
     }
 
     @Override
@@ -123,9 +123,9 @@ public class Industry implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mTypeName);
-        dest.writeList(mSegments);
+        dest.writeInt(id);
+        dest.writeString(typeName);
+        dest.writeList(segments);
     }
 
     /**
@@ -136,39 +136,39 @@ public class Industry implements Serializable, Parcelable {
     public static class Segment implements Serializable {
         private static final long serialVersionUID = -3150915425802346415L;
 
-        private final int mId;
-        private String mTypeName;
+        private final int id;
+        private String typeName;
 
         public Segment(int id, String typeName) {
-            mId = id;
-            mTypeName = typeName;
+            this.id = id;
+            this.typeName = typeName;
         }
 
         public int getId() {
-            return mId;
+            return id;
         }
 
         public String getTypeName() {
-            return mTypeName;
+            return typeName;
         }
 
         public void setTypeName(String typeName) {
-            mTypeName = typeName;
+            this.typeName = typeName;
         }
 
         @Override
         public boolean equals(Object object) {
-            return object instanceof Segment && mId == ((Segment) object).mId;
+            return object instanceof Segment && id == ((Segment) object).id;
         }
 
         @Override
         public int hashCode() {
-            return mTypeName.hashCode();
+            return typeName.hashCode();
         }
 
         @Override
         public String toString() {
-            return mTypeName;
+            return typeName;
         }
     }
 }

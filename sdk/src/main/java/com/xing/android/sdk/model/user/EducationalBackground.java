@@ -25,6 +25,8 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +53,17 @@ public class EducationalBackground implements Serializable, Parcelable {
     };
 
     /** Educational degree. */
-    private String mDegree;
+    @Json(name = "degree")
+    private String degree;
     /** Primary school attended. */
-    private School mPrimarySchool;
+    @Json(name = "primary_school")
+    private School primarySchool;
     /** List of schools attended. */
-    private List<School> mSchools;
+    @Json(name = "schools")
+    private List<School> schools;
     /** List of qualifications. */
-    private List<String> mQualifications;
+    @Json(name = "qualifications")
+    private List<String> qualifications;
 
     /** Create a simple Educational Background object with empty fields. */
     public EducationalBackground() {
@@ -69,12 +75,12 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private EducationalBackground(Parcel in) {
-        mDegree = in.readString();
-        mPrimarySchool = in.readParcelable(School.class.getClassLoader());
-        mSchools = new ArrayList<>();
-        in.readTypedList(mSchools, School.CREATOR);
-        mQualifications = new ArrayList<>();
-        in.readStringList(mQualifications);
+        degree = in.readString();
+        primarySchool = in.readParcelable(School.class.getClassLoader());
+        schools = new ArrayList<>(1);
+        in.readTypedList(schools, School.CREATOR);
+        qualifications = new ArrayList<>(1);
+        in.readStringList(qualifications);
     }
 
     @Override
@@ -86,16 +92,16 @@ public class EducationalBackground implements Serializable, Parcelable {
             return false;
         }
 
-        EducationalBackground that = (EducationalBackground) o;
-        return hashCode() == that.hashCode();
+        EducationalBackground educationalBackground = (EducationalBackground) o;
+        return hashCode() == educationalBackground.hashCode();
     }
 
     @Override
     public int hashCode() {
-        int result = mDegree != null ? mDegree.hashCode() : 0;
-        result = 31 * result + (mPrimarySchool != null ? mPrimarySchool.hashCode() : 0);
-        result = 31 * result + (mSchools != null ? mSchools.hashCode() : 0);
-        result = 31 * result + (mQualifications != null ? mQualifications.hashCode() : 0);
+        int result = degree != null ? degree.hashCode() : 0;
+        result = 31 * result + (primarySchool != null ? primarySchool.hashCode() : 0);
+        result = 31 * result + (schools != null ? schools.hashCode() : 0);
+        result = 31 * result + (qualifications != null ? qualifications.hashCode() : 0);
         return result;
     }
 
@@ -106,10 +112,10 @@ public class EducationalBackground implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mDegree);
-        dest.writeParcelable(mPrimarySchool, 0);
-        dest.writeTypedList(mSchools);
-        dest.writeStringList(mQualifications);
+        dest.writeString(degree);
+        dest.writeParcelable(primarySchool, 0);
+        dest.writeTypedList(schools);
+        dest.writeStringList(qualifications);
     }
 
     /**
@@ -118,16 +124,16 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @return degree.
      */
     public String getDegree() {
-        return mDegree;
+        return degree;
     }
 
     /**
      * Set degree.
      *
-     * @param mDegree Set degree.
+     * @param degree Set degree.
      */
-    public void setDegree(String mDegree) {
-        this.mDegree = mDegree;
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     /**
@@ -136,16 +142,16 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @return primary school.
      */
     public School getPrimarySchool() {
-        return mPrimarySchool;
+        return primarySchool;
     }
 
     /**
      * Set primary school.
      *
-     * @param mPrimarySchool primary school.
+     * @param primarySchool primary school.
      */
-    public void setPrimarySchool(School mPrimarySchool) {
-        this.mPrimarySchool = mPrimarySchool;
+    public void setPrimarySchool(School primarySchool) {
+        this.primarySchool = primarySchool;
     }
 
     /**
@@ -154,7 +160,7 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @return list of schools.
      */
     public List<School> getSchools() {
-        return mSchools;
+        return schools;
     }
 
     /**
@@ -163,7 +169,7 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @param mSchools list of schools.
      */
     public void setSchools(List<School> mSchools) {
-        this.mSchools = mSchools;
+        schools = mSchools;
     }
 
     /**
@@ -172,15 +178,15 @@ public class EducationalBackground implements Serializable, Parcelable {
      * @return list of qualifications.
      */
     public List<String> getQualifications() {
-        return mQualifications;
+        return qualifications;
     }
 
     /**
      * Set list of qualifications.
      *
-     * @param mQualifications list of qualifications.
+     * @param qualifications list of qualifications.
      */
-    public void setQualifications(List<String> mQualifications) {
-        this.mQualifications = mQualifications;
+    public void setQualifications(List<String> qualifications) {
+        this.qualifications = qualifications;
     }
 }

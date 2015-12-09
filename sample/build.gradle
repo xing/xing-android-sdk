@@ -80,7 +80,7 @@ android {
 
 dependencies {
     compile project(':sdk')
-
+    compile project(':api-client-oauth')
     compile libraries.supportV4
     compile libraries.supportAppCompat
     compile libraries.supportDesign

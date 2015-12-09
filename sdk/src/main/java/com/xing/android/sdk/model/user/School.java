@@ -27,11 +27,13 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.model.XingCalendar;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Represents a school.
@@ -53,21 +55,29 @@ public class School implements Serializable, Parcelable {
             return new School[size];
         }
     };
+    private static final Pattern COMPILE = Pattern.compile(", ");
 
     /** School ID. */
-    private String mId;
+    @Json(name = "id")
+    private String id;
     /** Name of school. */
-    private String mName;
+    @Json(name = "name")
+    private String name;
     /** Degree. */
-    private String mDegree;
+    @Json(name = "degree")
+    private String degree;
     /** Additional notes such as specialized subjects. */
-    private List<String> mNotes;
+    @Json(name = "notes")
+    private List<String> notes;
     /** Describes the field of study. */
-    private String mSubject;
+    @Json(name = "subject")
+    private String subject;
     /** Start date. */
-    private XingCalendar mBeginDate;
+    @Json(name = "begin_date")
+    private XingCalendar beginDate;
     /** End date. */
-    private XingCalendar mEndDate;
+    @Json(name = "end_date")
+    private XingCalendar endDate;
 
     /**
      * Create a school object given id and name.
@@ -75,9 +85,9 @@ public class School implements Serializable, Parcelable {
      * @param id id of shcool.
      * @param name name of school.
      */
-    public School(@NonNull final String id, @NonNull final String name) {
-        mId = id;
-        mName = name;
+    public School(@NonNull String id, @NonNull String name) {
+        this.id = id;
+        this.name = name;
     }
 
     /** Create a simple School object with empty fields. */
@@ -90,13 +100,13 @@ public class School implements Serializable, Parcelable {
      * @param parcel Input {@link Parcel}
      */
     private School(Parcel parcel) {
-        mId = parcel.readString();
-        mName = parcel.readString();
-        mDegree = parcel.readString();
-        parcel.readList(mNotes, List.class.getClassLoader());
-        mSubject = parcel.readString();
-        mBeginDate = (XingCalendar) parcel.readSerializable();
-        mEndDate = (XingCalendar) parcel.readSerializable();
+        id = parcel.readString();
+        name = parcel.readString();
+        degree = parcel.readString();
+        parcel.readList(notes, List.class.getClassLoader());
+        subject = parcel.readString();
+        beginDate = (XingCalendar) parcel.readSerializable();
+        endDate = (XingCalendar) parcel.readSerializable();
     }
 
     @Override
@@ -114,13 +124,13 @@ public class School implements Serializable, Parcelable {
 
     @Override
     public int hashCode() {
-        int result = mId != null ? mId.hashCode() : 0;
-        result = 31 * result + (mName != null ? mName.hashCode() : 0);
-        result = 31 * result + (mDegree != null ? mDegree.hashCode() : 0);
-        result = 31 * result + (mNotes != null ? mNotes.hashCode() : 0);
-        result = 31 * result + (mSubject != null ? mSubject.hashCode() : 0);
-        result = 31 * result + (mBeginDate != null ? mBeginDate.hashCode() : 0);
-        result = 31 * result + (mEndDate != null ? mEndDate.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (degree != null ? degree.hashCode() : 0);
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (beginDate != null ? beginDate.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         return result;
     }
 
@@ -131,13 +141,13 @@ public class School implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(mId);
-        parcel.writeString(mName);
-        parcel.writeString(mDegree);
-        parcel.writeList(mNotes);
-        parcel.writeString(mSubject);
-        parcel.writeSerializable(mBeginDate);
-        parcel.writeSerializable(mEndDate);
+        parcel.writeString(id);
+        parcel.writeString(name);
+        parcel.writeString(degree);
+        parcel.writeList(notes);
+        parcel.writeString(subject);
+        parcel.writeSerializable(beginDate);
+        parcel.writeSerializable(endDate);
     }
 
     /**
@@ -146,7 +156,7 @@ public class School implements Serializable, Parcelable {
      * @return school id.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -156,7 +166,7 @@ public class School implements Serializable, Parcelable {
      */
     public void setId(String id) {
         if (!TextUtils.isEmpty(id)) {
-            mId = id;
+            this.id = id;
         }
     }
 
@@ -166,7 +176,7 @@ public class School implements Serializable, Parcelable {
      * @return name of school.
      */
     public String getName() {
-        return mName;
+        return name;
     }
 
     /**
@@ -176,7 +186,7 @@ public class School implements Serializable, Parcelable {
      */
     public void setName(String name) {
         if (!TextUtils.isEmpty(name)) {
-            mName = name;
+            this.name = name;
         }
     }
 
@@ -186,7 +196,7 @@ public class School implements Serializable, Parcelable {
      * @return degree.
      */
     public String getDegree() {
-        return mDegree;
+        return degree;
     }
 
     /**
@@ -195,7 +205,7 @@ public class School implements Serializable, Parcelable {
      * @param degree degree.
      */
     public void setDegree(String degree) {
-        mDegree = degree;
+        this.degree = degree;
     }
 
     /**
@@ -204,7 +214,7 @@ public class School implements Serializable, Parcelable {
      * @return list of notes.
      */
     public List<String> getNotes() {
-        return mNotes;
+        return notes;
     }
 
     /**
@@ -213,8 +223,8 @@ public class School implements Serializable, Parcelable {
      * @param notes notes.
      */
     public void setNotes(String notes) {
-        String[] splitNotes = notes.split(", ");
-        mNotes = Arrays.asList(splitNotes);
+        String[] splitNotes = COMPILE.split(notes);
+        this.notes = Arrays.asList(splitNotes);
     }
 
     /**
@@ -223,7 +233,7 @@ public class School implements Serializable, Parcelable {
      * @return subject.
      */
     public String getSubject() {
-        return mSubject;
+        return subject;
     }
 
     /**
@@ -232,7 +242,7 @@ public class School implements Serializable, Parcelable {
      * @param subject subject.
      */
     public void setSubject(String subject) {
-        mSubject = subject;
+        this.subject = subject;
     }
 
     /**
@@ -241,7 +251,7 @@ public class School implements Serializable, Parcelable {
      * @return start date.
      */
     public XingCalendar getBeginDate() {
-        return mBeginDate;
+        return beginDate;
     }
 
     /**
@@ -250,7 +260,7 @@ public class School implements Serializable, Parcelable {
      * @param beginDate start date.
      */
     public void setBeginDate(XingCalendar beginDate) {
-        mBeginDate = beginDate;
+        this.beginDate = beginDate;
     }
 
     /**
@@ -259,7 +269,7 @@ public class School implements Serializable, Parcelable {
      * @return end date.
      */
     public XingCalendar getEndDate() {
-        return mEndDate;
+        return endDate;
     }
 
     /**
@@ -268,6 +278,6 @@ public class School implements Serializable, Parcelable {
      * @param endDate end date.
      */
     public void setEndDate(XingCalendar endDate) {
-        mEndDate = endDate;
+        this.endDate = endDate;
     }
 }

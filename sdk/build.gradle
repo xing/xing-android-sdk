@@ -65,12 +65,19 @@ android {
 
 dependencies {
     provided libraries.supportAnnotations
+    provided libraries.rxjava
+
     compile libraries.singpost
+    compile libraries.okio
     compile libraries.okhttp
     compile libraries.okhttpUrlConnection
+    compile libraries.okhttpLoggingInterceptor
+    compile libraries.moshi
+    compile libraries.moshiAdapters
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
+    testCompile libraries.assertj
     testCompile libraries.mockito
     testCompile libraries.robolectric
     testCompile libraries.commonsIo
@@ -79,9 +86,6 @@ dependencies {
 /*
  *  ============== Artifacts publishing section ==============
  */
-apply plugin: 'maven'
-apply plugin: 'signing'
-
 ext {
     POM_NAME = 'xing-android-sdk'
     POM_ARTIFACT_ID = 'sdk'
@@ -89,43 +93,3 @@ ext {
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-
-/*
- *  ============== Code coverage section ==============
- */
-
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion '0.7.2.201409121644'
-}
-
-/** Create a test coverage report */
-task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
-    group = 'reporting'
-    description = 'Generate Jacoco coverage reports after running tests.'
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: [
-                    '**/R*.class',
-                    '**/BuildConfig*'
-            ]
-    )
-
-    sourceDirectories = files('src/main/java')
-    executionData = files('build/jacoco/testDebugUnitTest.exec')
-
-    doFirst {
-        files('build/intermediates/classes/debug').getFiles().each { file ->
-            if (file.name.contains('$$')) {
-                file.renameTo(file.path.replace('$$', '$'))
-            }
-        }
-    }
-}

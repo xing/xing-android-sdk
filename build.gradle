@@ -35,39 +35,54 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+
+        // TODO Remove this for release.
+        maven { // Sonatype snapshot repo.
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
     }
 
     project.ext {
         /** Contains global constants shared with all modules */
         versions = [
-                COMPILE_SDK_VERSION: 22,
-                BUILD_TOOLS_VERSION: '22.0.1',
-                MIN_SDK_VERSION    : 14,
-                TARGET_SDK_VERSION : 22
+              COMPILE_SDK_VERSION: 22,
+              BUILD_TOOLS_VERSION: '22.0.1',
+              MIN_SDK_VERSION    : 14,
+              TARGET_SDK_VERSION : 22
         ]
 
         /** Used dependencies */
         libraries = [
-                // Android
-                supportAnnotations : 'com.android.support:support-annotations:23.0.1',
-                supportV4          : 'com.android.support:support-v4:22.2.0',
-                supportAppCompat   : 'com.android.support:appcompat-v7:22.2.0',
-                supportDesign      : 'com.android.support:design:22.2.0',
-                supportCardView    : 'com.android.support:cardview-v7:22.2.0',
-                supportRecyclerView: 'com.android.support:recyclerview-v7:22.2.0',
+              // Android
+              supportAnnotations      : 'com.android.support:support-annotations:23.1.0',
+              supportV4               : 'com.android.support:support-v4:22.2.0',
+              supportAppCompat        : 'com.android.support:appcompat-v7:22.2.0',
+              supportDesign           : 'com.android.support:design:22.2.0',
+              supportCardView         : 'com.android.support:cardview-v7:22.2.0',
+              supportRecyclerView     : 'com.android.support:recyclerview-v7:22.2.0',
 
-                // Network
-                okhttp             : 'com.squareup.okhttp:okhttp:2.4.0',
-                okhttpUrlConnection: 'com.squareup.okhttp:okhttp-urlconnection:2.4.0',
-                singpost           : 'oauth.signpost:signpost-core:1.2.1.2@jar',
-                glide              : 'com.github.bumptech.glide:glide:3.6.0',
+              // Ok stack
+              okhttp                  : 'com.squareup.okhttp:okhttp:2.6.0',
+              okhttpUrlConnection     : 'com.squareup.okhttp:okhttp-urlconnection:2.6.0',
+              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.6.0',
+              okio                    : 'com.squareup.okio:okio:1.6.0',
+              moshi                   : 'com.squareup.moshi:moshi:1.1.0-SNAPSHOT',
+              moshiAdapters           : 'com.squareup.moshi:moshi-adapters:1.1.0-SNAPSHOT',
 
-                // Test
-                junit              : 'junit:junit:4.12',
-                mockito            : 'org.mockito:mockito-all:1.10.19',
-                robolectric        : 'org.robolectric:robolectric:3.0',
-                mockWebServer      : 'com.squareup.okhttp:mockwebserver:2.3.0',
-                commonsIo          : 'commons-io:commons-io:2.4'
+              // Additional network libraries
+              singpost                : 'oauth.signpost:signpost-core:1.2.1.2@jar',
+              glide                   : 'com.github.bumptech.glide:glide:3.6.0',
+
+              // ReactiveX
+              rxjava                  : 'io.reactivex:rxjava:1.0.14',
+
+              // Test
+              junit                   : 'junit:junit:4.12',
+              assertj                 : 'org.assertj:assertj-core:1.7.0',
+              mockito                 : 'org.mockito:mockito-all:1.10.19',
+              robolectric             : 'org.robolectric:robolectric:3.0',
+              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.5.0',
+              commonsIo               : 'commons-io:commons-io:2.4'
         ]
     }
 }
@@ -93,8 +108,8 @@ subprojects { project ->
 
         classpath = files()
         configProperties = [
-                'proj.module.dir'      : projectDir.absolutePath,
-                'checkstyle.cache.file': './build/cache/checkstyle-cache'
+              'proj.module.dir'      : projectDir.absolutePath,
+              'checkstyle.cache.file': './build/cache/checkstyle-cache'
         ]
     }
 

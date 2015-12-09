@@ -36,7 +36,7 @@ import com.xing.android.sdk.model.JsonEnum;
 public enum CompanySize implements JsonEnum {
 
     SIZE_1("1"),
-    SIZE1_10("1-10"),
+    SIZE_1_10("1-10"),
     SIZE_11_50("11-50"),
     SIZE_51_200("51-200"),
     SIZE_201_500("201-500"),
@@ -45,14 +45,14 @@ public enum CompanySize implements JsonEnum {
     SIZE_5001_10000("5001-10000"),
     SIZE_10001PLUS("10001+");
 
-    private final String mText;
+    private final String text;
 
-    CompanySize(@NonNull final String text) {
-        mText = text;
+    CompanySize(@NonNull String text) {
+        this.text = text;
     }
 
     @Override
     public String getJsonValue() {
-        return mText;
+        return text;
     }
 }

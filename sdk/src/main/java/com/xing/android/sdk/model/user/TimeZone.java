@@ -25,6 +25,8 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
+
 import java.io.Serializable;
 
 /**
@@ -48,9 +50,11 @@ public class TimeZone implements Serializable, Parcelable {
     };
 
     /** Name of timezone. */
-    private String mName;
+    @Json(name = "name")
+    private String name;
     /** Offset. */
-    private float mUtcOffset;
+    @Json(name = "utc_offset")
+    private float utcOffset;
 
     /** Create a simple TimeZone object with empty fields. */
     public TimeZone() {
@@ -62,8 +66,8 @@ public class TimeZone implements Serializable, Parcelable {
      * @param in Input {@link Parcel}
      */
     private TimeZone(Parcel in) {
-        this.mName = in.readString();
-        this.mUtcOffset = in.readFloat();
+        name = in.readString();
+        utcOffset = in.readFloat();
     }
 
     @Override
@@ -77,14 +81,14 @@ public class TimeZone implements Serializable, Parcelable {
 
         TimeZone timeZone = (TimeZone) o;
 
-        return Float.compare(timeZone.mUtcOffset, mUtcOffset) == 0 && !(mName != null ? !mName.equals(timeZone.mName)
-                : timeZone.mName != null);
+        return Float.compare(timeZone.utcOffset, utcOffset) == 0 && (name != null ? name.equals(timeZone.name)
+              : timeZone.name == null);
     }
 
     @Override
     public int hashCode() {
-        int result = mName != null ? mName.hashCode() : 0;
-        result = 31 * result + (mUtcOffset != +0.0f ? Float.floatToIntBits(mUtcOffset) : 0);
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (utcOffset != +0.0f ? Float.floatToIntBits(utcOffset) : 0);
         return result;
     }
 
@@ -95,8 +99,8 @@ public class TimeZone implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.mName);
-        dest.writeFloat(this.mUtcOffset);
+        dest.writeString(name);
+        dest.writeFloat(utcOffset);
     }
 
     /**
@@ -105,7 +109,7 @@ public class TimeZone implements Serializable, Parcelable {
      * @return timezone name.
      */
     public String getName() {
-        return mName;
+        return name;
     }
 
     /**
@@ -114,7 +118,7 @@ public class TimeZone implements Serializable, Parcelable {
      * @param name timezone.
      */
     public void setName(String name) {
-        mName = name;
+        this.name = name;
     }
 
     /**
@@ -123,7 +127,7 @@ public class TimeZone implements Serializable, Parcelable {
      * @return UTC offset.
      */
     public float getUtcOffset() {
-        return mUtcOffset;
+        return utcOffset;
     }
 
     /**
@@ -132,6 +136,6 @@ public class TimeZone implements Serializable, Parcelable {
      * @param utcOffset UTC offset.
      */
     public void setUtcOffset(float utcOffset) {
-        mUtcOffset = utcOffset;
+        this.utcOffset = utcOffset;
     }
 }
