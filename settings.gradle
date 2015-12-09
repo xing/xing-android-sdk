@@ -1,2 +1,2 @@
-include ':sdk'
+include ':sdk', ':api-client-oauth'
 include ':sample'

@@ -32,49 +32,26 @@ import com.xing.android.sdk.sample.utils.Utils;
  * @author daniel.hartwich
  */
 public class SdkSampleApplication extends Application {
-    /**
-     * Singleton instance of the Sample application.
-     */
-    private static SdkSampleApplication app;
-    private Prefs prefs;
-    private boolean xingRequestControllerInitiated = false;
-
-    /**
-     * @return the global Sample App instance
-     */
-    public static SdkSampleApplication getInstance() {
-        return app;
-    }
-
     @Override
     public void onCreate() {
-        app = this;
-        prefs = Prefs.getInstance(app);
-        if (Utils.isLoggedIn(this) && !xingRequestControllerInitiated) {
-            initializeXingRequestController();
+        Prefs prefs = Prefs.getInstance(this);
+        if (Utils.isLoggedIn(this)) {
+            //noinspection ConstantConditions
+            initializeXingRequestController(prefs.getOauthToken(), prefs.getOauthSecret());
         }
         super.onCreate();
     }
 
     /**
-     * Handle the initialization process after the user logged in.
-     */
-    public void onUserLoggedIn() {
-        if (!xingRequestControllerInitiated) {
-            initializeXingRequestController();
-        }
-    }
-
-    /**
      * Initializing the XingRequest Controller using the oAuth Token and the oAuthSecret.
      */
-    private void initializeXingRequestController() {
+    public static void initializeXingRequestController(String oAuthToken, String oAuthSecret) {
+        XingController.flush();
         XingController.setup()
-                .setConsumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
-                .setConsumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
-                .setToken(prefs.getOauthToken())
-                .setTokenSecret(prefs.getOauthSecret())
-                .init();
-        xingRequestControllerInitiated = true;
+              .setConsumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
+              .setConsumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
+              .setToken(oAuthToken)
+              .setTokenSecret(oAuthSecret)
+              .init();
     }
 }
