@@ -20,13 +20,8 @@ package com.xing.android.sdk;
 
 import android.support.annotation.Nullable;
 
-import com.squareup.okhttp.ResponseBody;
-
 import java.io.Closeable;
 import java.io.IOException;
-
-import okio.Buffer;
-import okio.BufferedSource;
 
 final class Utils {
     /**
@@ -91,22 +86,6 @@ final class Utils {
     /** Returns a {@link IOException} with a formatted message. */
     static IOException ioError(String message, Object... args) {
         return new IOException(String.format(message, args));
-    }
-
-    /**
-     * Replace a {@link com.squareup.okhttp.Response} with an identical copy whose body is backed by a {@link Buffer}
-     * rather than a {@link okio.Source}.
-     */
-    @Nullable
-    static ResponseBody readBodyToBytesIfNecessary(ResponseBody body) throws IOException {
-        if (body == null) return null;
-
-        BufferedSource source = body.source();
-        Buffer buffer = new Buffer();
-        buffer.writeAll(source);
-        source.close();
-
-        return ResponseBody.create(body.contentType(), body.contentLength(), buffer);
     }
 
     private Utils() {
