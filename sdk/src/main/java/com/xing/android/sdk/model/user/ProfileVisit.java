@@ -22,63 +22,55 @@
 
 package com.xing.android.sdk.model.user;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.json.EnumMapper;
 import com.xing.android.sdk.model.CalendarUtils;
+import com.xing.android.sdk.model.Reason;
 import com.xing.android.sdk.model.XingCalendar;
 
 /**
  * Represents an profile visit.
  * <p/>
  *
+ * @author daniel.hartwich
  * @author ciprian.ursu
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">Profile Visit</a>
  */
 @SuppressWarnings("unused")
 public class ProfileVisit {
-    /**
-     * Company name.
-     */
-    private String companyName;
-    /**
-     * Reason for visit.
-     */
-    private String reason;
-    /**
-     * Encrypted date of visit.
-     */
-    private String visitedAtEncrypted;
-    /**
-     * User photo.
-     */
-    private XingPhotoUrls photoUrls;
-    /**
-     * User ID.
-     */
+    /** User ID. */
+    @Json(name = "user_id")
     private String userId;
-    /**
-     * User name.
-     */
+    /** User name. */
+    @Json(name = "display_name")
     private String displayName;
-    /**
-     * User job title.
-     */
+    /** Company name. */
+    @Json(name = "company_name")
+    private String companyName;
+    /** User job title. */
+    @Json(name = "job_title")
     private String jobTitle;
-    /**
-     * User contact path length.
-     */
-    private Integer contactPathLength;
-    /**
-     * Date of visit.
-     */
-    private XingCalendar visitedAt;
-    /**
-     * Number of visits.
-     */
-    private Integer visitCount;
-    /**
-     * Gender of user.
-     */
+    /** Number of visits. */
+    @Json(name = "visit_count")
+    private int visitCount;
+    /** Gender of user. */
+    @Json(name = "gender")
     private Gender gender;
+    /** Date of visit. */
+    @Json(name = "visited_at")
+    private XingCalendar visitedAt;
+    /** Encrypted date of visit. */
+    @Json(name = "visited_at_encrypted")
+    private String visitedAtEncrypted;
+    /** User photo. */
+    @Json(name = "photo_urls")
+    private XingPhotoUrls photoUrls;
+    /** Reason for visit. */
+    @Json(name = "reason")
+    private Reason reason;
+    /** Distance from the visitor to the user. */
+    @Json(name = "distance")
+    private int distance;
 
     /**
      * Return company name.
@@ -103,7 +95,7 @@ public class ProfileVisit {
      *
      * @return reason for visit.
      */
-    public String getReason() {
+    public Reason getReason() {
         return reason;
     }
 
@@ -112,7 +104,7 @@ public class ProfileVisit {
      *
      * @param reason reason for visit.
      */
-    public void setReason(String reason) {
+    public void setReason(Reason reason) {
         this.reason = reason;
     }
 
@@ -193,17 +185,17 @@ public class ProfileVisit {
      *
      * @return contact path length.
      */
-    public Integer getContactPathLength() {
-        return contactPathLength;
+    public Integer getDistance() {
+        return distance;
     }
 
     /**
      * Set contact path length.
      *
-     * @param contactPathLength contact path length.
+     * @param distance contact path length.
      */
-    public void setContactPathLength(Integer contactPathLength) {
-        this.contactPathLength = contactPathLength;
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 
     /**

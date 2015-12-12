@@ -25,6 +25,7 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.model.CalendarUtils;
 import com.xing.android.sdk.model.XingCalendar;
 
@@ -37,40 +38,44 @@ import java.io.Serializable;
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">Contact Request</a>
  */
 @SuppressWarnings("unused")
-public class ContactPetition implements Serializable, Parcelable {
+public class ContactRequest implements Serializable, Parcelable {
     private static final long serialVersionUID = 1792283724323281L;
     /** Creator object for the Parcelable contract. */
-    public static final Creator<ContactPetition> CREATOR = new Creator<ContactPetition>() {
+    public static final Creator<ContactRequest> CREATOR = new Creator<ContactRequest>() {
         @Override
-        public ContactPetition createFromParcel(Parcel source) {
-            return new ContactPetition(source);
+        public ContactRequest createFromParcel(Parcel source) {
+            return new ContactRequest(source);
         }
 
         @Override
-        public ContactPetition[] newArray(int size) {
-            return new ContactPetition[size];
+        public ContactRequest[] newArray(int size) {
+            return new ContactRequest[size];
         }
     };
 
     /** ID of sender. */
+    @Json(name = "sender_id")
     private String senderId;
     /** Sender user object. */
+    @Json(name = "sender")
     private XingUser sender;
     /** Message from sender. */
+    @Json(name = "message")
     private String message;
     /** Date of contact request. */
+    @Json(name = "received_at")
     private XingCalendar receivedAt;
 
     /** Create a simple Contact object with empty fields. */
-    public ContactPetition() {
+    public ContactRequest() {
     }
 
     /**
-     * Create {@link ContactPetition} from {@link Parcel}.
+     * Create {@link ContactRequest} from {@link Parcel}.
      *
      * @param in Input {@link Parcel}
      */
-    private ContactPetition(Parcel in) {
+    private ContactRequest(Parcel in) {
         senderId = in.readString();
         sender = (XingUser) in.readSerializable();
         message = in.readString();
@@ -96,12 +101,12 @@ public class ContactPetition implements Serializable, Parcelable {
             return true;
         }
 
-        if (!(obj instanceof ContactPetition)) {
+        if (!(obj instanceof ContactRequest)) {
             return false;
         }
 
-        ContactPetition contactPetition = (ContactPetition) obj;
-        return ((contactPetition.senderId != null) && (senderId != null)) && contactPetition.senderId.equals(senderId);
+        ContactRequest contactRequest = (ContactRequest) obj;
+        return ((contactRequest.senderId != null) && (senderId != null)) && contactRequest.senderId.equals(senderId);
     }
 
     @Override
