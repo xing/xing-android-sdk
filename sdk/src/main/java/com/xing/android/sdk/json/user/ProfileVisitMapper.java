@@ -92,7 +92,7 @@ public final class ProfileVisitMapper {
                             if (reader.peek() == JsonToken.NULL) {
                                 reader.nextNull();
                             } else {
-                                profilevisit.setReason(reader.nextString());
+//                                profilevisit.setReason(reader.nextString());
                             }
                             break;
                     }
@@ -143,7 +143,7 @@ public final class ProfileVisitMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        profilevisit.setContactPathLength(reader.nextInt());
+                        profilevisit.setDistance(reader.nextInt());
                     }
                     break;
                 }

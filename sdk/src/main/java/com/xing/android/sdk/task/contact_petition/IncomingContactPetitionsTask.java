@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.xing.android.sdk.json.user.ContactPetitionsMapper;
-import com.xing.android.sdk.model.user.ContactPetition;
+import com.xing.android.sdk.model.user.ContactRequest;
 import com.xing.android.sdk.model.user.field.XingUserField;
 import com.xing.android.sdk.network.request.ContactPetitionRequests;
 import com.xing.android.sdk.task.OnTaskFinishedListener;
@@ -40,7 +40,7 @@ import java.util.List;
  * @see ContactPetitionRequests#incomingContactPetitions(String, Integer, Integer, List)
  */
 @SuppressWarnings("unused")
-public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<ContactPetition>> {
+public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<ContactRequest>> {
     private final String mUserId;
     private final List<XingUserField> mUserFields;
 
@@ -56,7 +56,7 @@ public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<C
      */
     public IncomingContactPetitionsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
             @Nullable List<XingUserField> userFields, @NonNull Object tag,
-            @NonNull OnTaskFinishedListener<List<ContactPetition>> listener) {
+            @NonNull OnTaskFinishedListener<List<ContactRequest>> listener) {
         this(userId, limit, offset, userFields, tag, listener, null);
     }
 
@@ -74,7 +74,7 @@ public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<C
      */
     public IncomingContactPetitionsTask(@NonNull String userId, @Nullable Integer limit, @Nullable Integer offset,
             @Nullable List<XingUserField> userFields, @NonNull Object tag,
-            @NonNull OnTaskFinishedListener<List<ContactPetition>> listener, @Nullable Priority priority) {
+            @NonNull OnTaskFinishedListener<List<ContactRequest>> listener, @Nullable Priority priority) {
         super(limit, offset, tag, listener, priority);
         mUserId = userId;
         mUserFields = userFields;
@@ -84,7 +84,7 @@ public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<C
      * Executes the {@link ContactPetitionRequests#incomingContactPetitions(String, Integer, Integer, List)}
      * ContactPathRequests.incomingContactPetitions} request and deserialize the result.
      *
-     * @return List of incoming {@link ContactPetition contact petition}
+     * @return List of incoming {@link ContactRequest contact petition}
      *
      * @throws Exception Can be {@link com.xing.android.sdk.network.oauth.OauthSigner.XingOauthException
      * XingOauthException},
@@ -92,7 +92,7 @@ public class IncomingContactPetitionsTask extends PaginatedWithOffsetTask<List<C
      * or {@link com.xing.android.sdk.json.XingJsonException XingJsonException}.
      */
     @Override
-    public List<ContactPetition> run() throws Exception {
+    public List<ContactRequest> run() throws Exception {
         String response = ContactPetitionRequests.incomingContactPetitions(mUserId, mLimit, mOffset, mUserFields);
 
         return ContactPetitionsMapper.parseContactPetitionList(response);

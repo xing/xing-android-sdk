@@ -36,12 +36,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
+import com.xing.android.sdk.Callback;
 import com.xing.android.sdk.Response;
 import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.model.SearchResult;
 import com.xing.android.sdk.model.user.XingAddress;
 import com.xing.android.sdk.model.user.XingUser;
 import com.xing.android.sdk.network.XingController;
+import com.xing.android.sdk.resources.ProfileEditingResource;
 import com.xing.android.sdk.resources.UserProfilesResource;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.DownloadImageTask;
@@ -245,9 +247,23 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
                   .logLevel(Level.BODY)
                   .build();
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
-
+            ProfileEditingResource editingResource = api.resource(ProfileEditingResource.class);
             Response<XingUser, Object> response = null;
             try {
+                editingResource.updateUserGeneralInformation()
+                      .formField("academic_title", "Ing.").enqueue(new Callback<String, String>() {
+                    @Override
+                    public void onResponse(Response<String, String> response) {
+                        if (response.isSuccess()) {
+                            Log.i("Update res", response.raw().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e("Error", t.getLocalizedMessage(), t);
+                    }
+                });
                 response = profilesResource.getYourProfile().execute();
                 Response<List<SearchResult>, Object> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
                       .queryParam("user_fields", "display_name, id")

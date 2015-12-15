@@ -20,38 +20,51 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.model;
 
-import com.xing.android.sdk.internal.HttpMethod;
+import com.squareup.moshi.Json;
+import com.xing.android.sdk.model.user.XingUser;
+
+import java.util.List;
 
 /**
- * TODO docs.
- *
- * @author serj.lotutovici
+ * @author daniel.hartwich
  */
-public abstract class Resource {
-    protected final XingApi api;
+public class ContactPaths {
+    @Json(name = "paths")
+    private List<ContactPath> contactPaths;
+    @Json(name = "distance")
+    private int distance;
+    @Json(name = "total")
+    private int total;
 
-    /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected Resource(XingApi api) {
-        this.api = api;
+    public int getDistance() {
+        return distance;
     }
 
-    protected static <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(XingApi api, String resourcePath) {
-        return new CallSpec.Builder<>(api, HttpMethod.GET, resourcePath, false);
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
-    protected static <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(XingApi api, String resourcePath,
-          boolean isFormEncoded) {
-        return new CallSpec.Builder<>(api, HttpMethod.POST, resourcePath, isFormEncoded);
+    public int getTotal() {
+        return total;
     }
 
-    protected static <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(XingApi api, String resourcePath,
-          boolean isFormEncoded) {
-        return new CallSpec.Builder<>(api, HttpMethod.PUT, resourcePath, isFormEncoded);
+    public void setTotal(int total) {
+        this.total = total;
     }
 
-    protected static <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(XingApi api, String resourcePath) {
-        return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
+    private static final class ContactPath {
+        @Json(name = "users")
+        private List<XingUser> userList;
+
+        public List<XingUser> getUserList() {
+            return userList;
+        }
+
+        public void setUserList(List<XingUser> userList) {
+            this.userList = userList;
+        }
     }
 }
+

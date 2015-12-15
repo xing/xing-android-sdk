@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
-import com.xing.android.sdk.model.user.ContactPetition;
+import com.xing.android.sdk.model.user.ContactRequest;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -44,11 +44,11 @@ public final class ContactPetitionsMapper {
      * Parse the json string containing contact petition information.
      *
      * @param json The json that was returned by the request
-     * @return A ContactPetition object
+     * @return A ContactRequest object
      *
      * @throws IOException
      */
-    public static ContactPetition parseContactPetition(String json) throws IOException {
+    public static ContactRequest parseContactPetition(String json) throws IOException {
         return parseContactPetition(new JsonReader(new StringReader(json)));
     }
 
@@ -56,12 +56,12 @@ public final class ContactPetitionsMapper {
      * Parse the JsonReader object containing contact petition information.
      *
      * @param reader The json reader that contains the json information
-     * @return A ContactPetition object
+     * @return A ContactRequest object
      *
      * @throws IOException
      */
-    public static ContactPetition parseContactPetition(JsonReader reader) throws IOException {
-        ContactPetition contactPetition = new ContactPetition();
+    public static ContactRequest parseContactPetition(JsonReader reader) throws IOException {
+        ContactRequest contactRequest = new ContactRequest();
         reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.nextName()) {
@@ -69,7 +69,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactPetition.setSenderId(reader.nextString());
+                        contactRequest.setSenderId(reader.nextString());
                     }
                     break;
                 }
@@ -77,7 +77,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactPetition.setReceivedAt(reader.nextString());
+                        contactRequest.setReceivedAt(reader.nextString());
                     }
                     break;
                 }
@@ -85,7 +85,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactPetition.setMessage(reader.nextString());
+                        contactRequest.setMessage(reader.nextString());
                     }
                     break;
                 }
@@ -93,7 +93,7 @@ public final class ContactPetitionsMapper {
                     if (reader.peek() == JsonToken.NULL) {
                         reader.nextNull();
                     } else {
-                        contactPetition.setSender(XingUserMapper.parseXingUser(reader));
+                        contactRequest.setSender(XingUserMapper.parseXingUser(reader));
                     }
                     break;
                 }
@@ -102,7 +102,7 @@ public final class ContactPetitionsMapper {
             }
         }
         reader.endObject();
-        return contactPetition;
+        return contactRequest;
     }
 
     /**
@@ -143,7 +143,7 @@ public final class ContactPetitionsMapper {
      *
      * @throws IOException
      */
-    public static List<ContactPetition> parseContactPetitionList(String json) throws IOException {
+    public static List<ContactRequest> parseContactPetitionList(String json) throws IOException {
         return parseContactPetitionList(new JsonReader(new StringReader(json)));
     }
 
@@ -155,8 +155,8 @@ public final class ContactPetitionsMapper {
      *
      * @throws IOException
      */
-    public static List<ContactPetition> parseContactPetitionList(JsonReader reader) throws IOException {
-        List<ContactPetition> contactrequestList = new ArrayList<>(0);
+    public static List<ContactRequest> parseContactPetitionList(JsonReader reader) throws IOException {
+        List<ContactRequest> contactrequestList = new ArrayList<>(0);
         reader.beginArray();
         while (reader.hasNext()) {
             contactrequestList.add(parseContactPetition(reader));

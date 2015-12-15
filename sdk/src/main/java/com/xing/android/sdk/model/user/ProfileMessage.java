@@ -25,6 +25,7 @@ package com.xing.android.sdk.model.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.squareup.moshi.Json;
 import com.xing.android.sdk.model.XingCalendar;
 
 import java.io.Serializable;
@@ -51,8 +52,10 @@ public class ProfileMessage implements Serializable, Parcelable {
     };
 
     /** Date message was updated. */
+    @Json(name = "updated_at")
     private XingCalendar updatedAt;
     /** Message. */
+    @Json(name = "message")
     private String message;
 
     /** Create a simple Profile Message object with empty fields. */
