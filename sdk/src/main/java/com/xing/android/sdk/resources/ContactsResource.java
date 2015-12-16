@@ -23,6 +23,7 @@
 package com.xing.android.sdk.resources;
 
 import com.xing.android.sdk.CallSpec;
+import com.xing.android.sdk.ErrorBody;
 import com.xing.android.sdk.Resource;
 import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.internal.Experimental;
@@ -97,8 +98,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    public CallSpec<List<XingUser>, Object> getContacts(String userId) {
-        return Resource.<List<XingUser>, Object>newGetSpec(api, "/v1/users/{user_id}/contacts")
+    public CallSpec<List<XingUser>, ErrorBody> getContacts(String userId) {
+        return Resource.<List<XingUser>, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/contacts")
               .pathParam("user_id", userId)
               .responseAsListOf(XingUser.class, "contacts, users")
               .build();
@@ -107,7 +108,7 @@ public class ContactsResource extends Resource {
     /**
      * Get the current users's contacts.
      */
-    public CallSpec<List<XingUser>, Object> getYourContacts() {
+    public CallSpec<List<XingUser>, ErrorBody> getYourContacts() {
         return getContacts(ME);
     }
 
@@ -116,8 +117,8 @@ public class ContactsResource extends Resource {
      * Returns all contact IDs of the current user.
      * If you only need the number of contact IDs, please use the contacts call with limit=0.
      */
-    public CallSpec<List<String>, Object> getYourContactIds() {
-        return Resource.<List<String>, Object>newGetSpec(api, "/v1/users/me/contact_ids")
+    public CallSpec<List<String>, ErrorBody> getYourContactIds() {
+        return Resource.<List<String>, ErrorBody>newGetSpec(api, "/v1/users/me/contact_ids")
               .responseAsListOf(String.class, "contact_ids", "items")
               .build();
     }
@@ -168,8 +169,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    public CallSpec<List<XingUser>, Object> getSharedContacts(String userId) {
-        return Resource.<List<XingUser>, Object>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
+    public CallSpec<List<XingUser>, ErrorBody> getSharedContacts(String userId) {
+        return Resource.<List<XingUser>, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
               .responseAsListOf(XingUser.class, "shared_contacts", "users")
               .build();
@@ -193,8 +194,8 @@ public class ContactsResource extends Resource {
      * </table>
      */
     @Experimental
-    public CallSpec<List<XingUser>, Object> getUpcomingBirthdays(String userId) {
-        return Resource.<List<XingUser>, Object>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
+    public CallSpec<List<XingUser>, ErrorBody> getUpcomingBirthdays(String userId) {
+        return Resource.<List<XingUser>, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
               .responseAsListOf(XingUser.class, "users")
               .build();
@@ -228,8 +229,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    public CallSpec<List<ContactRequest>, Object> getIncomingContactRequests() {
-        return Resource.<List<ContactRequest>, Object>newGetSpec(api, "/v1/users/me/contact_requests")
+    public CallSpec<List<ContactRequest>, ErrorBody> getIncomingContactRequests() {
+        return Resource.<List<ContactRequest>, ErrorBody>newGetSpec(api, "/v1/users/me/contact_requests")
               .responseAsListOf(ContactRequest.class, "contact_requests")
               .build();
     }
@@ -259,8 +260,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    public CallSpec<List<PendingContactRequest>, Object> getPendingContactRequests() {
-        return Resource.<List<PendingContactRequest>, Object>newGetSpec(api, " /v1/users/me/contact_requests/sent")
+    public CallSpec<List<PendingContactRequest>, ErrorBody> getPendingContactRequests() {
+        return Resource.<List<PendingContactRequest>, ErrorBody>newGetSpec(api, " /v1/users/me/contact_requests/sent")
               .responseAsListOf(PendingContactRequest.class, "contact_requests")
               .build();
     }
@@ -284,8 +285,8 @@ public class ContactsResource extends Resource {
      *
      * @param userId ID of the user receiving the contact request
      */
-    public CallSpec<String, String> sendContactRequest(String userId) {
-        return Resource.<String, String>newPostSpec(api, "/v1/users/{user_id}/contact_requests", false)
+    public CallSpec<String, ErrorBody> sendContactRequest(String userId) {
+        return Resource.<String, ErrorBody>newPostSpec(api, "/v1/users/{user_id}/contact_requests", false)
               .pathParam("user_id", userId)
               .responseAs(String.class)
               .build();
@@ -299,8 +300,8 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    public CallSpec<String, String> acceptContactRequest(String recipientId, String senderId) {
-        return Resource.<String, String>newPutSpec(api, "/v1/users/{user_id}/contact_requests/{id}/accept", false)
+    public CallSpec<String, ErrorBody> acceptContactRequest(String recipientId, String senderId) {
+        return Resource.<String, ErrorBody>newPutSpec(api, "/v1/users/{user_id}/contact_requests/{id}/accept", false)
               .pathParam("user_id", recipientId)
               .pathParam("id", senderId)
               .responseAs(String.class)
@@ -322,8 +323,8 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    public CallSpec<String, String> denyOrRevokeContactRequest(String recipientId, String senderId) {
-        return Resource.<String, String>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{id}")
+    public CallSpec<String, ErrorBody> denyOrRevokeContactRequest(String recipientId, String senderId) {
+        return Resource.<String, ErrorBody>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{id}")
               .pathParam("user_id", recipientId)
               .pathParam("id", senderId)
               .responseAs(String.class)
@@ -356,8 +357,8 @@ public class ContactsResource extends Resource {
      * @param userId ID of the user whose contact path(s) are to be returned
      * @param otherUserId ID of any other XING user
      */
-    public CallSpec<ContactPaths, Object> getContactPaths(String userId, String otherUserId) {
-        return Resource.<ContactPaths, Object>newGetSpec(api, "/v1/users/{user_id}/network/{other_user_id}/paths")
+    public CallSpec<ContactPaths, ErrorBody> getContactPaths(String userId, String otherUserId) {
+        return Resource.<ContactPaths, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/network/{other_user_id}/paths")
               .pathParam("user_id", userId)
               .pathParam("other_user_id", otherUserId)
               .responseAs(ContactPaths.class, "contact_paths")
@@ -391,8 +392,8 @@ public class ContactsResource extends Resource {
      * @param toEmails List of one or more comma-separated email addresses.
      * NOTE: The current user’s email address will be filtered out.
      */
-    public CallSpec<InvitationStats, String> sendInvitation(String... toEmails) {
-        return Resource.<InvitationStats, String>newPostSpec(api, "/v1/users/invite", true)
+    public CallSpec<InvitationStats, ErrorBody> sendInvitation(String... toEmails) {
+        return Resource.<InvitationStats, ErrorBody>newPostSpec(api, "/v1/users/invite", true)
               //TODO SerjLtt|DanielH Make this array a string which is comma seperated
               .pathParam("to_emails", toEmails.toString())
               .responseAs(InvitationStats.class, "invitation_stats")

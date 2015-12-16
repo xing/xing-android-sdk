@@ -338,7 +338,7 @@ public final class CallSpec<RT, ET> {
             return this;
         }
 
-        //TODO (DanielH) set a generic error type response if this is not set.
+        //This is needed for XING internal APIs that return the error message in a custom format.
         public Builder<RT, ET> errorAs(Class<ET> type) {
             errorType = CompositeType.single(checkNotNull(type, "type == null"));
             return this;
@@ -352,7 +352,7 @@ public final class CallSpec<RT, ET> {
 
             if (urlBuilder == null) buildUrlBuilder();
             if (responseType == null) throw stateError("Response type is not set.");
-            if (errorType == null) errorType = CompositeType.single(Object.class); // FIXME need to make this secure.
+            if (errorType == null) errorType = CompositeType.single(ErrorBody.class);
 
             return new CallSpec<>(this);
         }
