@@ -22,8 +22,17 @@
 
 package com.xing.android.sdk.resources;
 
+import com.xing.android.sdk.Resource;
+import com.xing.android.sdk.XingApi;
+
 /**
  * @author daniel.hartwich
  */
-public class JobsResource {
+public class JobsResource extends Resource {
+    /**
+     * Creates a resource instance. This should be the only constructor declared by child classes.
+     */
+    protected JobsResource(XingApi api) {
+        super(api);
+    }
 }

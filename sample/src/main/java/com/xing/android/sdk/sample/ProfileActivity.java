@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.android.sdk.Callback;
+import com.xing.android.sdk.ErrorBody;
 import com.xing.android.sdk.Response;
 import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.model.SearchResult;
@@ -248,14 +249,18 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
                   .build();
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
             ProfileEditingResource editingResource = api.resource(ProfileEditingResource.class);
-            Response<XingUser, Object> response = null;
+            Response<XingUser, ErrorBody> response = null;
             try {
                 editingResource.updateUserGeneralInformation()
-                      .formField("academic_title", "Ing.").enqueue(new Callback<String, String>() {
+                      .formField("academic_title", "Ing.").enqueue(new Callback<String, ErrorBody>() {
                     @Override
-                    public void onResponse(Response<String, String> response) {
+                    public void onResponse(Response<String, ErrorBody> response) {
                         if (response.isSuccess()) {
-                            Log.i("Update res", response.raw().toString());
+                            //Success
+                            Log.w("Update res", response.raw().toString());
+                        } else {
+                            //Error Case
+                            Log.w("Update Res", "with error " + response.errorBody().getErrorName());
                         }
                     }
 
@@ -265,14 +270,14 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
                     }
                 });
                 response = profilesResource.getYourProfile().execute();
-                Response<List<SearchResult>, Object> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
+                Response<List<SearchResult>, ErrorBody> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
                       .queryParam("user_fields", "display_name, id")
                       .execute();
                 XingUser ss = xingUsers.body().get(0).getSearchResultItem();
 
-                Log.d("Search ResultUser", ss.toString());
+                Log.w("Search ResultUser", ss.toString());
 
-                Log.d("Search Request", xingUsers.body().toString());
+                Log.w("Search Request", xingUsers.body().toString());
                 return response.body();
             } catch (Exception e) {
                 e.printStackTrace();
