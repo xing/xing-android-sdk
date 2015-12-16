@@ -20,53 +20,57 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.internal.json;
 
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
-import com.xing.android.sdk.model.user.CompanySize;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
+import com.xing.android.sdk.model.user.LanguageSkill;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Set;
 
 /**
  * @author daniel.hartwich
  */
-public class CompanySizeJsonAdapter extends JsonAdapter<CompanySize> {
+public class LanguageSkillJsonAdapter extends JsonAdapter<LanguageSkill> {
+    public static final Factory FACTORY = new Factory() {
+        @Nullable
+        @Override
+        public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
+            if (!annotations.isEmpty()) return null;
+            Class<?> rawType = Types.getRawType(type);
+            if (rawType != LanguageSkill.class) return null;
+            return new LanguageSkillJsonAdapter().nullSafe();
+        }
+    };
     @Nullable
     @Override
-    public CompanySize fromJson(JsonReader reader) throws IOException {
-        if (reader.peek() == Token.NULL) return reader.nextNull();
-        String companySize = reader.nextString();
-        switch (companySize) {
-            case "1":
-                return CompanySize.SIZE_1;
-            case "1-10":
-                return CompanySize.SIZE_1_10;
-            case "11-50":
-                return CompanySize.SIZE_11_50;
-            case "51-200":
-                return CompanySize.SIZE_51_200;
-            case "201-500":
-                return CompanySize.SIZE_201_500;
-            case "501-1000":
-                return CompanySize.SIZE_501_1000;
-            case "1001-5000":
-                return CompanySize.SIZE_1001_5000;
-            case "5001-10000":
-                return CompanySize.SIZE_5001_10000;
-            case "10001+":
-                return CompanySize.SIZE_10001PLUS;
+    public LanguageSkill fromJson(JsonReader reader) throws IOException {
+
+        String languageSkill = reader.nextString();
+        switch (languageSkill) {
+            case "BASIC":
+                return LanguageSkill.BASIC;
+            case "GOOD":
+                return LanguageSkill.GOOD;
+            case "FLUENT":
+                return LanguageSkill.FLUENT;
+            case "NATIVE":
+                return LanguageSkill.NATIVE;
             default:
                 return null;
         }
     }
 
     @Override
-    public void toJson(JsonWriter writer, CompanySize value) throws IOException {
+    public void toJson(JsonWriter writer, LanguageSkill value) throws IOException {
         writer.value(value.getJsonValue());
     }
 }

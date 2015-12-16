@@ -20,21 +20,36 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk;
+package com.xing.android.sdk.internal.json;
 
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import com.xing.android.sdk.model.user.WebProfile;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Set;
 
 /**
  * @author daniel.hartwich
  */
 public class WebProfileJsonAdapter extends JsonAdapter<WebProfile> {
+    public static final Factory FACTORY = new Factory() {
+        @Nullable
+        @Override
+        public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
+            if (!annotations.isEmpty()) return null;
+            Class<?> rawType = Types.getRawType(type);
+            if (rawType != WebProfile.class) return null;
+            return new WebProfileJsonAdapter().nullSafe();
+        }
+    };
     @Nullable
     @Override
     public WebProfile fromJson(JsonReader reader) throws IOException {
