@@ -20,6 +20,7 @@ package com.xing.android.sdk;
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.HttpUrl;
@@ -214,7 +215,7 @@ public final class CallSpec<RT, ET> {
         if (code < 200 || code >= 300) {
             try {
                 // Buffer the entire body to avoid future I/O.
-                ET errorBody = errorType.fromJson(api.converter, catchingBody);
+                ET errorBody = parseBody(errorType, catchingBody);
                 return Response.error(errorBody, rawResponse);
             } catch (RuntimeException e) {
                 // If the underlying source threw an exception, propagate that, rather than indicating it was
@@ -232,7 +233,7 @@ public final class CallSpec<RT, ET> {
         }
 
         try {
-            RT body = responseType.fromJson(api.converter, catchingBody);
+            RT body = parseBody(responseType, catchingBody);
             return Response.success(body, rawResponse);
         } catch (RuntimeException e) {
             // If the underlying source threw an exception, propagate that, rather than indicating it was
@@ -241,6 +242,17 @@ public final class CallSpec<RT, ET> {
             throw e;
         } finally {
             closeQuietly(catchingBody);
+        }
+    }
+
+    private <PT> PT parseBody(CompositeType type, ResponseBody body) throws IOException {
+        if (body == null) return null;
+        BufferedSource source = body.source();
+        try {
+            //noinspection unchecked
+            return (PT) api.converter.adapter(type).fromJson(JsonReader.of(source));
+        } finally {
+            closeQuietly(source);
         }
     }
 
@@ -324,23 +336,23 @@ public final class CallSpec<RT, ET> {
         }
 
         public Builder<RT, ET> responseAs(Class<RT> type, String... roots) {
-            responseType = CompositeType.single(checkNotNull(type, "type == null"), roots);
+            responseType = Resource.single(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         public Builder<RT, ET> responseAsListOf(Type type, String... roots) {
-            responseType = CompositeType.list(checkNotNull(type, "type == null"), roots);
+            responseType = Resource.list(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         public Builder<RT, ET> responseAsFirst(Class<RT> type, String... roots) {
-            responseType = CompositeType.first(checkNotNull(type, "type == null"), roots);
+            responseType = Resource.first(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         //This is needed for XING internal APIs that return the error message in a custom format.
         public Builder<RT, ET> errorAs(Class<ET> type) {
-            errorType = CompositeType.single(checkNotNull(type, "type == null"));
+            errorType = Resource.single(checkNotNull(type, "type == null"));
             return this;
         }
 
@@ -352,7 +364,7 @@ public final class CallSpec<RT, ET> {
 
             if (urlBuilder == null) buildUrlBuilder();
             if (responseType == null) throw stateError("Response type is not set.");
-            if (errorType == null) errorType = CompositeType.single(ErrorBody.class);
+            if (errorType == null) errorType = Resource.single(ErrorBody.class);
 
             return new CallSpec<>(this);
         }

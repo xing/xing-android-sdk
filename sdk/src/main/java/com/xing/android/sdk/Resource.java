@@ -24,6 +24,8 @@ package com.xing.android.sdk;
 
 import com.xing.android.sdk.internal.HttpMethod;
 
+import java.lang.reflect.Type;
+
 /**
  * TODO docs.
  *
@@ -37,21 +39,42 @@ public abstract class Resource {
         this.api = api;
     }
 
+    /** Returns a {@link CallSpec.Builder} for a GET request. */
     protected static <RT, ET> CallSpec.Builder<RT, ET> newGetSpec(XingApi api, String resourcePath) {
         return new CallSpec.Builder<>(api, HttpMethod.GET, resourcePath, false);
     }
 
+    /** Returns a {@link CallSpec.Builder} for a POST request. */
     protected static <RT, ET> CallSpec.Builder<RT, ET> newPostSpec(XingApi api, String resourcePath,
           boolean isFormEncoded) {
         return new CallSpec.Builder<>(api, HttpMethod.POST, resourcePath, isFormEncoded);
     }
 
+    /** Returns a {@link CallSpec.Builder} for a PUT request. */
     protected static <RT, ET> CallSpec.Builder<RT, ET> newPutSpec(XingApi api, String resourcePath,
           boolean isFormEncoded) {
         return new CallSpec.Builder<>(api, HttpMethod.PUT, resourcePath, isFormEncoded);
     }
 
+    /** Returns a {@link CallSpec.Builder} for a DELETE request. */
     protected static <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(XingApi api, String resourcePath) {
         return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
+    }
+
+    /** Returns a {@link CompositeType} that will expect a single object in the root tree. */
+    protected static CompositeType single(Type classType, String... roots) {
+        return new CompositeType(classType, CompositeType.Structure.SINGLE, roots);
+    }
+
+    /** Returns a {@link CompositeType} that will expect a list of objects in the root tree. */
+    protected static CompositeType list(Type classType, String... roots) {
+        return new CompositeType(classType, CompositeType.Structure.LIST, roots);
+    }
+
+    /**
+     * Returns a {@link CompositeType} that will expect an element of {@code classType} as the first element in a list.
+     */
+    protected static CompositeType first(Type classType, String... roots) {
+        return new CompositeType(classType, CompositeType.Structure.FIRST, roots);
     }
 }
