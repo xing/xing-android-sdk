@@ -200,6 +200,7 @@ public final class XingApi {
                 moshiBuilder = new Moshi.Builder();
             }
             //Adding the Custom JSON Adapters to Moshi
+            moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY); // This should always be the first custom adapter.
             moshiBuilder.add(XingCalendar.class, new XingCalendarJsonAdapter(new Rfc3339DateJsonAdapter()));
             moshiBuilder.add(MessagingAccount.class, new MessagingAccountJsonAdapter());
             moshiBuilder.add(WebProfile.class, new WebProfileJsonAdapter());

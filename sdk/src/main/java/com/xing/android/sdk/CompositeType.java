@@ -22,24 +22,11 @@
 
 package com.xing.android.sdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import com.squareup.okhttp.ResponseBody;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
-
-import okio.BufferedSource;
-
-import static com.xing.android.sdk.Utils.closeQuietly;
-import static com.xing.android.sdk.Utils.ioError;
 
 /**
  * Defines the type of responses, while adding the possibility to add a root, as well as defining if the object is a
@@ -49,12 +36,9 @@ import static com.xing.android.sdk.Utils.ioError;
  * This can be used as follows:
  * <pre>
  * {@code
- *  CompositeType delegate = CompositeType.single(YourReturnObject.class, [Root or List of roots where your object can
- * be
- *  found])
- *  // or for a list
- *  CompositeType delegate = CompositeType.list(YourReturnObject.class, [Root or List of roots where your object can be
- *  found])
+ * CompositeType type = Resource.single(YourReturnObject.class, [List of roots where your object can be found]);
+ * // or for a list
+ * CompositeType type = Resource.list(YourReturnObject.class, [List of roots where your object can be found]);
  *
  * //Example: Usage inside the UserProfilesResource
  * public CallSpec<XingUser, Object> getUsersById(String id) {
@@ -64,119 +48,68 @@ import static com.xing.android.sdk.Utils.ioError;
  *      .build();
  * }
  * }
- *
  * </pre>
  *
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-final class CompositeType {
+public final class CompositeType implements Type {
     /**
-     * Returns a {@link CompositeType} that will expect a single object in the root tree.
+     * Defines the possible response types a user can expect.
+     * <p>
+     * Currently supported:
+     * <li>SINGLE - A single object</li>
+     * <li>LIST - A list of objects</li>
+     * <li>FIRST - A single object wrapped in a list structure (happens often in profile resources)</li>
      */
-    public static CompositeType single(Class<?> classType, String... roots) {
-        return new CompositeType(classType, Structure.SINGLE, roots);
-    }
-
-    /**
-     * Returns a {@link CompositeType} that will expect a list of objects in the root tree.
-     */
-    public static CompositeType list(Type classType, String... roots) {
-        return new CompositeType(classType, Structure.LIST, roots);
-    }
-
-    public static CompositeType first(Type classType, String... roots) {
-        return new CompositeType(classType, Structure.FIRST, roots);
-    }
-
-    private final Type classType;
-    private final String[] roots;
-    private final Structure structure;
-
-    /**
-     * This enum defines the possible response types a user can expect.
-     * These are:
-     * SINGLE - A single object
-     * LIST - A list of objects
-     * FIRST - A single object wrapped in a list structure (happens often in profile resources)
-     */
-    enum Structure {
+    protected enum Structure {
         SINGLE,
         LIST,
         FIRST
     }
 
-    private CompositeType(Type classType, Structure structure, String... roots) {
-        this.classType = classType;
+    private final Type parseType;
+    private final String[] roots;
+    private final Structure structure;
+
+    CompositeType(Type parseType, Structure structure, String... roots) {
+        this.parseType = parseType;
         this.structure = structure;
         this.roots = roots;
     }
 
-    /**
-     * Parses the ResponseBody and closes it. This method goes through provided roots to retrieve the object.
-     */
-    @Nullable
-    <T> T fromJson(Moshi moshi, @Nullable ResponseBody body) throws IOException {
-        if (body == null) return null;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-        // Determine which type is required.
-        Type type = structure == Structure.SINGLE ? classType : Types.newParameterizedType(List.class, classType);
+        CompositeType that = (CompositeType) obj;
 
-        BufferedSource source = body.source();
-        JsonAdapter<T> adapter = moshi.adapter(type);
-        try {
-            Object result;
-            if (roots != null && roots.length != 0) {
-                result = readRootLeafs(adapter, JsonReader.of(source), roots, 0);
-            } else {
-                result = adapter.fromJson(source);
-            }
-
-            if (structure == Structure.FIRST) {
-                //noinspection unchecked This is puts full responsibility on the caller.
-                List<T> list = (List<T>) result;
-                return list != null && !list.isEmpty() ? list.get(0) : null;
-            }
-
-            //noinspection unchecked
-            return (T) result;
-        } finally {
-            closeQuietly(body);
-        }
+        if (parseType != null ? !parseType.equals(that.parseType) : that.parseType != null) return false;
+        // We need a strict order comparison.
+        return Arrays.equals(roots, that.roots) && structure == that.structure;
     }
 
-    /**
-     * Recursive method that goes through the JSON, finds the given root and returns the objects with the provided
-     * roots.
-     */
-    @Nullable
-    private static <T> T readRootLeafs(@NonNull JsonAdapter<T> adapter, @NonNull JsonReader reader,
-          @NonNull String[] roots, int index) throws IOException {
-        if (index == roots.length) {
-            return adapter.fromJson(reader);
-        } else {
-            reader.beginObject();
-            try {
-                String root = roots[index];
-                while (reader.hasNext()) {
-                    if (reader.nextName().equals(root)) {
-                        if (reader.peek() == JsonReader.Token.NULL) {
-                            return reader.nextNull();
-                        }
+    @Override
+    public int hashCode() {
+        int result = parseType != null ? parseType.hashCode() : 0;
+        result = 31 * result + (roots != null ? Arrays.hashCode(roots) : 0);
+        result = 31 * result + (structure != null ? structure.hashCode() : 0);
+        return result;
+    }
 
-                        return readRootLeafs(adapter, reader, roots, ++index);
-                    } else {
-                        reader.skipValue();
-                    }
-                }
-            } finally {
-                try {
-                    reader.endObject();
-                } catch (IOException ioe) {
-                    // Ignore, in case we are closing early.
-                }
-            }
-            throw ioError("Json does not match expected structure for roots %s.", Arrays.asList(roots));
-        }
+    /** Return the actual parse type. */
+    Type parseType() {
+        return structure == Structure.SINGLE ? parseType : Types.newParameterizedType(List.class, parseType);
+    }
+
+    /** Return the composite structure. */
+    Structure structure() {
+        return structure;
+    }
+
+    /** Roots the parse type is located. */
+    String[] roots() {
+        return roots;
     }
 }
