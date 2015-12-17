@@ -43,18 +43,14 @@ import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.model.SearchResult;
 import com.xing.android.sdk.model.user.XingAddress;
 import com.xing.android.sdk.model.user.XingUser;
-import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.resources.ProfileEditingResource;
 import com.xing.android.sdk.resources.UserProfilesResource;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.DownloadImageTask;
-import com.xing.android.sdk.task.OnTaskFinishedListener;
-import com.xing.android.sdk.task.profile_visits.CreateVisitTask;
-import com.xing.android.sdk.task.user.UserDetailsTask;
 
 import java.util.List;
 
-public class ProfileActivity extends BaseActivity implements OnTaskFinishedListener<XingUser> {
+public class ProfileActivity extends BaseActivity {
     private TextView userDisplayNameView;
     private TextView userPositionView;
     private TextView userCompanyView;
@@ -91,8 +87,6 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
         if (getIntent() != null) {
             mUserId = getIntent().getStringExtra(EXTRA_USER_ID);
             if (!TextUtils.isEmpty(mUserId)) {
-                UserDetailsTask userDetailsTask = new UserDetailsTask(mUserId, null, this, this);
-                XingController.getInstance().executeAsync(userDetailsTask);
             } else {
                 //Execute the task in order to get the users profile
                 new OwnProfileTask().execute(this);
@@ -140,52 +134,11 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
         }
     }
 
-    @Override
-    public void onSuccess(@Nullable XingUser result) {
-        if (result != null) {
-            //Save the user id to the preferences since it might be needed in other parts of the app
-            if (!TextUtils.isEmpty(mUserId)) {
-                Prefs.getInstance(this).setUserId(result.getId());
-                CreateVisitTask visitTask =
-                      new CreateVisitTask(result.getId(), this, new OnTaskFinishedListener<Void>() {
-                          @Override
-                          public void onSuccess(@Nullable Void result) {
-                          }
-
-                          @Override
-                          public void onError(Exception exception) {
-                          }
-                      });
-                XingController.getInstance().executeAsync(visitTask);
-            }
-
-            if (result.getPhotoUrls().getPhotoSize256Url() != null) {
-                new DownloadImageTask(userProfilePictureView).
-                      execute(result.getPhotoUrls().getPhotoSize256Url().toString());
-            }
-
-            //After the request was succesfully executed update all fields with the appropriate values
-            populateTextView(userDisplayNameView, result.getDisplayName());
-            populateTextView(userCompanyView, result.getPrimaryInstitutionName());
-            populateTextView(userPositionView, result.getPrimaryOccupationName());
-            populateTextView(userPrivateAddress, formatAddress(result.getPrivateAddress()));
-            populateTextView(userWorkAddress, formatAddress(result.getBusinessAddress()));
-            populateTextView(userHaves, result.getHaves());
-            populateTextView(userInterests, result.getInterests());
-            populateTextView(userWants, result.getWants());
-        }
-    }
-
     private static void populateTextView(TextView textView, String value) {
         textView.setText(!TextUtils.isEmpty(value) ? value : "");
     }
 
-    @Override
-    public void onError(Exception exception) {
-        Log.d("Error loading profile", exception.getMessage());
-    }
-
-    /**
+     /**
      * Takes a List of Strings and returns one String with '#' separated by a comma(,).
      *
      * @return hashedTaggedString String with all strings of a list
@@ -226,12 +179,6 @@ public class ProfileActivity extends BaseActivity implements OnTaskFinishedListe
         } else {
             return "-";
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        XingController.getInstance().cancelExecution(this);
     }
 
     public class OwnProfileTask extends AsyncTask<Activity, Void, XingUser> {

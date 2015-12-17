@@ -23,7 +23,6 @@
 package com.xing.android.sdk.model.user;
 
 import com.squareup.moshi.Json;
-import com.xing.android.sdk.json.EnumMapper;
 import com.xing.android.sdk.model.CalendarUtils;
 import com.xing.android.sdk.model.Reason;
 import com.xing.android.sdk.model.XingCalendar;
@@ -248,8 +247,8 @@ public class ProfileVisit {
      *
      * @param gender gender of user.
      */
-    public void setGender(String gender) {
-        this.gender = EnumMapper.parseEnumFromString(Gender.values(), gender);
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     /**

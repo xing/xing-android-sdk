@@ -28,7 +28,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.Json;
-import com.xing.android.sdk.json.EnumMapper;
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;
@@ -252,7 +251,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param careerLevel career level.
      */
     public void setCareerLevel(String careerLevel) {
-        this.careerLevel = EnumMapper.parseEnumFromString(CareerLevel.values(), careerLevel);
+//        this.careerLevel = EnumMapper.parseEnumFromString(CareerLevel.values(), careerLevel);
     }
 
     /**
@@ -279,7 +278,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param companySize company size.
      */
     public void setCompanySize(String companySize) {
-        this.companySize = EnumMapper.parseEnumFromString(CompanySize.values(), companySize);
+//        this.companySize = EnumMapper.parseEnumFromString(CompanySize.values(), companySize);
     }
 
     public String getDescription() {
@@ -343,7 +342,7 @@ public class ExperienceCompany implements Serializable, Parcelable {
      * @param formOfEmployment form of employment.
      */
     public void setFormOfEmployment(String formOfEmployment) {
-        this.formOfEmployment = EnumMapper.parseEnumFromString(FormOfEmployment.values(), formOfEmployment);
+//        this.formOfEmployment = EnumMapper.parseEnumFromString(FormOfEmployment.values(), formOfEmployment);
     }
 
     /**

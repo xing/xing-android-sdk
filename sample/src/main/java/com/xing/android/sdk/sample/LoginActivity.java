@@ -98,7 +98,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String tokenSecret = extras.getString(XingOauthActivity.TOKEN_SECRET, "");
         Prefs.getInstance(this).setOauthToken(token);
         Prefs.getInstance(this).setOauthSecret(tokenSecret);
-
-        SdkSampleApplication.initializeXingRequestController(token, tokenSecret);
     }
 }

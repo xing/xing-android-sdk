@@ -24,29 +24,18 @@ package com.xing.android.sdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.xing.android.sdk.model.user.XingUser;
-import com.xing.android.sdk.model.user.field.XingUserField;
-import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.sample.adapters.ContactsRecyclerAdapter;
 import com.xing.android.sdk.sample.utils.EndlessRecyclerOnScrollListener;
 import com.xing.android.sdk.sample.utils.RecyclerItemClickListener;
-import com.xing.android.sdk.task.OnTaskFinishedListener;
-import com.xing.android.sdk.task.contact.ContactsTask;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ContactsActivity extends BaseActivity implements OnTaskFinishedListener<List<XingUser>>,
-        RecyclerItemClickListener.OnItemClickListener {
+public class ContactsActivity extends BaseActivity implements RecyclerItemClickListener.OnItemClickListener {
     //The amount of contacts that should be loaded at a time
     private static final int CONTACT_BATCH_SIZE = 20;
     private static final String ME = "me";
@@ -54,8 +43,7 @@ public class ContactsActivity extends BaseActivity implements OnTaskFinishedList
     private static final String SORT_LAST_NAME = "last_name";
 
     private ContactsRecyclerAdapter adapter;
-    private ContactsTask mContactsTask;
-    private XingController mXingController;
+
     //Boolean to see if the load more functionality should be triggered
     private boolean shouldLoadMore = true;
 
@@ -75,20 +63,6 @@ public class ContactsActivity extends BaseActivity implements OnTaskFinishedList
         // and the default on which we contacts will be rendered
         adapter = new ContactsRecyclerAdapter(this, R.layout.contact_view);
 
-        //Set the Contact user field to tell the task what fields should be returned
-        List<XingUserField> contactUserFields = new ArrayList<>(4);
-        contactUserFields.add(XingUserField.DISPLAY_NAME);
-        contactUserFields.add(XingUserField.PHOTO_URLS);
-        contactUserFields.add(XingUserField.PROFESSIONAL_EXPERIENCE);
-        contactUserFields.add(XingUserField.EDUCATIONAL_BACKGROUND);
-
-        mContactsTask =
-                new ContactsTask(ME, null, CONTACT_BATCH_SIZE, null, SORT_LAST_NAME, contactUserFields, this, this);
-        mXingController = XingController.getInstance();
-
-        //Executing the ContactsTask with the parameters specified above
-        mXingController.executeAsync(mContactsTask);
-
         //Initialize the RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contacts_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -100,11 +74,11 @@ public class ContactsActivity extends BaseActivity implements OnTaskFinishedList
         //Adding the onScrollListener to the recyclerView
         // in order to get notified when the user reaches the end of the list
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-                    @Override
-                    public void onLoadMore(int currentPage) {
-                        loadMore();
-                    }
-                });
+            @Override
+            public void onLoadMore(int currentPage) {
+                loadMore();
+            }
+        });
 
         recyclerView.setAdapter(adapter);
     }
@@ -124,26 +98,8 @@ public class ContactsActivity extends BaseActivity implements OnTaskFinishedList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSuccess(@Nullable List<XingUser> result) {
-        //After the first contacts are loaded successfully we set them to the adapter
-        adapter.addItems(result);
-
-        if (result != null && result.size() < CONTACT_BATCH_SIZE) {
-            //If the amount of received contacts is smaller than the batch size we know
-            //that we've reached the end of the list so the next time load more should not be triggered
-            shouldLoadMore = false;
-        }
-    }
-
-    @Override
-    public void onError(Exception exception) {
-        Log.d("Error in Contacts", exception.getMessage());
-    }
-
     private void loadMore() {
         if (shouldLoadMore) {
-            mXingController.executeAsync(mContactsTask);
         }
     }
 
@@ -154,12 +110,6 @@ public class ContactsActivity extends BaseActivity implements OnTaskFinishedList
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(ProfileActivity.EXTRA_USER_ID, userId);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        XingController.getInstance().cancelExecution(this);
     }
 }
 
