@@ -24,7 +24,6 @@ package com.xing.android.sdk.sample;
 
 import android.app.Application;
 
-import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.sample.prefs.Prefs;
 import com.xing.android.sdk.sample.utils.Utils;
 
@@ -37,21 +36,7 @@ public class SdkSampleApplication extends Application {
         Prefs prefs = Prefs.getInstance(this);
         if (Utils.isLoggedIn(this)) {
             //noinspection ConstantConditions
-            initializeXingRequestController(prefs.getOauthToken(), prefs.getOauthSecret());
         }
         super.onCreate();
-    }
-
-    /**
-     * Initializing the XingRequest Controller using the oAuth Token and the oAuthSecret.
-     */
-    public static void initializeXingRequestController(String oAuthToken, String oAuthSecret) {
-        XingController.flush();
-        XingController.setup()
-              .setConsumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
-              .setConsumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
-              .setToken(oAuthToken)
-              .setTokenSecret(oAuthSecret)
-              .init();
     }
 }

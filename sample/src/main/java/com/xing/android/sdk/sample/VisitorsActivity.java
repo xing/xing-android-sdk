@@ -24,29 +24,20 @@ package com.xing.android.sdk.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.xing.android.sdk.model.user.ProfileVisit;
-import com.xing.android.sdk.network.XingController;
 import com.xing.android.sdk.sample.adapters.VisitorsRecyclerAdapter;
 import com.xing.android.sdk.sample.utils.EndlessRecyclerOnScrollListener;
 import com.xing.android.sdk.sample.utils.RecyclerItemClickListener;
 import com.xing.android.sdk.sample.utils.RecyclerItemClickListener.OnItemClickListener;
-import com.xing.android.sdk.task.OnTaskFinishedListener;
-import com.xing.android.sdk.task.profile_visits.VisitsTask;
 
-import java.util.List;
-
-public class VisitorsActivity extends BaseActivity implements OnTaskFinishedListener<List<ProfileVisit>>,
-        OnItemClickListener {
+public class VisitorsActivity extends BaseActivity implements OnItemClickListener {
 
     //The amount of contacts that should be loaded at a time
     private static final int VISITS_BATCH_SIZE = 10;
@@ -54,7 +45,6 @@ public class VisitorsActivity extends BaseActivity implements OnTaskFinishedList
     private VisitorsRecyclerAdapter adapter;
     //Boolean to see if the load more functionality should be triggered
     private boolean shouldLoadMore = true;
-    private VisitsTask mVisitsTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +57,6 @@ public class VisitorsActivity extends BaseActivity implements OnTaskFinishedList
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        //Executing the ContactsTask with the parameters specified above
-        mVisitsTask = new VisitsTask(ME, null, null, null, true, this, this);
-        XingController.getInstance().executeAsync(mVisitsTask);
 
         //Initialize the RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.visitors_recycler);
@@ -86,11 +72,11 @@ public class VisitorsActivity extends BaseActivity implements OnTaskFinishedList
         //Adding the onScrollListener to the recyclerView
         // in order to get notified when the user reaches the end of the list
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-                    @Override
-                    public void onLoadMore(int currentPage) {
-                        loadMore();
-                    }
-                });
+            @Override
+            public void onLoadMore(int currentPage) {
+                loadMore();
+            }
+        });
 
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
@@ -111,29 +97,8 @@ public class VisitorsActivity extends BaseActivity implements OnTaskFinishedList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSuccess(@Nullable List<ProfileVisit> result) {
-        if (result != null) {
-            //After the first contacts are loaded successfully we set them to the adapter
-            adapter.addItems(result);
-            if (result.size() < VISITS_BATCH_SIZE) {
-                //If the amount of received contacts is smaller than the batch size we know
-                //that we've reached the end of the list so the next time load more should not be triggered
-                shouldLoadMore = false;
-            }
-        } else {
-            shouldLoadMore = false;
-        }
-    }
-
-    @Override
-    public void onError(Exception exception) {
-        Log.d("Error in visitors", exception.getMessage());
-    }
-
     private void loadMore() {
         if (shouldLoadMore) {
-            XingController.getInstance().executeAsync(mVisitsTask);
         }
     }
 
@@ -148,11 +113,6 @@ public class VisitorsActivity extends BaseActivity implements OnTaskFinishedList
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        XingController.getInstance().cancelExecution(this);
-    }
 }
 
 

@@ -30,9 +30,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.squareup.moshi.Json;
-import com.xing.android.sdk.json.EnumMapper;
 import com.xing.android.sdk.model.XingCalendar;
-import com.xing.android.sdk.network.request.RequestUtils;
 
 import java.io.Serializable;
 import java.security.InvalidParameterException;
@@ -49,6 +47,7 @@ import java.util.regex.Pattern;
  *
  * @author david.gonzalez
  * @author serj.lotutovici
+ * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/get/users/:id">https://dev.xing.com/docs/get/users/:id</a>
  */
 @SuppressWarnings("unused") // Public api
@@ -180,28 +179,6 @@ public class XingUser implements Serializable, Parcelable {
 
     public static boolean isUserIdInValid(String userId) {
         return TextUtils.isEmpty(userId);
-    }
-
-    /**
-     * Creates a String with the ids of the users separated by commas.
-     *
-     * @param users List of users to read their ids. Can not be empty.
-     * @return String with the ids, in a comma separated format.
-     *
-     * @throws IllegalArgumentException if users is empty.
-     */
-    public static String getIdList(@NonNull List<XingUser> users) {
-        if (users.isEmpty()) {
-            throw new IllegalArgumentException("users can not be empty");
-        }
-
-        int numUsers = users.size();
-        List<String> ids = new ArrayList<>(users.size());
-        for (int iterator = 0; iterator < numUsers; iterator++) {
-            ids.add(users.get(iterator).id);
-        }
-
-        return RequestUtils.createCommaSeparatedStringFromStringList(ids);
     }
 
     @Override
@@ -356,10 +333,6 @@ public class XingUser implements Serializable, Parcelable {
         this.gender = gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = EnumMapper.parseEnumFromString(Gender.values(), gender);
-    }
-
     public String getPageName() {
         return pageName;
     }
@@ -418,20 +391,6 @@ public class XingUser implements Serializable, Parcelable {
 
     public void setPremiumServices(List<PremiumService> premiumServices) {
         this.premiumServices = premiumServices;
-    }
-
-    public void setPremiumServicesFromStringList(List<String> premiumServices) {
-        if (this.premiumServices == null) {
-            this.premiumServices = new ArrayList<>(1);
-        }
-
-        PremiumService premiumService;
-        for (String premiumServiceString : premiumServices) {
-            premiumService = EnumMapper.parseEnumFromString(PremiumService.values(), premiumServiceString);
-            if (premiumService != null) {
-                this.premiumServices.add(premiumService);
-            }
-        }
     }
 
     public void addPremiumService(PremiumService premiumService) {
