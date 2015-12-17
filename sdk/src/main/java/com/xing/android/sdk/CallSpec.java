@@ -28,7 +28,6 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
-import com.xing.android.sdk.internal.HttpMethod;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -42,6 +41,11 @@ import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
 import rx.Observable;
+import rx.Subscriber;
+import rx.exceptions.Exceptions;
+import rx.functions.Action0;
+import rx.functions.Func1;
+import rx.subscriptions.Subscriptions;
 
 import static com.xing.android.sdk.Utils.assertionError;
 import static com.xing.android.sdk.Utils.checkNotNull;
@@ -54,7 +58,7 @@ import static com.xing.android.sdk.Utils.stateNotNull;
  *
  * @author serj.lotutovici
  */
-public final class CallSpec<RT, ET> {
+public final class CallSpec<RT, ET> implements Cloneable {
     private final XingApi api;
     private final Builder<RT, ET> builder;
     private final CompositeType responseType;
@@ -69,6 +73,13 @@ public final class CallSpec<RT, ET> {
         api = builder.api;
         responseType = builder.responseType;
         errorType = builder.errorType;
+    }
+
+    @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
+    @Override
+    protected CallSpec<RT, ET> clone() {
+        // When called from CallSpec we don't need to do through the validation process.
+        return new CallSpec<>(builder.newBuilder());
     }
 
     /**
@@ -153,8 +164,27 @@ public final class CallSpec<RT, ET> {
         });
     }
 
-    public Observable<Response<RT, ET>> stream() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    /**
+     * Executes the underlying call as an observable. The observable will try to return an
+     * {@link Response} object from which the http result may be obtained.
+     */
+    public Observable<Response<RT, ET>> rawStream() {
+        return Observable.create(new SpecOnSubscribe<>(this));
+    }
+
+    /**
+     * Executes the underlying call as an observable. This method will try to populate the success response object of
+     * a {@link Response}. In case of an error an {@link HttpException} will be thrown.
+     * For a more richer and controllable api consider calling {@link #rawStream()}.
+     */
+    public Observable<RT> stream() {
+        return rawStream().flatMap(new Func1<Response<RT, ET>, Observable<RT>>() {
+            @Override
+            public Observable<RT> call(Response<RT, ET> response) {
+                if (response.isSuccess()) return Observable.just(response.body());
+                return Observable.error(new HttpException(response));
+            }
+        });
     }
 
     /**
@@ -294,6 +324,20 @@ public final class CallSpec<RT, ET> {
             if (isFormEncoded) formEncodingBuilder = new FormEncodingBuilder();
         }
 
+        private Builder(Builder<RT, ET> builder) {
+            this.api = builder.api;
+            this.httpMethod = builder.httpMethod;
+            this.apiEndpoint = builder.apiEndpoint;
+            this.requestBuilder = builder.requestBuilder;
+            this.resourcePathParams = builder.resourcePathParams;
+            this.resourcePath = builder.resourcePath;
+            this.urlBuilder = builder.urlBuilder;
+            this.formEncodingBuilder = builder.formEncodingBuilder;
+            this.body = builder.body;
+            this.responseType = builder.responseType;
+            this.errorType = builder.errorType;
+        }
+
         public Builder<RT, ET> pathParam(String name, String value) {
             stateNotNull(resourcePath, "Path params must be set before query params.");
             validatePathParam(name);
@@ -364,7 +408,7 @@ public final class CallSpec<RT, ET> {
 
             if (urlBuilder == null) buildUrlBuilder();
             if (responseType == null) throw stateError("Response type is not set.");
-            if (errorType == null) errorType = Resource.single(ErrorBody.class);
+            if (errorType == null) errorType = Resource.single(HttpError.class);
 
             return new CallSpec<>(this);
         }
@@ -391,6 +435,11 @@ public final class CallSpec<RT, ET> {
                   .url(url)
                   .method(httpMethod.method(), body)
                   .build();
+        }
+
+        /** Creates a new builder from the existing one. */
+        Builder<RT, ET> newBuilder() {
+            return new Builder<>(this);
         }
 
         /** Do a one-time combination of the built relative URL and the base URL. */
@@ -503,6 +552,50 @@ public final class CallSpec<RT, ET> {
 
         void throwIfCaught() throws IOException {
             if (thrownException != null) throw thrownException;
+        }
+    }
+
+    /**
+     * {@link Observable.OnSubscribe} implementation that takes a {@linkplain CallSpec spec} and executes the request.
+     * This class handles the subscriptions life cycle and completes the subscription as soon as the response is
+     * delivered.
+     */
+    static final class SpecOnSubscribe<RT, ET> implements Observable.OnSubscribe<Response<RT, ET>> {
+        private final CallSpec<RT, ET> originalSpec;
+
+        private SpecOnSubscribe(CallSpec<RT, ET> originalSpec) {
+            this.originalSpec = originalSpec;
+        }
+
+        @Override
+        public void call(Subscriber<? super Response<RT, ET>> subscriber) {
+            // Since Call is a one-shot type, clone it for each new subscriber.
+            final CallSpec<RT, ET> spec = originalSpec.clone();
+
+            // Attempt to cancel the call if it is still in-flight on un-subscription.
+            subscriber.add(Subscriptions.create(new Action0() {
+                @Override
+                public void call() {
+                    spec.cancel();
+                }
+            }));
+
+            try {
+                Response<RT, ET> response = spec.execute();
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(response);
+                }
+            } catch (Throwable t) {
+                Exceptions.throwIfFatal(t);
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onError(t);
+                }
+                return;
+            }
+
+            if (!subscriber.isUnsubscribed()) {
+                subscriber.onCompleted();
+            }
         }
     }
 }

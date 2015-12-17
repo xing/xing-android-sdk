@@ -31,8 +31,9 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.SocketPolicy;
 import com.xing.android.sdk.CallSpec.ExceptionCatchingRequestBody;
-import com.xing.android.sdk.internal.HttpMethod;
+import com.xing.android.sdk.HttpError.Error.Reason;
 
 import org.junit.After;
 import org.junit.Before;
@@ -46,6 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import okio.Buffer;
 import okio.BufferedSource;
+import rx.observables.BlockingObservable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -54,7 +56,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author serj.lotutovici
  */
-@SuppressWarnings("MagicNumber")
+@SuppressWarnings({"MagicNumber", "ConstantConditions"})
 public class CallSpecTest {
     @Rule
     public final MockWebServer server = new MockWebServer();
@@ -544,9 +546,143 @@ public class CallSpecTest {
         }
     }
 
+    @Test
+    public void specRawStreamsSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"success\",\n"
+              + "  \"code\": 200\n"
+              + "}"));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        BlockingObservable<Response<TestMsg, Object>> blocking = spec.rawStream().toBlocking();
+        Response<TestMsg, Object> response = blocking.first();
+
+        assertNotNull(response.body());
+        assertThat(response.body().code).isEqualTo(200);
+        assertThat(response.body().msg).isEqualTo("success");
+    }
+
+    @Test
+    public void specRawStreamsErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR\",\n"
+              + "  \"message\": \"Terrible Error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"no_field\",\n"
+              + "      \"reason\": \"UNEXPECTED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + "}"));
+
+        CallSpec<Object, HttpError> spec = this.<Object, HttpError>builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Response<Object, HttpError>> blocking = spec.rawStream().toBlocking();
+        Response<Object, HttpError> response = blocking.first();
+
+        assertThat(response.isSuccess()).isFalse();
+        assertNotNull(response.error());
+        assertThat(response.error().getErrorMessage()).isEqualTo("Terrible Error.");
+        assertThat(response.error().getErrorName()).isEqualTo("TEST_ERROR");
+        assertThat(response.error().getErrors().get(0))
+              .isEqualTo(new HttpError.Error("no_field", Reason.UNEXPECTED));
+    }
+
+    @Test
+    public void specRawStreamsError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Response<Object, Object>> blocking = spec.rawStream().toBlocking();
+        try {
+            blocking.first();
+            fail("This should throw an error.");
+        } catch (RuntimeException t) {
+            assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specStreamsSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"Hey!\",\n"
+              + "  \"code\": 42\n"
+              + "}"));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        BlockingObservable<TestMsg> blocking = spec.stream().toBlocking();
+        TestMsg result = blocking.first();
+
+        assertThat(result.msg).isEqualTo("Hey!");
+        assertThat(result.code).isEqualTo(42);
+    }
+
+    @Test
+    public void specStreamsErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR2\",\n"
+              + "  \"message\": \"Yet another error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"some_field\",\n"
+              + "      \"reason\": \"FIELD_DEPRECATED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + "}"));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.DELETE, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Object> blocking = spec.stream().toBlocking();
+        try {
+            blocking.first();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(HttpException.class);
+
+            HttpException exception = (HttpException) t.getCause();
+            assertThat(exception.code()).isEqualTo(405);
+            assertThat(exception.message()).isEqualTo("OK");
+
+            HttpError error = (HttpError) exception.error();
+            assertThat(error.getErrorName()).isEqualTo("TEST_ERROR2");
+            assertThat(error.getErrorMessage()).isEqualTo("Yet another error.");
+            assertThat(error.getErrors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+        }
+    }
+
+    @Test
+    public void specStreamsError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.PUT, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Object> blocking = spec.stream().toBlocking();
+        try {
+            blocking.first();
+            fail("Observable should throw.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {
         assertThat(response.code()).isEqualTo(200);
-        assertThat(response.errorBody()).isNull();
+        assertThat(response.error()).isNull();
         assertThat(response.message()).isEqualTo("OK");
         assertThat(response.headers()).isNotNull();
 
@@ -561,7 +697,7 @@ public class CallSpecTest {
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.body()).isNull();
 
-        TestMsg body = response.errorBody();
+        TestMsg body = response.error();
         assertNotNull(body);
         assertThat(body.msg).isEqualTo(expected.msg);
         assertThat(body.code).isEqualTo(expected.code);
@@ -584,7 +720,7 @@ public class CallSpecTest {
 
     private static void assertNoBodySuccessResponse(Response response, int code) throws IOException {
         assertThat(response.code()).isEqualTo(code);
-        assertThat(response.errorBody()).isNull();
+        assertThat(response.error()).isNull();
         assertThat(response.body()).isNull();
         assertThat(response.isSuccess()).isTrue();
 

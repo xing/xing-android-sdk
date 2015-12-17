@@ -33,18 +33,18 @@ public final class Response<RT, ET> {
     }
 
     /** Returns a error {@link Response} with a {@code null} response body. */
-    static <RT, ET> Response<RT, ET> error(@Nullable ET errorBody, com.squareup.okhttp.Response rawResponse) {
-        return new Response<>(rawResponse, null, errorBody);
+    static <RT, ET> Response<RT, ET> error(@Nullable ET error, com.squareup.okhttp.Response rawResponse) {
+        return new Response<>(rawResponse, null, error);
     }
 
     private final com.squareup.okhttp.Response rawResponse;
     private final RT body;
-    private final ET errorBody;
+    private final ET error;
 
-    private Response(com.squareup.okhttp.Response rawResponse, @Nullable RT body, @Nullable ET errorBody) {
+    private Response(com.squareup.okhttp.Response rawResponse, @Nullable RT body, @Nullable ET error) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
         this.body = body;
-        this.errorBody = errorBody;
+        this.error = error;
     }
 
     /** The raw response from the HTTP client. */
@@ -77,9 +77,9 @@ public final class Response<RT, ET> {
         return body;
     }
 
-    /** The raw response body of an {@linkplain #isSuccess() unsuccessful} response. */
+    /** The parsed error response of an {@linkplain #isSuccess() unsuccessful} response. */
     @Nullable
-    public ET errorBody() {
-        return errorBody;
+    public ET error() {
+        return error;
     }
 }

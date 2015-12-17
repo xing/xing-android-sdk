@@ -31,7 +31,8 @@ import java.util.List;
 /**
  * Defines the type of responses, while adding the possibility to add a root, as well as defining if the object is a
  * list or just a single object.
- * The {@link CompositeType} can be used when defining the response type when building the CallSpec for a Resource.
+ * The {@link CompositeType} is used when defining the response type of a {@link com.xing.android.sdk.CallSpec} defined
+ * in a {@link com.xing.android.sdk.Resource}.
  * <p>
  * This can be used as follows:
  * <pre>
@@ -41,8 +42,8 @@ import java.util.List;
  * CompositeType type = Resource.list(YourReturnObject.class, [List of roots where your object can be found]);
  *
  * //Example: Usage inside the UserProfilesResource
- * public CallSpec<XingUser, Object> getUsersById(String id) {
- *  return this.<XingUser, Object>newGetSpec("/v1/users/{id}")
+ * public CallSpec<XingUser, HttpError> getUsersById(String id) {
+ *  return this.<XingUser, HttpError>newGetSpec("/v1/users/{id}")
  *      .pathParam("id", id)
  *      .responseAsList(XingUser.class, "users")
  *      .build();

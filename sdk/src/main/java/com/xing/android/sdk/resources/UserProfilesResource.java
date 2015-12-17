@@ -23,7 +23,7 @@
 package com.xing.android.sdk.resources;
 
 import com.xing.android.sdk.CallSpec;
-import com.xing.android.sdk.ErrorBody;
+import com.xing.android.sdk.HttpError;
 import com.xing.android.sdk.Resource;
 import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.internal.Experimental;
@@ -64,8 +64,8 @@ public class UserProfilesResource extends Resource {
      * @param id The ID of the user you want to have the profile from
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<XingUser, ErrorBody> getUsersById(String id) {
-        return Resource.<XingUser, ErrorBody>newGetSpec(api, "/v1/users/{id}")
+    public CallSpec<XingUser, HttpError> getUsersById(String id) {
+        return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/{id}")
               .pathParam("id", id)
               .responseAsFirst(XingUser.class, "users")
               .build();
@@ -80,7 +80,7 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<XingUser, ErrorBody> getYourProfile() {
+    public CallSpec<XingUser, HttpError> getYourProfile() {
         return getUsersById(ME);
     }
 
@@ -90,8 +90,8 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<IdCard, ErrorBody> getYourIdCard() {
-        return Resource.<IdCard, ErrorBody>newGetSpec(api, "/v1/users/me/id_card")
+    public CallSpec<IdCard, HttpError> getYourIdCard() {
+        return Resource.<IdCard, HttpError>newGetSpec(api, "/v1/users/me/id_card")
               .responseAs(IdCard.class, "id_card")
               .build();
     }
@@ -111,8 +111,8 @@ public class UserProfilesResource extends Resource {
      * @param emails Comma-seperated list of email addresses to search for
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<List<XingUser>, ErrorBody> findUsersByEmail(String emails) {
-        return Resource.<List<XingUser>, ErrorBody>newGetSpec(api, "/v1/users/find_by_emails")
+    public CallSpec<List<XingUser>, HttpError> findUsersByEmail(String emails) {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/find_by_emails")
               .pathParam("emails", emails)
               .responseAsListOf(XingUser.class, "results", "items")
               .build();
@@ -130,8 +130,8 @@ public class UserProfilesResource extends Resource {
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
     @Experimental
-    public CallSpec<List<SearchResult>, ErrorBody> findUsersByKeyword(String keywords) {
-        return Resource.<List<SearchResult>, ErrorBody>newGetSpec(api, "/v1/users/find")
+    public CallSpec<List<SearchResult>, HttpError> findUsersByKeyword(String keywords) {
+        return Resource.<List<SearchResult>, HttpError>newGetSpec(api, "/v1/users/find")
               .responseAsListOf(SearchResult.class, "users", "items")
               .queryParam("keywords", keywords)
               .build();
@@ -142,8 +142,8 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<ProfileMessage, ErrorBody> getUserProfileMessage(String userId) {
-        return Resource.<ProfileMessage, ErrorBody>newGetSpec(api, "/v1/{user_id}/profile_message")
+    public CallSpec<ProfileMessage, HttpError> getUserProfileMessage(String userId) {
+        return Resource.<ProfileMessage, HttpError>newGetSpec(api, "/v1/{user_id}/profile_message")
               .pathParam("user_id", userId)
               .responseAs(ProfileMessage.class, "profile_message")
               .build();
@@ -154,7 +154,7 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<ProfileMessage, ErrorBody> getYourProfileMessage() {
+    public CallSpec<ProfileMessage, HttpError> getYourProfileMessage() {
         return getUserProfileMessage(ME);
     }
 
@@ -164,8 +164,8 @@ public class UserProfilesResource extends Resource {
      * @param userId The ID of the user from whom you want to receive the legal information
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<LegalInformation, ErrorBody> getLegalInformation(String userId) {
-        return Resource.<LegalInformation, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/legal_information")
+    public CallSpec<LegalInformation, HttpError> getLegalInformation(String userId) {
+        return Resource.<LegalInformation, HttpError>newGetSpec(api, "/v1/users/{user_id}/legal_information")
               .pathParam("user_id", userId)
               .responseAs(LegalInformation.class, "legal_information")
               .build();
@@ -176,7 +176,7 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<LegalInformation, ErrorBody> getYourLegalInformation() {
+    public CallSpec<LegalInformation, HttpError> getYourLegalInformation() {
         return getLegalInformation(ME);
     }
 }
