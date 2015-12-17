@@ -22,8 +22,6 @@
 
 package com.xing.android.sdk;
 
-import com.xing.android.sdk.internal.HttpMethod;
-
 import java.lang.reflect.Type;
 
 /**

@@ -23,7 +23,7 @@
 package com.xing.android.sdk.resources;
 
 import com.xing.android.sdk.CallSpec;
-import com.xing.android.sdk.ErrorBody;
+import com.xing.android.sdk.HttpError;
 import com.xing.android.sdk.Resource;
 import com.xing.android.sdk.XingApi;
 import com.xing.android.sdk.model.user.ProfileVisit;
@@ -51,8 +51,8 @@ public class ProfileVisitsResource extends Resource {
      * user_id attribute indicate anonymous (non-XING) users (e.g. resulting from Google searches). Any blacklisted
      * users returned will contain null values in the same way as the empty user profile.
      */
-    public CallSpec<List<ProfileVisit>, ErrorBody> getProfileVisits(String userId) {
-        return Resource.<List<ProfileVisit>, ErrorBody>newGetSpec(api, "/v1/users/{user_id}/visits")
+    public CallSpec<List<ProfileVisit>, HttpError> getProfileVisits(String userId) {
+        return Resource.<List<ProfileVisit>, HttpError>newGetSpec(api, "/v1/users/{user_id}/visits")
               .pathParam("user_id", userId)
               .responseAsListOf(ProfileVisit.class)
               .build();
@@ -66,8 +66,8 @@ public class ProfileVisitsResource extends Resource {
      *
      * @param userId The user which is visited by the consumer of this call
      */
-    public CallSpec<String, ErrorBody> createProfileVisits(String userId) {
-        return Resource.<String, ErrorBody>newPostSpec(api, "v1/users/{user_id}/visits", true)
+    public CallSpec<String, HttpError> createProfileVisits(String userId) {
+        return Resource.<String, HttpError>newPostSpec(api, "v1/users/{user_id}/visits", true)
               .pathParam("user_id", userId)
               .responseAs(String.class)
               .build();

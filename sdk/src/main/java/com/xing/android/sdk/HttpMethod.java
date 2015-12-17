@@ -20,14 +20,14 @@
  * THE SOFTWARE.
  */
 
-package com.xing.android.sdk.internal;
+package com.xing.android.sdk;
 
 /**
  * TODO docs.
  *
  * @author serj.lotutovici
  */
-public enum HttpMethod {
+enum HttpMethod {
     GET("GET", false),
 
     POST("POST", true),
