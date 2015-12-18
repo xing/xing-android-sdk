@@ -1,2 +1,3 @@
-include ':sdk', ':api-client-oauth'
-include ':sample'
+include ':api-client'
+include ':api-client-android-oauth'
+include ':api-client-android-sample'
