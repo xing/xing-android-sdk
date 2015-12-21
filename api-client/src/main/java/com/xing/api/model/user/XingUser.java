@@ -15,8 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -28,7 +26,7 @@ import com.xing.api.model.XingCalendar;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,28 +34,27 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Java representation of a XING user object.
+ * Java representation of a XING user.
  *
  * @author david.gonzalez
  * @author serj.lotutovici
  * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/get/users/:id">https://dev.xing.com/docs/get/users/:id</a>
  */
-@SuppressWarnings("unused") // Public api
-public class XingUser implements Serializable, Parcelable {
-    private static final long serialVersionUID = 3037193617271688856L;
-    private static final Pattern COMMA_SEPARATOR = Pattern.compile(", ");
-    public static final Creator<XingUser> CREATOR = new Creator<XingUser>() {
-        @Override
-        public XingUser createFromParcel(Parcel source) {
-            return new XingUser(source);
-        }
+@SuppressWarnings({"unused", "CollectionWithoutInitialCapacity"}) // Public api
+public class XingUser implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-        @Override
-        public XingUser[] newArray(int size) {
-            return new XingUser[size];
-        }
-    };
+    // TODO remove all the comma separation stuff.
+    private static final Pattern COMMA_SEPARATOR = Pattern.compile(", ");
+
+    public static boolean isUserIdValid(String userId) {
+        return !isUserIdInValid(userId);
+    }
+
+    public static boolean isUserIdInValid(String userId) {
+        return TextUtils.isEmpty(userId);
+    }
 
     @Json(name = "id")
     private String id;
@@ -98,15 +95,15 @@ public class XingUser implements Serializable, Parcelable {
     @Json(name = "organisation_member")
     private String organisationMember;
     @Json(name = "languages")
-    private EnumMap<Language, LanguageSkill> languages;
+    private Map<Language, LanguageSkill> languages;
     @Json(name = "private_address")
     private XingAddress privateAddress;
     @Json(name = "business_address")
     private XingAddress businessAddress;
     @Json(name = "web_profiles")
-    private EnumMap<WebProfile, Set<String>> webProfiles;
+    private Map<WebProfile, Set<String>> webProfiles;
     @Json(name = "instant_messaging_accounts")
-    private EnumMap<MessagingAccount, String> instantMessagingAccounts;
+    private Map<MessagingAccount, String> instantMessagingAccounts;
     //    // TODO Handle Dates more correctly
     @Json(name = "professional_experience")
     private ProfessionalExperience professionalExperience;
@@ -115,64 +112,6 @@ public class XingUser implements Serializable, Parcelable {
     //    private EducationalBackground educationBackground;
     @Json(name = "photo_urls")
     private XingPhotoUrls photoUrls;
-
-    public XingUser(@NonNull String id) {
-        if (TextUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("id can not be null neither empty");
-        } else {
-            this.id = id;
-        }
-    }
-
-    public XingUser() {
-    }
-
-    /**
-     * Create {@link XingUser} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    @SuppressWarnings("unchecked")
-    private XingUser(Parcel in) {
-        id = in.readString();
-        firstName = in.readString();
-        lastName = in.readString();
-        displayName = in.readString();
-        pageName = in.readString();
-        permalink = in.readString();
-        int tmpMEmploymentStatus = in.readInt();
-        employmentStatus = tmpMEmploymentStatus == -1 ? null : EmploymentStatus.values()[tmpMEmploymentStatus];
-        int tmpMGender = in.readInt();
-        gender = tmpMGender == -1 ? null : Gender.values()[tmpMGender];
-        birthday = (XingCalendar) in.readSerializable();
-        activeEmail = in.readString();
-        premiumServices = new ArrayList<>(0);
-        in.readList(premiumServices, ArrayList.class.getClassLoader());
-        badges = new ArrayList<>(0);
-        in.readList(badges, ArrayList.class.getClassLoader());
-        wants = in.readString();
-        haves = in.readString();
-        interests = in.readString();
-        //        organisationMember = new ArrayList<>(0);
-        //        in.readStringList(organisationMember);
-        languages = (EnumMap<Language, LanguageSkill>) in.readSerializable();
-        privateAddress = in.readParcelable(XingAddress.class.getClassLoader());
-        timeZone = in.readParcelable(TimeZone.class.getClassLoader());
-        businessAddress = in.readParcelable(XingAddress.class.getClassLoader());
-        webProfiles = (EnumMap<WebProfile, Set<String>>) in.readSerializable();
-        instantMessagingAccounts = (EnumMap<MessagingAccount, String>) in.readSerializable();
-        //        educationBackground = in.readParcelable(EducationalBackground.class.getClassLoader());
-        professionalExperience = in.readParcelable(ProfessionalExperience.class.getClassLoader());
-        photoUrls = in.readParcelable(XingPhotoUrls.class.getClassLoader());
-    }
-
-    public static boolean isUserIdValid(String userId) {
-        return !isUserIdInValid(userId);
-    }
-
-    public static boolean isUserIdInValid(String userId) {
-        return TextUtils.isEmpty(userId);
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -246,40 +185,6 @@ public class XingUser implements Serializable, Parcelable {
               + ", professionalExperience=" + professionalExperience
               + ", photoUrls=" + photoUrls
               + '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(displayName);
-        dest.writeString(pageName);
-        dest.writeString(permalink);
-        dest.writeInt(employmentStatus == null ? -1 : employmentStatus.ordinal());
-        dest.writeInt(gender == null ? -1 : gender.ordinal());
-        dest.writeSerializable(birthday);
-        dest.writeString(activeEmail);
-        dest.writeList(premiumServices);
-        dest.writeList(badges);
-        dest.writeString(wants);
-        dest.writeString(haves);
-        dest.writeString(interests);
-        dest.writeString(organisationMember);
-        dest.writeSerializable(languages);
-        dest.writeParcelable(privateAddress, flags);
-        dest.writeParcelable(timeZone, flags);
-        dest.writeParcelable(businessAddress, flags);
-        dest.writeSerializable(webProfiles);
-        dest.writeSerializable(instantMessagingAccounts);
-        //        dest.writeParcelable(educationBackground, flags);
-        dest.writeParcelable(professionalExperience, flags);
-        dest.writeParcelable(photoUrls, flags);
     }
 
     public String getId() {
@@ -537,11 +442,11 @@ public class XingUser implements Serializable, Parcelable {
     //        this.organisationMember.add(organisationMember);
     //    }
 
-    public EnumMap<Language, LanguageSkill> getLanguages() {
+    public Map<Language, LanguageSkill> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(EnumMap<Language, LanguageSkill> languages) {
+    public void setLanguages(Map<Language, LanguageSkill> languages) {
         this.languages = languages;
     }
 
@@ -552,7 +457,7 @@ public class XingUser implements Serializable, Parcelable {
 
     public void addLanguage(@NonNull Language language, @Nullable LanguageSkill languageSkill) {
         if (languages == null) {
-            languages = new EnumMap<>(Language.class);
+            languages = new LinkedHashMap<>();
         }
 
         languages.put(language, languageSkill);
@@ -560,7 +465,7 @@ public class XingUser implements Serializable, Parcelable {
 
     public void addLanguage(@NonNull String language, @NonNull String languageSkill) {
         if (languages == null) {
-            languages = new EnumMap<>(Language.class);
+            languages = new LinkedHashMap<>();
         }
 
         languages.put(Language.valueOf(language), LanguageSkill.valueOf(languageSkill));
@@ -586,13 +491,13 @@ public class XingUser implements Serializable, Parcelable {
         return webProfiles;
     }
 
-    public void setWebProfiles(EnumMap<WebProfile, Set<String>> webProfiles) {
+    public void setWebProfiles(Map<WebProfile, Set<String>> webProfiles) {
         this.webProfiles = webProfiles;
     }
 
     public void setWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> profiles) {
         if (webProfiles == null) {
-            webProfiles = new EnumMap<>(WebProfile.class);
+            webProfiles = new LinkedHashMap<>();
         }
 
         webProfiles.put(webProfile, profiles);
@@ -600,7 +505,7 @@ public class XingUser implements Serializable, Parcelable {
 
     public void addWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> accounts) {
         if (webProfiles == null) {
-            webProfiles = new EnumMap<>(WebProfile.class);
+            webProfiles = new LinkedHashMap<>();
         }
 
         if (!webProfiles.containsKey(webProfile)) {
@@ -614,7 +519,7 @@ public class XingUser implements Serializable, Parcelable {
 
     public void addWebProfile(@NonNull WebProfile webProfile, @Nullable String accountName) {
         if (webProfiles == null) {
-            webProfiles = new EnumMap<>(WebProfile.class);
+            webProfiles = new LinkedHashMap<>();
         }
 
         if (!webProfiles.containsKey(webProfile)) {
@@ -652,13 +557,13 @@ public class XingUser implements Serializable, Parcelable {
         return instantMessagingAccounts;
     }
 
-    public void setInstantMessagingAccounts(EnumMap<MessagingAccount, String> instantMessagingAccounts) {
+    public void setInstantMessagingAccounts(Map<MessagingAccount, String> instantMessagingAccounts) {
         this.instantMessagingAccounts = instantMessagingAccounts;
     }
 
     public void addInstantMessagingAccount(@NonNull MessagingAccount account, @Nullable String accountValue) {
         if (instantMessagingAccounts == null) {
-            instantMessagingAccounts = new EnumMap<>(MessagingAccount.class);
+            instantMessagingAccounts = new LinkedHashMap<>();
         }
 
         instantMessagingAccounts.put(account, accountValue);

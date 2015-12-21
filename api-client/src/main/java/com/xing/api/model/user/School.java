@@ -15,18 +15,13 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.squareup.moshi.Json;
 import com.xing.api.model.XingCalendar;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Represents a school.
@@ -34,21 +29,8 @@ import java.util.regex.Pattern;
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School</a>
  */
-public class School implements Serializable, Parcelable {
-    private static final long serialVersionUID = -700850712160641923L;
-    /** Creator object for Parcelable contract. */
-    public static final Creator<School> CREATOR = new Creator<School>() {
-        @Override
-        public School createFromParcel(Parcel parcel) {
-            return new School(parcel);
-        }
-
-        @Override
-        public School[] newArray(int size) {
-            return new School[size];
-        }
-    };
-    private static final Pattern COMPILE = Pattern.compile(", ");
+public class School implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** School ID. */
     @Json(name = "id")
@@ -71,36 +53,6 @@ public class School implements Serializable, Parcelable {
     /** End date. */
     @Json(name = "end_date")
     private XingCalendar endDate;
-
-    /**
-     * Create a school object given id and name.
-     *
-     * @param id id of shcool.
-     * @param name name of school.
-     */
-    public School(@NonNull String id, @NonNull String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    /** Create a simple School object with empty fields. */
-    public School() {
-    }
-
-    /**
-     * Create {@link Award} from {@link Parcel}.
-     *
-     * @param parcel Input {@link Parcel}
-     */
-    private School(Parcel parcel) {
-        id = parcel.readString();
-        name = parcel.readString();
-        degree = parcel.readString();
-        parcel.readList(notes, List.class.getClassLoader());
-        subject = parcel.readString();
-        beginDate = (XingCalendar) parcel.readSerializable();
-        endDate = (XingCalendar) parcel.readSerializable();
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -125,22 +77,6 @@ public class School implements Serializable, Parcelable {
         result = 31 * result + (beginDate != null ? beginDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(degree);
-        parcel.writeList(notes);
-        parcel.writeString(subject);
-        parcel.writeSerializable(beginDate);
-        parcel.writeSerializable(endDate);
     }
 
     /**
@@ -215,9 +151,8 @@ public class School implements Serializable, Parcelable {
      *
      * @param notes notes.
      */
-    public void setNotes(String notes) {
-        String[] splitNotes = COMPILE.split(notes);
-        this.notes = Arrays.asList(splitNotes);
+    public void setNotes(List<String> notes) {
+        this.notes = notes;
     }
 
     /**

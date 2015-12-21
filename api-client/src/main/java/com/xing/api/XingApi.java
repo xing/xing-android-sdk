@@ -15,7 +15,6 @@
  */
 package com.xing.api;
 
-import com.squareup.moshi.EnumMapJsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -199,7 +198,6 @@ public final class XingApi {
             moshiBuilder.add(LanguageSkillJsonAdapter.FACTORY);
             moshiBuilder.add(GenderJsonAdapter.FACTORY);
             moshiBuilder.add(CompanySizeJsonAdapter.FACTORY);
-            moshiBuilder.add(EnumMapJsonAdapter.FACTORY);
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());
         }

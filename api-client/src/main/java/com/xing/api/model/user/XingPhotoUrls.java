@@ -15,9 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
@@ -28,21 +25,8 @@ import java.io.Serializable;
  * @author serj.lotutovici
  */
 @SuppressWarnings("unused")
-public class XingPhotoUrls implements Serializable, Parcelable {
-    private static final long serialVersionUID = 1864837657156226558L;
-    /** Parcelable creator required by contract. */
-    public static final Creator<XingPhotoUrls> CREATOR = new Creator<XingPhotoUrls>() {
-
-        @Override
-        public XingPhotoUrls createFromParcel(Parcel source) {
-            return new XingPhotoUrls(source);
-        }
-
-        @Override
-        public XingPhotoUrls[] newArray(int size) {
-            return new XingPhotoUrls[size];
-        }
-    };
+public class XingPhotoUrls implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Json(name = "large")
     private String photoLargeUrl;
@@ -72,32 +56,6 @@ public class XingPhotoUrls implements Serializable, Parcelable {
     private String photoSize1024Url;
     @Json(name = "size_original")
     private String photoSizeOriginalUrl;
-
-    /** Create a simple XingPhotoUrls object with empty fields. */
-    public XingPhotoUrls() {
-    }
-
-    /**
-     * Create {@link XingPhotoUrls} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private XingPhotoUrls(Parcel in) {
-        photoLargeUrl = in.readParcelable(String.class.getClassLoader());
-        photoMaxiThumbUrl = in.readParcelable(String.class.getClassLoader());
-        photoMediumThumbUrl = in.readParcelable(String.class.getClassLoader());
-        photoMiniThumbUrl = in.readParcelable(String.class.getClassLoader());
-        photoThumbUrl = in.readParcelable(String.class.getClassLoader());
-        photoSize32Url = in.readParcelable(String.class.getClassLoader());
-        photoSize48Url = in.readParcelable(String.class.getClassLoader());
-        photoSize64Url = in.readParcelable(String.class.getClassLoader());
-        photoSize96Url = in.readParcelable(String.class.getClassLoader());
-        photoSize128Url = in.readParcelable(String.class.getClassLoader());
-        photoSize192Url = in.readParcelable(String.class.getClassLoader());
-        photoSize256Url = in.readParcelable(String.class.getClassLoader());
-        photoSize1024Url = in.readParcelable(String.class.getClassLoader());
-        photoSizeOriginalUrl = in.readParcelable(String.class.getClassLoader());
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -129,29 +87,6 @@ public class XingPhotoUrls implements Serializable, Parcelable {
         result = 31 * result + (photoSize1024Url != null ? photoSize1024Url.hashCode() : 0);
         result = 31 * result + (photoSizeOriginalUrl != null ? photoSizeOriginalUrl.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(photoLargeUrl);
-        dest.writeString(photoMaxiThumbUrl);
-        dest.writeString(photoMediumThumbUrl);
-        dest.writeString(photoMiniThumbUrl);
-        dest.writeString(photoThumbUrl);
-        dest.writeString(photoSize32Url);
-        dest.writeString(photoSize48Url);
-        dest.writeString(photoSize64Url);
-        dest.writeString(photoSize96Url);
-        dest.writeString(photoSize128Url);
-        dest.writeString(photoSize192Url);
-        dest.writeString(photoSize256Url);
-        dest.writeString(photoSize1024Url);
-        dest.writeString(photoSizeOriginalUrl);
     }
 
     public String getPhotoLargeUrl() {

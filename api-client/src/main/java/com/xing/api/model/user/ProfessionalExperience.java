@@ -15,13 +15,9 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,20 +26,8 @@ import java.util.List;
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/me">Professional Experience</a>
  */
-public class ProfessionalExperience implements Serializable, Parcelable {
-    private static final long serialVersionUID = 5863766233252368533L;
-    /** Creator object for Parcelable contract. */
-    public static final Creator<ProfessionalExperience> CREATOR = new Creator<ProfessionalExperience>() {
-        @Override
-        public ProfessionalExperience createFromParcel(Parcel source) {
-            return new ProfessionalExperience(source);
-        }
-
-        @Override
-        public ProfessionalExperience[] newArray(int size) {
-            return new ProfessionalExperience[size];
-        }
-    };
+public class ProfessionalExperience implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** Primary company. */
     @Json(name = "primary_company")
@@ -54,23 +38,6 @@ public class ProfessionalExperience implements Serializable, Parcelable {
     /** List of awards. */
     @Json(name = "awards")
     private List<Award> awards;
-
-    /** Create a simple Professional experience object with empty fields. */
-    public ProfessionalExperience() {
-    }
-
-    /**
-     * Create {@link ProfessionalExperience} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private ProfessionalExperience(Parcel in) {
-        primaryCompany = in.readParcelable(ExperienceCompany.class.getClassLoader());
-        companies = new ArrayList<>(1);
-        in.readTypedList(companies, ExperienceCompany.CREATOR);
-        awards = new ArrayList<>(1);
-        in.readTypedList(awards, Award.CREATOR);
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -91,18 +58,6 @@ public class ProfessionalExperience implements Serializable, Parcelable {
         result = 31 * result + (companies != null ? companies.hashCode() : 0);
         result = 31 * result + (awards != null ? awards.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(primaryCompany, 0);
-        dest.writeTypedList(companies);
-        dest.writeTypedList(awards);
     }
 
     /**

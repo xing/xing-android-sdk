@@ -15,6 +15,8 @@
  */
 package com.xing.api.model.user;
 
+import java.io.Serializable;
+
 /**
  * The User object returned by the Find By Email Call.
  *
@@ -22,11 +24,21 @@ package com.xing.api.model.user;
  * @see <a href="https://dev.xing.com/docs/get/users/find_by_emails">Find users by email address</a>
  */
 @SuppressWarnings("unused") // Public api
-public class FoundXingUser {
+public class FoundXingUser implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String hash;
     private String email;
     private XingUser user;
+
+    @Override
+    public String toString() {
+        return "FoundXingUser{"
+              + "hash='" + hash + '\''
+              + ", email='" + email + '\''
+              + ", user=" + user
+              + '}';
+    }
 
     public String getHash() {
         return hash;

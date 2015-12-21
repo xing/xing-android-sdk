@@ -20,6 +20,8 @@ import com.xing.api.model.CalendarUtils;
 import com.xing.api.model.Reason;
 import com.xing.api.model.XingCalendar;
 
+import java.io.Serializable;
+
 /**
  * Represents an profile visit.
  * <p/>
@@ -29,7 +31,9 @@ import com.xing.api.model.XingCalendar;
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">Profile Visit</a>
  */
 @SuppressWarnings("unused")
-public class ProfileVisit {
+public class ProfileVisit implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /** User ID. */
     @Json(name = "user_id")
     private String userId;

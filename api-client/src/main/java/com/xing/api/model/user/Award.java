@@ -15,9 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -35,21 +32,8 @@ import java.util.Calendar;
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
 @SuppressWarnings("unused")
-public class Award implements Serializable, Parcelable {
+public class Award implements Serializable {
     private static final long serialVersionUID = 1792717237671423281L;
-
-    /** Creator object for Parcelable contract. */
-    public static final Creator<Award> CREATOR = new Creator<Award>() {
-        @Override
-        public Award createFromParcel(Parcel parcel) {
-            return new Award(parcel);
-        }
-
-        @Override
-        public Award[] newArray(int size) {
-            return new Award[size];
-        }
-    };
 
     /** Name of the award. */
     @Json(name = "name")
@@ -60,21 +44,6 @@ public class Award implements Serializable, Parcelable {
     /** URL of the award. */
     @Json(name = "url")
     private String url;
-
-    /** Create a simple Award object with empty fields. */
-    public Award() {
-    }
-
-    /**
-     * Create {@link Award} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private Award(@NonNull Parcel in) {
-        name = in.readString();
-        dateAwarded = (XingCalendar) in.readSerializable();
-        url = in.readParcelable(Uri.class.getClassLoader());
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -95,18 +64,6 @@ public class Award implements Serializable, Parcelable {
         result = 31 * result + (dateAwarded != null ? dateAwarded.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(name);
-        parcel.writeSerializable(dateAwarded);
-        parcel.writeString(url);
     }
 
     /**

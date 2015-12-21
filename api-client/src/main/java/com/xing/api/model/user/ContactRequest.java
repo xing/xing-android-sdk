@@ -15,9 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 import com.xing.api.model.CalendarUtils;
 import com.xing.api.model.XingCalendar;
@@ -31,20 +28,8 @@ import java.io.Serializable;
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">Contact Request</a>
  */
 @SuppressWarnings("unused")
-public class ContactRequest implements Serializable, Parcelable {
-    private static final long serialVersionUID = 1792283724323281L;
-    /** Creator object for the Parcelable contract. */
-    public static final Creator<ContactRequest> CREATOR = new Creator<ContactRequest>() {
-        @Override
-        public ContactRequest createFromParcel(Parcel source) {
-            return new ContactRequest(source);
-        }
-
-        @Override
-        public ContactRequest[] newArray(int size) {
-            return new ContactRequest[size];
-        }
-    };
+public class ContactRequest implements Serializable {
+    private static final long serialVersionUID = 1;
 
     /** ID of sender. */
     @Json(name = "sender_id")
@@ -58,35 +43,6 @@ public class ContactRequest implements Serializable, Parcelable {
     /** Date of contact request. */
     @Json(name = "received_at")
     private XingCalendar receivedAt;
-
-    /** Create a simple Contact object with empty fields. */
-    public ContactRequest() {
-    }
-
-    /**
-     * Create {@link ContactRequest} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private ContactRequest(Parcel in) {
-        senderId = in.readString();
-        sender = (XingUser) in.readSerializable();
-        message = in.readString();
-        receivedAt = (XingCalendar) in.readSerializable();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int i) {
-        dest.writeString(senderId);
-        dest.writeSerializable(sender);
-        dest.writeString(message);
-        dest.writeSerializable(receivedAt);
-    }
 
     @Override
     public boolean equals(Object obj) {

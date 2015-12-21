@@ -15,9 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
@@ -29,20 +26,8 @@ import java.io.Serializable;
  * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Phone</a>
  */
 @SuppressWarnings("unused") // Public api
-public class XingAddress implements Serializable, Parcelable {
-    private static final long serialVersionUID = -6309755823721877973L;
-    /** Creator object for Parcelable contract. */
-    public static final Creator<XingAddress> CREATOR = new Creator<XingAddress>() {
-        @Override
-        public XingAddress createFromParcel(Parcel source) {
-            return new XingAddress(source);
-        }
-
-        @Override
-        public XingAddress[] newArray(int size) {
-            return new XingAddress[size];
-        }
-    };
+public class XingAddress implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Json(name = "city")
     private String city;
@@ -62,27 +47,6 @@ public class XingAddress implements Serializable, Parcelable {
     private String street;
     @Json(name = "zip_code")
     private String zipCode;
-
-    /** Create a simple XingAddress object with empty fields. */
-    public XingAddress() {
-    }
-
-    /**
-     * Create {@link XingAddress} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private XingAddress(Parcel in) {
-        city = in.readString();
-        country = in.readString();
-        email = in.readString();
-        fax = in.readParcelable(XingPhone.class.getClassLoader());
-        mobilePhone = in.readParcelable(XingPhone.class.getClassLoader());
-        phone = in.readParcelable(XingPhone.class.getClassLoader());
-        province = in.readString();
-        street = in.readString();
-        zipCode = in.readString();
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -109,24 +73,6 @@ public class XingAddress implements Serializable, Parcelable {
         result = 31 * result + (street != null ? street.hashCode() : 0);
         result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(city);
-        dest.writeString(country);
-        dest.writeString(email);
-        dest.writeParcelable(fax, flags);
-        dest.writeString(mobilePhone);
-        dest.writeParcelable(phone, flags);
-        dest.writeString(province);
-        dest.writeString(street);
-        dest.writeString(zipCode);
     }
 
     public String getCity() {
