@@ -15,8 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -30,26 +28,12 @@ import java.util.List;
  * @author angelo.marchesin
  */
 @SuppressWarnings("unused")
-public class Industry implements Serializable, Parcelable {
-    private static final long serialVersionUID = 6164637739744149347L;
+public class Industry implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final float FIRST_CATEGORY_CONVERSION = 10000f;
 
-    /* Creator object for the Parcelable contract. */
-    public static final Creator<Industry> CREATOR = new Creator<Industry>() {
-        @Override
-        public Industry createFromParcel(Parcel source) {
-            return new Industry(source);
-        }
-
-        @Override
-        public Industry[] newArray(int size) {
-            return new Industry[size];
-        }
-    };
-
-
     private final int id;
-    private List<Segment> segments;
+    private final List<Segment> segments;
     private String typeName;
 
     public static Industry newInstanceFromCompoundId(int compoundId) {
@@ -59,12 +43,6 @@ public class Industry implements Serializable, Parcelable {
 
     private static int extractFirstCategoryIndex(int encodedId) {
         return (int) (Math.floor(encodedId / FIRST_CATEGORY_CONVERSION) * FIRST_CATEGORY_CONVERSION);
-    }
-
-    public Industry(Parcel source) {
-        id = source.readInt();
-        typeName = source.readString();
-        source.readList(segments, List.class.getClassLoader());
     }
 
     public Industry(int id, String type) {
@@ -107,18 +85,6 @@ public class Industry implements Serializable, Parcelable {
     @Override
     public int hashCode() {
         return typeName.hashCode();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(typeName);
-        dest.writeList(segments);
     }
 
     /**

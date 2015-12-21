@@ -15,9 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
@@ -27,20 +24,8 @@ import java.io.Serializable;
  *
  * @author serj.lotutovici
  */
-public class TimeZone implements Serializable, Parcelable {
-    private static final long serialVersionUID = -9131199441954044707L;
-    /** Creator object for Parcelable contract. */
-    public static final Creator<TimeZone> CREATOR = new Creator<TimeZone>() {
-        @Override
-        public TimeZone createFromParcel(Parcel source) {
-            return new TimeZone(source);
-        }
-
-        @Override
-        public TimeZone[] newArray(int size) {
-            return new TimeZone[size];
-        }
-    };
+public class TimeZone implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** Name of timezone. */
     @Json(name = "name")
@@ -48,20 +33,6 @@ public class TimeZone implements Serializable, Parcelable {
     /** Offset. */
     @Json(name = "utc_offset")
     private float utcOffset;
-
-    /** Create a simple TimeZone object with empty fields. */
-    public TimeZone() {
-    }
-
-    /**
-     * Create {@link TimeZone} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private TimeZone(Parcel in) {
-        name = in.readString();
-        utcOffset = in.readFloat();
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -83,17 +54,6 @@ public class TimeZone implements Serializable, Parcelable {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (utcOffset != +0.0f ? Float.floatToIntBits(utcOffset) : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeFloat(utcOffset);
     }
 
     /**

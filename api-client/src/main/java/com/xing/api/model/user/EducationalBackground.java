@@ -15,13 +15,9 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,20 +26,8 @@ import java.util.List;
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public class EducationalBackground implements Serializable, Parcelable {
-    private static final long serialVersionUID = 2927900492592865436L;
-    /** Creator object for the Parcelable contract. */
-    public static final Creator<EducationalBackground> CREATOR = new Creator<EducationalBackground>() {
-        @Override
-        public EducationalBackground createFromParcel(Parcel source) {
-            return new EducationalBackground(source);
-        }
-
-        @Override
-        public EducationalBackground[] newArray(int size) {
-            return new EducationalBackground[size];
-        }
-    };
+public class EducationalBackground implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** Educational degree. */
     @Json(name = "degree")
@@ -57,24 +41,6 @@ public class EducationalBackground implements Serializable, Parcelable {
     /** List of qualifications. */
     @Json(name = "qualifications")
     private List<String> qualifications;
-
-    /** Create a simple Educational Background object with empty fields. */
-    public EducationalBackground() {
-    }
-
-    /**
-     * Create {@link EducationalBackground} from {@link Parcel}.
-     *
-     * @param in Input {@link Parcel}
-     */
-    private EducationalBackground(Parcel in) {
-        degree = in.readString();
-        primarySchool = in.readParcelable(School.class.getClassLoader());
-        schools = new ArrayList<>(1);
-        in.readTypedList(schools, School.CREATOR);
-        qualifications = new ArrayList<>(1);
-        in.readStringList(qualifications);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -96,19 +62,6 @@ public class EducationalBackground implements Serializable, Parcelable {
         result = 31 * result + (schools != null ? schools.hashCode() : 0);
         result = 31 * result + (qualifications != null ? qualifications.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(degree);
-        dest.writeParcelable(primarySchool, 0);
-        dest.writeTypedList(schools);
-        dest.writeStringList(qualifications);
     }
 
     /**

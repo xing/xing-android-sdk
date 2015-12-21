@@ -17,10 +17,14 @@ package com.xing.api.model.user;
 
 import com.squareup.moshi.Json;
 
+import java.io.Serializable;
+
 /**
  * @author daniel.hartwich
  */
-public class LegalInformation {
+public class LegalInformation implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Json(name = "content")
     private String content;
 

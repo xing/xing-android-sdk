@@ -15,8 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -28,20 +26,9 @@ import java.io.Serializable;
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Address</a>
  */
-public class XingPhone implements Serializable, Parcelable {
-    private static final long serialVersionUID = -973963783219359383L;
+public class XingPhone implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final char SEPARATOR = '|';
-    public static final Creator<XingPhone> CREATOR = new Creator<XingPhone>() {
-        @Override
-        public XingPhone createFromParcel(Parcel parcel) {
-            return new XingPhone(parcel);
-        }
-
-        @Override
-        public XingPhone[] newArray(int size) {
-            return new XingPhone[size];
-        }
-    };
 
     private String countryCode;
     private String areaCode;
@@ -93,17 +80,6 @@ public class XingPhone implements Serializable, Parcelable {
     }
 
     /**
-     * Create {@link XingPhone} from {@link Parcel}.
-     *
-     * @param parcel Input {@link Parcel}
-     */
-    public XingPhone(Parcel parcel) {
-        countryCode = parcel.readString();
-        areaCode = parcel.readString();
-        number = parcel.readString();
-    }
-
-    /**
      * Generates an empty phone, necessary to delete it.
      *
      * @return phone with empty data.
@@ -143,18 +119,6 @@ public class XingPhone implements Serializable, Parcelable {
         }
 
         return valid;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(countryCode);
-        dest.writeString(areaCode);
-        dest.writeString(number);
     }
 
     @Override
@@ -202,21 +166,12 @@ public class XingPhone implements Serializable, Parcelable {
      * @return String with the format countryCode|areaCode|number.
      */
     public String getFormattedPhone() {
-        StringBuilder stringBuilder;
-        String empty = "";
-
         //  checking one is enough, it is not possible to have only one empty field.
-        if (empty.equals(countryCode)) {
-            stringBuilder = new StringBuilder(empty);
-        } else {
-            stringBuilder = new StringBuilder(countryCode);
-            stringBuilder.append(SEPARATOR);
-            stringBuilder.append(areaCode);
-            stringBuilder.append(SEPARATOR);
-            stringBuilder.append(number);
+        if (!TextUtils.isEmpty(countryCode)) {
+            return countryCode + SEPARATOR + areaCode + SEPARATOR + number;
         }
 
-        return stringBuilder.toString();
+        return "";
     }
 
     public static class InvalidPhoneException extends IllegalArgumentException {
