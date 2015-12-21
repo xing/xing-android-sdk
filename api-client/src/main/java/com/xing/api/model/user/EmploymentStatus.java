@@ -15,17 +15,12 @@
  */
 package com.xing.api.model.user;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible values for the employment status.
- * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public enum EmploymentStatus implements JsonEnum {
-
+public enum EmploymentStatus {
     ENTREPRENEUR,
     FREELANCER,
     EMPLOYEE,
@@ -34,10 +29,5 @@ public enum EmploymentStatus implements JsonEnum {
     PUBLIC_SERVANT,
     STUDENT,
     UNEMPLOYED,
-    RETIRED;
-
-    @Override
-    public String getJsonValue() {
-        return name();
-    }
+    RETIRED
 }

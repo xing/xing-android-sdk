@@ -15,23 +15,14 @@
  */
 package com.xing.api.model.user;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible language skill.
- * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages</a>
  */
-public enum LanguageSkill implements JsonEnum {
+public enum LanguageSkill {
     BASIC,
     GOOD,
     FLUENT,
-    NATIVE;
-
-    @Override
-    public String getJsonValue() {
-        return name();
-    }
+    NATIVE
 }

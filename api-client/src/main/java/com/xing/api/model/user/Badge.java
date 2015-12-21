@@ -15,24 +15,14 @@
  */
 package com.xing.api.model.user;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible XING badges.
- * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public enum Badge implements JsonEnum {
-
+public enum Badge {
     AMBASSADOR,
     EXPERT,
     MODERATOR,
-    PREMIUM;
-
-    @Override
-    public String getJsonValue() {
-        return name();
-    }
+    PREMIUM
 }

@@ -15,19 +15,13 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
-
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible values for the company size.
  * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public enum CompanySize implements JsonEnum {
-
+public enum CompanySize {
     SIZE_1("1"),
     SIZE_1_10("1-10"),
     SIZE_11_50("11-50"),
@@ -38,14 +32,14 @@ public enum CompanySize implements JsonEnum {
     SIZE_5001_10000("5001-10000"),
     SIZE_10001PLUS("10001+");
 
-    private final String text;
+    private final String value;
 
-    CompanySize(@NonNull String text) {
-        this.text = text;
+    CompanySize(String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return text;
+    public String toString() {
+        return value;
     }
 }

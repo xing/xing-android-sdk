@@ -15,17 +15,12 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
-
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible languages.
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages</a>
  */
-public enum Language implements JsonEnum {
+public enum Language {
     EN("en"),
     DE("de"),
     ES("es"),
@@ -50,15 +45,14 @@ public enum Language implements JsonEnum {
     AR("ar"),
     HE("he");
 
-    /** Language value received form the json. */
-    private final String name;
+    private final String value;
 
-    Language(@NonNull String name) {
-        this.name = name;
+    Language(String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return name;
+    public String toString() {
+        return value;
     }
 }

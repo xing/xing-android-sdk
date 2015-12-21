@@ -121,7 +121,7 @@ public class CompanySizeJsonAdapterTest {
         moshi.adapter(CompanySize.class).toJson(writer, CompanySize.SIZE_10001PLUS);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + CompanySize.SIZE_10001PLUS.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + CompanySize.SIZE_10001PLUS.toString() + '"');
     }
 
     static class CompanySizeHelper {

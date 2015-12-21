@@ -15,26 +15,16 @@
  */
 package com.xing.api.model.user;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible values for the company career level.
- * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public enum CareerLevel implements JsonEnum {
-
+public enum CareerLevel {
     STUDENT_INTERN,
     ENTRY_LEVEL,
     PROFESSIONAL_EXPERIENCED,
     MANAGER_SUPERVISOR,
     EXECUTIVE,
-    SENIOR_EXECUTIVE;
-
-    @Override
-    public String getJsonValue() {
-        return name();
-    }
+    SENIOR_EXECUTIVE
 }

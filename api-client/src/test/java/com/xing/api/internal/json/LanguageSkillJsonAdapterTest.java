@@ -49,13 +49,12 @@ public class LanguageSkillJsonAdapterTest {
 
     @Test
     public void testFromJson() throws Exception {
-        JsonAdapter<LanguageSkillHelper> adapter =  moshi.adapter(LanguageSkillHelper.class);
+        JsonAdapter<LanguageSkillHelper> adapter = moshi.adapter(LanguageSkillHelper.class);
         assertThat(adapter.fromJson("{\"language_skill\" : \"BASIC\"}").languageSkill).isEqualTo(LanguageSkill.BASIC);
         assertThat(adapter.fromJson("{\"language_skill\" : \"GOOD\"}").languageSkill).isEqualTo(LanguageSkill.GOOD);
         assertThat(adapter.fromJson("{\"language_skill\" : \"FLUENT\"}").languageSkill).isEqualTo(LanguageSkill.FLUENT);
         assertThat(adapter.fromJson("{\"language_skill\" : \"NATIVE\"}").languageSkill).isEqualTo(LanguageSkill.NATIVE);
         assertThat(adapter.fromJson("{\"language_skill\" : \"BESTONEARTHSTYLE\"}").languageSkill).isNull();
-
     }
 
     @Test
@@ -66,7 +65,7 @@ public class LanguageSkillJsonAdapterTest {
         moshi.adapter(LanguageSkill.class).toJson(writer, LanguageSkill.NATIVE);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + LanguageSkill.NATIVE.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + LanguageSkill.NATIVE.toString() + '"');
     }
 
     static class LanguageSkillHelper {

@@ -15,30 +15,25 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
-
-import com.xing.api.model.JsonEnum;
-
 /**
  * Premium Services.
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/me">Premium Services</a>
  */
-public enum PremiumService implements JsonEnum {
+public enum PremiumService {
     SEARCH("SEARCH"),
     PRIVATE_MESSAGES("PRIVATEMESSAGES"),
     NO_ADVERTISING("NOADVERTISING");
 
     /** The json representation of this instance. */
-    private final String jsonName;
+    private final String value;
 
-    PremiumService(@NonNull String name) {
-        jsonName = name;
+    PremiumService(String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return jsonName;
+    public String toString() {
+        return value;
     }
 }

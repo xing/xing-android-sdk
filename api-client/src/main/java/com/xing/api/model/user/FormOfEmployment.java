@@ -15,16 +15,12 @@
  */
 package com.xing.api.model.user;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible values for the form of employment.
- * <p/>
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
-public enum FormOfEmployment implements JsonEnum {
+public enum FormOfEmployment {
     UNSELECTED,
     FULL_TIME_EMPLOYEE,
     PART_TIME_EMPLOYEE,
@@ -33,10 +29,5 @@ public enum FormOfEmployment implements JsonEnum {
     OWNER,
     PARTNER,
     BOARD_MEMBER,
-    VOLUNTEER;
-
-    @Override
-    public String getJsonValue() {
-        return name();
-    }
+    VOLUNTEER
 }

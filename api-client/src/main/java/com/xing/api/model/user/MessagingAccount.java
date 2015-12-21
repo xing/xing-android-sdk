@@ -17,15 +17,12 @@ package com.xing.api.model.user;
 
 import android.support.annotation.NonNull;
 
-import com.xing.api.model.JsonEnum;
-
 /**
  * Possible instant messaging accounts.
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/me">Instant Messaging Accounts</a>
  */
-public enum MessagingAccount implements JsonEnum {
+public enum MessagingAccount {
     SKYPE("skype"),
     ICQ("icq"),
     MSN("msn"),
@@ -35,14 +32,14 @@ public enum MessagingAccount implements JsonEnum {
     GOOGLE_TALK("googletalk");
 
     /** The name value received from the json response. */
-    private final String mName;
+    private final String value;
 
-    MessagingAccount(@NonNull String accountName) {
-        mName = accountName;
+    MessagingAccount(@NonNull String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return mName;
+    public String toString() {
+        return value;
     }
 }
