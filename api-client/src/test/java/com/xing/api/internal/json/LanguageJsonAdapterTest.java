@@ -85,7 +85,7 @@ public class LanguageJsonAdapterTest {
         moshi.adapter(Language.class).toJson(writer, Language.EN);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + Language.EN.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + Language.EN.toString() + '"');
     }
 
     static class LanguageHelper {

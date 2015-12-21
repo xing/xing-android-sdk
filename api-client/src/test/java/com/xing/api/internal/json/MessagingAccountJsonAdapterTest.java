@@ -75,7 +75,7 @@ public class MessagingAccountJsonAdapterTest {
         moshi.adapter(MessagingAccount.class).toJson(writer, MessagingAccount.GOOGLE_TALK);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + MessagingAccount.GOOGLE_TALK.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + MessagingAccount.GOOGLE_TALK.toString() + '"');
     }
 
     static class MessagingAccountHelper {

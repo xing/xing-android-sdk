@@ -100,7 +100,7 @@ public class WebProfileJsonAdapterTest {
         moshi.adapter(WebProfile.class).toJson(writer, WebProfile.GITHUB);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + WebProfile.GITHUB.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + WebProfile.GITHUB.toString() + '"');
     }
 
     static class WebProfileHelper {

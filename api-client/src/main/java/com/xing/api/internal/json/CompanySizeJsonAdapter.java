@@ -19,7 +19,6 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import com.xing.api.model.user.CompanySize;
@@ -32,7 +31,7 @@ import java.util.Set;
 /**
  * @author daniel.hartwich
  */
-public final class CompanySizeJsonAdapter extends JsonAdapter<CompanySize> {
+public final class CompanySizeJsonAdapter extends EnumJsonAdapter<CompanySize> {
     public static final Factory FACTORY = new Factory() {
         @Nullable
         @Override
@@ -73,7 +72,7 @@ public final class CompanySizeJsonAdapter extends JsonAdapter<CompanySize> {
     }
 
     @Override
-    public void toJson(JsonWriter writer, CompanySize value) throws IOException {
-        writer.value(value.getJsonValue());
+    public String toString() {
+        return "JsonAdapter(" + CompanySize.class + ')';
     }
 }

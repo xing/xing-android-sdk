@@ -63,7 +63,7 @@ public class GenderJsonAdapterTest {
         moshi.adapter(Gender.class).toJson(writer, Gender.MALE);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + Gender.MALE.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + Gender.MALE.toString() + '"');
     }
 
     static class GenderHelper {

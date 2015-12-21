@@ -67,7 +67,7 @@ public class PremiumServiceJsonAdapterTest {
         moshi.adapter(PremiumService.class).toJson(writer, PremiumService.SEARCH);
         writer.flush();
         String bufferedString = buffer.readUtf8();
-        assertThat(bufferedString).isEqualTo('"' + PremiumService.SEARCH.getJsonValue() + '"');
+        assertThat(bufferedString).isEqualTo('"' + PremiumService.SEARCH.toString() + '"');
     }
 
     static class PremiumServiceHelper {

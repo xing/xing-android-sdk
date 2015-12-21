@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.model;
+package com.xing.api.internal.json;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonWriter;
+
+import java.io.IOException;
 
 /**
- * Abstract description of enums that describe a json field value.
- * <p/>
- * TODO We don't need this anymore
- *
- * @author serj.lotutovici
+ * Simple json adapter for an {@link Enum<T>}. This adapter assumes that every enum that leverages from it, will
+ * return it's json value in {@link Object#toString()}.
  */
-public interface JsonEnum {
-
-    /**
-     * @return The string value that the enum represents.
-     */
-    String getJsonValue();
+abstract class EnumJsonAdapter<T extends Enum<T>> extends JsonAdapter<T> {
+    @Override
+    public void toJson(JsonWriter writer, T value) throws IOException {
+        writer.value(value.toString());
+    }
 }

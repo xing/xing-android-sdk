@@ -16,48 +16,24 @@
 package com.xing.api.model.user;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.squareup.moshi.FromJson;
-import com.squareup.moshi.ToJson;
-import com.xing.api.model.JsonEnum;
 
 /**
  * Represents users gender.
  *
  * @author david.gonzalez
  */
-public enum Gender implements JsonEnum {
+public enum Gender {
     MALE("m"),
     FEMALE("f");
 
-    private final String gender;
+    private final String value;
 
-    Gender(@NonNull String gender) {
-        this.gender = gender;
+    Gender(@NonNull String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return gender;
+    public String toString() {
+        return value;
     }
-
-    @Nullable
-    @FromJson
-    public Gender fromJson(String value) {
-        switch (value) {
-            case "m":
-                return MALE;
-            case "f":
-                return FEMALE;
-            default:
-                return null;
-        }
-    }
-
-    @ToJson
-    public String toJson(Gender gender) {
-        return gender.gender;
-    }
-
 }

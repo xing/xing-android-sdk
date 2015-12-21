@@ -65,4 +65,9 @@ public class XingCalendarJsonAdapter extends JsonAdapter<XingCalendar> {
         Date date = value.getTime();
         delegate.toJson(writer, date);
     }
+
+    @Override
+    public String toString() {
+        return "JsonAdapter(" + XingCalendar.class + ')';
+    }
 }

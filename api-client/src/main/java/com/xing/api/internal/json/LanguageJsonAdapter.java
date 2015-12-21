@@ -19,7 +19,6 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import com.xing.api.model.user.Language;
@@ -32,7 +31,7 @@ import java.util.Set;
 /**
  * @author daniel.hartwich
  */
-public class LanguageJsonAdapter extends JsonAdapter<Language> {
+public class LanguageJsonAdapter extends EnumJsonAdapter<Language> {
     public static final Factory FACTORY = new Factory() {
         @Nullable
         @Override
@@ -101,7 +100,7 @@ public class LanguageJsonAdapter extends JsonAdapter<Language> {
     }
 
     @Override
-    public void toJson(JsonWriter writer, Language value) throws IOException {
-        writer.value(value.getJsonValue());
+    public String toString() {
+        return "JsonAdapter(" + Language.class + ')';
     }
 }

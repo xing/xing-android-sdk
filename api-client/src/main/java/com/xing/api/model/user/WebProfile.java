@@ -15,17 +15,12 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
-
-import com.xing.api.model.JsonEnum;
-
 /**
  * List of possible external web profiles.
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/put/users/me/web_profiles/:profile">Web Profile</a>
  */
-public enum WebProfile implements JsonEnum {
+public enum WebProfile {
     AMAZON("amazon"),
     DELICIOUS("delicious"),
     DIGG("digg"),
@@ -61,14 +56,14 @@ public enum WebProfile implements JsonEnum {
     ZOOMINFO("zoominfo");
 
     /** Name value that is received form the json response. */
-    private final String name;
+    private final String value;
 
-    WebProfile(@NonNull String name) {
-        this.name = name;
+    WebProfile(String value) {
+        this.value = value;
     }
 
     @Override
-    public String getJsonValue() {
-        return name;
+    public String toString() {
+        return value;
     }
 }
