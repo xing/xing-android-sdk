@@ -17,12 +17,12 @@ package com.xing.api;
 
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
-import com.xing.api.CompositeType;
 import com.xing.api.CompositeType.Structure;
 
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesSingleObjects() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE);
+        Type compositeType = compose(TestData.class, Structure.SINGLE);
         TestData data = parse(compositeType, "{\n"
               + "  \"str\": \"test\",\n"
               + "  \"val\": 42\n"
@@ -51,7 +51,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesSingleObjectsWithRoots() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE, "findMe");
+        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe");
         TestData data = parse(compositeType, "{\n"
               + "  \"findMe\": {\n"
               + "    \"str\": \"test1\",\n"
@@ -66,7 +66,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesSingleObjectsWithMultipleRoots() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
         TestData data = parse(compositeType, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -83,7 +83,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parseSingleObjectsWithNullObjectInside() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
         TestData data = parse(compositeType, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -98,7 +98,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parseSingleObjectsWithRootsNull() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE, null);
+        Type compositeType = compose(TestData.class, Structure.SINGLE, null);
         TestData data = parse(compositeType, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -113,7 +113,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parseListObject() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.LIST, "content");
+        Type compositeType = compose(TestData.class, Structure.LIST, "content");
         List<TestData> listData = parse(compositeType, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
@@ -143,7 +143,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parseListObjectWrongRoots() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.LIST, "asdasdasd");
+        Type compositeType = compose(TestData.class, Structure.LIST, "asdasdasd");
         try {
             parse(compositeType, "{\n"
                   + "  \"content\": []\n"
@@ -157,7 +157,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test(expected = JsonDataException.class)
     public void parseListObjectWithoutRoot() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.LIST);
+        Type compositeType = compose(TestData.class, Structure.LIST);
         parse(compositeType, "{\n"
               + "  \"content\": []\n"
               + "}");
@@ -165,7 +165,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test(expected = JsonDataException.class)
     public void parseListObjectMultipleRoots() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.LIST, "users", "companies");
+        Type compositeType = compose(TestData.class, Structure.LIST, "users", "companies");
         parse(compositeType, "{\n"
               + "  \"users\": [\n"
               + "    {\n"
@@ -190,7 +190,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void objectWithNull() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.SINGLE, "root");
+        Type compositeType = compose(TestData.class, Structure.SINGLE, "root");
         TestData data = parse(compositeType, "{\n"
               + "  \"root\": null\n"
               + "}");
@@ -199,7 +199,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesFirstInList() throws Exception {
-        CompositeType compositeType = new CompositeType(TestData.class, Structure.FIRST, "content");
+        Type compositeType = compose(TestData.class, Structure.FIRST, "content");
         TestData data = parse(compositeType, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
@@ -224,12 +224,12 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesFirstAsNullIfListEmpty() throws Exception {
-        CompositeType compositeType1 = new CompositeType(TestData.class, Structure.FIRST, "empty");
+        Type compositeType1 = compose(TestData.class, Structure.FIRST, "empty");
         assertThat(parse(compositeType1, "{\n"
               + "  \"empty\": null\n"
               + "}")).isNull();
 
-        CompositeType compositeType2 = new CompositeType(TestData.class, Structure.FIRST, "empty");
+        Type compositeType2 = compose(TestData.class, Structure.FIRST, "empty");
         assertThat(parse(compositeType2, "{\n"
               + "  \"empty\": []\n"
               + "}")).isNull();
@@ -237,8 +237,8 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void parsesListOfCompositeType() throws Exception {
-        CompositeType innerType = new CompositeType(TestData.class, Structure.SINGLE, "secondDegree");
-        CompositeType compositeType = new CompositeType(innerType, Structure.LIST, "firstDegree");
+        Type innerType = compose(TestData.class, Structure.SINGLE, "secondDegree");
+        Type compositeType = compose(innerType, Structure.LIST, "firstDegree");
 
         List<TestData> listData = parse(compositeType, "{\n"
               + "  \"firstDegree\": [\n"
@@ -266,9 +266,13 @@ public class CompositeTypeJsonAdapterTest {
     }
 
     @SuppressWarnings("unchecked") // This is the callers responsibility.
-    private <T> T parse(CompositeType type, String json) throws Exception {
+    private <T> T parse(Type type, String json) throws Exception {
         if (json == null) return null;
         return (T) moshi.adapter(type).fromJson(json);
+    }
+    
+    private static Type compose(Type searchFor, Structure structure, String... roots) {
+        return new CompositeType(null, searchFor, structure, roots);
     }
 
     static class TestData {

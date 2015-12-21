@@ -15,8 +15,7 @@
  */
 package com.xing.api;
 
-import com.squareup.moshi.Types;
-
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +46,9 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public final class CompositeType implements Type {
+final class CompositeType implements ParameterizedType {
     /**
-     * Defines the possible response types a user can expect.
+     * Defines the possible response structures a caller may search for.
      * <p>
      * Currently supported:
      * <li>SINGLE - A single object</li>
@@ -62,14 +61,31 @@ public final class CompositeType implements Type {
         FIRST
     }
 
-    private final Type parseType;
+    private final Type ownerType;
+    private final Type searchFor;
     private final String[] roots;
     private final Structure structure;
 
-    CompositeType(Type parseType, Structure structure, String... roots) {
-        this.parseType = parseType;
+    CompositeType(Type ownerType, Type searchFor, Structure structure, String... roots) {
+        this.ownerType = ownerType;
+        this.searchFor = searchFor;
         this.structure = structure;
         this.roots = roots;
+    }
+
+    @Override
+    public Type[] getActualTypeArguments() {
+        return new Type[]{toFind()};
+    }
+
+    @Override
+    public Type getOwnerType() {
+        return ownerType;
+    }
+
+    @Override
+    public Type getRawType() {
+        return CompositeType.class;
     }
 
     @Override
@@ -79,22 +95,29 @@ public final class CompositeType implements Type {
 
         CompositeType that = (CompositeType) obj;
 
-        if (parseType != null ? !parseType.equals(that.parseType) : that.parseType != null) return false;
+        if (searchFor != null ? !searchFor.equals(that.searchFor) : that.searchFor != null) return false;
         // We need a strict order comparison.
         return Arrays.equals(roots, that.roots) && structure == that.structure;
     }
 
     @Override
     public int hashCode() {
-        int result = parseType != null ? parseType.hashCode() : 0;
+        int result = searchFor != null ? searchFor.hashCode() : 0;
         result = 31 * result + (roots != null ? Arrays.hashCode(roots) : 0);
         result = 31 * result + (structure != null ? structure.hashCode() : 0);
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "CompositeType[" + toFind() + ']';
+    }
+
     /** Return the actual parse type. */
-    Type parseType() {
-        return structure == Structure.SINGLE ? parseType : Types.newParameterizedType(List.class, parseType);
+    Type toFind() {
+        return structure == Structure.SINGLE
+              ? normalize(searchFor, this)
+              : new ListTypeImpl(normalize(searchFor, List.class));
     }
 
     /** Return the composite structure. */
@@ -102,8 +125,50 @@ public final class CompositeType implements Type {
         return structure;
     }
 
-    /** Roots the parse type is located. */
+    /** Roots where {@link #toFind()} is located. */
     String[] roots() {
-        return roots;
+        return roots != null ? roots : new String[0];
+    }
+
+    /** Make sure that the required type will be processed as expected. */
+    private static Type normalize(Type type, Type ownerType) {
+        if (type instanceof CompositeType) {
+            CompositeType composite = (CompositeType) type;
+            // The caller is not aware of type ownership.
+            if (composite.getOwnerType() != ownerType) {
+                return new CompositeType(ownerType, composite.searchFor, composite.structure, composite.roots);
+            }
+        }
+
+        return type;
+    }
+
+    /** Helps to avoid going through Moshi's ParameterizedTypeImpl so that {@code argType} is not wrapped by it. */
+    private static final class ListTypeImpl implements ParameterizedType {
+        private final Type[] typeArguments;
+
+        public ListTypeImpl(Type argType) {
+            this.typeArguments = new Type[]{argType};
+        }
+
+        @Override
+        public Type[] getActualTypeArguments() {
+            return typeArguments;
+        }
+
+        @Override
+        public Type getOwnerType() {
+            return null;
+        }
+
+        @Override
+        public Type getRawType() {
+            return List.class;
+        }
+
+        @Override
+        public String toString() {
+            return "ParameterizedType[List[" + typeArguments[0] + "]]";
+        }
     }
 }

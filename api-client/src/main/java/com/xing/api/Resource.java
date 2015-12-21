@@ -52,20 +52,21 @@ public abstract class Resource {
         return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
     }
 
-    /** Returns a {@link CompositeType} that will expect a single object in the root tree. */
-    protected static CompositeType single(Type classType, String... roots) {
-        return new CompositeType(classType, CompositeType.Structure.SINGLE, roots);
+    /** Returns a {@link Type} that will expect a single object in the root json tree. */
+    protected static Type single(Type searchFor, String... roots) {
+        return new CompositeType(null, searchFor, CompositeType.Structure.SINGLE, roots);
     }
 
-    /** Returns a {@link CompositeType} that will expect a list of objects in the root tree. */
-    protected static CompositeType list(Type classType, String... roots) {
-        return new CompositeType(classType, CompositeType.Structure.LIST, roots);
+    /** Returns a {@link Type} that will expect a list of objects in the root json tree. */
+    protected static Type list(Type searchFor, String... roots) {
+        return new CompositeType(null, searchFor, CompositeType.Structure.LIST, roots);
     }
 
     /**
-     * Returns a {@link CompositeType} that will expect an element of {@code classType} as the first element in a list.
+     * Returns a {@link Type} that will expect an element of {@code searchFor} as the first element in a json list in
+     * the root json tree.
      */
-    protected static CompositeType first(Type classType, String... roots) {
-        return new CompositeType(classType, CompositeType.Structure.FIRST, roots);
+    protected static Type first(Type searchFor, String... roots) {
+        return new CompositeType(null, searchFor, CompositeType.Structure.FIRST, roots);
     }
 }

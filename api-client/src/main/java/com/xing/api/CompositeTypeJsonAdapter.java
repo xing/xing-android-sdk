@@ -22,6 +22,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -40,7 +41,8 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
-            if (!(type instanceof CompositeType)) return null;
+            Class<?> rawType = Types.getRawType(type);
+            if (rawType != CompositeType.class) return null;
             return new CompositeTypeJsonAdapter<>(moshi, (CompositeType) type).nullSafe();
         }
     };
@@ -50,7 +52,7 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     private final String[] roots;
 
     public CompositeTypeJsonAdapter(Moshi moshi, CompositeType type) {
-        this.adapter = moshi.adapter(type.parseType());
+        this.adapter = moshi.adapter(type.toFind());
         this.roots = type.roots();
         this.structure = type.structure();
     }
@@ -72,6 +74,11 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     @Override
     public void toJson(JsonWriter writer, T value) throws IOException {
         // CompositeType is a simplification for parsing XWS responses. No need to write it as a json.
+    }
+
+    @Override
+    public String toString() {
+        return String.format("JsonAdapter[%s][%s](%s)", structure, Arrays.asList(roots), adapter);
     }
 
     /**

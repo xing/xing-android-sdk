@@ -46,6 +46,16 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
+import static com.xing.api.Resource.first;
+import static com.xing.api.Resource.list;
+import static com.xing.api.Resource.single;
+import static com.xing.api.UrlEscapeUtils.escape;
+import static com.xing.api.Utils.assertionError;
+import static com.xing.api.Utils.checkNotNull;
+import static com.xing.api.Utils.closeQuietly;
+import static com.xing.api.Utils.stateError;
+import static com.xing.api.Utils.stateNotNull;
+
 /**
  * TODO docs.
  *
@@ -54,8 +64,8 @@ import rx.subscriptions.Subscriptions;
 public final class CallSpec<RT, ET> implements Cloneable {
     private final XingApi api;
     private final Builder<RT, ET> builder;
-    private final CompositeType responseType;
-    private final CompositeType errorType;
+    private final Type responseType;
+    private final Type errorType;
 
     private volatile Call rawCall;
     private boolean executed; // Guarded by this.
@@ -83,7 +93,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
      */
     public Response<RT, ET> execute() throws IOException {
         synchronized (this) {
-            if (executed) throw Utils.stateError("Call already executed");
+            if (executed) throw stateError("Call already executed");
             executed = true;
         }
 
@@ -105,7 +115,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
      */
     public void enqueue(final Callback<RT, ET> callback) {
         synchronized (this) {
-            if (executed) throw Utils.stateError("Call already executed");
+            if (executed) throw stateError("Call already executed");
             executed = true;
         }
 
@@ -246,7 +256,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
                 catchingBody.throwIfCaught();
                 throw e;
             } finally {
-                Utils.closeQuietly(catchingBody);
+                closeQuietly(catchingBody);
             }
         }
 
@@ -264,18 +274,18 @@ public final class CallSpec<RT, ET> implements Cloneable {
             catchingBody.throwIfCaught();
             throw e;
         } finally {
-            Utils.closeQuietly(catchingBody);
+            closeQuietly(catchingBody);
         }
     }
 
-    private <PT> PT parseBody(CompositeType type, ResponseBody body) throws IOException {
+    private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
         BufferedSource source = body.source();
         try {
             //noinspection unchecked
             return (PT) api.converter.adapter(type).fromJson(JsonReader.of(source));
         } finally {
-            Utils.closeQuietly(source);
+            closeQuietly(source);
         }
     }
 
@@ -301,14 +311,14 @@ public final class CallSpec<RT, ET> implements Cloneable {
         private FormEncodingBuilder formEncodingBuilder;
         private RequestBody body;
 
-        private CompositeType responseType;
-        private CompositeType errorType;
+        private Type responseType;
+        private Type errorType;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
             this.api = api;
-            this.httpMethod = Utils.checkNotNull(httpMethod, "httpMethod == null");
-            this.resourcePath = Utils.checkNotNull(resourcePath, "resourcePath == null");
+            this.httpMethod = checkNotNull(httpMethod, "httpMethod == null");
+            this.resourcePath = checkNotNull(resourcePath, "resourcePath == null");
 
             resourcePathParams = parseResourcePathParams(resourcePath);
             apiEndpoint = api.apiEndpoint;
@@ -332,16 +342,16 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         public Builder<RT, ET> pathParam(String name, String value) {
-            Utils.stateNotNull(resourcePath, "Path params must be set before query params.");
+            stateNotNull(resourcePath, "Path params must be set before query params.");
             validatePathParam(name);
-            resourcePath = resourcePath.replace('{' + name + '}', UrlEscapeUtils.escape(value));
+            resourcePath = resourcePath.replace('{' + name + '}', escape(value));
             resourcePathParams.remove(name);
             return this;
         }
 
         public Builder<RT, ET> queryParam(String name, @Nullable Object value) {
             if (resourcePath != null) buildUrlBuilder();
-            urlBuilder.addEncodedQueryParameter(name, UrlEscapeUtils.escape(String.valueOf(value)));
+            urlBuilder.addEncodedQueryParameter(name, escape(String.valueOf(value)));
             return this;
         }
 
@@ -373,41 +383,41 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         public Builder<RT, ET> responseAs(Class<RT> type, String... roots) {
-            responseType = Resource.single(Utils.checkNotNull(type, "type == null"), roots);
+            responseType = single(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         public Builder<RT, ET> responseAsListOf(Type type, String... roots) {
-            responseType = Resource.list(Utils.checkNotNull(type, "type == null"), roots);
+            responseType = list(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         public Builder<RT, ET> responseAsFirst(Class<RT> type, String... roots) {
-            responseType = Resource.first(Utils.checkNotNull(type, "type == null"), roots);
+            responseType = first(checkNotNull(type, "type == null"), roots);
             return this;
         }
 
         //This is needed for XING internal APIs that return the error message in a custom format.
         public Builder<RT, ET> errorAs(Class<ET> type) {
-            errorType = Resource.single(Utils.checkNotNull(type, "type == null"));
+            errorType = single(checkNotNull(type, "type == null"));
             return this;
         }
 
         public CallSpec<RT, ET> build() {
             if (!resourcePathParams.isEmpty()) {
-                throw Utils.stateError("Not all path params where set. Found %d unsatisfied parameter(s)",
+                throw stateError("Not all path params where set. Found %d unsatisfied parameter(s)",
                       resourcePathParams.size());
             }
 
             if (urlBuilder == null) buildUrlBuilder();
-            if (responseType == null) throw Utils.stateError("Response type is not set.");
-            if (errorType == null) errorType = Resource.single(HttpError.class);
+            if (responseType == null) throw stateError("Response type is not set.");
+            if (errorType == null) errorType = single(HttpError.class);
 
             return new CallSpec<>(this);
         }
 
         Request request() {
-            if (urlBuilder == null) throw Utils.stateError("#request() can be called only after #build()");
+            if (urlBuilder == null) throw stateError("#request() can be called only after #build()");
             HttpUrl url = urlBuilder.build();
 
             RequestBody body = this.body;
@@ -457,12 +467,11 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
         private void validatePathParam(String name) {
             if (!PARAM_NAME_REGEX.matcher(name).matches()) {
-                throw Utils
-                      .assertionError("Path parameter name must match %s. Found: %s", PARAM_URL_REGEX.pattern(), name);
+                throw assertionError("Path parameter name must match %s. Found: %s", PARAM_URL_REGEX.pattern(), name);
             }
             // Verify URL replacement name is actually present in the URL path.
             if (!resourcePathParams.contains(name)) {
-                throw Utils.assertionError(
+                throw assertionError(
                       "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has been already set.",
                       resourcePath, name);
             }

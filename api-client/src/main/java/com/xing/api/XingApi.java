@@ -188,11 +188,9 @@ public final class XingApi {
                 client.interceptors().add(oauth1Builder.build());
             }
 
-            if (moshiBuilder == null) {
-                moshiBuilder = new Moshi.Builder();
-            }
-            //Adding the Custom JSON Adapters to Moshi
-            moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY); // This should always be the first custom adapter.
+            // Add the custom JSON Adapters to Moshi
+            if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
+            moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
             moshiBuilder.add(XingCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(WebProfileJsonAdapter.FACTORY);
             moshiBuilder.add(MessagingAccountJsonAdapter.FACTORY);
