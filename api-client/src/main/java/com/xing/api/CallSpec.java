@@ -80,7 +80,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
     @Override
-    protected CallSpec<RT, ET> clone() {
+    public CallSpec<RT, ET> clone() {
         // When called from CallSpec we don't need to do through the validation process.
         return new CallSpec<>(builder.newBuilder());
     }
@@ -278,6 +278,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
     }
 
+    @Nullable
     private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
         BufferedSource source = body.source();
@@ -300,19 +301,19 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
         static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
-        private final XingApi api;
         private final HttpMethod httpMethod;
         private final HttpUrl apiEndpoint;
         private final Request.Builder requestBuilder;
         private final Set<String> resourcePathParams;
-
         private String resourcePath;
+
         private HttpUrl.Builder urlBuilder;
         private FormEncodingBuilder formEncodingBuilder;
         private RequestBody body;
 
-        private Type responseType;
-        private Type errorType;
+        final XingApi api;
+        Type responseType;
+        Type errorType;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
@@ -328,17 +329,17 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         private Builder(Builder<RT, ET> builder) {
-            this.api = builder.api;
-            this.httpMethod = builder.httpMethod;
-            this.apiEndpoint = builder.apiEndpoint;
-            this.requestBuilder = builder.requestBuilder;
-            this.resourcePathParams = builder.resourcePathParams;
-            this.resourcePath = builder.resourcePath;
-            this.urlBuilder = builder.urlBuilder;
-            this.formEncodingBuilder = builder.formEncodingBuilder;
-            this.body = builder.body;
-            this.responseType = builder.responseType;
-            this.errorType = builder.errorType;
+            api = builder.api;
+            httpMethod = builder.httpMethod;
+            apiEndpoint = builder.apiEndpoint;
+            requestBuilder = builder.requestBuilder;
+            resourcePathParams = builder.resourcePathParams;
+            resourcePath = builder.resourcePath;
+            urlBuilder = builder.urlBuilder;
+            formEncodingBuilder = builder.formEncodingBuilder;
+            body = builder.body;
+            responseType = builder.responseType;
+            errorType = builder.errorType;
         }
 
         public Builder<RT, ET> pathParam(String name, String value) {
@@ -566,7 +567,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
     static final class SpecOnSubscribe<RT, ET> implements Observable.OnSubscribe<Response<RT, ET>> {
         private final CallSpec<RT, ET> originalSpec;
 
-        private SpecOnSubscribe(CallSpec<RT, ET> originalSpec) {
+        SpecOnSubscribe(CallSpec<RT, ET> originalSpec) {
             this.originalSpec = originalSpec;
         }
 

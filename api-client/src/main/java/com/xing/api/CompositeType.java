@@ -15,6 +15,8 @@
  */
 package com.xing.api;
 
+import android.support.annotation.Nullable;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -47,6 +49,8 @@ import java.util.List;
  * @author serj.lotutovici
  */
 final class CompositeType implements ParameterizedType {
+    static final String[] NO_ROOTS = new String[0];
+
     /**
      * Defines the possible response structures a caller may search for.
      * <p>
@@ -55,16 +59,16 @@ final class CompositeType implements ParameterizedType {
      * <li>LIST - A list of objects</li>
      * <li>FIRST - A single object wrapped in a list structure (happens often in profile resources)</li>
      */
-    protected enum Structure {
+    enum Structure {
         SINGLE,
         LIST,
         FIRST
     }
 
-    private final Type ownerType;
-    private final Type searchFor;
-    private final String[] roots;
-    private final Structure structure;
+    final Type ownerType;
+    final Type searchFor;
+    final String[] roots;
+    final Structure structure;
 
     CompositeType(Type ownerType, Type searchFor, Structure structure, String... roots) {
         this.ownerType = ownerType;
@@ -93,11 +97,11 @@ final class CompositeType implements ParameterizedType {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        CompositeType that = (CompositeType) obj;
+        CompositeType compareTo = (CompositeType) obj;
 
-        if (searchFor != null ? !searchFor.equals(that.searchFor) : that.searchFor != null) return false;
+        if (searchFor != null ? !searchFor.equals(compareTo.searchFor) : compareTo.searchFor != null) return false;
         // We need a strict order comparison.
-        return Arrays.equals(roots, that.roots) && structure == that.structure;
+        return Arrays.equals(roots, compareTo.roots) && structure == compareTo.structure;
     }
 
     @Override
@@ -127,7 +131,7 @@ final class CompositeType implements ParameterizedType {
 
     /** Roots where {@link #toFind()} is located. */
     String[] roots() {
-        return roots != null ? roots : new String[0];
+        return roots != null ? roots : NO_ROOTS;
     }
 
     /** Make sure that the required type will be processed as expected. */
@@ -135,7 +139,7 @@ final class CompositeType implements ParameterizedType {
         if (type instanceof CompositeType) {
             CompositeType composite = (CompositeType) type;
             // The caller is not aware of type ownership.
-            if (composite.getOwnerType() != ownerType) {
+            if (composite.ownerType != ownerType) {
                 return new CompositeType(ownerType, composite.searchFor, composite.structure, composite.roots);
             }
         }
@@ -144,11 +148,11 @@ final class CompositeType implements ParameterizedType {
     }
 
     /** Helps to avoid going through Moshi's ParameterizedTypeImpl so that {@code argType} is not wrapped by it. */
-    private static final class ListTypeImpl implements ParameterizedType {
+    static final class ListTypeImpl implements ParameterizedType {
         private final Type[] typeArguments;
 
-        public ListTypeImpl(Type argType) {
-            this.typeArguments = new Type[]{argType};
+        ListTypeImpl(Type argType) {
+            typeArguments = new Type[]{argType};
         }
 
         @Override
@@ -156,6 +160,7 @@ final class CompositeType implements ParameterizedType {
             return typeArguments;
         }
 
+        @Nullable
         @Override
         public Type getOwnerType() {
             return null;
