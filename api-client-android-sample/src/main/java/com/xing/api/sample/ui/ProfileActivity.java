@@ -30,14 +30,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
-import com.xing.api.Callback;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
 import com.xing.api.model.SearchResult;
 import com.xing.api.model.user.XingAddress;
 import com.xing.api.model.user.XingUser;
-import com.xing.api.resources.ProfileEditingResource;
 import com.xing.api.resources.UserProfilesResource;
 import com.xing.api.sample.BuildConfig;
 import com.xing.api.sample.Prefs;
@@ -127,8 +125,8 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
-    private static void populateTextView(TextView textView, String value) {
-        textView.setText(!TextUtils.isEmpty(value) ? value : "");
+    private static void populateTextView(TextView textView, @Nullable Object value) {
+        textView.setText(value != null ? String.valueOf(value) : "");
     }
 
     /**
@@ -188,27 +186,8 @@ public class ProfileActivity extends BaseActivity {
                   .logLevel(Level.BODY)
                   .build();
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
-            ProfileEditingResource editingResource = api.resource(ProfileEditingResource.class);
             Response<XingUser, HttpError> response = null;
             try {
-                editingResource.updateUserGeneralInformation()
-                      .formField("academic_title", "Ing.").enqueue(new Callback<String, HttpError>() {
-                    @Override
-                    public void onResponse(Response<String, HttpError> response) {
-                        if (response.isSuccess()) {
-                            //Success
-                            Log.w("Update res", response.raw().toString());
-                        } else {
-                            //Error Case
-                            Log.w("Update Res", "with error " + response.error().getErrorName());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e("Error", t.getLocalizedMessage(), t);
-                    }
-                });
                 response = profilesResource.getYourProfile().execute();
                 Response<List<SearchResult>, HttpError> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
                       .queryParam("user_fields", "display_name, id")
