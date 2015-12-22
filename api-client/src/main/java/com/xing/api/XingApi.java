@@ -21,6 +21,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.internal.json.CompanySizeJsonAdapter;
+import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.GenderJsonAdapter;
 import com.xing.api.internal.json.LanguageJsonAdapter;
 import com.xing.api.internal.json.LanguageSkillJsonAdapter;
@@ -198,6 +199,7 @@ public final class XingApi {
             moshiBuilder.add(LanguageSkillJsonAdapter.FACTORY);
             moshiBuilder.add(GenderJsonAdapter.FACTORY);
             moshiBuilder.add(CompanySizeJsonAdapter.FACTORY);
+            moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());
         }
