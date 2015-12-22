@@ -50,7 +50,7 @@ public final class XingApi {
     final HttpUrl apiEndpoint;
     final Moshi converter;
 
-    private XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter) {
+    XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter) {
         this.client = client;
         this.apiEndpoint = apiEndpoint;
         this.converter = converter;

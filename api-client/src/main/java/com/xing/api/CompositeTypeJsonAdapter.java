@@ -38,6 +38,7 @@ import java.util.Set;
  */
 final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     static final JsonAdapter.Factory FACTORY = new Factory() {
+        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
@@ -52,11 +53,12 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     private final String[] roots;
 
     public CompositeTypeJsonAdapter(Moshi moshi, CompositeType type) {
-        this.adapter = moshi.adapter(type.toFind());
-        this.roots = type.roots();
-        this.structure = type.structure();
+        adapter = moshi.adapter(type.toFind());
+        roots = type.roots();
+        structure = type.structure();
     }
 
+    @Nullable
     @Override
     public T fromJson(JsonReader reader) throws IOException {
         Object result = readRootLeafs(adapter, reader, roots, 0);
@@ -72,7 +74,7 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     }
 
     @Override
-    public void toJson(JsonWriter writer, T value) throws IOException {
+    public void toJson(JsonWriter writer, T value) {
         // CompositeType is a simplification for parsing XWS responses. No need to write it as a json.
     }
 
