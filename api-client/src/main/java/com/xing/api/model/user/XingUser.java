@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.squareup.moshi.Json;
+import com.xing.api.internal.json.CsvCollection;
 import com.xing.api.model.XingCalendar;
 
 import java.io.Serializable;
@@ -31,7 +32,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Java representation of a XING user.
@@ -44,17 +44,6 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unused", "CollectionWithoutInitialCapacity"}) // Public api
 public class XingUser implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    // TODO remove all the comma separation stuff.
-    private static final Pattern COMMA_SEPARATOR = Pattern.compile(", ");
-
-    public static boolean isUserIdValid(String userId) {
-        return !isUserIdInValid(userId);
-    }
-
-    public static boolean isUserIdInValid(String userId) {
-        return TextUtils.isEmpty(userId);
-    }
 
     @Json(name = "id")
     private String id;
@@ -82,18 +71,18 @@ public class XingUser implements Serializable {
     private List<PremiumService> premiumServices;
     @Json(name = "badges")
     private List<Badge> badges;
-    // TODO Custom Adapter for Comma-Seperated values
     @Json(name = "wants")
-    private String wants;
-    // TODO Custom Adapter for Comma-Seperated values
+    @CsvCollection
+    private List<String> wants;
     @Json(name = "haves")
-    private String haves;
-    // TODO Custom Adapter for Comma-Seperated values
+    @CsvCollection
+    private List<String> haves;
     @Json(name = "interests")
-    private String interests;
-    // TODO Custom Adapter for Comma-Seperated values
+    @CsvCollection
+    private List<String> interests;
     @Json(name = "organisation_member")
-    private String organisationMember;
+    @CsvCollection
+    private List<String> organizations;
     @Json(name = "languages")
     private Map<Language, LanguageSkill> languages;
     @Json(name = "private_address")
@@ -143,7 +132,7 @@ public class XingUser implements Serializable {
         result = 31 * result + (wants != null ? wants.hashCode() : 0);
         result = 31 * result + (haves != null ? haves.hashCode() : 0);
         result = 31 * result + (interests != null ? interests.hashCode() : 0);
-        result = 31 * result + (organisationMember != null ? organisationMember.hashCode() : 0);
+        result = 31 * result + (organizations != null ? organizations.hashCode() : 0);
         result = 31 * result + (languages != null ? languages.hashCode() : 0);
         result = 31 * result + (privateAddress != null ? privateAddress.hashCode() : 0);
         result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
@@ -174,7 +163,7 @@ public class XingUser implements Serializable {
               + ", wants=" + wants
               + ", haves=" + haves
               + ", interests=" + interests
-              + ", organisationMember=" + organisationMember
+              + ", organizations=" + organizations
               + ", languages=" + languages
               + ", privateAddress=" + privateAddress
               + ", timeZone=" + timeZone
@@ -328,119 +317,89 @@ public class XingUser implements Serializable {
         badges.add(badge);
     }
 
-    public String getWants() {
+    public List<String> getWants() {
         return wants;
     }
 
-    public void setWants(String wants) {
+    public void setWants(List<String> wants) {
         this.wants = wants;
     }
 
-    //    /**
-    //     * Replace the current wants with the ones from the param.
-    //     *
-    //     * @param wants String with wants with the format want1, want2, want3, want4
-    //     */
-    //
-    //    public void setWants(String wants) {
-    //        String[] wantsArray = COMMA_SEPARATOR.split(wants);
-    //        this.wants = Arrays.asList(wantsArray);
-    //    }
+    public void addToWants(String want) {
+        if (wants == null) wants = new ArrayList<>();
+        wants.add(want);
+    }
 
-    //    /**
-    //     * Adds a new want to the list of wants.
-    //     *
-    //     * @param want The new want to add to the list.
-    //     */
-    //    //TODO consider wants, haves and interests with commas, it can affect.
-    //    public void addWant(String want) {
-    //        if (wants == null) {
-    //            wants = new ArrayList<>(1);
-    //        }
-    //
-    //        wants.add(want);
-    //    }
+    public void addAllToWants(List<String> wants) {
+        if (this.wants == null) {
+            this.wants = wants;
+        } else {
+            this.wants.addAll(wants);
+        }
+    }
 
-    public String getHaves() {
+    public List<String> getHaves() {
         return haves;
     }
 
-    public void setHaves(String haves) {
+    public void setHaves(List<String> haves) {
         this.haves = haves;
     }
 
-    /**
-     * Replace the current haves with the ones from the param.
-     *
-     * //     * @param haves String with haves with the format have1, have2, have3, have4
-     */
+    public void addToHaves(String has) {
+        if (haves == null) haves = new ArrayList<>();
+        haves.add(has);
+    }
 
-    //    public void setHaves(String haves) {
-    //        String[] havesArray = COMMA_SEPARATOR.split(haves);
-    //        this.haves = Arrays.asList(havesArray);
-    //    }
-    //
-    //    public void addHave(String have) {
-    //        if (haves == null) {
-    //            haves = new ArrayList<>(1);
-    //        }
-    //
-    //        haves.add(have);
-    //    }
-    public String getInterests() {
+    public void addAllToHaves(List<String> haves) {
+        if (this.haves == null) {
+            this.haves = haves;
+        } else {
+            this.haves.addAll(haves);
+        }
+    }
+
+    public List<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(String interests) {
+    public void setInterests(List<String> interests) {
         this.interests = interests;
     }
-    //
-    //    /**
-    //     * Replace the current interests with the ones from the param.
-    //     *
-    //     * @param interests String with interests with the format interest1, interest2, interest3, interest4
-    //     */
-    //
-    //    public void setInterests(String interests) {
-    //        String[] interestsArray = COMMA_SEPARATOR.split(interests);
-    //        this.interests = Arrays.asList(interestsArray);
-    //    }
-    //
-    //    public void addInterest(String interest) {
-    //        if (interests == null) {
-    //            interests = new ArrayList<>(1);
-    //        }
-    //
-    //        interests.add(interest);
-    //    }
 
-    public String getOrganisationMember() {
-        return organisationMember;
+    public void addToInterests(String interest) {
+        if (interests == null) interests = new ArrayList<>();
+        interests.add(interest);
     }
 
-    public void setOrganisationMember(String organisationMember) {
-        this.organisationMember = organisationMember;
+    public void addAllToInterests(List<String> interests) {
+        if (this.interests == null) {
+            this.interests = interests;
+        } else {
+            this.interests.addAll(interests);
+        }
     }
 
-    //    /**
-    //     * Replace the current organisationMember with the ones from the param.
-    //     *
-    //     * @param organisationMember String with interests with the format organisationMember1, organisationMember2,
-    //     * organisationMember3, organisationMember4
-    //     */
-    //
-    //    public void setOrganisationMember(String organisationMember) {
-    //        String[] organisationMemberArray = COMMA_SEPARATOR.split(organisationMember);
-    //        this.organisationMember = Arrays.asList(organisationMemberArray);
-    //    }
-    //
-    //    public void addOrganisationMember(String organisationMember) {
-    //        if (this.organisationMember == null) {
-    //            this.organisationMember = new ArrayList<>(1);
-    //        }
-    //
-    //        this.organisationMember.add(organisationMember);
-    //    }
+    public List<String> getOrganizations() {
+        return organizations;
+    }
+
+    public void setOrganizations(List<String> organizations) {
+        this.organizations = organizations;
+    }
+
+    public void addToOrganisations(String organization) {
+        if (organizations == null) organizations = new ArrayList<>();
+        organizations.add(organization);
+    }
+
+    public void addAllToOrganizations(List<String> organizations) {
+        if (this.organizations == null) {
+            this.organizations = organizations;
+        } else {
+            this.organizations.addAll(organizations);
+        }
+    }
 
     public Map<Language, LanguageSkill> getLanguages() {
         return languages;
