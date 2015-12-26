@@ -43,6 +43,9 @@ public class WebProfileJsonAdapter extends EnumJsonAdapter<WebProfile> {
         }
     };
 
+    WebProfileJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public WebProfile fromJson(JsonReader reader) throws IOException {

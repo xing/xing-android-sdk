@@ -43,6 +43,9 @@ public final class CompanySizeJsonAdapter extends EnumJsonAdapter<CompanySize> {
         }
     };
 
+    CompanySizeJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public CompanySize fromJson(JsonReader reader) throws IOException {

@@ -43,6 +43,9 @@ public final class GenderJsonAdapter extends EnumJsonAdapter<Gender> {
         }
     };
 
+    GenderJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public Gender fromJson(JsonReader reader) throws IOException {

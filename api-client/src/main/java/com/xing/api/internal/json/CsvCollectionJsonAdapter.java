@@ -90,6 +90,9 @@ public abstract class CsvCollectionJsonAdapter<C extends Collection<String>> ext
         };
     }
 
+    CsvCollectionJsonAdapter() {
+    }
+
     @Override
     public C fromJson(JsonReader reader) throws IOException {
         C result = newCollection();

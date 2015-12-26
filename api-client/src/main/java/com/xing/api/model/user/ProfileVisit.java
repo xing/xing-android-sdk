@@ -16,9 +16,8 @@
 package com.xing.api.model.user;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.CalendarUtils;
 import com.xing.api.model.Reason;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 
@@ -54,13 +53,13 @@ public class ProfileVisit implements Serializable {
     private Gender gender;
     /** Date of visit. */
     @Json(name = "visited_at")
-    private XingCalendar visitedAt;
+    private SafeCalendar visitedAt;
     /** Encrypted date of visit. */
     @Json(name = "visited_at_encrypted")
     private String visitedAtEncrypted;
     /** User photo. */
     @Json(name = "photo_urls")
-    private XingPhotoUrls photoUrls;
+    private PhotoUrls photoUrls;
     /** Reason for visit. */
     @Json(name = "reason")
     private Reason reason;
@@ -127,7 +126,7 @@ public class ProfileVisit implements Serializable {
      *
      * @return photo URLs of user.
      */
-    public XingPhotoUrls getPhotoUrls() {
+    public PhotoUrls getPhotoUrls() {
         return photoUrls;
     }
 
@@ -136,7 +135,7 @@ public class ProfileVisit implements Serializable {
      *
      * @param photoUrls photo URLs of user.
      */
-    public void setPhotoUrls(XingPhotoUrls photoUrls) {
+    public void setPhotoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
     }
 
@@ -199,7 +198,7 @@ public class ProfileVisit implements Serializable {
      *
      * @return date of visit.
      */
-    public XingCalendar getVisitedAt() {
+    public SafeCalendar getVisitedAt() {
         return visitedAt;
     }
 
@@ -208,8 +207,8 @@ public class ProfileVisit implements Serializable {
      *
      * @param visitedAt date of visit.
      */
-    public void setVisitedAt(String visitedAt) {
-        this.visitedAt = CalendarUtils.parseCalendarFromString(visitedAt);
+    public void setVisitedAt(SafeCalendar visitedAt) {
+        this.visitedAt = visitedAt;
     }
 
     /**

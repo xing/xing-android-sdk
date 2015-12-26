@@ -61,10 +61,8 @@ dependencies {
     compile libraries.singpost
     compile libraries.okio
     compile libraries.okhttp
-    compile libraries.okhttpUrlConnection
     compile libraries.okhttpLoggingInterceptor
     compile libraries.moshi
-    compile libraries.moshiAdapters
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit

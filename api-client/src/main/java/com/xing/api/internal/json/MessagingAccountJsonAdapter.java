@@ -43,6 +43,9 @@ public class MessagingAccountJsonAdapter extends EnumJsonAdapter<MessagingAccoun
         }
     };
 
+    MessagingAccountJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public MessagingAccount fromJson(JsonReader reader) throws IOException {

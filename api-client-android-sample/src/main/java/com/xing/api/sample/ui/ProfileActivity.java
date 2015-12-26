@@ -34,7 +34,7 @@ import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
 import com.xing.api.model.SearchResult;
-import com.xing.api.model.user.XingAddress;
+import com.xing.api.model.user.Address;
 import com.xing.api.model.user.XingUser;
 import com.xing.api.resources.UserProfilesResource;
 import com.xing.api.sample.BuildConfig;
@@ -151,7 +151,7 @@ public class ProfileActivity extends BaseActivity {
      * Takes a XingAddress and returns a 3 line String with an address.
      * Be aware that the country field only returns the country code (Germany => DE).
      */
-    private static String formatAddress(XingAddress address) {
+    private static String formatAddress(Address address) {
         if (address != null) {
             StringBuilder sb = new StringBuilder();
             if (!TextUtils.isEmpty(address.getStreet())) {

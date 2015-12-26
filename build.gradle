@@ -61,7 +61,6 @@ allprojects {
               okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.6.0',
               okio                    : 'com.squareup.okio:okio:1.6.0',
               moshi                   : 'com.squareup.moshi:moshi:1.1.0-SNAPSHOT',
-              moshiAdapters           : 'com.squareup.moshi:moshi-adapters:1.1.0-SNAPSHOT',
 
               // Additional network libraries
               singpost                : 'oauth.signpost:signpost-core:1.2.1.2@jar',

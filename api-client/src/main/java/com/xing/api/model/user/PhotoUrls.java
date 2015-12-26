@@ -20,12 +20,10 @@ import com.squareup.moshi.Json;
 import java.io.Serializable;
 
 /**
- * Represents the photos of a user.
- *
- * @author serj.lotutovici
+ * TODO java docs.
  */
 @SuppressWarnings("unused")
-public class XingPhotoUrls implements Serializable {
+public class PhotoUrls implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "large")
@@ -57,17 +55,60 @@ public class XingPhotoUrls implements Serializable {
     @Json(name = "size_original")
     private String photoSizeOriginalUrl;
 
+    @SuppressWarnings("SimplifiableIfStatement")
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof XingPhotoUrls)) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        //noinspection QuestionableName
+        PhotoUrls that = (PhotoUrls) o;
+
+        if (photoLargeUrl != null ? !photoLargeUrl.equals(that.photoLargeUrl) : that.photoLargeUrl != null) {
             return false;
         }
-
-        XingPhotoUrls xingPhotoUrls = (XingPhotoUrls) obj;
-        return hashCode() == xingPhotoUrls.hashCode();
+        if (photoMaxiThumbUrl != null ? !photoMaxiThumbUrl.equals(that.photoMaxiThumbUrl)
+              : that.photoMaxiThumbUrl != null) {
+            return false;
+        }
+        if (photoMediumThumbUrl != null ? !photoMediumThumbUrl.equals(that.photoMediumThumbUrl)
+              : that.photoMediumThumbUrl != null) {
+            return false;
+        }
+        if (photoMiniThumbUrl != null ? !photoMiniThumbUrl.equals(that.photoMiniThumbUrl)
+              : that.photoMiniThumbUrl != null) {
+            return false;
+        }
+        if (photoThumbUrl != null ? !photoThumbUrl.equals(that.photoThumbUrl) : that.photoThumbUrl != null) {
+            return false;
+        }
+        if (photoSize32Url != null ? !photoSize32Url.equals(that.photoSize32Url) : that.photoSize32Url != null) {
+            return false;
+        }
+        if (photoSize48Url != null ? !photoSize48Url.equals(that.photoSize48Url) : that.photoSize48Url != null) {
+            return false;
+        }
+        if (photoSize64Url != null ? !photoSize64Url.equals(that.photoSize64Url) : that.photoSize64Url != null) {
+            return false;
+        }
+        if (photoSize96Url != null ? !photoSize96Url.equals(that.photoSize96Url) : that.photoSize96Url != null) {
+            return false;
+        }
+        if (photoSize128Url != null ? !photoSize128Url.equals(that.photoSize128Url) : that.photoSize128Url != null) {
+            return false;
+        }
+        if (photoSize192Url != null ? !photoSize192Url.equals(that.photoSize192Url) : that.photoSize192Url != null) {
+            return false;
+        }
+        if (photoSize256Url != null ? !photoSize256Url.equals(that.photoSize256Url) : that.photoSize256Url != null) {
+            return false;
+        }
+        if (photoSize1024Url != null ? !photoSize1024Url.equals(that.photoSize1024Url)
+              : that.photoSize1024Url != null) {
+            return false;
+        }
+        return photoSizeOriginalUrl != null ? photoSizeOriginalUrl.equals(that.photoSizeOriginalUrl)
+              : that.photoSizeOriginalUrl == null;
     }
 
     @Override

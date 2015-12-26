@@ -16,8 +16,7 @@
 package com.xing.api.model.user;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.CalendarUtils;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 
@@ -29,7 +28,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused")
 public class ContactRequest implements Serializable {
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
 
     /** ID of sender. */
     @Json(name = "sender_id")
@@ -42,20 +41,30 @@ public class ContactRequest implements Serializable {
     private String message;
     /** Date of contact request. */
     @Json(name = "received_at")
-    private XingCalendar receivedAt;
+    private SafeCalendar receivedAt;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
+    public String toString() {
+        return "ContactRequest{"
+              + "senderId='" + senderId + '\''
+              + ", sender=" + sender
+              + ", message='" + message + '\''
+              + ", receivedAt=" + receivedAt
+              + '}';
+    }
 
-        if (!(obj instanceof ContactRequest)) {
-            return false;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ContactRequest contactRequest = (ContactRequest) obj;
-        return ((contactRequest.senderId != null) && (senderId != null)) && contactRequest.senderId.equals(senderId);
+        ContactRequest otherRequest = (ContactRequest) o;
+
+        return (senderId != null ? senderId.equals(otherRequest.senderId)
+              : otherRequest.senderId == null) && (sender != null ? sender.equals(otherRequest.sender)
+              : otherRequest.sender == null) && (message != null ? message.equals(otherRequest.message)
+              : otherRequest.message == null) && (receivedAt != null ? receivedAt.equals(otherRequest.receivedAt)
+              : otherRequest.receivedAt == null);
     }
 
     @Override
@@ -67,74 +76,34 @@ public class ContactRequest implements Serializable {
         return result;
     }
 
-    /**
-     * Return sender id.
-     *
-     * @return sender id.
-     */
     public String getSenderId() {
         return senderId;
     }
 
-    /**
-     * Set sender id.
-     *
-     * @param id sender id.
-     */
     public void setSenderId(String id) {
         senderId = id;
     }
 
-    /**
-     * Return contact request date.
-     *
-     * @return Date of contact request.
-     */
-    public XingCalendar getReceivedAt() {
+    public SafeCalendar getReceivedAt() {
         return receivedAt;
     }
 
-    /**
-     * Set date of contact request.
-     *
-     * @param receivedAt Date of contact request.
-     */
-    public void setReceivedAt(String receivedAt) {
-        this.receivedAt = CalendarUtils.parseCalendarFromString(receivedAt);
+    public void setReceivedAt(SafeCalendar receivedAt) {
+        this.receivedAt = receivedAt;
     }
 
-    /**
-     * Return sender message.
-     *
-     * @return sender message.
-     */
     public String getMessage() {
         return message;
     }
 
-    /**
-     * Set sender message.
-     *
-     * @param message sender message.
-     */
     public void setMessage(String message) {
         this.message = message;
     }
 
-    /**
-     * Return sender user object.
-     *
-     * @return sender user object.
-     */
     public XingUser getSender() {
         return sender;
     }
 
-    /**
-     * Set sender user object.
-     *
-     * @param sender sender user object.
-     */
     public void setSender(XingUser sender) {
         this.sender = sender;
     }

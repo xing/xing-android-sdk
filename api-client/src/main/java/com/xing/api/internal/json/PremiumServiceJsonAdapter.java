@@ -43,6 +43,9 @@ public class PremiumServiceJsonAdapter extends EnumJsonAdapter<PremiumService> {
         }
     };
 
+    PremiumServiceJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public PremiumService fromJson(JsonReader reader) throws IOException {
