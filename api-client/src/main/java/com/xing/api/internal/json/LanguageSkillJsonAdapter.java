@@ -43,6 +43,9 @@ public class LanguageSkillJsonAdapter extends EnumJsonAdapter<LanguageSkill> {
         }
     };
 
+    LanguageSkillJsonAdapter() {
+    }
+
     @Nullable
     @Override
     public LanguageSkill fromJson(JsonReader reader) throws IOException {

@@ -20,15 +20,17 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
+import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.CompanySizeJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.GenderJsonAdapter;
 import com.xing.api.internal.json.LanguageJsonAdapter;
 import com.xing.api.internal.json.LanguageSkillJsonAdapter;
 import com.xing.api.internal.json.MessagingAccountJsonAdapter;
+import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.PremiumServiceJsonAdapter;
+import com.xing.api.internal.json.SafeCalendarJsonAdapter;
 import com.xing.api.internal.json.WebProfileJsonAdapter;
-import com.xing.api.internal.json.XingCalendarJsonAdapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -191,7 +193,9 @@ public final class XingApi {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
-            moshiBuilder.add(XingCalendarJsonAdapter.FACTORY);
+            moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
+            moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
+            moshiBuilder.add(PhoneJsonAdapter.FACTORY);
             moshiBuilder.add(WebProfileJsonAdapter.FACTORY);
             moshiBuilder.add(MessagingAccountJsonAdapter.FACTORY);
             moshiBuilder.add(PremiumServiceJsonAdapter.FACTORY);

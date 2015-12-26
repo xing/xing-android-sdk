@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.model;
+package com.xing.api.internal.json;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
+import com.xing.api.model.SafeCalendar;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -27,25 +36,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Data format utilities that help convert received dates form json to calendar instances.
+ * {@link JsonAdapter} that parses all types of dates received form XWS and converts them into a {@link SafeCalendar}.
  *
- * Currently supporting the next formats:
- * <li>"yyyy-MM"</li>
- * <li>"yyyy"</li>
- * <li>"yyyy-MM-dd"</li>
- * <li>"yyyy-MM-dd'T'HH:mmZ"</li>
- * <p/>
- * <p/>
- * <p/>
- *
+ * @author daniel.hartwich
  * @author serj.lotutovici
  */
 @SuppressLint("SimpleDateFormat")
-public final class CalendarUtils {
+public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapter<T> {
     private static final String REG_EX_YEAR = "^(19|20)\\d{2}";
     private static final String REG_EX_YEAR_MONTH = "^(19|20)\\d{2}-\\d{2}$";
     private static final String REG_EX_YEAR_MONTH_DAY = "^(19|20)\\d{2}-\\d{2}-\\d{2}$";
@@ -59,9 +62,7 @@ public final class CalendarUtils {
     private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
 
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
-
-    /** A processing map for the date string to calendar conversion. */
-    private static final Map<String, DateFormat> DATE_FORMAT_MAP = new HashMap<>(5);
+    private static final Map<String, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
 
     static {
         DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT));
@@ -71,19 +72,28 @@ public final class CalendarUtils {
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT));
     }
 
-    /**
-     * Parse the string to a calendar instance.
-     *
-     * @param dateStr The string to parse
-     * @return A calendar instance with the encoded date, or null if nothing can be extracted
-     */
-    @Nullable
-    public static XingCalendar parseCalendarFromString(@Nullable String dateStr) {
-
-        // Return null if the date string is empty
-        if (TextUtils.isEmpty(dateStr)) {
+    public static final Factory FACTORY = new Factory() {
+        @Nullable
+        @Override
+        public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
+            if (!annotations.isEmpty()) return null;
+            Class<?> rawType = Types.getRawType(type);
+            if (rawType == SafeCalendar.class || rawType == GregorianCalendar.class
+                  || rawType == Calendar.class) {
+                return new SafeCalendarJsonAdapter().nullSafe();
+            }
             return null;
         }
+    };
+
+    SafeCalendarJsonAdapter() {
+    }
+
+    @Nullable
+    @Override
+    public T fromJson(JsonReader reader) throws IOException {
+        String dateStr = reader.nextString();
+        if (dateStr.isEmpty()) return null;
 
         // Read the format entry
         DateFormat format = null;
@@ -95,25 +105,58 @@ public final class CalendarUtils {
         }
 
         // No supported format
-        if (format == null) {
-            return null;
-        }
+        if (format == null) return null;
 
         try {
             // Try to parse the date
             Date date = format.parse(dateStr);
             // Create a calendar instance, clear it and set the received time
-            XingCalendar calendar = new XingCalendar();
+            Calendar calendar = new SafeCalendar();
             calendar.clear();
             calendar.setTime(date);
 
             // Clear unnecessary fields form calendar
             clearCalendarByRegEx(calendar, ((SimpleDateFormat) format).toPattern());
 
-            return calendar;
+            //noinspection unchecked
+            return (T) calendar;
         } catch (ParseException ex) {
+            // This should not be reached.
             return null;
         }
+    }
+
+    @Override
+    public void toJson(JsonWriter writer, T calendar) throws IOException {
+        StringBuilder output = null;
+        if (calendar.isSet(Calendar.YEAR)) {
+            output = new StringBuilder();
+            output.append(calendar.get(Calendar.YEAR));
+            if (calendar.isSet(Calendar.MONTH)) {
+                output.append('-');
+                output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MONTH) + 1));
+                if (calendar.isSet(Calendar.DAY_OF_MONTH)) {
+                    output.append('-');
+                    output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.DAY_OF_MONTH)));
+                    if (isFilledToTime(calendar)) {
+                        output.append('T');
+                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.HOUR_OF_DAY)));
+                        output.append(':');
+                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MINUTE)));
+                        output.append(':');
+                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.SECOND)));
+                        output.append('Z');
+                    }
+                }
+            }
+        }
+
+        writer.value(output != null ? output.toString() : null);
+    }
+
+    @Override
+    public String toString() {
+        return "JsonAdapter(" + SafeCalendar.class + ')';
     }
 
     /**
@@ -122,7 +165,7 @@ public final class CalendarUtils {
      * @param calendar The calendar to clear
      * @param regEx The reg ex
      */
-    private static void clearCalendarByRegEx(XingCalendar calendar, String regEx) {
+    private static void clearCalendarByRegEx(Calendar calendar, String regEx) {
         switch (regEx) {
             case YEAR_DATE_FORMAT: {
                 calendar.clear(Calendar.MONTH);
@@ -140,58 +183,14 @@ public final class CalendarUtils {
     }
 
     /**
-     * Converts a XingCalendar object into a String with the format "yyyy-MM-ddThh:mm:ssZ". Useful to save dates into
-     * the database, easily convertible to XingCalendar again with {@link com.xing.api.model.CalendarUtils
-     * .parseCalendarFromString(String)}.
-     *
-     * It is possible to do the same with a DateFormat, but due to the issues on DateFormat on API 15
-     * and the simplicity of the implementation, it's better to use our own one.
-     *
-     * @param calendar The XingCalendar to convert.
-     * @return The String with the timestamp.
-     */
-    @Nullable
-    public static String calendarToTimestamp(@NonNull XingCalendar calendar) {
-        String output = null;
-        if (calendar.isSet(Calendar.YEAR)) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(calendar.get(Calendar.YEAR));
-            if (calendar.isSet(Calendar.MONTH)) {
-                stringBuilder.append('-');
-                stringBuilder.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MONTH) + 1));
-                if (calendar.isSet(Calendar.DAY_OF_MONTH)) {
-                    stringBuilder.append('-');
-                    stringBuilder.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.DAY_OF_MONTH)));
-                    if (isFilledToTime(calendar)) {
-                        stringBuilder.append('T');
-                        stringBuilder.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.HOUR_OF_DAY)));
-                        stringBuilder.append(':');
-                        stringBuilder.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MINUTE)));
-                        stringBuilder.append(':');
-                        stringBuilder.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.SECOND)));
-                        stringBuilder.append('Z');
-                    }
-                }
-            }
-            output = stringBuilder.toString();
-        }
-        return output;
-    }
-
-    /**
-     * Checks if a XingCalendar object has all the necessary fields set to generate a timeStamp.
+     * Checks if a {@link SafeCalendar} has all the necessary fields set to generate a timestamp.
      * These fields are: year, month, day of month, hour of day, minute and second.
      *
-     * @param calendar The XingCalendar to check.
      * @return True if has all the fields set, false otherwise.
      */
-    private static boolean isFilledToTime(@NonNull XingCalendar calendar) {
-        return calendar.isSet(Calendar.HOUR_OF_DAY) && calendar.isSet(Calendar.MINUTE) && calendar.isSet(
-                Calendar.SECOND);
-    }
-
-    private CalendarUtils() {
-        throw new AssertionError("No instances.");
+    private static boolean isFilledToTime(@NonNull Calendar calendar) {
+        return calendar.isSet(Calendar.HOUR_OF_DAY)
+              && calendar.isSet(Calendar.MINUTE)
+              && calendar.isSet(Calendar.SECOND);
     }
 }
-

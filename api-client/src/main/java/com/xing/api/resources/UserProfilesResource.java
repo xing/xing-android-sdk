@@ -22,7 +22,6 @@ import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
 import com.xing.api.model.IdCard;
 import com.xing.api.model.SearchResult;
-import com.xing.api.model.user.LegalInformation;
 import com.xing.api.model.user.ProfileMessage;
 import com.xing.api.model.user.XingUser;
 
@@ -157,10 +156,10 @@ public class UserProfilesResource extends Resource {
      * @param userId The ID of the user from whom you want to receive the legal information
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<LegalInformation, HttpError> getLegalInformation(String userId) {
-        return Resource.<LegalInformation, HttpError>newGetSpec(api, "/v1/users/{user_id}/legal_information")
+    public CallSpec<String, HttpError> getLegalInformation(String userId) {
+        return Resource.<String, HttpError>newGetSpec(api, "/v1/users/{user_id}/legal_information")
               .pathParam("user_id", userId)
-              .responseAs(LegalInformation.class, "legal_information")
+              .responseAs(String.class, "legal_information", "content")
               .build();
     }
 
@@ -169,7 +168,7 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<LegalInformation, HttpError> getYourLegalInformation() {
+    public CallSpec<String, HttpError> getYourLegalInformation() {
         return getLegalInformation(ME);
     }
 }

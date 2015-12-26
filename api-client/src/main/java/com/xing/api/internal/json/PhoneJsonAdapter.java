@@ -21,53 +21,43 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Rfc3339DateJsonAdapter;
 import com.squareup.moshi.Types;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.user.Phone;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.Set;
 
 /**
- * @author daniel.hartwich
+ * @author serj.lotutovici
  */
-public class XingCalendarJsonAdapter extends JsonAdapter<XingCalendar> {
-    public static final Factory FACTORY = new Factory() {
+public class PhoneJsonAdapter extends JsonAdapter<Phone> {
+    public static final JsonAdapter.Factory FACTORY = new Factory() {
         @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
             Class<?> rawType = Types.getRawType(type);
-            if (rawType != XingCalendar.class) return null;
-            return new XingCalendarJsonAdapter(new Rfc3339DateJsonAdapter()).nullSafe();
+            if (rawType != Phone.class) return null;
+            return new PhoneJsonAdapter().nullSafe();
         }
     };
 
-    private final Rfc3339DateJsonAdapter delegate;
-
-    XingCalendarJsonAdapter(Rfc3339DateJsonAdapter adapter) {
-        delegate = adapter;
+    PhoneJsonAdapter() {
     }
 
     @Override
-    public XingCalendar fromJson(JsonReader reader) throws IOException {
-        Date date = delegate.fromJson(reader);
-        XingCalendar calendar = new XingCalendar();
-        calendar.setTime(date);
-        return calendar;
+    public Phone fromJson(JsonReader reader) throws IOException {
+        String phone = reader.nextString();
+        String[] pieces = phone.split("\\|");
+        if (pieces.length == 3) return new Phone(pieces[0], pieces[1], pieces[2]);
+        // Avoid returning a null phone if the server didn't return null.
+        return new Phone("", "", "");
     }
 
     @Override
-    public void toJson(JsonWriter writer, XingCalendar value) throws IOException {
-        Date date = value.getTime();
-        delegate.toJson(writer, date);
-    }
-
-    @Override
-    public String toString() {
-        return "JsonAdapter(" + XingCalendar.class + ')';
+    public void toJson(JsonWriter writer, Phone value) throws IOException {
+        writer.value(value.toString());
     }
 }

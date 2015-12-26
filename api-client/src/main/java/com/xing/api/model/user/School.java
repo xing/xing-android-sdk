@@ -18,7 +18,7 @@ package com.xing.api.model.user;
 import android.text.TextUtils;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,10 +49,10 @@ public class School implements Serializable {
     private String subject;
     /** Start date. */
     @Json(name = "begin_date")
-    private XingCalendar beginDate;
+    private SafeCalendar beginDate;
     /** End date. */
     @Json(name = "end_date")
-    private XingCalendar endDate;
+    private SafeCalendar endDate;
 
     @Override
     public boolean equals(Object obj) {
@@ -178,7 +178,7 @@ public class School implements Serializable {
      *
      * @return start date.
      */
-    public XingCalendar getBeginDate() {
+    public SafeCalendar getBeginDate() {
         return beginDate;
     }
 
@@ -187,7 +187,7 @@ public class School implements Serializable {
      *
      * @param beginDate start date.
      */
-    public void setBeginDate(XingCalendar beginDate) {
+    public void setBeginDate(SafeCalendar beginDate) {
         this.beginDate = beginDate;
     }
 
@@ -196,7 +196,7 @@ public class School implements Serializable {
      *
      * @return end date.
      */
-    public XingCalendar getEndDate() {
+    public SafeCalendar getEndDate() {
         return endDate;
     }
 
@@ -205,7 +205,7 @@ public class School implements Serializable {
      *
      * @param endDate end date.
      */
-    public void setEndDate(XingCalendar endDate) {
+    public void setEndDate(SafeCalendar endDate) {
         this.endDate = endDate;
     }
 }

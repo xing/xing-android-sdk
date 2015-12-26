@@ -16,7 +16,7 @@
 package com.xing.api.model;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.user.XingPhotoUrls;
+import com.xing.api.model.user.PhotoUrls;
 
 /**
  * Representation of a users id card.
@@ -50,7 +50,7 @@ public class IdCard {
      * User photo urls.
      */
     @Json(name = "photo_urls")
-    private XingPhotoUrls photoUrls;
+    private PhotoUrls photoUrls;
 
     /**
      * Return id.
@@ -111,7 +111,7 @@ public class IdCard {
      *
      * @return user photo URLs.
      */
-    public XingPhotoUrls getPhotoUrls() {
+    public PhotoUrls getPhotoUrls() {
         return photoUrls;
     }
 
@@ -120,7 +120,7 @@ public class IdCard {
      *
      * @param photoUrls user photo URLs.
      */
-    public void setPhotoUrls(XingPhotoUrls photoUrls) {
+    public void setPhotoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
     }
 }

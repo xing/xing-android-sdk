@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Phone</a>
  */
 @SuppressWarnings("unused") // Public api
-public class XingAddress implements Serializable {
+public class Address implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "city")
@@ -36,11 +36,11 @@ public class XingAddress implements Serializable {
     @Json(name = "email")
     private String email;
     @Json(name = "fax")
-    private XingPhone fax;
+    private Phone fax;
     @Json(name = "mobile_phone")
-    private String mobilePhone;
+    private Phone mobilePhone;
     @Json(name = "phone")
-    private XingPhone phone;
+    private Phone phone;
     @Json(name = "province")
     private String province;
     @Json(name = "street")
@@ -48,17 +48,23 @@ public class XingAddress implements Serializable {
     @Json(name = "zip_code")
     private String zipCode;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof XingAddress)) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        XingAddress address = (XingAddress) obj;
-        return hashCode() == address.hashCode();
+        Address address = (Address) o;
+
+        return (city != null ? city.equals(address.city) : address.city == null)
+              && (country != null ? country.equals(address.country) : address.country == null)
+              && (email != null ? email.equals(address.email) : address.email == null)
+              && (fax != null ? fax.equals(address.fax) : address.fax == null)
+              && (mobilePhone != null ? mobilePhone.equals(address.mobilePhone) : address.mobilePhone == null)
+              && (phone != null ? phone.equals(address.phone) : address.phone == null)
+              && (province != null ? province.equals(address.province) : address.province == null)
+              && (street != null ? street.equals(address.street) : address.street == null)
+              && (zipCode != null ? zipCode.equals(address.zipCode) : address.zipCode == null);
     }
 
     @Override
@@ -99,46 +105,28 @@ public class XingAddress implements Serializable {
         this.email = email;
     }
 
-    public XingPhone getFax() {
+    public Phone getFax() {
         return fax;
     }
 
-    public void setFax(String fax) throws XingPhone.InvalidPhoneException {
-        this.fax = XingPhone.createXingPhone(fax);
-    }
-
-    public void setFax(XingPhone fax) {
+    public void setFax(Phone fax) {
         this.fax = fax;
     }
 
-    public void setFax(String countryCode, String areaCode, String number)
-    throws XingPhone.InvalidPhoneException {
-        fax = new XingPhone(countryCode, areaCode, number);
-    }
-
-    public String getMobilePhone() {
+    public Phone getMobilePhone() {
         return mobilePhone;
     }
 
-    public void setMobilePhone(String mobilePhone) {
+    public void setMobilePhone(Phone mobilePhone) {
         this.mobilePhone = mobilePhone;
     }
 
-    public XingPhone getPhone() {
+    public Phone getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) throws XingPhone.InvalidPhoneException {
-        this.phone = XingPhone.createXingPhone(phone);
-    }
-
-    public void setPhone(XingPhone phone) {
+    public void setPhone(Phone phone) {
         this.phone = phone;
-    }
-
-    public void setPhone(String countryCode, String areaCode, String number)
-    throws XingPhone.InvalidPhoneException {
-        phone = new XingPhone(countryCode, areaCode, number);
     }
 
     public String getProvince() {

@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.model.user;
+package com.xing.api.internal.json;
 
-import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonQualifier;
 
-import java.io.Serializable;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-/**
- * @author daniel.hartwich
- */
-public class LegalInformation implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Json(name = "content")
-    private String content;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
+/** Represents a json object that should be parsed as a {@link com.xing.api.model.SafeCalendar}. */
+@Documented
+@JsonQualifier
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BirthDate {
 }

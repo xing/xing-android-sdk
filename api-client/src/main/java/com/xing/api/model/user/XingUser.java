@@ -17,15 +17,14 @@ package com.xing.api.model.user;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Patterns;
 
 import com.squareup.moshi.Json;
+import com.xing.api.internal.json.BirthDate;
 import com.xing.api.internal.json.CsvCollection;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -47,6 +46,8 @@ public class XingUser implements Serializable {
 
     @Json(name = "id")
     private String id;
+    @Json(name = "academic_title")
+    private String academicTitle;
     @Json(name = "first_name")
     private String firstName;
     @Json(name = "last_name")
@@ -61,8 +62,9 @@ public class XingUser implements Serializable {
     private EmploymentStatus employmentStatus;
     @Json(name = "gender")
     private Gender gender;
-    //FIXME annotate with birth_date
-    private volatile XingCalendar birthday;
+    @BirthDate
+    @Json(name = "birth_date")
+    private SafeCalendar birthDate;
     @Json(name = "active_email")
     private String activeEmail;
     @Json(name = "time_zone")
@@ -86,38 +88,88 @@ public class XingUser implements Serializable {
     @Json(name = "languages")
     private Map<Language, LanguageSkill> languages;
     @Json(name = "private_address")
-    private XingAddress privateAddress;
+    private Address privateAddress;
     @Json(name = "business_address")
-    private XingAddress businessAddress;
+    private Address businessAddress;
     @Json(name = "web_profiles")
     private Map<WebProfile, Set<String>> webProfiles;
     @Json(name = "instant_messaging_accounts")
-    private Map<MessagingAccount, String> instantMessagingAccounts;
-    //    // TODO Handle Dates more correctly
+    private Map<MessagingAccount, String> messagingAccounts;
     @Json(name = "professional_experience")
     private ProfessionalExperience professionalExperience;
-    //    // TODO Handle Dates more correctly
-    //    @Json(name = "educational_background")
-    //    private EducationalBackground educationBackground;
+    @Json(name = "educational_background")
+    private EducationalBackground educationBackground;
     @Json(name = "photo_urls")
-    private XingPhotoUrls photoUrls;
+    private PhotoUrls photoUrls;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof XingUser)) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        XingUser xingUser = (XingUser) o;
+
+        if (id != null ? !id.equals(xingUser.id) : xingUser.id != null) return false;
+        if (academicTitle != null ? !academicTitle.equals(xingUser.academicTitle) : xingUser.academicTitle != null) {
             return false;
         }
-
-        XingUser user = (XingUser) obj;
-        return hashCode() == user.hashCode();
+        if (firstName != null ? !firstName.equals(xingUser.firstName) : xingUser.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(xingUser.lastName) : xingUser.lastName != null) return false;
+        if (displayName != null ? !displayName.equals(xingUser.displayName) : xingUser.displayName != null) {
+            return false;
+        }
+        if (pageName != null ? !pageName.equals(xingUser.pageName) : xingUser.pageName != null) return false;
+        if (permalink != null ? !permalink.equals(xingUser.permalink) : xingUser.permalink != null) return false;
+        if (employmentStatus != xingUser.employmentStatus) return false;
+        if (gender != xingUser.gender) return false;
+        if (birthDate != null ? !birthDate.equals(xingUser.birthDate) : xingUser.birthDate != null) return false;
+        if (activeEmail != null ? !activeEmail.equals(xingUser.activeEmail) : xingUser.activeEmail != null) {
+            return false;
+        }
+        if (timeZone != null ? !timeZone.equals(xingUser.timeZone) : xingUser.timeZone != null) return false;
+        if (premiumServices != null ? !premiumServices.equals(xingUser.premiumServices)
+              : xingUser.premiumServices != null) {
+            return false;
+        }
+        if (badges != null ? !badges.equals(xingUser.badges) : xingUser.badges != null) return false;
+        if (wants != null ? !wants.equals(xingUser.wants) : xingUser.wants != null) return false;
+        if (haves != null ? !haves.equals(xingUser.haves) : xingUser.haves != null) return false;
+        if (interests != null ? !interests.equals(xingUser.interests) : xingUser.interests != null) return false;
+        if (organizations != null ? !organizations.equals(xingUser.organizations) : xingUser.organizations != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(xingUser.languages) : xingUser.languages != null) return false;
+        if (privateAddress != null ? !privateAddress.equals(xingUser.privateAddress)
+              : xingUser.privateAddress != null) {
+            return false;
+        }
+        if (businessAddress != null ? !businessAddress.equals(xingUser.businessAddress)
+              : xingUser.businessAddress != null) {
+            return false;
+        }
+        if (webProfiles != null ? !webProfiles.equals(xingUser.webProfiles) : xingUser.webProfiles != null) {
+            return false;
+        }
+        if (messagingAccounts != null ? !messagingAccounts.equals(xingUser.messagingAccounts)
+              : xingUser.messagingAccounts != null) {
+            return false;
+        }
+        if (professionalExperience != null ? !professionalExperience.equals(xingUser.professionalExperience)
+              : xingUser.professionalExperience != null) {
+            return false;
+        }
+        //noinspection SimplifiableIfStatement
+        if (educationBackground != null ? !educationBackground.equals(xingUser.educationBackground)
+              : xingUser.educationBackground != null) {
+            return false;
+        }
+        return photoUrls != null ? photoUrls.equals(xingUser.photoUrls) : xingUser.photoUrls == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (academicTitle != null ? academicTitle.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
@@ -125,8 +177,9 @@ public class XingUser implements Serializable {
         result = 31 * result + (permalink != null ? permalink.hashCode() : 0);
         result = 31 * result + (employmentStatus != null ? employmentStatus.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
         result = 31 * result + (activeEmail != null ? activeEmail.hashCode() : 0);
+        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
         result = 31 * result + (premiumServices != null ? premiumServices.hashCode() : 0);
         result = 31 * result + (badges != null ? badges.hashCode() : 0);
         result = 31 * result + (wants != null ? wants.hashCode() : 0);
@@ -135,12 +188,11 @@ public class XingUser implements Serializable {
         result = 31 * result + (organizations != null ? organizations.hashCode() : 0);
         result = 31 * result + (languages != null ? languages.hashCode() : 0);
         result = 31 * result + (privateAddress != null ? privateAddress.hashCode() : 0);
-        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
         result = 31 * result + (businessAddress != null ? businessAddress.hashCode() : 0);
         result = 31 * result + (webProfiles != null ? webProfiles.hashCode() : 0);
-        result = 31 * result + (instantMessagingAccounts != null ? instantMessagingAccounts.hashCode() : 0);
-        //        result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
+        result = 31 * result + (messagingAccounts != null ? messagingAccounts.hashCode() : 0);
         result = 31 * result + (professionalExperience != null ? professionalExperience.hashCode() : 0);
+        result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
         result = 31 * result + (photoUrls != null ? photoUrls.hashCode() : 0);
         return result;
     }
@@ -149,6 +201,7 @@ public class XingUser implements Serializable {
     public String toString() {
         return "XingUser{"
               + "id='" + id + '\''
+              + ", academicTitle='" + academicTitle + '\''
               + ", firstName='" + firstName + '\''
               + ", lastName='" + lastName + '\''
               + ", displayName='" + displayName + '\''
@@ -156,7 +209,7 @@ public class XingUser implements Serializable {
               + ", permalink=" + permalink
               + ", employmentStatus=" + employmentStatus
               + ", gender=" + gender
-              + ", birthday=" + birthday
+              + ", birthDate=" + birthDate
               + ", activeEmail='" + activeEmail + '\''
               + ", premiumServices=" + premiumServices
               + ", badges=" + badges
@@ -169,8 +222,8 @@ public class XingUser implements Serializable {
               + ", timeZone=" + timeZone
               + ", businessAddress=" + businessAddress
               + ", webProfiles=" + webProfiles
-              + ", instantMessagingAccounts=" + instantMessagingAccounts
-              //              + ", educationBackground=" + educationBackground
+              + ", messagingAccounts=" + messagingAccounts
+              + ", educationBackground=" + educationBackground
               + ", professionalExperience=" + professionalExperience
               + ", photoUrls=" + photoUrls
               + '}';
@@ -180,12 +233,16 @@ public class XingUser implements Serializable {
         return id;
     }
 
-    public void setId(@NonNull String id) {
-        if (TextUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("id can not be null neither empty");
-        } else {
-            this.id = id;
-        }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getAcademicTitle() {
+        return academicTitle;
+    }
+
+    public void setAcademicTitle(String academicTitle) {
+        this.academicTitle = academicTitle;
     }
 
     public String getFirstName() {
@@ -234,9 +291,8 @@ public class XingUser implements Serializable {
 
     public void setPermalink(String permalink) {
         if (!Patterns.WEB_URL.matcher(permalink).matches()) {
-            throw new InvalidParameterException(permalink + " is not an url.");
+            throw new IllegalArgumentException(permalink + " is not an url.");
         }
-
         this.permalink = permalink;
     }
 
@@ -252,12 +308,12 @@ public class XingUser implements Serializable {
         this.employmentStatus = EmploymentStatus.valueOf(employmentStatus);
     }
 
-    public XingCalendar getBirthday() {
-        return birthday;
+    public SafeCalendar getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirthday(XingCalendar birthday) {
-        this.birthday = birthday;
+    public void setBirthDate(SafeCalendar birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getActiveEmail() {
@@ -266,10 +322,9 @@ public class XingUser implements Serializable {
 
     public void setActiveEmail(String activeEmail) {
         if (!Patterns.EMAIL_ADDRESS.matcher(activeEmail).matches()) {
-            throw new InvalidParameterException(activeEmail + " is not a valid email");
-        } else {
-            this.activeEmail = activeEmail;
+            throw new IllegalArgumentException(activeEmail + " is not a valid email");
         }
+        this.activeEmail = activeEmail;
     }
 
     public List<PremiumService> getPremiumServices() {
@@ -281,9 +336,7 @@ public class XingUser implements Serializable {
     }
 
     public void addPremiumService(PremiumService premiumService) {
-        if (premiumServices == null) {
-            premiumServices = new ArrayList<>(1);
-        }
+        if (premiumServices == null) premiumServices = new ArrayList<>(1);
         premiumServices.add(premiumService);
     }
 
@@ -295,26 +348,17 @@ public class XingUser implements Serializable {
         this.badges = badges;
     }
 
-    public void setBadgesFromStringList(List<String> badges) {
-        if (this.badges == null) {
-            this.badges = new ArrayList<>(badges.size());
-        }
-
-        Badge badge;
-        for (String badgeString : badges) {
-            badge = Badge.valueOf(badgeString);
-
-            if (badge != null) {
-                this.badges.add(badge);
-            }
-        }
+    public void addToBadges(Badge badge) {
+        if (badges == null) badges = new ArrayList<>(1);
+        badges.add(badge);
     }
 
-    public void addBadges(Badge badge) {
-        if (badges == null) {
-            badges = new ArrayList<>(1);
+    public void addAllToBadges(List<Badge> badges) {
+        if (this.badges == null) {
+            this.badges = badges;
+        } else {
+            this.badges.addAll(badges);
         }
-        badges.add(badge);
     }
 
     public List<String> getWants() {
@@ -326,7 +370,7 @@ public class XingUser implements Serializable {
     }
 
     public void addToWants(String want) {
-        if (wants == null) wants = new ArrayList<>();
+        if (wants == null) wants = new ArrayList<>(1);
         wants.add(want);
     }
 
@@ -347,7 +391,7 @@ public class XingUser implements Serializable {
     }
 
     public void addToHaves(String has) {
-        if (haves == null) haves = new ArrayList<>();
+        if (haves == null) haves = new ArrayList<>(1);
         haves.add(has);
     }
 
@@ -368,7 +412,7 @@ public class XingUser implements Serializable {
     }
 
     public void addToInterests(String interest) {
-        if (interests == null) interests = new ArrayList<>();
+        if (interests == null) interests = new ArrayList<>(1);
         interests.add(interest);
     }
 
@@ -389,7 +433,7 @@ public class XingUser implements Serializable {
     }
 
     public void addToOrganisations(String organization) {
-        if (organizations == null) organizations = new ArrayList<>();
+        if (organizations == null) organizations = new ArrayList<>(1);
         organizations.add(organization);
     }
 
@@ -409,40 +453,28 @@ public class XingUser implements Serializable {
         this.languages = languages;
     }
 
-    @Nullable
-    public LanguageSkill getLanguageSkill(@NonNull Language language) {
-        return languages != null ? languages.get(language) : null;
+    public LanguageSkill getLanguageSkill(Language language) {
+        return languages.get(language);
     }
 
-    public void addLanguage(@NonNull Language language, @Nullable LanguageSkill languageSkill) {
-        if (languages == null) {
-            languages = new LinkedHashMap<>();
-        }
-
+    public void addLanguage(Language language, LanguageSkill languageSkill) {
+        if (languages == null) languages = new LinkedHashMap<>();
         languages.put(language, languageSkill);
     }
 
-    public void addLanguage(@NonNull String language, @NonNull String languageSkill) {
-        if (languages == null) {
-            languages = new LinkedHashMap<>();
-        }
-
-        languages.put(Language.valueOf(language), LanguageSkill.valueOf(languageSkill));
-    }
-
-    public XingAddress getPrivateAddress() {
+    public Address getPrivateAddress() {
         return privateAddress;
     }
 
-    public void setPrivateAddress(XingAddress privateAddress) {
+    public void setPrivateAddress(Address privateAddress) {
         this.privateAddress = privateAddress;
     }
 
-    public XingAddress getBusinessAddress() {
+    public Address getBusinessAddress() {
         return businessAddress;
     }
 
-    public void setBusinessAddress(XingAddress businessAddress) {
+    public void setBusinessAddress(Address businessAddress) {
         this.businessAddress = businessAddress;
     }
 
@@ -454,53 +486,36 @@ public class XingUser implements Serializable {
         this.webProfiles = webProfiles;
     }
 
-    public void setWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> profiles) {
-        if (webProfiles == null) {
-            webProfiles = new LinkedHashMap<>();
-        }
-
+    public void setWebProfiles(WebProfile webProfile, Set<String> profiles) {
+        if (webProfiles == null) webProfiles = new LinkedHashMap<>();
         webProfiles.put(webProfile, profiles);
     }
 
-    public void addWebProfiles(@NonNull WebProfile webProfile, @Nullable Set<String> accounts) {
-        if (webProfiles == null) {
-            webProfiles = new LinkedHashMap<>();
-        }
-
-        if (!webProfiles.containsKey(webProfile)) {
-            webProfiles.put(webProfile, new LinkedHashSet<String>(1));
-        }
-
-        if (accounts != null) {
-            webProfiles.get(webProfile).addAll(accounts);
-        }
-    }
-
-    public void addWebProfile(@NonNull WebProfile webProfile, @Nullable String accountName) {
-        if (webProfiles == null) {
-            webProfiles = new LinkedHashMap<>();
-        }
-
-        if (!webProfiles.containsKey(webProfile)) {
-            webProfiles.put(webProfile, new LinkedHashSet<String>(1));
-        }
-
+    public void addTpWebProfile(WebProfile webProfile, String accountName) {
+        if (webProfiles == null) webProfiles = new LinkedHashMap<>();
+        if (!webProfiles.containsKey(webProfile)) webProfiles.put(webProfile, new LinkedHashSet<String>());
         webProfiles.get(webProfile).add(accountName);
     }
 
-    //    public EducationalBackground getEducationBackground() {
-    //        return educationBackground;
-    //    }
-    //
-    //    public void setEducationBackground(EducationalBackground educationBackground) {
-    //        this.educationBackground = educationBackground;
-    //    }
+    public void addAllToWebProfile(WebProfile webProfile, Set<String> profiles) {
+        if (webProfiles == null) webProfiles = new LinkedHashMap<>();
+        if (!webProfiles.containsKey(webProfile)) webProfiles.put(webProfile, new LinkedHashSet<String>());
+        if (profiles != null) webProfiles.get(webProfile).addAll(profiles);
+    }
 
-    public XingPhotoUrls getPhotoUrls() {
+    public EducationalBackground getEducationBackground() {
+        return educationBackground;
+    }
+
+    public void setEducationBackground(EducationalBackground educationBackground) {
+        this.educationBackground = educationBackground;
+    }
+
+    public PhotoUrls getPhotoUrls() {
         return photoUrls;
     }
 
-    public void setPhotoUrls(XingPhotoUrls photoUrls) {
+    public void setPhotoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
     }
 
@@ -512,20 +527,17 @@ public class XingUser implements Serializable {
         this.timeZone = timeZone;
     }
 
-    public Map<MessagingAccount, String> getInstantMessagingAccounts() {
-        return instantMessagingAccounts;
+    public Map<MessagingAccount, String> getMessagingAccounts() {
+        return messagingAccounts;
     }
 
-    public void setInstantMessagingAccounts(Map<MessagingAccount, String> instantMessagingAccounts) {
-        this.instantMessagingAccounts = instantMessagingAccounts;
+    public void setMessagingAccounts(Map<MessagingAccount, String> messagingAccounts) {
+        this.messagingAccounts = messagingAccounts;
     }
 
-    public void addInstantMessagingAccount(@NonNull MessagingAccount account, @Nullable String accountValue) {
-        if (instantMessagingAccounts == null) {
-            instantMessagingAccounts = new LinkedHashMap<>();
-        }
-
-        instantMessagingAccounts.put(account, accountValue);
+    public void addMessagingAccount(@NonNull MessagingAccount account, String accountValue) {
+        if (messagingAccounts == null) messagingAccounts = new LinkedHashMap<>();
+        messagingAccounts.put(account, accountValue);
     }
 
     public ProfessionalExperience getProfessionalExperience() {
@@ -537,35 +549,33 @@ public class XingUser implements Serializable {
     }
 
     /**
-     * @return The primary institution name
+     * Returns the primary institution name. This method will try to return a primary {@link School} in case the
+     * user is a student.
      */
     @Nullable
     public String getPrimaryInstitutionName() {
         String primaryInstitution = null;
 
-        //         Check if we have a primary company
+        // Check if we have a primary company
         if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
             ExperienceCompany company = professionalExperience.getPrimaryCompany();
-            if (!TextUtils.isEmpty(company.getId()) || !TextUtils.isEmpty(company.getName())) {
-                primaryInstitution = company.getName();
-            }
+            primaryInstitution = company.getName();
         }
 
-        //        // If the primary company not available try to use the primary school (the user may be a student)
-        //        if (TextUtils.isEmpty(primaryInstitution)) {
-        //            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-        //                School primarySchool = educationBackground.getPrimarySchool();
-        //                if (!TextUtils.isEmpty(primarySchool.getName())) {
-        //                    primaryInstitution = primarySchool.getName();
-        //                }
-        //            }
-        //        }
+        // If the primary company not available try to use the primary school (the user may be a student)
+        if (primaryInstitution == null || primaryInstitution.isEmpty()) {
+            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
+                School primarySchool = educationBackground.getPrimarySchool();
+                primaryInstitution = primarySchool.getName();
+            }
+        }
 
         return primaryInstitution;
     }
 
     /**
-     * @return The primary occupation name
+     * Returns the user primary occupation. This method will also check the users education fields if the user is a
+     * student.
      */
     @Nullable
     public String getPrimaryOccupationName() {
@@ -574,20 +584,16 @@ public class XingUser implements Serializable {
         // Check if we have a primary company
         if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
             ExperienceCompany company = professionalExperience.getPrimaryCompany();
-            if (!TextUtils.isEmpty(company.getId()) || !TextUtils.isEmpty(company.getTitle())) {
-                primaryOccupation = company.getTitle();
-            }
+            primaryOccupation = company.getTitle();
         }
 
-        //        // If the primary company not available try to use the primary school (the user may be a student)
-        //        if (TextUtils.isEmpty(primaryOccupation)) {
-        //            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-        //                School primarySchool = educationBackground.getPrimarySchool();
-        //                if (!TextUtils.isEmpty(primarySchool.getDegree())) {
-        //                    primaryOccupation = primarySchool.getDegree();
-        //                }
-        //            }
-        //        }
+        // If the primary company not available try to use the primary school (the user may be a student)
+        if (primaryOccupation == null || primaryOccupation.isEmpty()) {
+            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
+                School primarySchool = educationBackground.getPrimarySchool();
+                primaryOccupation = primarySchool.getDegree();
+            }
+        }
 
         return primaryOccupation;
     }

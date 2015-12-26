@@ -16,7 +16,7 @@
 package com.xing.api.model.user;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 
@@ -31,7 +31,7 @@ public class ProfileMessage implements Serializable {
 
     /** Date message was updated. */
     @Json(name = "updated_at")
-    private XingCalendar updatedAt;
+    private SafeCalendar updatedAt;
     /** Message. */
     @Json(name = "message")
     private String message;
@@ -49,7 +49,7 @@ public class ProfileMessage implements Serializable {
      *
      * @return date message updated.
      */
-    public XingCalendar getUpdatedAt() {
+    public SafeCalendar getUpdatedAt() {
         return updatedAt;
     }
 
@@ -58,7 +58,7 @@ public class ProfileMessage implements Serializable {
      *
      * @param updatedAt date message updated.
      */
-    public void setUpdatedAt(XingCalendar updatedAt) {
+    public void setUpdatedAt(SafeCalendar updatedAt) {
         this.updatedAt = updatedAt;
     }
 

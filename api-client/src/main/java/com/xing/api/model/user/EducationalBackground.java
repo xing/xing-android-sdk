@@ -26,6 +26,7 @@ import java.util.List;
  * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
+@SuppressWarnings("unused")
 public class EducationalBackground implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -44,15 +45,17 @@ public class EducationalBackground implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof EducationalBackground)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        EducationalBackground educationalBackground = (EducationalBackground) o;
-        return hashCode() == educationalBackground.hashCode();
+        //noinspection QuestionableName
+        EducationalBackground that = (EducationalBackground) o;
+
+        return (degree != null ? degree.equals(that.degree)
+              : that.degree == null) && (primarySchool != null ? primarySchool.equals(that.primarySchool)
+              : that.primarySchool == null) && (schools != null ? schools.equals(that.schools)
+              : that.schools == null) && (qualifications != null ? qualifications.equals(that.qualifications)
+              : that.qualifications == null);
     }
 
     @Override
@@ -62,6 +65,16 @@ public class EducationalBackground implements Serializable {
         result = 31 * result + (schools != null ? schools.hashCode() : 0);
         result = 31 * result + (qualifications != null ? qualifications.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "EducationalBackground{"
+              + "degree='" + degree + '\''
+              + ", primarySchool=" + primarySchool
+              + ", schools=" + schools
+              + ", qualifications=" + qualifications
+              + '}';
     }
 
     /**

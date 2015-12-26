@@ -19,43 +19,42 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.Json;
-import com.xing.api.model.XingCalendar;
+import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Represents an award of a user.
- * <p/>
+ * <p>
  *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
  */
 @SuppressWarnings("unused")
 public class Award implements Serializable {
-    private static final long serialVersionUID = 1792717237671423281L;
+    private static final long serialVersionUID = 1L;
 
     /** Name of the award. */
     @Json(name = "name")
     private String name;
     /** XWS returns only the year, but for compatibility with possible future changes we use Calendar. */
     @Json(name = "date_awarded")
-    private XingCalendar dateAwarded;
+    private SafeCalendar dateAwarded;
     /** URL of the award. */
     @Json(name = "url")
     private String url;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Award)) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Award award = (Award) obj;
-        return hashCode() == award.hashCode();
+        Award award = (Award) o;
+
+        return (name != null ? name.equals(award.name) : award.name == null)
+              && (dateAwarded != null ? dateAwarded.equals(award.dateAwarded) : award.dateAwarded == null)
+              && (url != null ? url.equals(award.url) : award.url == null);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class Award implements Serializable {
      *
      * @return The year int value, if the award year is not set -1.
      */
-    public int getYearOfDateAwarded() {
+    public int getYearOfAward() {
         return dateAwarded != null ? dateAwarded.get(Calendar.YEAR) : -1;
     }
 
@@ -99,7 +98,7 @@ public class Award implements Serializable {
      * @return The year as a string, if the year is not set will return null.
      */
     @Nullable
-    public String getYearOfDateAwardedAsString() {
+    public String getYearOfAwardAsString() {
         return dateAwarded != null ? Integer.toString(dateAwarded.get(Calendar.YEAR)) : null;
     }
 
@@ -108,7 +107,7 @@ public class Award implements Serializable {
      *
      * @param dateAwarded Date of award as calendar object.
      */
-    public void setDateAwarded(@NonNull XingCalendar dateAwarded) {
+    public void setDateAwarded(@NonNull SafeCalendar dateAwarded) {
         this.dateAwarded = dateAwarded;
     }
 
@@ -118,7 +117,7 @@ public class Award implements Serializable {
      * @param year The year as an int.
      */
     public void setDateAwarded(int year) {
-        dateAwarded = new XingCalendar(year, 0, 1);
+        dateAwarded = new SafeCalendar(year, 0, 1);
     }
 
     /**
@@ -137,15 +136,5 @@ public class Award implements Serializable {
      */
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    /**
-     * Return url of award.
-     *
-     * @return award url as a string.
-     */
-    @Nullable
-    public String getUrlAsString() {
-        return url != null ? url : null;
     }
 }
