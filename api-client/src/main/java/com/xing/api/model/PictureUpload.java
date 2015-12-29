@@ -104,8 +104,11 @@ public final class PictureUpload {
 
         @Override
         public String toString() {
-            return "Photo{ fileName='" + fileName + '\'' + ", mimeType='" + mimeType + '\''
-                  + ", content=" + Arrays.toString(content) + '}';
+            return "Photo{ fileName='"
+                  + fileName + '\''
+                  + ", mimeType='" + mimeType + '\''
+                  + ", content=" + Arrays.toString(content)
+                  + '}';
         }
     }
 }

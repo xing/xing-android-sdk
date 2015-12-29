@@ -21,35 +21,34 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Represents a users professional experience.
+ * Represents a {@linkplain XingUser user's} professional experience container.
  *
  * @author david.gonzalez
- * @see <a href="https://dev.xing.com/docs/get/users/me">Professional Experience</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public class ProfessionalExperience implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Primary company. */
     @Json(name = "primary_company")
-    private ExperienceCompany primaryCompany;
+    private Company primaryCompany;
     /** List of companies. */
     @Json(name = "companies")
-    private List<ExperienceCompany> companies;
+    private List<Company> companies;
     /** List of awards. */
     @Json(name = "awards")
     private List<Award> awards;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof ProfessionalExperience)) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ProfessionalExperience professionalExperience = (ProfessionalExperience) obj;
-        return hashCode() == professionalExperience.hashCode();
+        //noinspection QuestionableName
+        ProfessionalExperience that = (ProfessionalExperience) o;
+        return (primaryCompany != null ? primaryCompany.equals(that.primaryCompany) : that.primaryCompany == null)
+              && (companies != null ? companies.equals(that.companies) : that.companies == null)
+              && (awards != null ? awards.equals(that.awards) : that.awards == null);
     }
 
     @Override
@@ -60,56 +59,41 @@ public class ProfessionalExperience implements Serializable {
         return result;
     }
 
-    /**
-     * Return primary company.
-     *
-     * @return primary company.
-     */
-    public ExperienceCompany getPrimaryCompany() {
+    @Override
+    public String toString() {
+        return "ProfessionalExperience{"
+              + "primaryCompany=" + primaryCompany
+              + ", companies=" + companies
+              + ", awards=" + awards
+              + '}';
+    }
+
+    /** Returns the {@linkplain XingUser user's} primary company. */
+    public Company getPrimaryCompany() {
         return primaryCompany;
     }
 
-    /**
-     * Set primary company.
-     *
-     * @param primaryCompany primary company.
-     */
-    public void setPrimaryCompany(ExperienceCompany primaryCompany) {
+    /** Set the {@linkplain XingUser user's} primary company. */
+    public void setPrimaryCompany(Company primaryCompany) {
         this.primaryCompany = primaryCompany;
     }
 
-    /**
-     * Return list of companies.
-     *
-     * @return list of companies.
-     */
-    public List<ExperienceCompany> getCompanies() {
+    /** Returns a list of companies the user has made part of his professional experience. */
+    public List<Company> getCompanies() {
         return companies;
     }
 
-    /**
-     * Set companies.
-     *
-     * @param companies list of companies.
-     */
-    public void setCompanies(List<ExperienceCompany> companies) {
+    /** Set the list of companies. */
+    public void setCompanies(List<Company> companies) {
         this.companies = companies;
     }
 
-    /**
-     * Return list of awards.
-     *
-     * @return list of awards.
-     */
+    /** Returns a list of awards of the user. */
     public List<Award> getAwards() {
         return awards;
     }
 
-    /**
-     * Set list of awards.
-     *
-     * @param awards list of awards.
-     */
+    /** Set the list of user awards. */
     public void setAwards(List<Award> awards) {
         this.awards = awards;
     }

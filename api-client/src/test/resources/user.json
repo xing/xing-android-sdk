@@ -216,7 +216,7 @@
       "id": "42_abcdef",
       "name": "Carl-von-Ossietzky Universtät Schellenburg",
       "degree": "MSc CE/CS",
-      "notes": null,
+      "notes": "CS, IT, Android",
       "subject": null,
       "begin_date": "1998-08",
       "end_date": "2005-02"
@@ -227,7 +227,7 @@
         "name": "Carl-von-Ossietzky Universtät Schellenburg",
         "degree": "MSc CE/CS",
         "notes": null,
-        "subject": null,
+        "subject": "CE",
         "begin_date": "1998-08",
         "end_date": "2005-02"
       }

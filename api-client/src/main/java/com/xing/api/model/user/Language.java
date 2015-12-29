@@ -16,9 +16,9 @@
 package com.xing.api.model.user;
 
 /**
- * Possible languages.
+ * Possible language values returned/accepted by XWS.
  *
- * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages</a>
+ * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages Resource</a>
  */
 public enum Language {
     EN("en"),

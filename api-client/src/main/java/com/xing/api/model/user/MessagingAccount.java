@@ -18,9 +18,9 @@ package com.xing.api.model.user;
 import android.support.annotation.NonNull;
 
 /**
- * Possible instant messaging accounts.
+ * Possible instant messaging account values returned/accepted by XWS.
  *
- * @see <a href="https://dev.xing.com/docs/get/users/me">Instant Messaging Accounts</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum MessagingAccount {
     SKYPE("skype"),

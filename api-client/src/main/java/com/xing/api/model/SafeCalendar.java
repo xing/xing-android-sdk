@@ -39,19 +39,35 @@ public final class SafeCalendar extends GregorianCalendar {
         clear();
     }
 
+    /** Creates a calendar with only year set. */
+    public SafeCalendar(int year) {
+        this();
+        set(YEAR, year);
+    }
+
+    /** Creates a calendar with only year and month set. */
+    public SafeCalendar(int year, int month) {
+        this(year);
+        set(MONTH, month);
+    }
+
     /** Creates a calendar with year, month and day set. */
     public SafeCalendar(int year, int month, int day) {
-        super(year, month, day);
+        this(year, month);
+        set(DAY_OF_MONTH, day);
     }
 
     /** Creates a calendar with year, month, day, hour and minute set. */
     public SafeCalendar(int year, int month, int day, int hour, int minute) {
-        super(year, month, day, hour, minute);
+        this(year, month, day);
+        set(HOUR_OF_DAY, hour);
+        set(MINUTE, minute);
     }
 
     /** Creates a calendar with year, month, day, hour, minute and seconds set. */
     public SafeCalendar(int year, int month, int day, int hour, int minute, int second) {
-        super(year, month, day, hour, minute, second);
+        this(year, month, day, hour, minute);
+        set(SECOND, second);
     }
 
     /** Creates a calendar with the desired local. The time will be set to {@link System#currentTimeMillis()}. */

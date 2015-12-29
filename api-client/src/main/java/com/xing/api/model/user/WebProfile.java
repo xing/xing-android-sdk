@@ -16,7 +16,7 @@
 package com.xing.api.model.user;
 
 /**
- * List of possible external web profiles.
+ * List of possible/accepted external web profiles.
  *
  * @see <a href="https://dev.xing.com/docs/put/users/me/web_profiles/:profile">Web Profile</a>
  */

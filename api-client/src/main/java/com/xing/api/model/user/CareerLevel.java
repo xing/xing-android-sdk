@@ -16,9 +16,9 @@
 package com.xing.api.model.user;
 
 /**
- * Possible values for the company career level.
+ * Possible values for the user's career level at a {@link Company}.
  *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum CareerLevel {
     STUDENT_INTERN,

@@ -20,33 +20,32 @@ import com.squareup.moshi.Json;
 import java.io.Serializable;
 
 /**
- * Timezone.
- *
- * @author serj.lotutovici
+ * Java representation of the time zone in which the {@linkplain XingUser user} is located.
  */
 public class TimeZone implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Name of timezone. */
     @Json(name = "name")
-    private String name;
+    private final String name;
     /** Offset. */
     @Json(name = "utc_offset")
-    private float utcOffset;
+    private final float utcOffset;
+
+    public TimeZone(String name, float utcOffset) {
+        this.name = name;
+        this.utcOffset = utcOffset;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TimeZone)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof TimeZone)) return false;
 
         TimeZone timeZone = (TimeZone) o;
 
-        return Float.compare(timeZone.utcOffset, utcOffset) == 0 && (name != null ? name.equals(timeZone.name)
-              : timeZone.name == null);
+        return Float.compare(timeZone.utcOffset, utcOffset) == 0
+              && (name != null ? name.equals(timeZone.name) : timeZone.name == null);
     }
 
     @Override
@@ -56,39 +55,21 @@ public class TimeZone implements Serializable {
         return result;
     }
 
-    /**
-     * Return name of timezone.
-     *
-     * @return timezone name.
-     */
+    @Override
+    public String toString() {
+        return "TimeZone{"
+              + "name='" + name + '\''
+              + ", utcOffset=" + utcOffset
+              + '}';
+    }
+
+    /** Returns the  name of timezone. */
     public String getName() {
         return name;
     }
 
-    /**
-     * Set name of timezone.
-     *
-     * @param name timezone.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Return UTC offset.
-     *
-     * @return UTC offset.
-     */
+    /** Returns the UTC offset. */
     public float getUtcOffset() {
         return utcOffset;
-    }
-
-    /**
-     * Set UTC offset.
-     *
-     * @param utcOffset UTC offset.
-     */
-    public void setUtcOffset(float utcOffset) {
-        this.utcOffset = utcOffset;
     }
 }

@@ -18,10 +18,13 @@ package com.xing.api.model.user;
 import java.io.Serializable;
 
 /**
- * Java representation of a users phone.
+ * Java representation of a {@linkplain XingUser user's} phone number.
+ * <p>
+ * XWS returns and accepts phone values only as a string formatted '[country_code]|[area_code]|[number]'. This class
+ * simplifies working with these values. The internal api will ensure the conversion form/to json is done properly.
  *
  * @author david.gonzalez
- * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Address</a>
+ * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Private Address Resource</a>
  */
 public class Phone implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -68,14 +71,17 @@ public class Phone implements Serializable {
         return countryCode + '|' + areaCode + '|' + number;
     }
 
+    /** Returns the phones country code. */
     public String getCountryCode() {
         return countryCode;
     }
 
+    /** Returns the phones area code. */
     public String getAreaCode() {
         return areaCode;
     }
 
+    /** Returns the phone number without country and area code. */
     public String getNumber() {
         return number;
     }

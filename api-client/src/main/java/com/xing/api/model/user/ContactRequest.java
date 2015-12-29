@@ -23,6 +23,8 @@ import java.io.Serializable;
 /**
  * Represents a contact request.
  *
+ * TODO Move this to appropriate package.
+ *
  * @author ciprian.ursu
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">Contact Request</a>
  */
@@ -42,16 +44,6 @@ public class ContactRequest implements Serializable {
     /** Date of contact request. */
     @Json(name = "received_at")
     private SafeCalendar receivedAt;
-
-    @Override
-    public String toString() {
-        return "ContactRequest{"
-              + "senderId='" + senderId + '\''
-              + ", sender=" + sender
-              + ", message='" + message + '\''
-              + ", receivedAt=" + receivedAt
-              + '}';
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -74,6 +66,16 @@ public class ContactRequest implements Serializable {
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (receivedAt != null ? receivedAt.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactRequest{"
+              + "senderId='" + senderId + '\''
+              + ", sender=" + sender
+              + ", message='" + message + '\''
+              + ", receivedAt=" + receivedAt
+              + '}';
     }
 
     public String getSenderId() {

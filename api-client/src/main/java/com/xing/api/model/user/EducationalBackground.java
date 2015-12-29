@@ -21,10 +21,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Represents a users educational background.
+ * Java representation of a user's <strong>educational background</strong> field..
  *
- * @author serj.lotutovici
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 @SuppressWarnings("unused")
 public class EducationalBackground implements Serializable {
@@ -51,11 +50,10 @@ public class EducationalBackground implements Serializable {
         //noinspection QuestionableName
         EducationalBackground that = (EducationalBackground) o;
 
-        return (degree != null ? degree.equals(that.degree)
-              : that.degree == null) && (primarySchool != null ? primarySchool.equals(that.primarySchool)
-              : that.primarySchool == null) && (schools != null ? schools.equals(that.schools)
-              : that.schools == null) && (qualifications != null ? qualifications.equals(that.qualifications)
-              : that.qualifications == null);
+        return (degree != null ? degree.equals(that.degree) : that.degree == null)
+              && (primarySchool != null ? primarySchool.equals(that.primarySchool) : that.primarySchool == null)
+              && (schools != null ? schools.equals(that.schools) : that.schools == null)
+              && (qualifications != null ? qualifications.equals(that.qualifications) : that.qualifications == null);
     }
 
     @Override
@@ -77,74 +75,42 @@ public class EducationalBackground implements Serializable {
               + '}';
     }
 
-    /**
-     * Return degree.
-     *
-     * @return degree.
-     */
+    /** Returns the user's degree. */
     public String getDegree() {
         return degree;
     }
 
-    /**
-     * Set degree.
-     *
-     * @param degree Set degree.
-     */
+    /** Set the user's degree. */
     public void setDegree(String degree) {
         this.degree = degree;
     }
 
-    /**
-     * Return primary school.
-     *
-     * @return primary school.
-     */
+    /** Returns user's primary school. */
     public School getPrimarySchool() {
         return primarySchool;
     }
 
-    /**
-     * Set primary school.
-     *
-     * @param primarySchool primary school.
-     */
+    /** Set user's primary school. */
     public void setPrimarySchool(School primarySchool) {
         this.primarySchool = primarySchool;
     }
 
-    /**
-     * Return list of schools.
-     *
-     * @return list of schools.
-     */
+    /** Returns a list of schools attended by the user. */
     public List<School> getSchools() {
         return schools;
     }
 
-    /**
-     * Set list of schools.
-     *
-     * @param mSchools list of schools.
-     */
+    /** Set a list of schools attended by the user. */
     public void setSchools(List<School> mSchools) {
         schools = mSchools;
     }
 
-    /**
-     * Return list of qualifications.
-     *
-     * @return list of qualifications.
-     */
+    /** Returns a list of qualifications. */
     public List<String> getQualifications() {
         return qualifications;
     }
 
-    /**
-     * Set list of qualifications.
-     *
-     * @param qualifications list of qualifications.
-     */
+    /** Set the list of qualifications. */
     public void setQualifications(List<String> qualifications) {
         this.qualifications = qualifications;
     }

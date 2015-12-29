@@ -16,9 +16,9 @@
 package com.xing.api.model.user;
 
 /**
- * Possible values for the form of employment.
+ * Possible values for the form of employment in a {@linkplain Company company}.
  *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum FormOfEmployment {
     UNSELECTED,

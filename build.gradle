@@ -75,7 +75,8 @@ allprojects {
               mockito                 : 'org.mockito:mockito-all:1.10.19',
               robolectric             : 'org.robolectric:robolectric:3.0',
               mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.5.0',
-              commonsIo               : 'commons-io:commons-io:2.4'
+              commonsIo               : 'commons-io:commons-io:2.4',
+              apacheCommons3          : 'org.apache.commons:commons-lang3:3.4'
         ]
     }
 }

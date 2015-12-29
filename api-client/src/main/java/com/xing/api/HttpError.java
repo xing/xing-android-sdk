@@ -114,7 +114,7 @@ public class HttpError {
 
             Error error = (Error) o;
 
-            return !(field != null ? !field.equals(error.field) : error.field != null) && reason == error.reason;
+            return (field != null ? field.equals(error.field) : error.field == null) && reason == error.reason;
         }
 
         @Override
@@ -140,7 +140,7 @@ public class HttpError {
 
             final String text;
 
-            Reason(final String text) {
+            Reason(String text) {
                 this.text = text;
             }
 
