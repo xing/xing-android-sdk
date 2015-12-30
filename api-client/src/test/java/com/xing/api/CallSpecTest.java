@@ -544,7 +544,7 @@ public class CallSpecTest {
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
               + "  \"msg\": \"success\",\n"
               + "  \"code\": 200\n"
-              + "}"));
+              + '}'));
 
         CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
               .responseAs(TestMsg.class)
@@ -569,7 +569,7 @@ public class CallSpecTest {
               + "      \"reason\": \"UNEXPECTED\"\n"
               + "    }\n"
               + "  ]\n"
-              + "}"));
+              + '}'));
 
         CallSpec<Object, HttpError> spec = this.<Object, HttpError>builder(HttpMethod.GET, "/", false)
               .responseAs(Object.class)
@@ -608,7 +608,7 @@ public class CallSpecTest {
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
               + "  \"msg\": \"Hey!\",\n"
               + "  \"code\": 42\n"
-              + "}"));
+              + '}'));
 
         CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
               .responseAs(TestMsg.class)
@@ -632,7 +632,7 @@ public class CallSpecTest {
               + "      \"reason\": \"FIELD_DEPRECATED\"\n"
               + "    }\n"
               + "  ]\n"
-              + "}"));
+              + '}'));
 
         CallSpec<Object, Object> spec = builder(HttpMethod.DELETE, "/", false)
               .responseAs(Object.class)

@@ -22,12 +22,12 @@ import java.util.List;
 /**
  * Generic HTTP Error Object that maps the error response of XWS.
  *
- * This is the default object that is returned when the request is successful but there was something wrong with the
- * request.
+ * This is the default object that is returned when the request is successful but the server returned an error request.
  *
  * The API will respond to invalid requests with common HTTP status code like 401, 403 and 404. In some cases the
  * status code is ambiguous so you might not be able to tell, e.g. if the error was a missing parameter or an invalid
- * value for a parameter. In order to make sure you can react to certain errors, we provide a JSON body for (almost)
+ * value for a parameter. In order to make sure that a user can react to certain errors, we provide a JSON body for
+ * (almost)
  * all client error responses.
  *
  * @author daniel.hartwich
@@ -41,7 +41,8 @@ public class HttpError {
     @Json(name = "errors")
     private final List<Error> errors;
 
-    public HttpError(String errorName, String errorMessage, List<Error> errors) {
+    // This object is not to be instantiated outside this package.
+    HttpError(String errorName, String errorMessage, List<Error> errors) {
         this.errorName = errorName;
         this.errorMessage = errorMessage;
         this.errors = errors;
@@ -73,11 +74,11 @@ public class HttpError {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HttpError that = (HttpError) o;
+        HttpError error = (HttpError) o;
 
-        return (errorName != null ? errorName.equals(that.errorName) : that.errorName == null)
-              && (errorMessage != null ? errorMessage.equals(that.errorMessage) : that.errorMessage == null)
-              && (errors != null ? errors.equals(that.errors) : that.errors == null);
+        return (errorName != null ? errorName.equals(error.errorName) : error.errorName == null)
+              && (errorMessage != null ? errorMessage.equals(error.errorMessage) : error.errorMessage == null)
+              && (errors != null ? errors.equals(error.errors) : error.errors == null);
     }
 
     @Override
@@ -88,13 +89,15 @@ public class HttpError {
         return result;
     }
 
+    /** Represents an error for a specific form field or query parameters, with a respective reason for the error. */
     public static final class Error {
         @Json(name = "field")
         public final String field;
         @Json(name = "reason")
         public final Reason reason;
 
-        public Error(String field, Reason reason) {
+        // This object is not to be instantiated outside this package.
+        Error(String field, Reason reason) {
             this.field = field;
             this.reason = reason;
         }
@@ -124,6 +127,7 @@ public class HttpError {
             return result;
         }
 
+        /** Possible error reason values. */
         @SuppressWarnings("InnerClassTooDeeplyNested")
         enum Reason {
             UNEXPECTED("UNEXPECTED"),
