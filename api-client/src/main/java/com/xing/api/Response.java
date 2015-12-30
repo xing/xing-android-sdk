@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.okhttp.Headers;
 
-import static com.google.gdata.util.common.base.Preconditions.checkNotNull;
+import static com.xing.api.Utils.checkNotNull;
 
 /**
  * TODO docs.

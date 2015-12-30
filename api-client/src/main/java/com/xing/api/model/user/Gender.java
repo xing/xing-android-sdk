@@ -18,7 +18,7 @@ package com.xing.api.model.user;
 import android.support.annotation.NonNull;
 
 /**
- * Represents users gender.
+ * Represents a {@linkplain XingUser user's} gender.
  *
  * @author david.gonzalez
  */

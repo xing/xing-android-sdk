@@ -58,7 +58,6 @@ dependencies {
     provided libraries.supportAnnotations
     provided libraries.rxjava
 
-    compile libraries.singpost
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.okhttpLoggingInterceptor
@@ -70,6 +69,7 @@ dependencies {
     testCompile libraries.mockito
     testCompile libraries.robolectric
     testCompile libraries.commonsIo
+    testCompile libraries.apacheCommons3
 }
 
 /*

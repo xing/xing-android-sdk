@@ -15,20 +15,20 @@
  */
 package com.xing.api.model.user;
 
-import android.text.TextUtils;
-
 import com.squareup.moshi.Json;
+import com.xing.api.internal.json.CsvCollection;
 import com.xing.api.model.SafeCalendar;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * Represents a school.
+ * Java representation of a {@linkplain XingUser user} school/university.
  *
  * @author david.gonzalez
- * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School</a>
+ * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School Resource</a>
  */
+@SuppressWarnings("unused")
 public class School implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -42,6 +42,7 @@ public class School implements Serializable {
     @Json(name = "degree")
     private String degree;
     /** Additional notes such as specialized subjects. */
+    @CsvCollection
     @Json(name = "notes")
     private List<String> notes;
     /** Describes the field of study. */
@@ -55,16 +56,19 @@ public class School implements Serializable {
     private SafeCalendar endDate;
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof School)) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        School school = (School) obj;
-        return hashCode() == school.hashCode();
+        School school = (School) o;
+
+        return (id != null ? id.equals(school.id) : school.id == null)
+              && (name != null ? name.equals(school.name) : school.name == null)
+              && (degree != null ? degree.equals(school.degree) : school.degree == null)
+              && (notes != null ? notes.equals(school.notes) : school.notes == null)
+              && (subject != null ? subject.equals(school.subject) : school.subject == null)
+              && (beginDate != null ? beginDate.equals(school.beginDate) : school.beginDate == null)
+              && (endDate != null ? endDate.equals(school.endDate) : school.endDate == null);
     }
 
     @Override
@@ -79,132 +83,85 @@ public class School implements Serializable {
         return result;
     }
 
-    /**
-     * Return school ID.
-     *
-     * @return school id.
-     */
+    @Override
+    public String toString() {
+        return "School{"
+              + "id='" + id + '\''
+              + ", name='" + name + '\''
+              + ", degree='" + degree + '\''
+              + ", notes=" + notes
+              + ", subject='" + subject + '\''
+              + ", beginDate=" + beginDate
+              + ", endDate=" + endDate
+              + '}';
+    }
+
+    /** Returns the school id. */
     public String getId() {
         return id;
     }
 
-    /**
-     * Set school id.
-     *
-     * @param id id of shcool.
-     */
+    /** Set the school id. */
     public void setId(String id) {
-        if (!TextUtils.isEmpty(id)) {
-            this.id = id;
-        }
+        this.id = id;
     }
 
-    /**
-     * Return name of school.
-     *
-     * @return name of school.
-     */
+    /** Returns the school name. */
     public String getName() {
         return name;
     }
 
-    /**
-     * Set name of school.
-     *
-     * @param name name of school.
-     */
+    /** Set the school name. */
     public void setName(String name) {
-        if (!TextUtils.isEmpty(name)) {
-            this.name = name;
-        }
+        this.name = name;
     }
 
-    /**
-     * Return degree.
-     *
-     * @return degree.
-     */
+    /** Returns the {@linkplain XingUser user's} degree. */
     public String getDegree() {
         return degree;
     }
 
-    /**
-     * Set degree.
-     *
-     * @param degree degree.
-     */
+    /** Set the {@linkplain XingUser user's} degree. */
     public void setDegree(String degree) {
         this.degree = degree;
     }
 
-    /**
-     * Return additional notes such as specialized subjects.
-     *
-     * @return list of notes.
-     */
+    /** Returns a list of additional notes (example: specialized subjects, e.t.c.). */
     public List<String> getNotes() {
         return notes;
     }
 
-    /**
-     * Set additional notes such as specialized subjects.
-     *
-     * @param notes notes.
-     */
+    /** Set the list of additional notes. */
     public void setNotes(List<String> notes) {
         this.notes = notes;
     }
 
-    /**
-     * Return subject of field of study.
-     *
-     * @return subject.
-     */
+    /** Returns the subject of the field of study. */
     public String getSubject() {
         return subject;
     }
 
-    /**
-     * Set subject of field of study.
-     *
-     * @param subject subject.
-     */
+    /** Set the subject of the field of study. */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
-    /**
-     * Return start date.
-     *
-     * @return start date.
-     */
+    /** Returns the start date. */
     public SafeCalendar getBeginDate() {
         return beginDate;
     }
 
-    /**
-     * Set return date.
-     *
-     * @param beginDate start date.
-     */
+    /** Set the start date. */
     public void setBeginDate(SafeCalendar beginDate) {
         this.beginDate = beginDate;
     }
 
-    /**
-     * Return end date.
-     *
-     * @return end date.
-     */
+    /** Returns the end date. */
     public SafeCalendar getEndDate() {
         return endDate;
     }
 
-    /**
-     * Set end date.
-     *
-     * @param endDate end date.
-     */
+    /** Returns the end date. */
     public void setEndDate(SafeCalendar endDate) {
         this.endDate = endDate;
     }

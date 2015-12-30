@@ -38,7 +38,7 @@ import java.util.Set;
  * @author david.gonzalez
  * @author serj.lotutovici
  * @author daniel.hartwich
- * @see <a href="https://dev.xing.com/docs/get/users/:id">https://dev.xing.com/docs/get/users/:id</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 @SuppressWarnings({"unused", "CollectionWithoutInitialCapacity"}) // Public api
 public class XingUser implements Serializable {
@@ -73,17 +73,17 @@ public class XingUser implements Serializable {
     private List<PremiumService> premiumServices;
     @Json(name = "badges")
     private List<Badge> badges;
+    @CsvCollection
     @Json(name = "wants")
-    @CsvCollection
     private List<String> wants;
+    @CsvCollection
     @Json(name = "haves")
-    @CsvCollection
     private List<String> haves;
+    @CsvCollection
     @Json(name = "interests")
-    @CsvCollection
     private List<String> interests;
-    @Json(name = "organisation_member")
     @CsvCollection
+    @Json(name = "organisation_member")
     private List<String> organizations;
     @Json(name = "languages")
     private Map<Language, LanguageSkill> languages;
@@ -102,6 +102,7 @@ public class XingUser implements Serializable {
     @Json(name = "photo_urls")
     private PhotoUrls photoUrls;
 
+    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -158,7 +159,6 @@ public class XingUser implements Serializable {
               : xingUser.professionalExperience != null) {
             return false;
         }
-        //noinspection SimplifiableIfStatement
         if (educationBackground != null ? !educationBackground.equals(xingUser.educationBackground)
               : xingUser.educationBackground != null) {
             return false;
@@ -558,7 +558,7 @@ public class XingUser implements Serializable {
 
         // Check if we have a primary company
         if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
-            ExperienceCompany company = professionalExperience.getPrimaryCompany();
+            Company company = professionalExperience.getPrimaryCompany();
             primaryInstitution = company.getName();
         }
 
@@ -583,7 +583,7 @@ public class XingUser implements Serializable {
 
         // Check if we have a primary company
         if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
-            ExperienceCompany company = professionalExperience.getPrimaryCompany();
+            Company company = professionalExperience.getPrimaryCompany();
             primaryOccupation = company.getTitle();
         }
 

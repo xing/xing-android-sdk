@@ -22,6 +22,7 @@ import com.xing.api.model.SafeCalendar;
 import java.io.Serializable;
 
 /**
+ * TODO move this to visits package.
  * Represents an profile visit.
  * <p/>
  *

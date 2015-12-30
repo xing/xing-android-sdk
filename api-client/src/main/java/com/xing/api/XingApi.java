@@ -25,7 +25,6 @@ import com.xing.api.internal.json.CompanySizeJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.GenderJsonAdapter;
 import com.xing.api.internal.json.LanguageJsonAdapter;
-import com.xing.api.internal.json.LanguageSkillJsonAdapter;
 import com.xing.api.internal.json.MessagingAccountJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.PremiumServiceJsonAdapter;
@@ -59,7 +58,7 @@ public final class XingApi {
         this.converter = converter;
     }
 
-    /** Return a {@link Resource} instance that specified by the provided class name. */
+    /** Return a {@link Resource} instance specified by the provided class. */
     @SuppressWarnings("unchecked")
     public <T extends Resource> T resource(Class<? extends Resource> resource) {
         Resource res = resourcesCache.get(checkNotNull(resource, "resource == null"));
@@ -200,7 +199,6 @@ public final class XingApi {
             moshiBuilder.add(MessagingAccountJsonAdapter.FACTORY);
             moshiBuilder.add(PremiumServiceJsonAdapter.FACTORY);
             moshiBuilder.add(LanguageJsonAdapter.FACTORY);
-            moshiBuilder.add(LanguageSkillJsonAdapter.FACTORY);
             moshiBuilder.add(GenderJsonAdapter.FACTORY);
             moshiBuilder.add(CompanySizeJsonAdapter.FACTORY);
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);

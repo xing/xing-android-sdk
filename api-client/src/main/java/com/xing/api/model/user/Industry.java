@@ -15,119 +15,95 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.squareup.moshi.Json;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Represent the industry contained in a {@link ExperienceCompany}.
+ * Represent the industry contained in a {@link Company}.
  *
  * @author angelo.marchesin
+ * @see <a href="https://dev.xing.com/docs/get/misc/industries">List of Industries Resource</a>
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Public api.
 public class Industry implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final float FIRST_CATEGORY_CONVERSION = 10000f;
 
-    private final int id;
-    private final List<Segment> segments;
-    private String typeName;
-
     public static Industry newInstanceFromCompoundId(int compoundId) {
-        Segment segment = new Segment(compoundId, "");
+        Industry segment = new Industry(compoundId, "");
         return new Industry(extractFirstCategoryIndex(compoundId), "", Collections.singletonList(segment));
     }
 
-    private static int extractFirstCategoryIndex(int encodedId) {
+    static int extractFirstCategoryIndex(int encodedId) {
         return (int) (Math.floor(encodedId / FIRST_CATEGORY_CONVERSION) * FIRST_CATEGORY_CONVERSION);
     }
 
-    public Industry(int id, String type) {
-        this(id, type, null);
+    @Json(name = "id")
+    private final int id;
+    @Json(name = "localized_name")
+    private final String name;
+    @Json(name = "segments")
+    private final List<Industry> segments;
+
+    /** Construct an industry with with no segments. */
+    public Industry(int id, String name) {
+        this(id, name, null);
     }
 
-    public Industry(int id, @NonNull String typeName, @Nullable List<Segment> segments) {
+    /** Construct an industry with it's list of segments. */
+    public Industry(int id, String name, @Nullable List<Industry> segments) {
         this.id = id;
-        this.typeName = typeName;
+        this.name = name;
         this.segments = segments;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
     @Override
-    public String toString() {
-        return typeName;
-    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    @Nullable
-    public List<Segment> getSegments() {
-        return segments;
-    }
+        Industry industry = (Industry) o;
 
-    @Override
-    public boolean equals(Object object) {
-        return object instanceof Industry && id == ((Industry) object).id;
+        return id == industry.id
+              && (name != null ? name.equals(industry.name) : industry.name == null)
+              && (segments != null ? segments.equals(industry.segments) : industry.segments == null);
     }
 
     @Override
     public int hashCode() {
-        return typeName.hashCode();
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (segments != null ? segments.hashCode() : 0);
+        return result;
     }
 
-    /**
-     * Represent a segment contained in the {@link Industry}'s list.
-     *
-     * @author angelo.marchesin
-     */
-    public static class Segment implements Serializable {
-        private static final long serialVersionUID = -3150915425802346415L;
+    @Override
+    public String toString() {
+        return "Industry{"
+              + "id=" + id
+              + ", name='" + name + '\''
+              + ", segments=" + segments
+              + '}';
+    }
 
-        private final int id;
-        private String typeName;
+    /** Returns the industry id. */
+    public int getId() {
+        return id;
+    }
 
-        public Segment(int id, String typeName) {
-            this.id = id;
-            this.typeName = typeName;
-        }
+    /** Returns the industry name. */
+    public String getName() {
+        return name;
+    }
 
-        public int getId() {
-            return id;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-
-        public void setTypeName(String typeName) {
-            this.typeName = typeName;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            return object instanceof Segment && id == ((Segment) object).id;
-        }
-
-        @Override
-        public int hashCode() {
-            return typeName.hashCode();
-        }
-
-        @Override
-        public String toString() {
-            return typeName;
-        }
+    /** Returns the industry segments (a list of sub-industries). */
+    @Nullable
+    public List<Industry> getSegments() {
+        return segments;
     }
 }

@@ -17,9 +17,9 @@ package com.xing.api.model.user;
 
 /**
  * Possible values for the company size.
- * <p/>
+ * <p>
  *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum CompanySize {
     SIZE_1("1"),

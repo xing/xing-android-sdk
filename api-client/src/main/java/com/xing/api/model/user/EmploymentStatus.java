@@ -16,9 +16,9 @@
 package com.xing.api.model.user;
 
 /**
- * Possible values for the employment status.
+ * Possible values for the employment status of a {@linkplain XingUser user}.
  *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum EmploymentStatus {
     ENTREPRENEUR,

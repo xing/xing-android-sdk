@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.model.user;
+package com.xing.api;
 
-/**
- * Possible values for premium services a {@linkplain XingUser user} may access.
- *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
- */
-public enum PremiumService {
-    SEARCH("SEARCH"),
-    PRIVATE_MESSAGES("PRIVATEMESSAGES"),
-    NO_ADVERTISING("NOADVERTISING");
+import android.annotation.SuppressLint;
 
-    /** The json representation of this instance. */
-    private final String value;
+import java.io.InputStream;
 
-    PremiumService(String value) {
-        this.value = value;
+import okio.BufferedSource;
+import okio.Okio;
+
+/** Test scoped helper methods. */
+public final class TestUtils {
+    @SuppressLint("NewApi")
+    public static String file(String file) throws Exception {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        try (InputStream is = classLoader.getResourceAsStream(file)) {
+            BufferedSource buffer = Okio.buffer(Okio.source(is));
+            return buffer.readUtf8();
+        }
     }
 
-    @Override
-    public String toString() {
-        return value;
+    private TestUtils() {
     }
 }

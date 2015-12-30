@@ -15,7 +15,6 @@
  */
 package com.xing.api.model.user;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.squareup.moshi.Json;
@@ -25,11 +24,10 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 /**
- * Represents an award of a user.
- * <p>
+ * Represents an award object that can be present in a user's <strong>professional experience</strong> field.
  *
  * @author david.gonzalez
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 @SuppressWarnings("unused")
 public class Award implements Serializable {
@@ -37,13 +35,19 @@ public class Award implements Serializable {
 
     /** Name of the award. */
     @Json(name = "name")
-    private String name;
+    private final String name;
     /** XWS returns only the year, but for compatibility with possible future changes we use Calendar. */
     @Json(name = "date_awarded")
-    private SafeCalendar dateAwarded;
+    private final SafeCalendar dateAwarded;
     /** URL of the award. */
     @Json(name = "url")
-    private String url;
+    private final String url;
+
+    public Award(String name, SafeCalendar dateAwarded, @Nullable String url) {
+        this.name = name;
+        this.dateAwarded = dateAwarded;
+        this.url = url;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -65,76 +69,34 @@ public class Award implements Serializable {
         return result;
     }
 
-    /**
-     * Return name of award.
-     *
-     * @return Name of award.
-     */
+    @Override
+    public String toString() {
+        return "Award{"
+              + "name='" + name + '\''
+              + ", dateAwarded=" + dateAwarded
+              + ", url='" + url + '\''
+              + '}';
+    }
+
+    /** Returns the name of the award. */
     public String getName() {
         return name;
     }
 
-    /**
-     * Set name of award.
-     *
-     * @param name award name.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Return the year of award.
-     *
-     * @return The year int value, if the award year is not set -1.
-     */
+    /** Returns the year of the award. If the award year is not set, <strong>-1</strong> will be returned. */
     public int getYearOfAward() {
         return dateAwarded != null ? dateAwarded.get(Calendar.YEAR) : -1;
     }
 
-    /**
-     * Return the year of award.
-     *
-     * @return The year as a string, if the year is not set will return null.
-     */
+    /** Returns the year of award as a {@link SafeCalendar}. */
     @Nullable
     public String getYearOfAwardAsString() {
         return dateAwarded != null ? Integer.toString(dateAwarded.get(Calendar.YEAR)) : null;
     }
 
-    /**
-     * Set date of award.
-     *
-     * @param dateAwarded Date of award as calendar object.
-     */
-    public void setDateAwarded(@NonNull SafeCalendar dateAwarded) {
-        this.dateAwarded = dateAwarded;
-    }
-
-    /**
-     * Set date of award.
-     *
-     * @param year The year as an int.
-     */
-    public void setDateAwarded(int year) {
-        dateAwarded = new SafeCalendar(year, 0, 1);
-    }
-
-    /**
-     * Return url of award.
-     *
-     * @return award url.
-     */
+    /** Returns the url of the award if present. */
+    @Nullable
     public String getUrl() {
         return url;
-    }
-
-    /**
-     * Set url of award.
-     *
-     * @param url URL of award as string.
-     */
-    public void setUrl(String url) {
-        this.url = url;
     }
 }

@@ -20,6 +20,8 @@ import java.io.Serializable;
 /**
  * The User object returned by the Find By Email Call.
  *
+ * TODO does anyone need the hash and email in this response?
+ *
  * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/get/users/find_by_emails">Find users by email address</a>
  */

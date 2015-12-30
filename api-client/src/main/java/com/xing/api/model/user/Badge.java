@@ -16,9 +16,9 @@
 package com.xing.api.model.user;
 
 /**
- * Possible XING badges.
+ * Possible values for XING badges a user may have.
  *
- * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum Badge {
     AMBASSADOR,

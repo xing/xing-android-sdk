@@ -20,7 +20,11 @@ import com.squareup.moshi.Json;
 import java.io.Serializable;
 
 /**
- * TODO java docs.
+ * Java representation of a {@linkplain XingUser user's} picture/photo container. XWS scales the user's profile
+ * picture in a different variety of sizes. This object allows the <strong>user</strong> to use any of the
+ * {@linkplain XingUser user's} profile picture without scaling on the client side.
+ *
+ * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 @SuppressWarnings("unused")
 public class PhotoUrls implements Serializable {
@@ -128,6 +132,26 @@ public class PhotoUrls implements Serializable {
         result = 31 * result + (photoSize1024Url != null ? photoSize1024Url.hashCode() : 0);
         result = 31 * result + (photoSizeOriginalUrl != null ? photoSizeOriginalUrl.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PhotoUrls{"
+              + "photoLargeUrl='" + photoLargeUrl + '\''
+              + ", photoMaxiThumbUrl='" + photoMaxiThumbUrl + '\''
+              + ", photoMediumThumbUrl='" + photoMediumThumbUrl + '\''
+              + ", photoMiniThumbUrl='" + photoMiniThumbUrl + '\''
+              + ", photoThumbUrl='" + photoThumbUrl + '\''
+              + ", photoSize32Url='" + photoSize32Url + '\''
+              + ", photoSize48Url='" + photoSize48Url + '\''
+              + ", photoSize64Url='" + photoSize64Url + '\''
+              + ", photoSize96Url='" + photoSize96Url + '\''
+              + ", photoSize128Url='" + photoSize128Url + '\''
+              + ", photoSize192Url='" + photoSize192Url + '\''
+              + ", photoSize256Url='" + photoSize256Url + '\''
+              + ", photoSize1024Url='" + photoSize1024Url + '\''
+              + ", photoSizeOriginalUrl='" + photoSizeOriginalUrl + '\''
+              + '}';
     }
 
     public String getPhotoLargeUrl() {

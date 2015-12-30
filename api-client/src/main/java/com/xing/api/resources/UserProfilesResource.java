@@ -20,7 +20,6 @@ import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
-import com.xing.api.model.IdCard;
 import com.xing.api.model.SearchResult;
 import com.xing.api.model.user.ProfileMessage;
 import com.xing.api.model.user.XingUser;
@@ -82,9 +81,9 @@ public class UserProfilesResource extends Resource {
      *
      * @return A CallSpec object which can be executed, enqueued or run with RX Java
      */
-    public CallSpec<IdCard, HttpError> getYourIdCard() {
-        return Resource.<IdCard, HttpError>newGetSpec(api, "/v1/users/me/id_card")
-              .responseAs(IdCard.class, "id_card")
+    public CallSpec<XingUser, HttpError> getYourIdCard() {
+        return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/me/id_card")
+              .responseAs(XingUser.class, "id_card")
               .build();
     }
 

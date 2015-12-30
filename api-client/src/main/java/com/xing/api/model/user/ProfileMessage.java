@@ -31,10 +31,33 @@ public class ProfileMessage implements Serializable {
 
     /** Date message was updated. */
     @Json(name = "updated_at")
-    private SafeCalendar updatedAt;
+    private final SafeCalendar updatedAt;
     /** Message. */
     @Json(name = "message")
-    private String message;
+    private final String message;
+
+    public ProfileMessage(String message, SafeCalendar updatedAt) {
+        this.updatedAt = updatedAt;
+        this.message = message;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProfileMessage other = (ProfileMessage) o;
+
+        return (updatedAt != null ? updatedAt.equals(other.updatedAt) : other.updatedAt == null)
+              && (message != null ? message.equals(other.message) : other.message == null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = updatedAt != null ? updatedAt.hashCode() : 0;
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {
@@ -44,39 +67,13 @@ public class ProfileMessage implements Serializable {
               + '}';
     }
 
-    /**
-     * Return date message was updated.
-     *
-     * @return date message updated.
-     */
+    /** Returns the date the message was updated. */
     public SafeCalendar getUpdatedAt() {
         return updatedAt;
     }
 
-    /**
-     * Set date message is updated.
-     *
-     * @param updatedAt date message updated.
-     */
-    public void setUpdatedAt(SafeCalendar updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * Return message.
-     *
-     * @return message
-     */
+    /** Returns the actual profile message. */
     public String getMessage() {
         return message;
-    }
-
-    /**
-     * Set message.
-     *
-     * @param message message.
-     */
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
