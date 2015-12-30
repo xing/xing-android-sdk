@@ -72,12 +72,12 @@ public final class SafeCalendar extends GregorianCalendar {
 
     /** Creates a calendar with the desired local. The time will be set to {@link System#currentTimeMillis()}. */
     public SafeCalendar(Locale locale) {
-        super(locale);
+        this(TimeZone.getDefault(), locale);
     }
 
     /** Creates a calendar with the desired local. The time will be set to {@link System#currentTimeMillis()}. */
     public SafeCalendar(TimeZone timezone) {
-        super(timezone);
+        this(timezone, Locale.getDefault());
     }
 
     /**
@@ -86,6 +86,19 @@ public final class SafeCalendar extends GregorianCalendar {
      */
     public SafeCalendar(TimeZone timezone, Locale locale) {
         super(timezone, locale);
+        clear();
+    }
+
+    @Override
+    public String toString() {
+        return "SafeCalendar["
+              + "\"year\": " + (isSet(YEAR) ? get(YEAR) : -1) + ", "
+              + "\"month\": " + (isSet(MONTH) ? get(MONTH) : -1) + ", "
+              + "\"day\": " + (isSet(DAY_OF_MONTH) ? get(DAY_OF_MONTH) : -1) + ", "
+              + "\"hour\": " + (isSet(HOUR_OF_DAY) ? get(HOUR_OF_DAY) : -1) + ", "
+              + "\"minute\": " + (isSet(MINUTE) ? get(MINUTE) : -1) + ", "
+              + "\"second\": " + (isSet(SECOND) ? get(SECOND) : -1)
+              + ']';
     }
 
     /**
