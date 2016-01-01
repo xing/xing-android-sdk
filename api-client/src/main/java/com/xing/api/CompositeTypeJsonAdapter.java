@@ -108,6 +108,8 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
                     }
                 }
             } finally {
+                // If the json has an additional key, that was not red, we ignore it.
+                while (reader.hasNext()) reader.skipValue();
                 reader.endObject();
             }
             throw Utils.ioError("Json does not match expected structure for roots %s.", Arrays.asList(roots));

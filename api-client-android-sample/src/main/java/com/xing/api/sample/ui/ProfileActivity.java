@@ -33,7 +33,6 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
-import com.xing.api.model.SearchResult;
 import com.xing.api.model.user.Address;
 import com.xing.api.model.user.XingUser;
 import com.xing.api.resources.UserProfilesResource;
@@ -188,14 +187,13 @@ public class ProfileActivity extends BaseActivity {
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
             Response<XingUser, HttpError> response = null;
             try {
-                response = profilesResource.getYourProfile().execute();
-                Response<List<SearchResult>, HttpError> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
+                response = profilesResource.getOwnProfile().execute();
+                Response<List<XingUser>, HttpError> xingUsers = profilesResource.findUsersByKeyword("Rocco Bruno")
                       .queryParam("user_fields", "display_name, id")
                       .execute();
-                XingUser ss = xingUsers.body().get(0).getSearchResultItem();
+                XingUser ss = xingUsers.body().get(0);
 
                 Log.w("Search ResultUser", ss.toString());
-
                 Log.w("Search Request", xingUsers.body().toString());
                 return response.body();
             } catch (Exception e) {

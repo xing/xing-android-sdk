@@ -20,15 +20,14 @@ import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
-import com.xing.api.model.SearchResult;
 import com.xing.api.model.user.ProfileMessage;
 import com.xing.api.model.user.XingUser;
 
 import java.util.List;
 
 /**
- * This is a representation of the User Profile API.
- * See <a href="https://dev.xing.com/docs/resources#user-profiles"></a>
+ * Represent the <a href="https://dev.xing.com/docs/resources#user-profiles">'User Profiles'</a> resource.
+ * This resource provides methods which allow to access the {@linkplain XingUser user} profile information.
  *
  * @author serj.lotutovici
  * @author daniel.hartwich
@@ -46,16 +45,39 @@ public class UserProfilesResource extends Resource {
     }
 
     /**
-     * Shows a particular user’s profile. The data returned by this call will be checked against and filtered on the
-     * basis of the privacy settings of the requested user.
-     *
+     * Gets a list of particular {@linkplain XingUser users} profiles. The data returned by this call will be checked
+     * and filtered on the basis of the privacy settings of each requested user.
+     * <p>
      * Possible optional query parameters are:
-     * fields - List of user attributes to return.
+     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
+     * the full user profile will be returned.</li>
      *
-     * @param id The ID of the user you want to have the profile from
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @param ids Id's of the requested {@linkplain XingUser user}.
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:id">'Get user details' resource page</a>
      */
-    public CallSpec<XingUser, HttpError> getUsersById(String id) {
+    public CallSpec<List<XingUser>, HttpError> getUsersById(List<String> ids) {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{ids}")
+              .pathParam("ids", csv(ids))
+              .responseAsListOf(XingUser.class, "users")
+              .build();
+    }
+
+    /**
+     * Gets a particular {@linkplain XingUser user’s} profile. The data returned by this call will be checked and
+     * filtered on the basis of the privacy settings of the requested user.
+     * <p>
+     * Possible optional query parameters are:
+     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
+     * the full user profile will be returned.</li>
+     *
+     * @param id Id of the requested {@linkplain XingUser user}.
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:id">'Get user details' resource page</a>
+     */
+    public CallSpec<XingUser, HttpError> getUserById(String id) {
         return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/{id}")
               .pathParam("id", id)
               .responseAsFirst(XingUser.class, "users")
@@ -63,75 +85,95 @@ public class UserProfilesResource extends Resource {
     }
 
     /**
-     * Shows the profile of the user who has granted access to an API consumer. The response format equals the one
-     * depicted in the get user details call, but you will only get access to the XING profile of the authorizing user.
-     *
+     * Gets the profile of the authorizing {@linkplain XingUser user} (The user who has granted access to the API
+     * consumer).
+     * <p>
      * Possible optional query parameters are:
-     * fields - List of user attributes to return.
+     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
+     * the full user profile will be returned.</li>
      *
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:id">'Get user details' resource page</a>
      */
-    public CallSpec<XingUser, HttpError> getYourProfile() {
-        return getUsersById(ME);
+    public CallSpec<XingUser, HttpError> getOwnProfile() {
+        return getUserById(ME);
     }
 
     /**
-     * Shows minimal profile information of the user that authorized the consumer. If you need more user details please
-     * also have a look at the get user details and the get app user’s details call.
+     * Get the minimal profile information of the authorizing {@linkplain XingUser user}.
+     * <p>
+     * If more user details required consider using {@link UserProfilesResource#getOwnProfile()}.
      *
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/me/id_card">'Get your id card' resource page</a>
      */
-    public CallSpec<XingUser, HttpError> getYourIdCard() {
+    public CallSpec<XingUser, HttpError> getOwnIdCard() {
         return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/me/id_card")
               .responseAs(XingUser.class, "id_card")
               .build();
     }
 
     /**
-     * Returns the list of users that belong directly to the given list of email addresses. The users will be returned
-     * in the same order as the corresponding email addresses. If addresses are invalid or no user was found, the user
-     * will be returned with the value null.
-     *
+     * Gets the list of users that belong directly to the given list of email addresses. The {@linkplain XingUser
+     * users} will be returned in the same order as the corresponding email addresses. If addresses are invalid or no
+     * user was found, the user will be returned as {@code null}.
+     * <p>
      * Possible optional query parameters are:
-     * hash_function - Consider values of the emails field to be hashed using the specified function. Currently
-     * supported is only
-     * user_fields - List of user attributes to return in nested user objects. If this parameter is not used, only the
-     * ID will be returned.
-     * “MD5”.
+     * <li><strong>hash_function</strong> - Hash emails values using the specified function. Currently only
+     * <strong>MD5</strong> is supported.</li>
+     * <li><strong>user_fields</strong> - List of user attributes to return in user objects. If this
+     * parameter is not set, only the {@linkplain XingUser user} ID will be set.</li>
      *
-     * @param emails Comma-seperated list of email addresses to search for
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @param emails List of email addresses to search for.
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/find_by_emails">'Find users by email address' resource page</a>
      */
-    public CallSpec<List<XingUser>, HttpError> findUsersByEmail(String emails) {
+    public CallSpec<List<XingUser>, HttpError> findUsersByEmail(List<String> emails) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/find_by_emails")
-              .pathParam("emails", emails)
-              .responseAsListOf(XingUser.class, "results", "items")
+              .responseAsListOf(single(XingUser.class, "user"), "results", "items")
+              .queryParam("emails", csv(emails))
               .build();
     }
 
     /**
      * Returns the list of users found in accordance with the given list of keywords.
-     *
-     * This call currently has EXPERIMENTAL status. You shouldn’t use it in production environments as it
+     * <p>
+     * This call is EXPERIMENTAL and is not suited for a production environments as it
      * may be missing some functionality, and both input and output interfaces are subject to change. Only certain
      * consumers are granted access to experimental calls. When in doubt, please contact the API team.
+     * <p>
+     * Possible optional query parameters are:
+     * <li><strong>limit</strong> - Restricts the number of profile visits to be returned. This must be a positive
+     * number. Default: 10, Maximum: 100.</li>
+     * <li><strong>offset</strong> - Offset. This must be a positive number. Default: 0.</li>
+     * <li><strong>user_fields</strong> - List of user attributes to return in nested user objects. If this parameter
+     * is
+     * not used, only the ID will be returned.</li>
      *
-     * @param keywords A String representing the keywords you want to search for, if this is empty the search will
+     * @param keywords A String representing the keywords to search for, if this is empty the search will
      * return and empty set
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/find">'Find users by keywords' resource page</a>
      */
     @Experimental
-    public CallSpec<List<SearchResult>, HttpError> findUsersByKeyword(String keywords) {
-        return Resource.<List<SearchResult>, HttpError>newGetSpec(api, "/v1/users/find")
-              .responseAsListOf(SearchResult.class, "users", "items")
+    public CallSpec<List<XingUser>, HttpError> findUsersByKeyword(String keywords) {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/find")
+              .responseAsListOf(single(XingUser.class, "user"), "users", "items")
               .queryParam("keywords", keywords)
               .build();
     }
 
     /**
-     * Get the recent profile message for the user with the given ID.
+     * Returns the recent profile message for the {@linkplain XingUser user} with the given ID.
      *
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/profile_message">'Get user profile message' resource
+     * page</a>
      */
     public CallSpec<ProfileMessage, HttpError> getUserProfileMessage(String userId) {
         return Resource.<ProfileMessage, HttpError>newGetSpec(api, "/v1/{user_id}/profile_message")
@@ -141,21 +183,27 @@ public class UserProfilesResource extends Resource {
     }
 
     /**
-     * Get your recent profile message.
+     * Returns the recent profile message for the authorizing {@linkplain XingUser user}.
      *
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/profile_message">'Get user profile message' resource
+     * page</a>
      */
-    public CallSpec<ProfileMessage, HttpError> getYourProfileMessage() {
+    public CallSpec<ProfileMessage, HttpError> getOwnProfileMessage() {
         return getUserProfileMessage(ME);
     }
 
     /**
-     * Fetch legal information of a user.
+     * Returns the legal information for the {@linkplain XingUser user} with the given ID.
      *
-     * @param userId The ID of the user from whom you want to receive the legal information
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @param userId The ID of the user from whom to retrieve the legal information.
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/legal_information">'Get legal information of a user'
+     * resource page</a>
      */
-    public CallSpec<String, HttpError> getLegalInformation(String userId) {
+    public CallSpec<String, HttpError> getUserLegalInformation(String userId) {
         return Resource.<String, HttpError>newGetSpec(api, "/v1/users/{user_id}/legal_information")
               .pathParam("user_id", userId)
               .responseAs(String.class, "legal_information", "content")
@@ -163,11 +211,14 @@ public class UserProfilesResource extends Resource {
     }
 
     /**
-     * Fetch legal information of the authorized user.
+     * Returns the legal information for the authorizing {@linkplain XingUser user}.
      *
-     * @return A CallSpec object which can be executed, enqueued or run with RX Java
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/legal_information">'Get legal information of a user'
+     * resource page</a>
      */
-    public CallSpec<String, HttpError> getYourLegalInformation() {
-        return getLegalInformation(ME);
+    public CallSpec<String, HttpError> getOwnLegalInformation() {
+        return getUserLegalInformation(ME);
     }
 }
