@@ -147,7 +147,7 @@ public class CompositeTypeJsonAdapterTest {
         try {
             parse(compositeType, "{\n"
                   + "  \"content\": []\n"
-                  + "}");
+                  + '}');
 
             fail("Adapter should throw.");
         } catch (IOException ioe) {
@@ -160,7 +160,7 @@ public class CompositeTypeJsonAdapterTest {
         Type compositeType = compose(TestData.class, Structure.LIST);
         parse(compositeType, "{\n"
               + "  \"content\": []\n"
-              + "}");
+              + '}');
     }
 
     @Test(expected = JsonDataException.class)
@@ -193,7 +193,7 @@ public class CompositeTypeJsonAdapterTest {
         Type compositeType = compose(TestData.class, Structure.SINGLE, "root");
         TestData data = parse(compositeType, "{\n"
               + "  \"root\": null\n"
-              + "}");
+              + '}');
         assertThat(data).isNull();
     }
 
@@ -227,12 +227,12 @@ public class CompositeTypeJsonAdapterTest {
         Type compositeType1 = compose(TestData.class, Structure.FIRST, "empty");
         assertThat(parse(compositeType1, "{\n"
               + "  \"empty\": null\n"
-              + "}")).isNull();
+              + '}')).isNull();
 
         Type compositeType2 = compose(TestData.class, Structure.FIRST, "empty");
         assertThat(parse(compositeType2, "{\n"
               + "  \"empty\": []\n"
-              + "}")).isNull();
+              + '}')).isNull();
     }
 
     @Test
@@ -255,7 +255,7 @@ public class CompositeTypeJsonAdapterTest {
               + "      }\n"
               + "    }\n"
               + "  ]\n"
-              + "}");
+              + '}');
 
         assertThat(listData).isNotNull();
         assertThat(listData.size()).isEqualTo(2);

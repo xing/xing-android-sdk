@@ -40,7 +40,7 @@ It can be done after a user logs in or when starting your application.
 this data will be lost when the `XingApi` instance is garbage collected. You should manage the object as a singleton
 and try to avoid initializing it multiple times during your applications lifecycle. We recommend to keep the instance
 inside your custom `Application` class (see android sample). Or use a Dependency Injection framework to do the heavy 
-all lifting for you (see [Dagger](https://github.com/square/dagger) and [Dagger 2](https://github.com/google/dagger)).
+lifting for you (see [Dagger](https://github.com/square/dagger) and [Dagger 2](https://github.com/google/dagger)).
 
 ### Access Resources/Execute Requests using XingApi:
 
@@ -54,7 +54,7 @@ data. For example, let's assume that you need to access the users profile data:
     UserProfileResource resource = xingApi.resource(UserProfileResource.class);
       
     // Get the spec for the user profile request.
-    CallSpec<XingUser, HttpError> spec = resource.getYourProfile();
+    CallSpec<XingUser, HttpError> spec = resource.getOwnProfile();
 ```
 
 Depending on your use case, you can execute the underlying request in several ways:

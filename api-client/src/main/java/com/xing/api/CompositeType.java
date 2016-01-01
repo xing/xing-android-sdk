@@ -36,7 +36,7 @@ import java.util.List;
  * CompositeType type = Resource.list(YourReturnObject.class, [List of roots where your object can be found]);
  *
  * //Example: Usage inside the UserProfilesResource
- * public CallSpec<XingUser, HttpError> getUsersById(String id) {
+ * public CallSpec<XingUser, HttpError> getUserById(String id) {
  *  return this.<XingUser, HttpError>newGetSpec("/v1/users/{id}")
  *      .pathParam("id", id)
  *      .responseAsList(XingUser.class, "users")

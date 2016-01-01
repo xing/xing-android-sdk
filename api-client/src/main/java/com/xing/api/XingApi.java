@@ -139,7 +139,7 @@ public final class XingApi {
             return apiEndpoint(httpUrl);
         }
 
-        Builder apiEndpoint(HttpUrl baseUrl) {
+        public Builder apiEndpoint(HttpUrl baseUrl) {
             apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
             return this;
         }
