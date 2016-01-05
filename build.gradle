@@ -56,9 +56,8 @@ allprojects {
               supportRecyclerView     : 'com.android.support:recyclerview-v7:22.2.0',
 
               // Ok stack
-              okhttp                  : 'com.squareup.okhttp:okhttp:2.6.0',
-              okhttpUrlConnection     : 'com.squareup.okhttp:okhttp-urlconnection:2.6.0',
-              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.6.0',
+              okhttp                  : 'com.squareup.okhttp:okhttp:2.7.1',
+              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.1',
               okio                    : 'com.squareup.okio:okio:1.6.0',
               moshi                   : 'com.squareup.moshi:moshi:1.1.0-SNAPSHOT',
 
@@ -74,7 +73,7 @@ allprojects {
               assertj                 : 'org.assertj:assertj-core:1.7.0',
               mockito                 : 'org.mockito:mockito-all:1.10.19',
               robolectric             : 'org.robolectric:robolectric:3.0',
-              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.5.0',
+              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.7.1',
               commonsIo               : 'commons-io:commons-io:2.4',
               apacheCommons3          : 'org.apache.commons:commons-lang3:3.4'
         ]
