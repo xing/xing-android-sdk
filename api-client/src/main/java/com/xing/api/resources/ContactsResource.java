@@ -94,7 +94,7 @@ public class ContactsResource extends Resource {
     public CallSpec<List<XingUser>, HttpError> getContacts(String userId) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts")
               .pathParam("user_id", userId)
-              .responseAsListOf(XingUser.class, "contacts, users")
+              .responseAs(list(XingUser.class, "contacts, users"))
               .build();
     }
 
@@ -112,7 +112,7 @@ public class ContactsResource extends Resource {
      */
     public CallSpec<List<String>, HttpError> getYourContactIds() {
         return Resource.<List<String>, HttpError>newGetSpec(api, "/v1/users/me/contact_ids")
-              .responseAsListOf(String.class, "contact_ids", "items")
+              .responseAs(list(String.class, "contact_ids", "items"))
               .build();
     }
 
@@ -165,7 +165,7 @@ public class ContactsResource extends Resource {
     public CallSpec<List<XingUser>, HttpError> getSharedContacts(String userId) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
-              .responseAsListOf(XingUser.class, "shared_contacts", "users")
+              .responseAs(list(XingUser.class, "shared_contacts", "users"))
               .build();
     }
 
@@ -190,7 +190,7 @@ public class ContactsResource extends Resource {
     public CallSpec<List<XingUser>, HttpError> getUpcomingBirthdays(String userId) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
-              .responseAsListOf(XingUser.class, "users")
+              .responseAs(list(XingUser.class, "users"))
               .build();
     }
 
@@ -224,7 +224,7 @@ public class ContactsResource extends Resource {
      */
     public CallSpec<List<ContactRequest>, HttpError> getIncomingContactRequests() {
         return Resource.<List<ContactRequest>, HttpError>newGetSpec(api, "/v1/users/me/contact_requests")
-              .responseAsListOf(ContactRequest.class, "contact_requests")
+              .responseAs(list(ContactRequest.class, "contact_requests"))
               .build();
     }
 
@@ -255,7 +255,7 @@ public class ContactsResource extends Resource {
      */
     public CallSpec<List<PendingContactRequest>, HttpError> getPendingContactRequests() {
         return Resource.<List<PendingContactRequest>, HttpError>newGetSpec(api, " /v1/users/me/contact_requests/sent")
-              .responseAsListOf(PendingContactRequest.class, "contact_requests")
+              .responseAs(list(PendingContactRequest.class, "contact_requests"))
               .build();
     }
 
@@ -354,7 +354,7 @@ public class ContactsResource extends Resource {
         return Resource.<ContactPaths, HttpError>newGetSpec(api, "/v1/users/{user_id}/network/{other_user_id}/paths")
               .pathParam("user_id", userId)
               .pathParam("other_user_id", otherUserId)
-              .responseAs(ContactPaths.class, "contact_paths")
+              .responseAs(single(ContactPaths.class, "contact_paths"))
               .build();
     }
 
@@ -387,9 +387,8 @@ public class ContactsResource extends Resource {
      */
     public CallSpec<InvitationStats, HttpError> sendInvitation(String... toEmails) {
         return Resource.<InvitationStats, HttpError>newPostSpec(api, "/v1/users/invite", true)
-              //TODO SerjLtt|DanielH Make this array a string which is comma seperated
-              .pathParam("to_emails", toEmails.toString())
-              .responseAs(InvitationStats.class, "invitation_stats")
+              .pathParam("to_emails", toEmails)
+              .responseAs(single(InvitationStats.class, "invitation_stats"))
               .build();
     }
 }

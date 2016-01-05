@@ -16,7 +16,6 @@
 package com.xing.api;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * TODO docs.
@@ -69,30 +68,5 @@ public abstract class Resource {
      */
     protected static Type first(Type searchFor, String... roots) {
         return new CompositeType(null, searchFor, CompositeType.Structure.FIRST, roots);
-    }
-
-    /**
-     * Converts a list of strings into a string with coma separated values. If the list is {@code null} or empty an
-     * empty string will be returned.
-     */
-    protected static String csv(List<String> values) {
-        StringBuilder sb = new StringBuilder();
-        if (values != null && !values.isEmpty()) {
-            int size = values.size();
-            if (size > 1) {
-                boolean firstTime = true;
-                for (int index = 0; index < size; index++) {
-                    if (firstTime) {
-                        firstTime = false;
-                    } else {
-                        sb.append(", ");
-                    }
-                    sb.append(values.get(index));
-                }
-            } else {
-                sb.append(values.get(0));
-            }
-        }
-        return sb.toString();
     }
 }
