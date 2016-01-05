@@ -59,8 +59,8 @@ public class UserProfilesResource extends Resource {
      */
     public CallSpec<List<XingUser>, HttpError> getUsersById(List<String> ids) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{ids}")
-              .pathParam("ids", csv(ids))
-              .responseAsListOf(XingUser.class, "users")
+              .pathParam("ids", ids)
+              .responseAs(list(XingUser.class, "users"))
               .build();
     }
 
@@ -80,7 +80,7 @@ public class UserProfilesResource extends Resource {
     public CallSpec<XingUser, HttpError> getUserById(String id) {
         return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/{id}")
               .pathParam("id", id)
-              .responseAsFirst(XingUser.class, "users")
+              .responseAs(first(XingUser.class, "users"))
               .build();
     }
 
@@ -111,7 +111,7 @@ public class UserProfilesResource extends Resource {
      */
     public CallSpec<XingUser, HttpError> getOwnIdCard() {
         return Resource.<XingUser, HttpError>newGetSpec(api, "/v1/users/me/id_card")
-              .responseAs(XingUser.class, "id_card")
+              .responseAs(single(XingUser.class, "id_card"))
               .build();
     }
 
@@ -133,8 +133,8 @@ public class UserProfilesResource extends Resource {
      */
     public CallSpec<List<XingUser>, HttpError> findUsersByEmail(List<String> emails) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/find_by_emails")
-              .responseAsListOf(single(XingUser.class, "user"), "results", "items")
-              .queryParam("emails", csv(emails))
+              .responseAs(list(single(XingUser.class, "user"), "results", "items"))
+              .queryParam("emails", emails)
               .build();
     }
 
@@ -162,7 +162,7 @@ public class UserProfilesResource extends Resource {
     @Experimental
     public CallSpec<List<XingUser>, HttpError> findUsersByKeyword(String keywords) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/find")
-              .responseAsListOf(single(XingUser.class, "user"), "users", "items")
+              .responseAs(list(single(XingUser.class, "user"), "users", "items"))
               .queryParam("keywords", keywords)
               .build();
     }
@@ -178,7 +178,7 @@ public class UserProfilesResource extends Resource {
     public CallSpec<ProfileMessage, HttpError> getUserProfileMessage(String userId) {
         return Resource.<ProfileMessage, HttpError>newGetSpec(api, "/v1/{user_id}/profile_message")
               .pathParam("user_id", userId)
-              .responseAs(ProfileMessage.class, "profile_message")
+              .responseAs(single(ProfileMessage.class, "profile_message"))
               .build();
     }
 
@@ -206,7 +206,7 @@ public class UserProfilesResource extends Resource {
     public CallSpec<String, HttpError> getUserLegalInformation(String userId) {
         return Resource.<String, HttpError>newGetSpec(api, "/v1/users/{user_id}/legal_information")
               .pathParam("user_id", userId)
-              .responseAs(String.class, "legal_information", "content")
+              .responseAs(single(String.class, "legal_information", "content"))
               .build();
     }
 

@@ -70,7 +70,7 @@ final class CompositeType implements ParameterizedType {
     final String[] roots;
     final Structure structure;
 
-    CompositeType(Type ownerType, Type searchFor, Structure structure, String... roots) {
+    CompositeType(@Nullable Type ownerType, Type searchFor, Structure structure, String... roots) {
         this.ownerType = ownerType;
         this.searchFor = searchFor;
         this.structure = structure;
@@ -82,6 +82,7 @@ final class CompositeType implements ParameterizedType {
         return new Type[]{toFind()};
     }
 
+    @Nullable
     @Override
     public Type getOwnerType() {
         return ownerType;

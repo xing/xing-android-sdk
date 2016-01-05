@@ -30,7 +30,10 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,9 +49,6 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
-import static com.xing.api.Resource.first;
-import static com.xing.api.Resource.list;
-import static com.xing.api.Resource.single;
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
 import static com.xing.api.Utils.checkNotNull;
@@ -218,8 +218,28 @@ public final class CallSpec<RT, ET> implements Cloneable {
         return this;
     }
 
+    public CallSpec<RT, ET> queryParam(String name, String... values) {
+        builder.queryParam(name, values);
+        return this;
+    }
+
+    public CallSpec<RT, ET> queryParam(String name, List<String> values) {
+        builder.queryParam(name, values);
+        return this;
+    }
+
     public CallSpec<RT, ET> formField(String name, String value) {
         builder.formField(name, value);
+        return this;
+    }
+
+    public CallSpec<RT, ET> formField(String name, String... values) {
+        builder.formField(name, values);
+        return this;
+    }
+
+    public CallSpec<RT, ET> formField(String name, List<String> values) {
+        builder.formField(name, values);
         return this;
     }
 
@@ -343,9 +363,21 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         public Builder<RT, ET> pathParam(String name, String value) {
+            return pathParam(name, value, false);
+        }
+
+        public Builder<RT, ET> pathParam(String name, String... values) {
+            return pathParam(name, toCsv(values), true);
+        }
+
+        public Builder<RT, ET> pathParam(String name, List<String> values) {
+            return pathParam(name, toCsv(values), true);
+        }
+
+        private Builder<RT, ET> pathParam(String name, String value, boolean encoded) {
             stateNotNull(resourcePath, "Path params must be set before query params.");
             validatePathParam(name);
-            resourcePath = resourcePath.replace('{' + name + '}', escape(value));
+            resourcePath = resourcePath.replace('{' + name + '}', encoded ? value : escape(value));
             resourcePathParams.remove(name);
             return this;
         }
@@ -356,9 +388,25 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return this;
         }
 
+        public Builder<RT, ET> queryParam(String name, String... values) {
+            return queryParam(name, toCsv(values));
+        }
+
+        public Builder<RT, ET> queryParam(String name, List<String> values) {
+            return queryParam(name, toCsv(values));
+        }
+
         public Builder<RT, ET> formField(String name, @Nullable Object value) {
             formEncodingBuilder.add(name, String.valueOf(value));
             return this;
+        }
+
+        public Builder<RT, ET> formField(String name, String... values) {
+            return formField(name, toCsv(values));
+        }
+
+        public Builder<RT, ET> formField(String name, List<String> values) {
+            return formField(name, toCsv(values));
         }
 
         public Builder<RT, ET> body(RequestBody body) {
@@ -383,24 +431,18 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return this;
         }
 
-        public Builder<RT, ET> responseAs(Class<RT> type, String... roots) {
-            responseType = single(checkNotNull(type, "type == null"), roots);
-            return this;
+        public Builder<RT, ET> responseAs(Class<RT> type) {
+            return responseAs((Type) type);
         }
 
-        public Builder<RT, ET> responseAsListOf(Type type, String... roots) {
-            responseType = list(checkNotNull(type, "type == null"), roots);
-            return this;
-        }
-
-        public Builder<RT, ET> responseAsFirst(Class<RT> type, String... roots) {
-            responseType = first(checkNotNull(type, "type == null"), roots);
+        public Builder<RT, ET> responseAs(Type type) {
+            responseType = checkNotNull(type, "type == null");
             return this;
         }
 
         //This is needed for XING internal APIs that return the error message in a custom format.
         public Builder<RT, ET> errorAs(Class<ET> type) {
-            errorType = single(checkNotNull(type, "type == null"));
+            errorType = checkNotNull(type, "type == null");
             return this;
         }
 
@@ -412,7 +454,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
             if (urlBuilder == null) buildUrlBuilder();
             if (responseType == null) throw stateError("Response type is not set.");
-            if (errorType == null) errorType = single(HttpError.class);
+            if (errorType == null) errorType = HttpError.class;
 
             return new CallSpec<>(this);
         }
@@ -452,6 +494,18 @@ public final class CallSpec<RT, ET> implements Cloneable {
             resourcePath = null;
         }
 
+        private void validatePathParam(String name) {
+            if (!PARAM_NAME_REGEX.matcher(name).matches()) {
+                throw assertionError("Path parameter name must match %s. Found: %s", PARAM_URL_REGEX.pattern(), name);
+            }
+            // Verify URL replacement name is actually present in the URL path.
+            if (!resourcePathParams.contains(name)) {
+                throw assertionError(
+                      "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has been already set.",
+                      resourcePath, name);
+            }
+        }
+
         /**
          * Gets the set of unique path parameters used in the given URI. If a parameter is used twice
          * in the URI, it will only show up once in the set.
@@ -466,16 +520,40 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return patterns;
         }
 
-        private void validatePathParam(String name) {
-            if (!PARAM_NAME_REGEX.matcher(name).matches()) {
-                throw assertionError("Path parameter name must match %s. Found: %s", PARAM_URL_REGEX.pattern(), name);
+        /**
+         * Converts varargs into a single string with coma separated values. If the varargs are {@code null}
+         * or empty an empty string will be returned.
+         */
+        static String toCsv(Object[] values) {
+            return toCsv(values != null ? Arrays.asList(values) : Collections.emptyList());
+        }
+
+        /**
+         * Converts a list into a string with coma separated values. If the list is {@code null} or empty an
+         * empty string will be returned.
+         * <p>
+         * <b>NOTE:</b> The values contained in the {@link List} should not be null, otherwise a {@code "null"}
+         * will be put in it's place.
+         */
+        static String toCsv(List<?> values) {
+            StringBuilder sb = new StringBuilder();
+            if (values != null && !values.isEmpty()) {
+                int size = values.size();
+                if (size > 1) {
+                    boolean firstTime = true;
+                    for (int index = 0; index < size; index++) {
+                        if (firstTime) {
+                            firstTime = false;
+                        } else {
+                            sb.append(',');
+                        }
+                        sb.append(values.get(index));
+                    }
+                } else {
+                    sb.append(values.get(0));
+                }
             }
-            // Verify URL replacement name is actually present in the URL path.
-            if (!resourcePathParams.contains(name)) {
-                throw assertionError(
-                      "Resource path \"%s\" does not contain \"{%s}\". Or the path parameter has been already set.",
-                      resourcePath, name);
-            }
+            return sb.toString();
         }
     }
 

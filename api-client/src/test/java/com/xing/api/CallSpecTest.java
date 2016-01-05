@@ -34,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -91,6 +93,37 @@ public class CallSpecTest {
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.urlString()).isEqualTo(httpUrl + "test1/test2");
+        assertThat(request.body()).isNull();
+    }
+
+    @Test
+    public void builderAcceptsPathParamsAsVarList() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{params}", false)
+              .responseAs(Object.class)
+              .pathParam("params", "one", "two", "three");
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "one,two,three");
+        assertThat(request.body()).isNull();
+    }
+
+    @Test
+    public void builderAcceptsPathParamsAsList() throws Exception {
+        List<String> params = new ArrayList<>(3);
+        params.add("one");
+        params.add("two");
+        params.add("three");
+
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/{params}", false)
+              .responseAs(Object.class)
+              .pathParam("params", params);
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "one,two,three");
         assertThat(request.body()).isNull();
     }
 
@@ -161,7 +194,9 @@ public class CallSpecTest {
 
     @Test
     public void builderAttachesQueryParams() throws Exception {
-        CallSpec.Builder builder = builder(HttpMethod.GET, "", false).responseAs(Object.class).queryParam("q", "test1");
+        CallSpec.Builder builder = builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .queryParam("q", "test1");
         // Build the CallSpec so that we don't test this behaviour twice.
         builder.build().queryParam("w", "test2");
 
@@ -172,8 +207,42 @@ public class CallSpecTest {
     }
 
     @Test
+    public void builderAttachesQueryParamsAsVarList() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .queryParam("q", "testL", "testL");
+        // Build the CallSpec so that we don't test this behaviour twice.
+        builder.build().queryParam("w", "testL", "testL");
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.body()).isNull();
+    }
+
+    @Test
+    public void builderAttachesQueryParamsAsList() throws Exception {
+        List<String> query = new ArrayList<>(2);
+        query.add("testL");
+        query.add("testL");
+
+        CallSpec.Builder builder = builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .queryParam("q", query);
+        // Build the CallSpec so that we don't test this behaviour twice.
+        builder.build().queryParam("w", query);
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.body()).isNull();
+    }
+
+    @Test
     public void builderAttachesFormFields() throws Exception {
-        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true).responseAs(Object.class).formField("f", "true");
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
+              .responseAs(Object.class)
+              .formField("f", "true");
         // Build the CallSpec so that we don't test this behaviour twice.
         builder.build().formField("e", "false");
 
@@ -188,6 +257,30 @@ public class CallSpecTest {
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
         assertThat(buffer.readUtf8()).isEqualTo("f=true&e=false");
+    }
+
+    @Test
+    public void builderAttachesFormFieldsAsLists() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
+              .responseAs(Object.class)
+              .formField("f", "test1", "test2");
+        // Build the CallSpec so that we don't test this behaviour twice.
+        List<String> field = new ArrayList<>(2);
+        field.add("test3");
+        field.add("test4");
+        builder.build().formField("e", field);
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
+        assertThat(request.httpUrl()).isEqualTo(httpUrl);
+        assertThat(request.body()).isNotNull();
+
+        RequestBody body = request.body();
+        assertThat(body.contentType()).isEqualTo(MediaType.parse("application/x-www-form-urlencoded"));
+
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        assertThat(buffer.readUtf8()).isEqualTo("f=test1%2Ctest2&e=test3%2Ctest4");
     }
 
     @Test

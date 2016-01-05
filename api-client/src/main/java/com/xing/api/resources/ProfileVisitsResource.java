@@ -47,7 +47,7 @@ public class ProfileVisitsResource extends Resource {
     public CallSpec<List<ProfileVisit>, HttpError> getProfileVisits(String userId) {
         return Resource.<List<ProfileVisit>, HttpError>newGetSpec(api, "/v1/users/{user_id}/visits")
               .pathParam("user_id", userId)
-              .responseAsListOf(ProfileVisit.class)
+              .responseAs(list(ProfileVisit.class))
               .build();
     }
 
