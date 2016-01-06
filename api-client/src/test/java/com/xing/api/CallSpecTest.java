@@ -216,7 +216,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2C%20testL&w=testL%2C%20testL");
         assertThat(request.body()).isNull();
     }
 
@@ -234,7 +234,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2C%20testL&w=testL%2C%20testL");
         assertThat(request.body()).isNull();
     }
 
@@ -268,7 +268,7 @@ public class CallSpecTest {
         List<String> field = new ArrayList<>(2);
         field.add("test3");
         field.add("test4");
-        builder.build().formField("e", field);
+        builder.build().formField("e", field).formField("d", "test5", "test6");
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
@@ -280,7 +280,7 @@ public class CallSpecTest {
 
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
-        assertThat(buffer.readUtf8()).isEqualTo("f=test1%2Ctest2&e=test3%2Ctest4");
+        assertThat(buffer.readUtf8()).isEqualTo("f=test1%2C%20test2&e=test3%2C%20test4&d=test5%2C%20test6");
     }
 
     @Test

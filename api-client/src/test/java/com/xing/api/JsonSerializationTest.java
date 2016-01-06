@@ -84,7 +84,7 @@ public class JsonSerializationTest {
         assertThat(user.getTimeZone()).isEqualTo(new TimeZone("Europe/Copenhagen", 2.0f));
         assertThat(user.getPremiumServices()).containsExactly(PremiumService.SEARCH, PremiumService.PRIVATE_MESSAGES);
         assertThat(user.getBadges()).containsExactly(Badge.PREMIUM, Badge.MODERATOR);
-        assertThat(user.getWants()).containsExactly("einen neuen Job");
+        assertThat(user.getWants()).containsExactly("einen neuen Job", "android");
         assertThat(user.getHaves()).containsExactly("viele tolle Skills");
         assertThat(user.getInterests()).containsExactly("Flitzebogen schießen and so on");
         assertThat(user.getOrganizations()).containsExactly("ACM", "GI");

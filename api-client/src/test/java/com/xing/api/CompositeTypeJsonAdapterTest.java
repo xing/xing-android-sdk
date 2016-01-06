@@ -37,37 +37,43 @@ public class CompositeTypeJsonAdapterTest {
     private final Moshi moshi = new Moshi.Builder().add(CompositeTypeJsonAdapter.FACTORY).build();
 
     @Test
-    public void parsesSingleObjects() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE);
-        TestData data = parse(compositeType, "{\n"
+    public void singleObjects() throws Exception {
+        Type type = compose(TestData.class, Structure.SINGLE);
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"str\": \"test\",\n"
               + "  \"val\": 42\n"
               + '}');
 
-        assertThat(data).isNotNull();
-        assertThat(data.str).isEqualTo("test");
-        assertThat(data.val).isEqualTo(42);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.str).isEqualTo("test");
+        assertThat(fromJson.val).isEqualTo(42);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"str\":\"test\",\"val\":42}");
     }
 
     @Test
-    public void parsesSingleObjectsWithRoots() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe");
-        TestData data = parse(compositeType, "{\n"
+    public void singleObjectsWithRoots() throws Exception {
+        Type type = compose(TestData.class, Structure.SINGLE, "findMe");
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"str\": \"test1\",\n"
               + "    \"val\": 43\n"
               + "  }\n"
               + '}');
 
-        assertThat(data).isNotNull();
-        assertThat(data.str).isEqualTo("test1");
-        assertThat(data.val).isEqualTo(43);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.str).isEqualTo("test1");
+        assertThat(fromJson.val).isEqualTo(43);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"findMe\":{\"str\":\"test1\",\"val\":43}}");
     }
 
     @Test
-    public void parsesSingleObjectsWithMultipleRoots() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
-        TestData data = parse(compositeType, "{\n"
+    public void singleObjectsWithMultipleRoots() throws Exception {
+        Type type = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
               + "      \"str\": \"test2\",\n"
@@ -76,45 +82,54 @@ public class CompositeTypeJsonAdapterTest {
               + "  }\n"
               + '}');
 
-        assertThat(data).isNotNull();
-        assertThat(data.str).isEqualTo("test2");
-        assertThat(data.val).isEqualTo(44);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.str).isEqualTo("test2");
+        assertThat(fromJson.val).isEqualTo(44);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"findMe\":{\"andMe\":{\"str\":\"test2\",\"val\":44}}}");
     }
 
     @Test
-    public void parseSingleObjectsWithNullObjectInside() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
-        TestData data = parse(compositeType, "{\n"
+    public void singleObjectsWithNullObjectInside() throws Exception {
+        Type type = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
               + "    }\n"
               + "  }\n"
               + '}');
 
-        assertThat(data).isNotNull();
-        assertThat(data.str).isNullOrEmpty();
-        assertThat(data.val).isEqualTo(0);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.str).isNullOrEmpty();
+        assertThat(fromJson.val).isEqualTo(0);
+
+        String toJson = toJson(compose(Object.class, Structure.SINGLE, "findMe", "andMe"), new Object());
+        assertThat(toJson).isEqualTo("{\"findMe\":{\"andMe\":{}}}");
     }
 
     @Test
-    public void parseSingleObjectsWithRootsNull() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE, null);
-        TestData data = parse(compositeType, "{\n"
+    public void singleObjectsWithRootsNull() throws Exception {
+        Type type = compose(TestData.class, Structure.SINGLE, null);
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
               + "    }\n"
               + "  }\n"
               + '}');
 
-        assertThat(data).isNotNull();
-        assertThat(data.str).isNullOrEmpty();
-        assertThat(data.val).isEqualTo(0);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.str).isNullOrEmpty();
+        assertThat(fromJson.val).isEqualTo(0);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"val\":0}");
     }
 
     @Test
-    public void parseListObject() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.LIST, "content");
-        List<TestData> listData = parse(compositeType, "{\n"
+    public void listObject() throws Exception {
+        Type type = compose(TestData.class, Structure.LIST, "content");
+        List<TestData> fromJson = fromJson(type, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
               + "      \"str\": \"zero\",\n"
@@ -131,21 +146,28 @@ public class CompositeTypeJsonAdapterTest {
               + "  ]\n"
               + '}');
 
-        assertThat(listData).isNotNull();
-        assertThat(listData).hasSize(3);
-        assertThat(listData.get(0).str).isEqualTo("zero");
-        assertThat(listData.get(1).str).isEqualTo("one");
-        assertThat(listData.get(2).str).isEqualTo("two");
-        assertThat(listData.get(0).val).isEqualTo(0);
-        assertThat(listData.get(1).val).isEqualTo(1);
-        assertThat(listData.get(2).val).isEqualTo(2);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson).hasSize(3);
+        assertThat(fromJson.get(0).str).isEqualTo("zero");
+        assertThat(fromJson.get(1).str).isEqualTo("one");
+        assertThat(fromJson.get(2).str).isEqualTo("two");
+        assertThat(fromJson.get(0).val).isEqualTo(0);
+        assertThat(fromJson.get(1).val).isEqualTo(1);
+        assertThat(fromJson.get(2).val).isEqualTo(2);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"content\":["
+              + "{\"str\":\"zero\",\"val\":0},"
+              + "{\"str\":\"one\",\"val\":1},"
+              + "{\"str\":\"two\",\"val\":2}]"
+              + '}');
     }
 
     @Test
-    public void parseListObjectWrongRoots() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.LIST, "asdasdasd");
+    public void listObjectWrongRoots() throws Exception {
+        Type type = compose(TestData.class, Structure.LIST, "asdasdasd");
         try {
-            parse(compositeType, "{\n"
+            fromJson(type, "{\n"
                   + "  \"content\": []\n"
                   + '}');
 
@@ -156,17 +178,17 @@ public class CompositeTypeJsonAdapterTest {
     }
 
     @Test(expected = JsonDataException.class)
-    public void parseListObjectWithoutRoot() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.LIST);
-        parse(compositeType, "{\n"
+    public void listObjectWithoutRoot() throws Exception {
+        Type type = compose(TestData.class, Structure.LIST);
+        fromJson(type, "{\n"
               + "  \"content\": []\n"
               + '}');
     }
 
     @Test(expected = JsonDataException.class)
-    public void parseListObjectMultipleRoots() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.LIST, "users", "companies");
-        parse(compositeType, "{\n"
+    public void listObjectMultipleRoots() throws Exception {
+        Type type = compose(TestData.class, Structure.LIST, "users", "companies");
+        fromJson(type, "{\n"
               + "  \"users\": [\n"
               + "    {\n"
               + "      \"companies\": [\n"
@@ -190,17 +212,17 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void objectWithNull() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.SINGLE, "root");
-        TestData data = parse(compositeType, "{\n"
+        Type type = compose(TestData.class, Structure.SINGLE, "root");
+        TestData fromJson = fromJson(type, "{\n"
               + "  \"root\": null\n"
               + '}');
-        assertThat(data).isNull();
+        assertThat(fromJson).isNull();
     }
 
     @Test
-    public void parsesFirstInList() throws Exception {
+    public void firstInList() throws Exception {
         Type compositeType = compose(TestData.class, Structure.FIRST, "content");
-        TestData data = parse(compositeType, "{\n"
+        TestData data = fromJson(compositeType, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
               + "      \"str\": \"zero\",\n"
@@ -223,24 +245,24 @@ public class CompositeTypeJsonAdapterTest {
     }
 
     @Test
-    public void parsesFirstAsNullIfListEmpty() throws Exception {
+    public void firstAsNullIfListEmpty() throws Exception {
         Type compositeType1 = compose(TestData.class, Structure.FIRST, "empty");
-        assertThat(parse(compositeType1, "{\n"
+        assertThat(fromJson(compositeType1, "{\n"
               + "  \"empty\": null\n"
               + '}')).isNull();
 
         Type compositeType2 = compose(TestData.class, Structure.FIRST, "empty");
-        assertThat(parse(compositeType2, "{\n"
+        assertThat(fromJson(compositeType2, "{\n"
               + "  \"empty\": []\n"
               + '}')).isNull();
     }
 
     @Test
-    public void parsesListOfCompositeType() throws Exception {
+    public void listOfCompositeType() throws Exception {
         Type innerType = compose(TestData.class, Structure.SINGLE, "secondDegree");
-        Type compositeType = compose(innerType, Structure.LIST, "firstDegree");
+        Type type = compose(innerType, Structure.LIST, "firstDegree");
 
-        List<TestData> listData = parse(compositeType, "{\n"
+        List<TestData> fromJson = fromJson(type, "{\n"
               + "  \"firstDegree\": [\n"
               + "    {\n"
               + "      \"secondDegree\": {\n"
@@ -257,20 +279,30 @@ public class CompositeTypeJsonAdapterTest {
               + "  ]\n"
               + '}');
 
-        assertThat(listData).isNotNull();
-        assertThat(listData.size()).isEqualTo(2);
-        assertThat(listData.get(0).str).isEqualTo("one");
-        assertThat(listData.get(0).val).isEqualTo(1);
-        assertThat(listData.get(1).str).isEqualTo("two");
-        assertThat(listData.get(1).val).isEqualTo(2);
+        assertThat(fromJson).isNotNull();
+        assertThat(fromJson.size()).isEqualTo(2);
+        assertThat(fromJson.get(0).str).isEqualTo("one");
+        assertThat(fromJson.get(0).val).isEqualTo(1);
+        assertThat(fromJson.get(1).str).isEqualTo("two");
+        assertThat(fromJson.get(1).val).isEqualTo(2);
+
+        String toJson = toJson(type, fromJson);
+        assertThat(toJson).isEqualTo("{\"firstDegree\":["
+              + "{\"secondDegree\":{\"str\":\"one\",\"val\":1}},"
+              + "{\"secondDegree\":{\"str\":\"two\",\"val\":2}}"
+              + "]}");
     }
 
     @SuppressWarnings("unchecked") // This is the callers responsibility.
-    private <T> T parse(Type type, String json) throws Exception {
+    private <T> T fromJson(Type type, String json) throws Exception {
         if (json == null) return null;
         return (T) moshi.adapter(type).fromJson(json);
     }
-    
+
+    private <T> String toJson(Type type, T value) throws Exception {
+        return moshi.adapter(type).toJson(value);
+    }
+
     private static Type compose(Type searchFor, Structure structure, String... roots) {
         return new CompositeType(null, searchFor, structure, roots);
     }
