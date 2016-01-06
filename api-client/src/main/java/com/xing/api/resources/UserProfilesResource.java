@@ -27,7 +27,8 @@ import java.util.List;
 
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#user-profiles">'User Profiles'</a> resource.
- * This resource provides methods which allow to access the {@linkplain XingUser user} profile information.
+ * <p>
+ * Provides methods which allow access the {@linkplain XingUser user's} profile information.
  *
  * @author serj.lotutovici
  * @author daniel.hartwich
@@ -48,9 +49,18 @@ public class UserProfilesResource extends Resource {
      * Gets a list of particular {@linkplain XingUser users} profiles. The data returned by this call will be checked
      * and filtered on the basis of the privacy settings of each requested user.
      * <p>
-     * Possible optional query parameters are:
-     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
-     * the full user profile will be returned.</li>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>fields</strong></td>
+     * <td>List of user attributes to return. If this parameter is not used, the full user profile will be returned
+     * .</td>
+     * </tr>
+     * </table>
      *
      * @param ids Id's of the requested {@linkplain XingUser user}.
      * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
@@ -68,9 +78,18 @@ public class UserProfilesResource extends Resource {
      * Gets a particular {@linkplain XingUser user’s} profile. The data returned by this call will be checked and
      * filtered on the basis of the privacy settings of the requested user.
      * <p>
-     * Possible optional query parameters are:
-     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
-     * the full user profile will be returned.</li>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>fields</strong></td>
+     * <td>List of user attributes to return. If this parameter is not used, the full user profile will be returned
+     * .</td>
+     * </tr>
+     * </table>
      *
      * @param id Id of the requested {@linkplain XingUser user}.
      * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
@@ -88,9 +107,18 @@ public class UserProfilesResource extends Resource {
      * Gets the profile of the authorizing {@linkplain XingUser user} (The user who has granted access to the API
      * consumer).
      * <p>
-     * Possible optional query parameters are:
-     * <li><strong>fields</strong> - List of user attributes to return. If this parameter is not used,
-     * the full user profile will be returned.</li>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>fields</strong></td>
+     * <td>List of user attributes to return. If this parameter is not used, the full user profile will be returned
+     * .</td>
+     * </tr>
+     * </table>
      *
      * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
      *
@@ -120,11 +148,22 @@ public class UserProfilesResource extends Resource {
      * users} will be returned in the same order as the corresponding email addresses. If addresses are invalid or no
      * user was found, the user will be returned as {@code null}.
      * <p>
-     * Possible optional query parameters are:
-     * <li><strong>hash_function</strong> - Hash emails values using the specified function. Currently only
-     * <strong>MD5</strong> is supported.</li>
-     * <li><strong>user_fields</strong> - List of user attributes to return in user objects. If this
-     * parameter is not set, only the {@linkplain XingUser user} ID will be set.</li>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><b>hash_function</b></td>
+     * <td>Hash emails values using the specified function. Currently only <strong>MD5</strong> is supported.</td>
+     * </tr>
+     * <tr>
+     * <td><b>user_fields</b></td>
+     * <td>List of user attributes to return in user objects. If this parameter is not set, only the
+     * {@linkplain XingUser user} ID will be set.</td>
+     * </tr>
+     * </table>
      *
      * @param emails List of email addresses to search for.
      * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
@@ -145,13 +184,28 @@ public class UserProfilesResource extends Resource {
      * may be missing some functionality, and both input and output interfaces are subject to change. Only certain
      * consumers are granted access to experimental calls. When in doubt, please contact the API team.
      * <p>
-     * Possible optional query parameters are:
-     * <li><strong>limit</strong> - Restricts the number of profile visits to be returned. This must be a positive
-     * number. Default: 10, Maximum: 100.</li>
-     * <li><strong>offset</strong> - Offset. This must be a positive number. Default: 0.</li>
-     * <li><strong>user_fields</strong> - List of user attributes to return in nested user objects. If this parameter
-     * is
-     * not used, only the ID will be returned.</li>
+     * <p>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>limit</strong></td>
+     * <td>Restricts the number of profile visits to be returned. This must be a positive number. Default: 10,
+     * Maximum: 100.</td>
+     * </tr>
+     * <tr>
+     * <td><strong>offset</strong></td>
+     * <td>Offset. This must be a positive number. Default: 0.</td>
+     * </tr>
+     * <tr>
+     * <td><strong>user_fields</strong></td>
+     * <td>List of user attributes to return in nested user objects. If this parameter is not used, only the ID will
+     * be returned.</td>
+     * </tr>
+     * </table>
      *
      * @param keywords A String representing the keywords to search for, if this is empty the search will
      * return and empty set

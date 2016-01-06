@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Json adapter that parses {@link CompositeType}.
+ * Json adapter for {@link CompositeType}.
  *
  * @author serj.lotutovici
  */
@@ -44,11 +44,11 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
             if (!annotations.isEmpty()) return null;
             Class<?> rawType = Types.getRawType(type);
             if (rawType != CompositeType.class) return null;
-            return new CompositeTypeJsonAdapter<>(moshi, (CompositeType) type).nullSafe();
+            return new CompositeTypeJsonAdapter<>(moshi, (CompositeType) type);
         }
     };
 
-    private final JsonAdapter<?> adapter;
+    private final JsonAdapter<T> adapter;
     private final CompositeType.Structure structure;
     private final String[] roots;
 
@@ -75,7 +75,11 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
 
     @Override
     public void toJson(JsonWriter writer, T value) {
-        // CompositeType is a simplification for parsing XWS responses. No need to write it as a json.
+        try {
+            writeRootLeafs(adapter, writer, value, roots, 0);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
     }
 
     @Override
@@ -83,16 +87,13 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
         return String.format("JsonAdapter[%s][%s](%s)", structure, Arrays.asList(roots), adapter);
     }
 
-    /**
-     * Recursive method that goes through the JSON, finds the given root and returns the objects with the provided
-     * roots.
-     */
+    /** Recursively goes through the JSON and finds the given root. Returns the object(s) found in provided roots. */
     @Nullable
-    private static <T> T readRootLeafs(JsonAdapter<?> adapter, @NonNull JsonReader reader, String[] roots, int index)
+    private static <T> T readRootLeafs(JsonAdapter<T> adapter, @NonNull JsonReader reader, String[] roots, int index)
           throws IOException {
         if (roots == null || index == roots.length) {
             //noinspection unchecked This puts full responsibility on the caller.
-            return (T) adapter.fromJson(reader);
+            return adapter.fromJson(reader);
         } else {
             reader.beginObject();
             try {
@@ -113,6 +114,21 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
                 reader.endObject();
             }
             throw Utils.ioError("Json does not match expected structure for roots %s.", Arrays.asList(roots));
+        }
+    }
+
+    /**
+     * Recursively writes the respective roots forming a json object that resembles the {@code roots} and {@code
+     * structure} of the {@linkplain CompositeType}.
+     */
+    private static <T> void writeRootLeafs(JsonAdapter<T> adapter, @NonNull JsonWriter writer, T value,
+          String[] roots, int index) throws IOException {
+        if (roots == null || index == roots.length) {
+            adapter.toJson(writer, value);
+        } else {
+            writer.beginObject();
+            writeRootLeafs(adapter, writer.name(roots[index]), value, roots, ++index);
+            writer.endObject();
         }
     }
 }

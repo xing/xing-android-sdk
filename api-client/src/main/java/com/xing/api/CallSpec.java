@@ -81,7 +81,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
     @Override
     public CallSpec<RT, ET> clone() {
-        // When called from CallSpec we don't need to do through the validation process.
+        // When called from CallSpec we don't need to go through the validation process.
         return new CallSpec<>(builder.newBuilder());
     }
 
@@ -362,16 +362,29 @@ public final class CallSpec<RT, ET> implements Cloneable {
             errorType = builder.errorType;
         }
 
+        /** Replaces path parameter {@code name} with provided {@code values}. */
         public Builder<RT, ET> pathParam(String name, String value) {
             return pathParam(name, value, false);
         }
 
+        /**
+         * Replaces path parameter {@code name} with provided {@code values}.
+         * <p>
+         * The string values will not be 'escaped' to meet the url formatting. If required this action has to be
+         * performed by the caller before submitting the values.
+         */
         public Builder<RT, ET> pathParam(String name, String... values) {
-            return pathParam(name, toCsv(values), true);
+            return pathParam(name, toCsv(values, false), true);
         }
 
+        /**
+         * Replaces path parameter {@code name} with provided {@code values}.
+         * <p>
+         * The string values will not be 'escaped' to meet the url formatting. If required this action has to be
+         * performed by the caller before submitting the values.
+         */
         public Builder<RT, ET> pathParam(String name, List<String> values) {
-            return pathParam(name, toCsv(values), true);
+            return pathParam(name, toCsv(values, false), true);
         }
 
         private Builder<RT, ET> pathParam(String name, String value, boolean encoded) {
@@ -389,24 +402,25 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         public Builder<RT, ET> queryParam(String name, String... values) {
-            return queryParam(name, toCsv(values));
+            return queryParam(name, toCsv(values, true));
         }
 
         public Builder<RT, ET> queryParam(String name, List<String> values) {
-            return queryParam(name, toCsv(values));
+            return queryParam(name, toCsv(values, true));
         }
 
         public Builder<RT, ET> formField(String name, @Nullable Object value) {
+            stateNotNull(formEncodingBuilder, "form fields are not accepted by this request.");
             formEncodingBuilder.add(name, String.valueOf(value));
             return this;
         }
 
         public Builder<RT, ET> formField(String name, String... values) {
-            return formField(name, toCsv(values));
+            return formField(name, toCsv(values, true));
         }
 
         public Builder<RT, ET> formField(String name, List<String> values) {
-            return formField(name, toCsv(values));
+            return formField(name, toCsv(values, true));
         }
 
         public Builder<RT, ET> body(RequestBody body) {
@@ -415,9 +429,9 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         //TODO Avoid converting response body on main thread?
-        public <U> Builder<RT, ET> body(Class<U> cls, U body) {
+        public <U> Builder<RT, ET> body(Type type, U body) {
             Buffer buffer = new Buffer();
-            JsonAdapter<U> jsonAdapter = api.converter.adapter(cls);
+            JsonAdapter<U> jsonAdapter = api.converter.adapter(type);
             try {
                 jsonAdapter.toJson(buffer, body);
             } catch (IOException ignored) {
@@ -524,8 +538,8 @@ public final class CallSpec<RT, ET> implements Cloneable {
          * Converts varargs into a single string with coma separated values. If the varargs are {@code null}
          * or empty an empty string will be returned.
          */
-        static String toCsv(Object[] values) {
-            return toCsv(values != null ? Arrays.asList(values) : Collections.emptyList());
+        static String toCsv(Object[] values, boolean withSpace) {
+            return toCsv(values != null ? Arrays.asList(values) : Collections.emptyList(), withSpace);
         }
 
         /**
@@ -534,8 +548,11 @@ public final class CallSpec<RT, ET> implements Cloneable {
          * <p>
          * <b>NOTE:</b> The values contained in the {@link List} should not be null, otherwise a {@code "null"}
          * will be put in it's place.
+         * <p>
+         * <b>NOTE:</b> For path params we need to avoid the whitespace after the comma, otherwise the url will be
+         * considered as malformed.
          */
-        static String toCsv(List<?> values) {
+        static String toCsv(List<?> values, boolean withSpace) {
             StringBuilder sb = new StringBuilder();
             if (values != null && !values.isEmpty()) {
                 int size = values.size();
@@ -545,7 +562,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
                         if (firstTime) {
                             firstTime = false;
                         } else {
-                            sb.append(',');
+                            sb.append(withSpace ? ", " : ',');
                         }
                         sb.append(values.get(index));
                     }
