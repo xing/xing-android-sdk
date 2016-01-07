@@ -19,7 +19,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.xing.api.model.SafeCalendar;
+import com.xing.api.data.SafeCalendar;
 
 import org.junit.Test;
 

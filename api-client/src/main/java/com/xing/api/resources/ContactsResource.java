@@ -20,11 +20,11 @@ import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
-import com.xing.api.model.ContactPaths;
-import com.xing.api.model.InvitationStats;
-import com.xing.api.model.PendingContactRequest;
-import com.xing.api.model.user.ContactRequest;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.ContactPaths;
+import com.xing.api.data.InvitationStats;
+import com.xing.api.data.PendingContactRequest;
+import com.xing.api.data.profile.ContactRequest;
+import com.xing.api.data.profile.XingUser;
 
 import java.lang.reflect.Type;
 import java.util.List;

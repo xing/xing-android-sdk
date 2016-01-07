@@ -24,20 +24,20 @@ import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
-import com.xing.api.model.SafeCalendar;
-import com.xing.api.model.edit.PictureUpload;
-import com.xing.api.model.edit.UploadProgress;
-import com.xing.api.model.edit.UploadProgress.Status;
-import com.xing.api.model.user.Address;
-import com.xing.api.model.user.Award;
-import com.xing.api.model.user.Company;
-import com.xing.api.model.user.FormOfEmployment;
-import com.xing.api.model.user.Language;
-import com.xing.api.model.user.LanguageSkill;
-import com.xing.api.model.user.MessagingAccount;
-import com.xing.api.model.user.School;
-import com.xing.api.model.user.WebProfile;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.SafeCalendar;
+import com.xing.api.data.edit.PictureUpload;
+import com.xing.api.data.edit.UploadProgress;
+import com.xing.api.data.edit.UploadProgress.Status;
+import com.xing.api.data.profile.Address;
+import com.xing.api.data.profile.Award;
+import com.xing.api.data.profile.Company;
+import com.xing.api.data.profile.FormOfEmployment;
+import com.xing.api.data.profile.Language;
+import com.xing.api.data.profile.LanguageSkill;
+import com.xing.api.data.profile.MessagingAccount;
+import com.xing.api.data.profile.School;
+import com.xing.api.data.profile.WebProfile;
+import com.xing.api.data.profile.XingUser;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import okio.Buffer;
 
 import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -115,6 +117,14 @@ public class ProfileEditingResourceTest {
         // This is not a valid body, but the server prevents that in the real world.
         PictureUpload upload = PictureUpload.pictureUploadJPEG("picture.jpeg", new byte[0]);
         testVoidSpec(resource.updateProfilePicture(upload));
+
+        RecordedRequest request = server.takeRequest(500, TimeUnit.MILLISECONDS);
+        Buffer body = request.getBody();
+        assertThat(body.readUtf8()).isEqualTo("{\"photo\":{"
+              + "\"content\":[],"
+              + "\"file_name\":\"picture.jpeg\","
+              + "\"mime_type\":\"image/jpeg\""
+              + "}}");
 
         testVoidSpec(resource.updateProfilePicture(RequestBody.create(MediaType.parse("multipart/form-data"), "")));
     }

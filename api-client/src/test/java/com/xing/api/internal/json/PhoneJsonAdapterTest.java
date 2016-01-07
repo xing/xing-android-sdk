@@ -19,7 +19,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.xing.api.model.user.Phone;
+import com.xing.api.data.profile.Phone;
 
 import org.junit.Test;
 

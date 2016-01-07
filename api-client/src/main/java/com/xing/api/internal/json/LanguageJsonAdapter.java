@@ -21,7 +21,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import com.xing.api.model.user.Language;
+import com.xing.api.data.profile.Language;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

@@ -20,9 +20,9 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
-import com.xing.api.model.SafeCalendar;
-import com.xing.api.model.user.ProfileMessage;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.SafeCalendar;
+import com.xing.api.data.profile.ProfileMessage;
+import com.xing.api.data.profile.XingUser;
 
 import org.junit.Before;
 import org.junit.Rule;

@@ -19,7 +19,7 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
-import com.xing.api.model.user.CompanySize;
+import com.xing.api.data.profile.CompanySize;
 
 import org.junit.After;
 import org.junit.Before;

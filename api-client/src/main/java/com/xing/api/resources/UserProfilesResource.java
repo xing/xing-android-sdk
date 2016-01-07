@@ -20,8 +20,8 @@ import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
-import com.xing.api.model.user.ProfileMessage;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.profile.ProfileMessage;
+import com.xing.api.data.profile.XingUser;
 
 import java.util.List;
 

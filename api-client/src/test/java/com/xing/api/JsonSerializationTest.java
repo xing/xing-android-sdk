@@ -18,28 +18,28 @@ package com.xing.api;
 import android.support.annotation.NonNull;
 
 import com.squareup.moshi.JsonAdapter;
-import com.xing.api.model.SafeCalendar;
-import com.xing.api.model.user.Address;
-import com.xing.api.model.user.Award;
-import com.xing.api.model.user.Badge;
-import com.xing.api.model.user.CareerLevel;
-import com.xing.api.model.user.Company;
-import com.xing.api.model.user.CompanySize;
-import com.xing.api.model.user.Discipline;
-import com.xing.api.model.user.EmploymentStatus;
-import com.xing.api.model.user.FormOfEmployment;
-import com.xing.api.model.user.Gender;
-import com.xing.api.model.user.Industry;
-import com.xing.api.model.user.Language;
-import com.xing.api.model.user.LanguageSkill;
-import com.xing.api.model.user.MessagingAccount;
-import com.xing.api.model.user.Phone;
-import com.xing.api.model.user.PhotoUrls;
-import com.xing.api.model.user.PremiumService;
-import com.xing.api.model.user.School;
-import com.xing.api.model.user.TimeZone;
-import com.xing.api.model.user.WebProfile;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.SafeCalendar;
+import com.xing.api.data.profile.Address;
+import com.xing.api.data.profile.Award;
+import com.xing.api.data.profile.Badge;
+import com.xing.api.data.profile.CareerLevel;
+import com.xing.api.data.profile.Company;
+import com.xing.api.data.profile.CompanySize;
+import com.xing.api.data.profile.Discipline;
+import com.xing.api.data.profile.EmploymentStatus;
+import com.xing.api.data.profile.FormOfEmployment;
+import com.xing.api.data.profile.Gender;
+import com.xing.api.data.profile.Industry;
+import com.xing.api.data.profile.Language;
+import com.xing.api.data.profile.LanguageSkill;
+import com.xing.api.data.profile.MessagingAccount;
+import com.xing.api.data.profile.Phone;
+import com.xing.api.data.profile.PhotoUrls;
+import com.xing.api.data.profile.PremiumService;
+import com.xing.api.data.profile.School;
+import com.xing.api.data.profile.TimeZone;
+import com.xing.api.data.profile.WebProfile;
+import com.xing.api.data.profile.XingUser;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.assertj.core.data.MapEntry;
@@ -136,7 +136,7 @@ public class JsonSerializationTest {
 
     private static void assertBusinessAddress(XingUser user) throws Exception {
         Address businessAddress = new Address();
-        businessAddress.setCity("Hamburg");
+        businessAddress.city("Hamburg");
         businessAddress.setCountry("DE");
         businessAddress.setZipCode("20357");
         businessAddress.setStreet("Geschäftsstraße 1a");
@@ -150,7 +150,7 @@ public class JsonSerializationTest {
 
     private static void assertPrivateAddress(XingUser user) throws Exception {
         Address privateAddress = new Address();
-        privateAddress.setCity("Hamburg");
+        privateAddress.city("Hamburg");
         privateAddress.setCountry("DE");
         privateAddress.setZipCode("20357");
         privateAddress.setStreet("Privatstraße 1");
