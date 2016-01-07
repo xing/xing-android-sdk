@@ -26,6 +26,7 @@ import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.GenderJsonAdapter;
 import com.xing.api.internal.json.LanguageJsonAdapter;
 import com.xing.api.internal.json.MessagingAccountJsonAdapter;
+import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.PremiumServiceJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
@@ -192,6 +193,7 @@ public final class XingApi {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
+            moshiBuilder.add(NullIntJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
             moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);
