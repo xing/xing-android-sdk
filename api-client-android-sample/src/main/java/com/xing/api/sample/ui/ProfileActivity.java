@@ -33,8 +33,8 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
-import com.xing.api.model.user.Address;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.profile.Address;
+import com.xing.api.data.profile.XingUser;
 import com.xing.api.resources.UserProfilesResource;
 import com.xing.api.sample.BuildConfig;
 import com.xing.api.sample.Prefs;
@@ -159,8 +159,8 @@ public class ProfileActivity extends BaseActivity {
             if (!TextUtils.isEmpty(address.getZipCode())) {
                 sb.append(address.getZipCode()).append(' ');
             }
-            if (!TextUtils.isEmpty(address.getCity())) {
-                sb.append(address.getCity()).append('\n');
+            if (!TextUtils.isEmpty(address.city())) {
+                sb.append(address.city()).append('\n');
             }
             if (!TextUtils.isEmpty(address.getCountry())) {
                 sb.append(address.getCountry());

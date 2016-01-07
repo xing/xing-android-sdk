@@ -21,7 +21,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** Represents a json object that should be parsed as a {@link com.xing.api.model.SafeCalendar}. */
+/** Represents a json object that should be parsed as a {@link com.xing.api.data.SafeCalendar SafeCalendar}. */
 @Documented
 @JsonQualifier
 @Retention(RetentionPolicy.RUNTIME)

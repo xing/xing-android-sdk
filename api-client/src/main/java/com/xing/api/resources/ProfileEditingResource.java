@@ -21,18 +21,18 @@ import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
 import com.xing.api.internal.Experimental;
-import com.xing.api.model.edit.PictureUpload;
-import com.xing.api.model.edit.UploadProgress;
-import com.xing.api.model.user.Address;
-import com.xing.api.model.user.Award;
-import com.xing.api.model.user.Company;
-import com.xing.api.model.user.FormOfEmployment;
-import com.xing.api.model.user.Language;
-import com.xing.api.model.user.LanguageSkill;
-import com.xing.api.model.user.MessagingAccount;
-import com.xing.api.model.user.School;
-import com.xing.api.model.user.WebProfile;
-import com.xing.api.model.user.XingUser;
+import com.xing.api.data.edit.PictureUpload;
+import com.xing.api.data.edit.UploadProgress;
+import com.xing.api.data.profile.Address;
+import com.xing.api.data.profile.Award;
+import com.xing.api.data.profile.Company;
+import com.xing.api.data.profile.FormOfEmployment;
+import com.xing.api.data.profile.Language;
+import com.xing.api.data.profile.LanguageSkill;
+import com.xing.api.data.profile.MessagingAccount;
+import com.xing.api.data.profile.School;
+import com.xing.api.data.profile.WebProfile;
+import com.xing.api.data.profile.XingUser;
 
 import java.util.Calendar;
 import java.util.List;
@@ -73,7 +73,7 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>employment_status</b></td>
      * <td>Updates the users employment status. Must be one of ‘ENTREPRENEUR’, ‘FREELANCER’, ‘EMPLOYEE’, ‘EXECUTIVE’,
-     * ‘RECRUITER’, ‘PUBLIC_SERVANT’, ‘UNEMPLOYED’, ‘RETIRED’. See: {@link com.xing.api.model.user.EmploymentStatus}
+     * ‘RECRUITER’, ‘PUBLIC_SERVANT’, ‘UNEMPLOYED’, ‘RETIRED’. See: {@link com.xing.api.data.profile.EmploymentStatus}
      * .</td>
      * </tr>
      * <tr>
@@ -129,7 +129,7 @@ public class ProfileEditingResource extends Resource {
     public CallSpec<Void, HttpError> updateProfilePicture(PictureUpload pictureUpload) {
         return Resource.<Void, HttpError>newPutSpec(api, "v1/users/me/photo", false)
               .responseAs(Void.class)
-              .body(PictureUpload.class, pictureUpload)
+              .body(single(PictureUpload.class, "photo"), pictureUpload)
               .build();
     }
 
@@ -214,17 +214,17 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>fax</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>mobile_phone</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>phone</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>province</b></td>
@@ -296,17 +296,17 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>fax</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>mobile_phone</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>phone</b></td>
      * <td>This field can be empty or must be the country code, area code and number separated by a pipe character
-     * (|). Use {@link com.xing.api.model.user.Phone}.</td>
+     * (|). Use {@link com.xing.api.data.profile.Phone}.</td>
      * </tr>
      * <tr>
      * <td><b>province</b></td>
@@ -361,7 +361,7 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>begin_date</b></td>
-     * <td>Start date in format YYYY or YYYY-MM. Use {@link com.xing.api.model.SafeCalendar}.</td>
+     * <td>Start date in format YYYY or YYYY-MM. Use {@link com.xing.api.data.SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>degree</b></td>
@@ -370,7 +370,7 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>end_date</b></td>
      * <td>End date in format YYYY or YYYY-MM, must be greater than begin_date. Use {@link
-     * com.xing.api.model.SafeCalendar}.</td>
+     * com.xing.api.data.SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>notes</b></td>
@@ -433,7 +433,7 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>begin_date</b></td>
-     * <td>Start date in format YYYY or YYYY-MM. Use {@link com.xing.api.model.SafeCalendar}.</td>
+     * <td>Start date in format YYYY or YYYY-MM. Use {@link com.xing.api.data.SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>degree</b></td>
@@ -442,7 +442,7 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>end_date</b></td>
      * <td>End date in format YYYY or YYYY-MM, must be greater than begin_date.  Use {@link
-     * com.xing.api.model.SafeCalendar}.</td>
+     * com.xing.api.data.SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>notes</b></td>
@@ -538,16 +538,16 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>begin_date</b></td>
-     * <td>Start date in format YYYY or YYYY-MM. Use {@linkplain com.xing.api.model.SafeCalendar SafeCalendar}.</td>
+     * <td>Start date in format YYYY or YYYY-MM. Use {@linkplain com.xing.api.data.SafeCalendar SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>career_level</b></td>
-     * <td>Describes the job level. See {@linkplain com.xing.api.model.user.CareerLevel CareerLevel} for possible
+     * <td>Describes the job level. See {@linkplain com.xing.api.data.profile.CareerLevel CareerLevel} for possible
      * values.</td>
      * </tr>
      * <tr>
      * <td><b>company_size</b></td>
-     * <td>Describes the company size. See {@linkplain com.xing.api.model.user.CompanySize CompanySize} for possible
+     * <td>Describes the company size. See {@linkplain com.xing.api.data.profile.CompanySize CompanySize} for possible
      * values.</td>
      * </tr>
      * <tr>
@@ -556,13 +556,13 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>discipline</b></td>
-     * <td>Describes the discipline of the role. See {@linkplain com.xing.api.model.user.Discipline Discipline} for
+     * <td>Describes the discipline of the role. See {@linkplain com.xing.api.data.profile.Discipline Discipline} for
      * possible values.</td>
      * </tr>
      * <tr>
      * <td><b>end_date</b></td>
      * <td>End date in format YYYY or YYYY-MM, must be greater than begin_date or {@code null}. Use
-     * {@linkplain com.xing.api.model.SafeCalendar SafeCalendar}.</td>
+     * {@linkplain com.xing.api.data.SafeCalendar SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>industries</b></td>
@@ -619,22 +619,22 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>begin_date</b></td>
-     * <td>Start date in format YYYY or YYYY-MM. Use {@linkplain com.xing.api.model.SafeCalendar SafeCalendar}.</td>
+     * <td>Start date in format YYYY or YYYY-MM. Use {@linkplain com.xing.api.data.SafeCalendar SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>career_level</b></td>
-     * <td>Describes the job level. See {@linkplain com.xing.api.model.user.CareerLevel CareerLevel} for possible
+     * <td>Describes the job level. See {@linkplain com.xing.api.data.profile.CareerLevel CareerLevel} for possible
      * values.</td>
      * </tr>
      * <tr>
      * <tr>
      * <td><b>form_of_employment</b></td>
-     * <td>Describes the form of employment. See {@linkplain com.xing.api.model.user.FormOfEmployment FormOfEmployment}
-     * for possible values.</td>
+     * <td>Describes the form of employment. See {@linkplain com.xing.api.data.profile.FormOfEmployment
+     * FormOfEmployment} for possible values.</td>
      * </tr>
      * <tr>
      * <td><b>company_size</b></td>
-     * <td>Describes the company size. See {@linkplain com.xing.api.model.user.CompanySize CompanySize} for possible
+     * <td>Describes the company size. See {@linkplain com.xing.api.data.profile.CompanySize CompanySize} for possible
      * values.</td>
      * </tr>
      * <tr>
@@ -643,13 +643,13 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>discipline</b></td>
-     * <td>Describes the discipline of the role. See {@linkplain com.xing.api.model.user.Discipline Discipline} for
+     * <td>Describes the discipline of the role. See {@linkplain com.xing.api.data.profile.Discipline Discipline} for
      * possible values.</td>
      * </tr>
      * <tr>
      * <td><b>end_date</b></td>
      * <td>End date in format YYYY or YYYY-MM, must be greater than begin_date or {@code null}. Use
-     * {@linkplain com.xing.api.model.SafeCalendar SafeCalendar}.</td>
+     * {@linkplain com.xing.api.data.SafeCalendar SafeCalendar}.</td>
      * </tr>
      * <tr>
      * <td><b>industries</b></td>
@@ -772,7 +772,7 @@ public class ProfileEditingResource extends Resource {
      * Updates the authorizing {@linkplain XingUser user's} birth date.
      *
      * @param calendar A calendar instance with 'year', 'month' and 'day' set. It is safer to use
-     * {@linkplain com.xing.api.model.SafeCalendar SafeCalendar}.
+     * {@linkplain com.xing.api.data.SafeCalendar SafeCalendar}.
      * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
      *
      * @see <a href="https://dev.xing.com/docs/put/users/me/birth_date">'Update Birth Date' resource page.</a>

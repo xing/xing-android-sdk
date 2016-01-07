@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.xing.api.model.user.ProfileVisit;
+import com.xing.api.data.profile.ProfileVisit;
 import com.xing.api.sample.R;
 
 import java.util.ArrayList;

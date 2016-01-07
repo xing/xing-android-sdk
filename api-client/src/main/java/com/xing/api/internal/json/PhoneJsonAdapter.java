@@ -22,7 +22,7 @@ import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import com.xing.api.model.user.Phone;
+import com.xing.api.data.profile.Phone;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

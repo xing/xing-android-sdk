@@ -24,7 +24,7 @@ import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import com.xing.api.model.SafeCalendar;
+import com.xing.api.data.SafeCalendar;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

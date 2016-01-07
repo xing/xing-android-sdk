@@ -19,7 +19,7 @@ import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
-import com.xing.api.model.user.ProfileVisit;
+import com.xing.api.data.profile.ProfileVisit;
 
 import java.util.List;
 
