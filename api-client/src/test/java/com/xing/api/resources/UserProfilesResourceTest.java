@@ -16,16 +16,12 @@
 package com.xing.api.resources;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
-import com.xing.api.XingApi;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.ProfileMessage;
 import com.xing.api.data.profile.XingUser;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -40,21 +36,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * method works as expected. In case if the json response changes on the server side, this test WILL NOT reflect that.
  */
 @SuppressWarnings({"ConstantConditions", "CollectionWithoutInitialCapacity"})
-public final class UserProfilesResourceTest {
-    @Rule
-    public final MockWebServer server = new MockWebServer();
-
-    XingApi mockApi;
-    UserProfilesResource resource;
+public final class UserProfilesResourceTest extends ResourceTestCase<UserProfilesResource> {
     String userJson;
 
-    @Before
+    public UserProfilesResourceTest() {
+        super(UserProfilesResource.class);
+    }
+
+    @Override
     public void setUp() throws Exception {
-        mockApi = new XingApi.Builder()
-              .apiEndpoint(server.url("/"))
-              .loggedOut()
-              .build();
-        resource = mockApi.resource(UserProfilesResource.class);
+        super.setUp();
         userJson = file("user.json");
     }
 

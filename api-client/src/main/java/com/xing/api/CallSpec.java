@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.Types;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.HttpUrl;
@@ -301,10 +302,12 @@ public final class CallSpec<RT, ET> implements Cloneable {
     @Nullable
     private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
+        if (Types.getRawType(type) == Void.class) return null;
         BufferedSource source = body.source();
         try {
-            //noinspection unchecked
-            return (PT) api.converter.adapter(type).fromJson(JsonReader.of(source));
+            JsonAdapter<PT> adapter = api.converter.adapter(type);
+            JsonReader reader = JsonReader.of(source);
+            return adapter.fromJson(reader);
         } finally {
             closeQuietly(source);
         }
@@ -445,6 +448,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return this;
         }
 
+        // TODO Document that setting response as Void will always avoid parsing the body.
         public Builder<RT, ET> responseAs(Class<RT> type) {
             return responseAs((Type) type);
         }

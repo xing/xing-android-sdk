@@ -17,8 +17,10 @@ package com.xing.api.data.profile;
 
 import com.squareup.moshi.Json;
 import com.xing.api.data.SafeCalendar;
+import com.xing.api.internal.json.NullInt;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Represents an profile visit.
@@ -45,6 +47,7 @@ public class ProfileVisit implements Serializable {
     @Json(name = "job_title")
     private String jobTitle;
     /** Number of visits. */
+    @NullInt
     @Json(name = "visit_count")
     private int visitCount;
     /** Gender of user. */
@@ -63,11 +66,73 @@ public class ProfileVisit implements Serializable {
     @Json(name = "reason")
     private Reason reason;
     /** Distance from the visitor to the user. */
+    @NullInt
     @Json(name = "distance")
     private int distance;
     /** Visit type. */
     @Json(name = "type")
     private Type type;
+    @Json(name = "shared_contacts")
+    private List<XingUser> sharedContacts;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProfileVisit visit = (ProfileVisit) o;
+
+        return visitCount == visit.visitCount && distance == visit.distance
+              && (userId != null ? userId.equals(visit.userId) : visit.userId == null)
+              && (displayName != null ? displayName.equals(visit.displayName) : visit.displayName == null)
+              && (companyName != null ? companyName.equals(visit.companyName) : visit.companyName == null)
+              && (jobTitle != null ? jobTitle.equals(visit.jobTitle) : visit.jobTitle == null)
+              && gender == visit.gender
+              && (visitedAt != null ? visitedAt.equals(visit.visitedAt) : visit.visitedAt == null)
+              && (visitedAtEncrypted != null ? visitedAtEncrypted.equals(visit.visitedAtEncrypted)
+              : visit.visitedAtEncrypted == null)
+              && (photoUrls != null ? photoUrls.equals(visit.photoUrls) : visit.photoUrls == null)
+              && (reason != null ? reason.equals(visit.reason) : visit.reason == null)
+              && type == visit.type
+              && (sharedContacts != null ? sharedContacts.equals(visit.sharedContacts) : visit.sharedContacts == null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId != null ? userId.hashCode() : 0;
+        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
+        result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
+        result = 31 * result + (jobTitle != null ? jobTitle.hashCode() : 0);
+        result = 31 * result + visitCount;
+        result = 31 * result + (gender != null ? gender.hashCode() : 0);
+        result = 31 * result + (visitedAt != null ? visitedAt.hashCode() : 0);
+        result = 31 * result + (visitedAtEncrypted != null ? visitedAtEncrypted.hashCode() : 0);
+        result = 31 * result + (photoUrls != null ? photoUrls.hashCode() : 0);
+        result = 31 * result + (reason != null ? reason.hashCode() : 0);
+        result = 31 * result + distance;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (sharedContacts != null ? sharedContacts.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ProfileVisit{"
+              + "userId='" + userId + '\''
+              + ", displayName='" + displayName + '\''
+              + ", companyName='" + companyName + '\''
+              + ", jobTitle='" + jobTitle + '\''
+              + ", visitCount=" + visitCount
+              + ", gender=" + gender
+              + ", visitedAt=" + visitedAt
+              + ", visitedAtEncrypted='" + visitedAtEncrypted + '\''
+              + ", photoUrls=" + photoUrls
+              + ", reason=" + reason
+              + ", distance=" + distance
+              + ", type=" + type
+              + ", sharedContacts=" + sharedContacts
+              + '}';
+    }
 
     /** Returns the company name. */
     public String getCompanyName() {
@@ -187,6 +252,14 @@ public class ProfileVisit implements Serializable {
     /** Set visit type. */
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public List<XingUser> getSharedContacts() {
+        return sharedContacts;
+    }
+
+    public void setSharedContacts(List<XingUser> sharedContacts) {
+        this.sharedContacts = sharedContacts;
     }
 
     /** Reason for the profile visit. */

@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
  * @author serj.lotutovici
  */
 public abstract class Resource {
+    protected static final String ME = "me";
     protected final XingApi api;
 
     /** Creates a resource instance. This should be the only constructor declared by child classes. */

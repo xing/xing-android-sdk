@@ -19,28 +19,22 @@ import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
-import com.xing.api.internal.Experimental;
 import com.xing.api.data.profile.ProfileMessage;
 import com.xing.api.data.profile.XingUser;
+import com.xing.api.internal.Experimental;
 
 import java.util.List;
 
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#user-profiles">'User Profiles'</a> resource.
  * <p>
- * Provides methods which allow access the {@linkplain XingUser user's} profile information.
+ * Provides methods which allow access a {@linkplain XingUser user's} profile information.
  *
  * @author serj.lotutovici
  * @author daniel.hartwich
  */
 public class UserProfilesResource extends Resource {
-    private static final String ME = "me";
-
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     *
-     * @param api An instance of XingApi
-     */
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
     protected UserProfilesResource(XingApi api) {
         super(api);
     }
@@ -183,7 +177,6 @@ public class UserProfilesResource extends Resource {
      * This call is EXPERIMENTAL and is not suited for a production environments as it
      * may be missing some functionality, and both input and output interfaces are subject to change. Only certain
      * consumers are granted access to experimental calls. When in doubt, please contact the API team.
-     * <p>
      * <p>
      * Possible optional <i>query</i> parameters:
      * <table>

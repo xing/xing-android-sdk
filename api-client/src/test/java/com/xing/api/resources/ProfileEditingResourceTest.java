@@ -18,12 +18,9 @@ package com.xing.api.resources;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
-import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
-import com.xing.api.XingApi;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.edit.PictureUpload;
 import com.xing.api.data.edit.UploadProgress;
@@ -39,8 +36,6 @@ import com.xing.api.data.profile.School;
 import com.xing.api.data.profile.WebProfile;
 import com.xing.api.data.profile.XingUser;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -58,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * method works as expected. In case if the json response changes on the server side, this test WILL NOT reflect that.
  */
 @SuppressWarnings({"ConstantConditions", "CollectionWithoutInitialCapacity", "ZeroLengthArrayAllocation"})
-public class ProfileEditingResourceTest {
+public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingResource> {
     private static final String BODY_COMPANY = "{\n"
           + "  \"company\": {\n"
           + "    \"id\": \"23_abcdef\",\n"
@@ -83,19 +78,8 @@ public class ProfileEditingResourceTest {
           + "  }\n"
           + '}';
 
-    @Rule
-    public final MockWebServer server = new MockWebServer();
-
-    XingApi mockApi;
-    ProfileEditingResource resource;
-
-    @Before
-    public void setUp() throws Exception {
-        mockApi = new XingApi.Builder()
-              .apiEndpoint(server.url("/"))
-              .loggedOut()
-              .build();
-        resource = mockApi.resource(ProfileEditingResource.class);
+    public ProfileEditingResourceTest() {
+        super(ProfileEditingResource.class);
     }
 
     @Test
@@ -334,14 +318,5 @@ public class ProfileEditingResourceTest {
     @Test
     public void updateUsersProfileMessage() throws Exception {
         testVoidSpec(resource.updateUsersProfileMessage("id", "message"));
-    }
-
-    /** Asserts a spec that expects 204 as success response. */
-    private void testVoidSpec(CallSpec<Void, HttpError> spec) throws Exception {
-        server.enqueue(new MockResponse().setResponseCode(204));
-
-        Response<Void, HttpError> response = spec.execute();
-        assertThat(response.isSuccess()).isTrue();
-        assertThat(response.body()).isNull();
     }
 }
