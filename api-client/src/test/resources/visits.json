@@ -1,0 +1,146 @@
+{
+  "visits": [
+    {
+      "company_name": null,
+      "visited_at_encrypted": "_Dx76Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK6lMs=",
+      "reason": {
+        "text": "<b>Google:</b> Search for \"hendrik mans\""
+      },
+      "user_id": null,
+      "photo_urls": {
+      },
+      "display_name": null,
+      "visited_at": "2011-01-16",
+      "visit_count": null,
+      "gender": "m",
+      "distance": null,
+      "type": "LOGGED_OUT",
+      "shared_contacts": [
+
+      ],
+      "job_title": null
+    },
+    {
+      "company_name": "XING AG",
+      "visited_at_encrypted": "_Vu76Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK6lgs=",
+      "reason": {
+        "text": "Click on own contacts/bookmarks"
+      },
+      "user_id": "6372502_bbf7d2",
+      "photo_urls": {
+        "large": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666.jpg",
+        "mini_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s1.jpg",
+        "thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s2.jpg",
+        "medium_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s4.jpg",
+        "maxi_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_32x32": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_48x48": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_64x64": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_96x96": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_128x128": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_192x192": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_256x256": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_1024x1024": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_original": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg"
+      },
+      "display_name": "Stuart Duffy",
+      "visited_at": "2011-01-14",
+      "visit_count": 2,
+      "gender": "m",
+      "distance": 1,
+      "type": "LOGGED_IN",
+      "shared_contacts": [
+
+      ],
+      "job_title": "Software Test Engineer"
+    },
+    {
+      "company_name": "XING AG",
+      "visited_at_encrypted": "_NMB6Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK68Hg=",
+      "reason": {
+        "text": "Click on contact path to <a href=\"https://www.xing.com/profile/Maria_Mueller/N7.04c521\">Maria Müller</a>"
+      },
+      "user_id": "30551_c7facd",
+      "photo_urls": {
+        "large": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666.jpg",
+        "mini_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s1.jpg",
+        "thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s2.jpg",
+        "medium_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s4.jpg",
+        "maxi_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_32x32": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_48x48": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_64x64": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_96x96": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_128x128": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_192x192": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_256x256": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_1024x1024": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_original": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg"
+      },
+      "display_name": "Mark Schmidt",
+      "visited_at": "2011-01-14",
+      "visit_count": 1,
+      "gender": "f",
+      "distance": 2,
+      "type": "LOGGED_IN",
+      "shared_contacts": [
+        {
+          "user_id": "104_b0d4ad",
+          "gender": "m",
+          "display_name": "John Smith",
+          "photo_urls": {
+            "large": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "mini_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "medium_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "maxi_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_32x32": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_48x48": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_64x64": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_96x96": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_128x128": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_192x192": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_256x256": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_1024x1024": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg",
+            "size_original": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.104.jpg"
+          }
+        }
+      ],
+      "job_title": "Software Architect"
+    },
+    {
+      "company_name": "XING AG",
+      "visited_at_encrypted": "_GhT3Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nKJJ52=",
+      "reason": {
+        "text": "Search for interests, city"
+      },
+      "user_id": "3205259_e868c1",
+      "photo_urls": {
+        "large": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666.jpg",
+        "mini_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s1.jpg",
+        "thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s2.jpg",
+        "medium_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s4.jpg",
+        "maxi_thumb": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_32x32": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_48x48": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_64x64": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_96x96": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_128x128": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_192x192": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_256x256": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_1024x1024": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg",
+        "size_original": "https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg"
+      },
+      "display_name": "Matthias Männich",
+      "visited_at": "2011-01-13",
+      "visit_count": 1,
+      "gender": "m",
+      "distance": 0,
+      "type": "LOGGED_IN",
+      "shared_contacts": [
+
+      ],
+      "job_title": "Software Developer"
+    }
+  ]
+}

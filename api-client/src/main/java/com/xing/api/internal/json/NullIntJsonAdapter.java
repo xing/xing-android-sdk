@@ -51,6 +51,7 @@ public final class NullIntJsonAdapter extends JsonAdapter<Integer> {
     @Override
     public Integer fromJson(JsonReader reader) throws IOException {
         if (reader.peek() == JsonReader.Token.NULL) {
+            reader.skipValue(); // Consume the next token.
             return -1;
         } else {
             return reader.nextInt();

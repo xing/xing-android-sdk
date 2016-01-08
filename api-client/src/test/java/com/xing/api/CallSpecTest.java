@@ -432,6 +432,18 @@ public class CallSpecTest {
     }
 
     @Test
+    public void specHandlesVoidAsEmptyBodyResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("Test"));
+        CallSpec<Void, Object> spec = this.<Void, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(Void.class)
+              .build();
+        assertNoBodySuccessResponse(spec.execute(), 200);
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("Test"));
+        assertNoBodySuccessResponseAsync(spec.clone(), 200);
+    }
+
+    @Test
     public void specHandlesErrorResponse() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(300).setBody("{\n"
               + "  \"msg\": \"error\",\n"
@@ -812,7 +824,8 @@ public class CallSpecTest {
 
         ResponseBody body = response.raw().body();
         assertThat(body).isNotNull();
-        assertThat(body.contentLength()).isEqualTo(0L);
+        // User may want to ignore the content of another response.
+        if (code == 204 || code == 205) assertThat(body.contentLength()).isEqualTo(0L);
         assertThat(body.contentType()).isNull();
 
         try {

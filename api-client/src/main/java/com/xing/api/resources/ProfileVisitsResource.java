@@ -24,45 +24,140 @@ import com.xing.api.data.profile.ProfileVisit;
 import java.util.List;
 
 /**
- * This is a representation of the Profile Visits API.
- * See <a href="https://dev.xing.com/docs/resources#profile-visits"></a>
+ * Represents the <a href="https://dev.xing.com/docs/resources#profile-visits">'Profile Visits'</a> resource.
+ * * <p>
+ * Provides methods which allow access to a {@linkplain com.xing.api.data.profile.XingUser user's} profile visits.
  *
  * @author daniel.hartwich
  */
 public class ProfileVisitsResource extends Resource {
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
     protected ProfileVisitsResource(XingApi api) {
         super(api);
     }
 
     /**
-     * Get profile visits.
+     * Returns a list of users who recently visited the specified {@linkplain com.xing.api.data.profile.XingUser
+     * user’s} profile. Entries with {@code null} value for the <strong>user_id</strong> attribute indicate
+     * anonymous (non-XING) users (e.g. resulting from Google searches). Any blacklisted
+     * users returned will contain {@code null} values in the same way as the
+     * <a href="https://dev.xing.com/docs/user_profile#empty-user-profile">empty user profile</a>.
+     * <p>
+     * The {@linkplain ProfileVisit#getDistance()} value returned will show only first (value = 1) and
+     * second (value = 2) degree contacts.
+     * For all other visitors who are XING users the value will be 0. For non-XING users it will be -1.
+     * <p>
+     * If the user is a basic member, only {@linkplain ProfileVisit#getPhotoUrls()},
+     * {@linkplain ProfileVisit#getVisitedAt()}, {@linkplain ProfileVisit#getReason()},
+     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} and {@linkplain ProfileVisit#getType()} will be available.
+     * The remaining fields will be {@code null} or {@code -1}.
+     * <p>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>limit</strong></td>
+     * <td>Restricts the number of profile visits to be returned. Must be a positive number. Default: 10</td>
+     * </tr>
+     * <tr>
+     * <td><strong>offset</strong></td>
+     * <td>Offset. This must be a positive number. Default: 0.</td>
+     * </tr>
+     * <tr>
+     * <td><strong>shared_contacts</strong></td>
+     * <td>Number of shared contacts that should be included in the result. Must be a positive number. Default: 0,
+     * Maximum: 10.</td>
+     * </tr>
+     * <tr>
+     * <td><b>since</b></td>
+     * <td>Only returns visits more recent than the specified time stamp (ISO 8601).
+     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
+     * that were more recent than the specified one one.</td>
+     * </tr>
+     * <tr>
+     * <td><b>strip_html</b></td>
+     * <td>Specifies whether the profile visit reason should be stripped of HTML ({@code true}) or not ({@code false}).
+     * Default value: {@code false}. Values other then {@code true/false} will be treated as {@code false}.
+     * </td>
+     * </tr>
+     * </table>
      *
-     * Returns a list of users who recently visited the specified user’s profile. Entries with a value of null in the
-     * user_id attribute indicate anonymous (non-XING) users (e.g. resulting from Google searches). Any blacklisted
-     * users returned will contain null values in the same way as the empty user profile.
+     * @param userId Id of the user who's profile visits should be returned.
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">'Get profile visit' resource page.</a>
      */
-    public CallSpec<List<ProfileVisit>, HttpError> getProfileVisits(String userId) {
+    public CallSpec<List<ProfileVisit>, HttpError> getUsersProfileVisits(String userId) {
         return Resource.<List<ProfileVisit>, HttpError>newGetSpec(api, "/v1/users/{user_id}/visits")
+              .responseAs(list(ProfileVisit.class, "visits"))
               .pathParam("user_id", userId)
-              .responseAs(list(ProfileVisit.class))
               .build();
     }
 
     /**
-     * Generate a profile visit.
+     * Returns a list of users who recently visited the authorizing {@linkplain com.xing.api.data.profile.XingUser
+     * user’s} profile. Same as {@linkplain #getUsersProfileVisits(String)}.
+     * <p>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><strong>limit</strong></td>
+     * <td>Restricts the number of profile visits to be returned. Must be a positive number. Default: 10</td>
+     * </tr>
+     * <tr>
+     * <td><strong>offset</strong></td>
+     * <td>Offset. This must be a positive number. Default: 0.</td>
+     * </tr>
+     * <tr>
+     * <td><strong>shared_contacts</strong></td>
+     * <td>Number of shared contacts that should be included in the result. Must be a positive number. Default: 0,
+     * Maximum: 10.</td>
+     * </tr>
+     * <tr>
+     * <td><b>since</b></td>
+     * <td>Only returns visits more recent than the specified time stamp (ISO 8601).
+     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
+     * that were more recent than the specified one one.</td>
+     * </tr>
+     * <tr>
+     * <td><b>strip_html</b></td>
+     * <td>Specifies whether the profile visit reason should be stripped of HTML ({@code true}) or not ({@code false}).
+     * Default value: {@code false}. Values other then {@code true/false} will be treated as {@code false}.
+     * </td>
+     * </tr>
+     * </table>
      *
-     * The visiting user will be derived from the user executing the call, and the visit reason derived from the
-     * consumer.
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
      *
-     * @param userId The user which is visited by the consumer of this call
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/visits">'Get profile visit' resource page.</a>
      */
-    public CallSpec<String, HttpError> createProfileVisits(String userId) {
-        return Resource.<String, HttpError>newPostSpec(api, "v1/users/{user_id}/visits", true)
+    public CallSpec<List<ProfileVisit>, HttpError> getOwnProfileVisits() {
+        return getUsersProfileVisits(ME);
+    }
+
+    /**
+     * Generate a profile visit.
+     * <p>
+     * The visiting user will be derived from the user executing the call auth headers, and the visit reason derived
+     * from the consumer.
+     *
+     * @param userId The user which is visited by the authorizing {@linkplain com.xing.api.data.profile.XingUser
+     * user}.
+     * @return A {@linkplain CallSpec callSpec} object ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/post/users/:user_id/visits">'Create profile visit' resource page.</a>
+     */
+    public CallSpec<Void, HttpError> createProfileVisits(String userId) {
+        return Resource.<Void, HttpError>newPostSpec(api, "v1/users/{user_id}/visits", false)
+              .responseAs(Void.class)
               .pathParam("user_id", userId)
-              .responseAs(String.class)
               .build();
     }
 }
