@@ -78,35 +78,39 @@ public class ContactRequest implements Serializable {
               + '}';
     }
 
-    public String getSenderId() {
+    public String senderId() {
         return senderId;
     }
 
-    public void setSenderId(String id) {
+    public ContactRequest senderId(String id) {
         senderId = id;
+        return this;
     }
 
-    public SafeCalendar getReceivedAt() {
+    public SafeCalendar receivedAt() {
         return receivedAt;
     }
 
-    public void setReceivedAt(SafeCalendar receivedAt) {
+    public ContactRequest receivedAt(SafeCalendar receivedAt) {
         this.receivedAt = receivedAt;
+        return this;
     }
 
-    public String getMessage() {
+    public String message() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public ContactRequest message(String message) {
         this.message = message;
+        return this;
     }
 
-    public XingUser getSender() {
+    public XingUser sender() {
         return sender;
     }
 
-    public void setSender(XingUser sender) {
+    public ContactRequest sender(XingUser sender) {
         this.sender = sender;
+        return this;
     }
 }

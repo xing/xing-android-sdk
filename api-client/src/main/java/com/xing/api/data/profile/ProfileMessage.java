@@ -68,12 +68,12 @@ public class ProfileMessage implements Serializable {
     }
 
     /** Returns the date the message was updated. */
-    public SafeCalendar getUpdatedAt() {
+    public SafeCalendar updatedAt() {
         return updatedAt;
     }
 
     /** Returns the actual profile message. */
-    public String getMessage() {
+    public String message() {
         return message;
     }
 }

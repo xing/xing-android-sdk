@@ -79,24 +79,24 @@ public class Award implements Serializable {
     }
 
     /** Returns the name of the award. */
-    public String getName() {
+    public String name() {
         return name;
     }
 
     /** Returns the year of the award. If the award year is not set, <strong>-1</strong> will be returned. */
-    public int getYearOfAward() {
+    public int yearOfAward() {
         return dateAwarded != null ? dateAwarded.get(Calendar.YEAR) : -1;
     }
 
-    /** Returns the year of award as a {@link SafeCalendar}. */
+    /** Returns the year of award as a {@link String} if set, otherwise {@code null}. */
     @Nullable
-    public String getYearOfAwardAsString() {
+    public String yearOfAwardAsString() {
         return dateAwarded != null ? Integer.toString(dateAwarded.get(Calendar.YEAR)) : null;
     }
 
     /** Returns the url of the award if present. */
     @Nullable
-    public String getUrl() {
+    public String url() {
         return url;
     }
 }

@@ -48,23 +48,11 @@ public class HttpError {
         this.errors = errors;
     }
 
-    public String getErrorName() {
-        return errorName;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public List<Error> getErrors() {
-        return errors;
-    }
-
     @Override
     public String toString() {
         return "ErrorBody{"
-              + "errorName='" + errorName + '\''
-              + ", errorMessage='" + errorMessage + '\''
+              + "name='" + errorName + '\''
+              + ", message='" + errorMessage + '\''
               + ", errors=" + errors
               + '}';
     }
@@ -87,6 +75,24 @@ public class HttpError {
         result = 31 * result + (errorMessage != null ? errorMessage.hashCode() : 0);
         result = 31 * result + (errors != null ? errors.hashCode() : 0);
         return result;
+    }
+
+    /** Returns the {@linkplain HttpError} name. */
+    public String name() {
+        return errorName;
+    }
+
+    /** Returns the {@linkplain HttpError} message. */
+    public String message() {
+        return errorMessage;
+    }
+
+    /**
+     * Returns a list of {@linkplain HttpError.Error} causes, which contain a descriptive
+     * {@linkplain HttpError.Error.Reason}.
+     */
+    public List<Error> errors() {
+        return errors;
     }
 
     /** Represents an error for a specific form field or query parameters, with a respective reason for the error. */

@@ -99,7 +99,7 @@ public class ContactsActivity extends BaseActivity implements RecyclerItemClickL
 
     @Override
     public void onItemClick(View view, int position) {
-        String userId = adapter.getItem(position).getId();
+        String userId = adapter.getItem(position).id();
         showToast("Item clicked with id " + userId);
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(ProfileActivity.EXTRA_USER_ID, userId);

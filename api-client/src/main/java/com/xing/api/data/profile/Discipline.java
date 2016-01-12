@@ -62,12 +62,12 @@ public class Discipline implements Serializable {
     }
 
     /** Returns discipline id. */
-    public String getId() {
+    public String id() {
         return id;
     }
 
     /** Returns discipline key. */
-    public String getKey() {
+    public String key() {
         return key;
     }
 }

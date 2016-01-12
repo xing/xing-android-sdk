@@ -31,7 +31,7 @@ public class CompanyTest {
     public void setNameThrowsIfLimitExited() throws Exception {
         Company company = new Company();
         try {
-            company.setName(leftPad("longName", Company.LIMIT_NAME + 1, '*'));
+            company.name(leftPad("longName", Company.LIMIT_NAME + 1, '*'));
             fail();
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage()).isEqualTo("Argument Name too long. "
@@ -44,7 +44,7 @@ public class CompanyTest {
     public void setTitleThrowsIfLimitExited() throws Exception {
         Company company = new Company();
         try {
-            company.setTitle(leftPad("longTitle", Company.LIMIT_TITLE + 1, '*'));
+            company.title(leftPad("longTitle", Company.LIMIT_TITLE + 1, '*'));
             fail();
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage()).isEqualTo("Argument Title too long. "
@@ -57,7 +57,7 @@ public class CompanyTest {
     public void setUrlThrowsIfLimitExited() throws Exception {
         Company company = new Company();
         try {
-            company.setUrl(leftPad("longUrl", Company.LIMIT_URL + 1, '*'));
+            company.url(leftPad("longUrl", Company.LIMIT_URL + 1, '*'));
             fail();
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage()).isEqualTo("Argument Url too long. "
@@ -70,7 +70,7 @@ public class CompanyTest {
     public void setDescriptionThrowsIfLimitExited() throws Exception {
         Company company = new Company();
         try {
-            company.setDescription(leftPad("longDescription", Company.LIMIT_DESCRIPTION + 1, '*'));
+            company.description(leftPad("longDescription", Company.LIMIT_DESCRIPTION + 1, '*'));
             fail();
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage()).isEqualTo("Argument Description too long. "
@@ -84,16 +84,16 @@ public class CompanyTest {
         Company company = new Company();
         assertFalse(company.isFilledForAddCompany());
 
-        company.setName("Test Name");
+        company.name("Test Name");
         assertFalse(company.isFilledForAddCompany());
 
-        company.setTitle("Test Title");
+        company.title("Test Title");
         assertFalse(company.isFilledForAddCompany());
 
-        company.setIndustries(Collections.singletonList(new Industry(22202, "TEST_IND")));
+        company.industries(Collections.singletonList(new Industry(22202, "TEST_IND")));
         assertFalse(company.isFilledForAddCompany());
 
-        company.setFormOfEmployment(FormOfEmployment.PARTNER);
+        company.formOfEmployment(FormOfEmployment.PARTNER);
         assertTrue(company.isFilledForAddCompany());
     }
 }

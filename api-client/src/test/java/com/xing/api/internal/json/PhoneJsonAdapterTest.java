@@ -60,9 +60,9 @@ public class PhoneJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"49|177|1234567\"");
 
         Phone fromJson = phoneAdapter().fromJson("\"+1|23|4567890\"");
-        assertThat(fromJson.getCountryCode()).isEqualTo("+1");
-        assertThat(fromJson.getAreaCode()).isEqualTo("23");
-        assertThat(fromJson.getNumber()).isEqualTo("4567890");
+        assertThat(fromJson.countryCode()).isEqualTo("+1");
+        assertThat(fromJson.areaCode()).isEqualTo("23");
+        assertThat(fromJson.number()).isEqualTo("4567890");
         assertThat(fromJson.toString()).isEqualTo("+1|23|4567890");
     }
 
@@ -74,9 +74,9 @@ public class PhoneJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"||\"");
 
         Phone fromJson = phoneAdapter().fromJson("\"||\"");
-        assertThat(fromJson.getAreaCode()).isEmpty();
-        assertThat(fromJson.getCountryCode()).isEmpty();
-        assertThat(fromJson.getNumber()).isEmpty();
+        assertThat(fromJson.areaCode()).isEmpty();
+        assertThat(fromJson.countryCode()).isEmpty();
+        assertThat(fromJson.number()).isEmpty();
         assertThat(fromJson.toString()).isEqualTo("||");
     }
 

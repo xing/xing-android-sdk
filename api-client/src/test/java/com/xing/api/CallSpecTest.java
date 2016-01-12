@@ -685,9 +685,9 @@ public class CallSpecTest {
 
         assertThat(response.isSuccess()).isFalse();
         assertNotNull(response.error());
-        assertThat(response.error().getErrorMessage()).isEqualTo("Terrible Error.");
-        assertThat(response.error().getErrorName()).isEqualTo("TEST_ERROR");
-        assertThat(response.error().getErrors().get(0))
+        assertThat(response.error().message()).isEqualTo("Terrible Error.");
+        assertThat(response.error().name()).isEqualTo("TEST_ERROR");
+        assertThat(response.error().errors().get(0))
               .isEqualTo(new HttpError.Error("no_field", Reason.UNEXPECTED));
     }
 
@@ -755,9 +755,9 @@ public class CallSpecTest {
             assertThat(exception.message()).isEqualTo("OK");
 
             HttpError error = (HttpError) exception.error();
-            assertThat(error.getErrorName()).isEqualTo("TEST_ERROR2");
-            assertThat(error.getErrorMessage()).isEqualTo("Yet another error.");
-            assertThat(error.getErrors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+            assertThat(error.name()).isEqualTo("TEST_ERROR2");
+            assertThat(error.message()).isEqualTo("Yet another error.");
+            assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
         }
     }
 

@@ -154,115 +154,129 @@ public class PhotoUrls implements Serializable {
               + '}';
     }
 
-    public String getPhotoLargeUrl() {
+    public String photoLargeUrl() {
         return photoLargeUrl;
     }
 
-    public void setPhotoLargeUrl(String photoLargeUrl) {
+    public PhotoUrls photoLargeUrl(String photoLargeUrl) {
         this.photoLargeUrl = photoLargeUrl;
+        return this;
     }
 
-    public String getPhotoMaxiThumbUrl() {
+    public String photoMaxiThumbUrl() {
         return photoMaxiThumbUrl;
     }
 
-    public void setPhotoMaxiThumbUrl(String photoMaxiThumbUrl) {
+    public PhotoUrls photoMaxiThumbUrl(String photoMaxiThumbUrl) {
         this.photoMaxiThumbUrl = photoMaxiThumbUrl;
+        return this;
     }
 
-    public String getPhotoMediumThumbUrl() {
+    public String photoMediumThumbUrl() {
         return photoMediumThumbUrl;
     }
 
-    public void setPhotoMediumThumbUrl(String photoMediumThumbUrl) {
+    public PhotoUrls photoMediumThumbUrl(String photoMediumThumbUrl) {
         this.photoMediumThumbUrl = photoMediumThumbUrl;
+        return this;
     }
 
-    public String getPhotoMiniThumbUrl() {
+    public String photoMiniThumbUrl() {
         return photoMiniThumbUrl;
     }
 
-    public void setPhotoMiniThumbUrl(String photoMiniUrl) {
-        photoMiniThumbUrl = photoMiniUrl;
+    public PhotoUrls photoMiniThumbUrl(String photoMiniThumbUrl) {
+        this.photoMiniThumbUrl = photoMiniThumbUrl;
+        return this;
     }
 
-    public String getPhotoThumbUrl() {
+    public String photoThumbUrl() {
         return photoThumbUrl;
     }
 
-    public void setPhotoThumbUrl(String photoThumbUrl) {
+    public PhotoUrls photoThumbUrl(String photoThumbUrl) {
         this.photoThumbUrl = photoThumbUrl;
+        return this;
     }
 
-    public String getPhotoSize32Url() {
+    public String photoSize32Url() {
         return photoSize32Url;
     }
 
-    public void setPhotoSize32Url(String photoSize32Url) {
+    public PhotoUrls photoSize32Url(String photoSize32Url) {
         this.photoSize32Url = photoSize32Url;
+        return this;
     }
 
-    public String getPhotoSize48Url() {
+    public String photoSize48Url() {
         return photoSize48Url;
     }
 
-    public void setPhotoSize48Url(String photoSize48Url) {
+    public PhotoUrls photoSize48Url(String photoSize48Url) {
         this.photoSize48Url = photoSize48Url;
+        return this;
     }
 
-    public String getPhotoSize64Url() {
+    public String photoSize64Url() {
         return photoSize64Url;
     }
 
-    public void setPhotoSize64Url(String photoSize64Url) {
+    public PhotoUrls photoSize64Url(String photoSize64Url) {
         this.photoSize64Url = photoSize64Url;
+        return this;
     }
 
-    public String getPhotoSize96Url() {
+    public String photoSize96Url() {
         return photoSize96Url;
     }
 
-    public void setPhotoSize96Url(String photoSize96Url) {
+    public PhotoUrls photoSize96Url(String photoSize96Url) {
         this.photoSize96Url = photoSize96Url;
+        return this;
     }
 
-    public String getPhotoSize128Url() {
+    public String photoSize128Url() {
         return photoSize128Url;
     }
 
-    public void setPhotoSize128Url(String photoSize128Url) {
+    public PhotoUrls photoSize128Url(String photoSize128Url) {
         this.photoSize128Url = photoSize128Url;
+        return this;
     }
 
-    public String getPhotoSize192Url() {
+    public String photoSize192Url() {
         return photoSize192Url;
     }
 
-    public void setPhotoSize192Url(String photoSize192Url) {
+    public PhotoUrls photoSize192Url(String photoSize192Url) {
         this.photoSize192Url = photoSize192Url;
+        return this;
     }
 
-    public String getPhotoSize256Url() {
+    public String photoSize256Url() {
         return photoSize256Url;
     }
 
-    public void setPhotoSize256Url(String photoSize256Url) {
+    public PhotoUrls photoSize256Url(String photoSize256Url) {
         this.photoSize256Url = photoSize256Url;
+        return this;
     }
 
-    public String getPhotoSize1024Url() {
+    public String photoSize1024Url() {
         return photoSize1024Url;
     }
 
-    public void setPhotoSize1024Url(String photoSize1024Url) {
+    public PhotoUrls photoSize1024Url(String photoSize1024Url) {
         this.photoSize1024Url = photoSize1024Url;
+        return this;
     }
 
-    public String getPhotoSizeOriginalUrl() {
+    public String photoSizeOriginalUrl() {
         return photoSizeOriginalUrl;
     }
 
-    public void setPhotoSizeOriginalUrl(String photoSizeOriginalUrl) {
+    public PhotoUrls photoSizeOriginalUrl(String photoSizeOriginalUrl) {
         this.photoSizeOriginalUrl = photoSizeOriginalUrl;
+        return this;
     }
 }

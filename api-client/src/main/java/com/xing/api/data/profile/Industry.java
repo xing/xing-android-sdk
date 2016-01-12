@@ -92,18 +92,18 @@ public class Industry implements Serializable {
     }
 
     /** Returns the industry id. */
-    public int getId() {
+    public int id() {
         return id;
     }
 
     /** Returns the industry name. */
-    public String getName() {
+    public String name() {
         return name;
     }
 
     /** Returns the industry segments (a list of sub-industries). */
     @Nullable
-    public List<Industry> getSegments() {
+    public List<Industry> segments() {
         return segments;
     }
 }
