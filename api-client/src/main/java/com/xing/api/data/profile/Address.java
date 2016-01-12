@@ -109,82 +109,90 @@ public class Address implements Serializable {
     }
 
     /** Returns the country name or abbreviation (example: 'DE' for Germany). */
-    public String getCountry() {
+    public String country() {
         return country;
     }
 
-    /** Set the county name. */
-    public void setCountry(String country) {
+    /** Sets the county name. */
+    public Address country(String country) {
         this.country = country;
+        return this;
     }
 
     /** Returns the user's email associated with <strong>this</strong> address. */
-    public String getEmail() {
+    public String email() {
         return email;
     }
 
-    /** Set the user's email associated with <strong>this</strong> address. */
-    public void setEmail(String email) {
+    /** Sets the user's email associated with <strong>this</strong> address. */
+    public Address email(String email) {
         this.email = email;
+        return this;
     }
 
     /** Returns the fax phone number associated with <strong>this</strong> address. */
-    public Phone getFax() {
+    public Phone fax() {
         return fax;
     }
 
-    /** Set the fax phone number associated with <strong>this</strong> address. */
-    public void setFax(Phone fax) {
+    /** Sets the fax phone number associated with <strong>this</strong> address. */
+    public Address fax(Phone fax) {
         this.fax = fax;
+        return this;
     }
 
     /** Returns the mobile phone number associated with <strong>this</strong> address. */
-    public Phone getMobilePhone() {
+    public Phone mobilePhone() {
         return mobilePhone;
     }
 
-    /** Set the mobile phone number associated with <strong>this</strong> address. */
-    public void setMobilePhone(Phone mobilePhone) {
+    /** Sets the mobile phone number associated with <strong>this</strong> address. */
+    public Address mobilePhone(Phone mobilePhone) {
         this.mobilePhone = mobilePhone;
+        return this;
     }
 
     /** Returns the phone number associated with <strong>this</strong> address. */
-    public Phone getPhone() {
+    public Phone phone() {
         return phone;
     }
 
-    /** Set the phone number associated with <strong>this</strong> address. */
-    public void setPhone(Phone phone) {
+    /** Sets the phone number associated with <strong>this</strong> address. */
+    public Address phone(Phone phone) {
         this.phone = phone;
+        return this;
     }
 
     /** Returns the province. */
-    public String getProvince() {
+    public String province() {
         return province;
     }
 
-    /** Set the province. */
-    public void setProvince(String province) {
+    /** Sets the province. */
+    public Address province(String province) {
         this.province = province;
+        return this;
     }
 
     /** Returns the address street. This string also may contain the house number. */
-    public String getStreet() {
+    public String street() {
         return street;
     }
 
-    /** Set the street. This string also may contain the house number. */
-    public void setStreet(String street) {
+    /** Sets the street. This string also may contain the house number. */
+    public Address street(String street) {
         this.street = street;
+        return this;
     }
 
     /** Returns the zip code as a string. */
-    public String getZipCode() {
+    public String zipCode() {
         return zipCode;
     }
 
-    /** Set the zip code as a string. */
-    public void setZipCode(String zipCode) {
+    /** Sets the zip code as a string. */
+    public Address zipCode(String zipCode) {
         this.zipCode = zipCode;
+        return this;
     }
 }

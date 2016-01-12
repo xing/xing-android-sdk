@@ -135,131 +135,145 @@ public class ProfileVisit implements Serializable {
     }
 
     /** Returns the company name. */
-    public String getCompanyName() {
+    public String companyName() {
         return companyName;
     }
 
-    /** Set the company name. */
-    public void setCompanyName(String companyName) {
+    /** Sets the company name. */
+    public ProfileVisit companyName(String companyName) {
         this.companyName = companyName;
+        return this;
     }
 
     /** Returns the reason for visit. */
-    public Reason getReason() {
+    public Reason reason() {
         return reason;
     }
 
-    /** Set the reason for visit. */
-    public void setReason(Reason reason) {
+    /** Sets the reason for visit. */
+    public ProfileVisit reason(Reason reason) {
         this.reason = reason;
+        return this;
     }
 
     /** Returns encrypted date of visit. */
-    public String getVisitedAtEncrypted() {
+    public String visitedAtEncrypted() {
         return visitedAtEncrypted;
     }
 
-    /** Set the encrypted date of visit. */
-    public void setVisitedAtEncrypted(String visitedAtEncrypted) {
+    /** Sets the encrypted date of visit. */
+    public ProfileVisit visitedAtEncrypted(String visitedAtEncrypted) {
         this.visitedAtEncrypted = visitedAtEncrypted;
+        return this;
     }
 
     /** Returns the photo URLs of user. */
-    public PhotoUrls getPhotoUrls() {
+    public PhotoUrls photoUrls() {
         return photoUrls;
     }
 
-    /** Set the photo URLs of user. */
-    public void setPhotoUrls(PhotoUrls photoUrls) {
+    /** Sets the photo URLs of user. */
+    public void photoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
     }
 
     /** Returns the user ID. */
-    public String getUserId() {
+    public String userId() {
         return userId;
     }
 
-    /** Set the user ID. */
-    public void setUserId(String userId) {
+    /** Sets the user ID. */
+    public ProfileVisit userId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     /** Returns the user name. */
-    public String getDisplayName() {
+    public String displayName() {
         return displayName;
     }
 
-    /** Set the user name. */
-    public void setDisplayName(String displayName) {
+    /** Sets the user name. */
+    public ProfileVisit displayName(String displayName) {
         this.displayName = displayName;
+        return this;
     }
 
     /** Returns the <strong>contact path</strong> length. */
-    public int getDistance() {
+    public int distance() {
         return distance;
     }
 
-    /** Set the <strong>contact path</strong> length. */
-    public void setDistance(int distance) {
+    /** Sets the <strong>contact path</strong> length. */
+    public ProfileVisit distance(int distance) {
         this.distance = distance;
+        return this;
     }
 
     /** Returns the date of visit. */
-    public SafeCalendar getVisitedAt() {
+    public SafeCalendar visitedAt() {
         return visitedAt;
     }
 
-    /** Set the date of visit. */
-    public void setVisitedAt(SafeCalendar visitedAt) {
+    /** Sets the date of visit. */
+    public ProfileVisit visitedAt(SafeCalendar visitedAt) {
         this.visitedAt = visitedAt;
+        return this;
     }
 
-    /** Returns the visit count (total number of visits for {@link #getVisitedAt()}). */
-    public int getVisitCount() {
+    /** Returns the visit count (total number of visits for {@link #visitedAt()}). */
+    public int visitCount() {
         return visitCount;
     }
 
-    /** Set visit count. */
-    public void setVisitCount(int visitCount) {
+    /** Sets visit count. */
+    public ProfileVisit visitCount(int visitCount) {
         this.visitCount = visitCount;
+        return this;
     }
 
     /** Returns the user's gender. */
-    public Gender getGender() {
+    public Gender gender() {
         return gender;
     }
 
-    /** Set the gender of the user. */
-    public void setGender(Gender gender) {
+    /** Sets the gender of the user. */
+    public ProfileVisit gender(Gender gender) {
         this.gender = gender;
+        return this;
     }
 
     /** Returns the job title of the user. */
-    public String getJobTitle() {
+    public String jobTitle() {
         return jobTitle;
     }
 
     /** Sets the job title of the user. */
-    public void setJobTitle(String jobTitle) {
+    public ProfileVisit jobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
+        return this;
     }
 
     /** Returns the type of the visit. */
-    public Type getType() {
+    public Type type() {
         return type;
     }
 
-    /** Set visit type. */
-    public void setType(Type type) {
+    /** Sets visit type. */
+    public ProfileVisit type(Type type) {
         this.type = type;
+        return this;
     }
 
-    public List<XingUser> getSharedContacts() {
+    /** Returns the list of shared contacts. */
+    public List<XingUser> sharedContacts() {
         return sharedContacts;
     }
 
-    public void setSharedContacts(List<XingUser> sharedContacts) {
+    /** Sets the list of shared contacts. */
+    public ProfileVisit sharedContacts(List<XingUser> sharedContacts) {
         this.sharedContacts = sharedContacts;
+        return this;
     }
 
     /** Reason for the profile visit. */
@@ -273,12 +287,10 @@ public class ProfileVisit implements Serializable {
 
         @Override
         public String toString() {
-            return "Reason{"
-                  + "text='" + text + '\''
-                  + '}';
+            return text;
         }
 
-        public String getText() {
+        public String text() {
             return text;
         }
     }

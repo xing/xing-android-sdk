@@ -20,9 +20,9 @@ import android.support.annotation.Nullable;
 import android.util.Patterns;
 
 import com.squareup.moshi.Json;
+import com.xing.api.data.SafeCalendar;
 import com.xing.api.internal.json.BirthDate;
 import com.xing.api.internal.json.CsvCollection;
-import com.xing.api.data.SafeCalendar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -229,323 +229,363 @@ public class XingUser implements Serializable {
               + '}';
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    public void setId(String id) {
+    public XingUser id(String id) {
         this.id = id;
+        return this;
     }
 
-    public String getAcademicTitle() {
+    public String academicTitle() {
         return academicTitle;
     }
 
-    public void setAcademicTitle(String academicTitle) {
+    public XingUser academicTitle(String academicTitle) {
         this.academicTitle = academicTitle;
+        return this;
     }
 
-    public String getFirstName() {
+    public String firstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public XingUser firstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
-    public String getLastName() {
+    public String lastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public XingUser lastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
-    public String getDisplayName() {
+    public String displayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public XingUser displayName(String displayName) {
         this.displayName = displayName;
+        return this;
     }
 
-    public Gender getGender() {
+    public Gender gender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public XingUser gender(Gender gender) {
         this.gender = gender;
+        return this;
     }
 
-    public String getPageName() {
+    public String pageName() {
         return pageName;
     }
 
-    public void setPageName(String pageName) {
+    public XingUser pageName(String pageName) {
         this.pageName = pageName;
+        return this;
     }
 
-    public String getPermalink() {
+    public String permalink() {
         return permalink;
     }
 
-    public void setPermalink(String permalink) {
+    public XingUser permalink(String permalink) {
+        // TODO Remove this? or replace with pure java solution.
         if (!Patterns.WEB_URL.matcher(permalink).matches()) {
             throw new IllegalArgumentException(permalink + " is not an url.");
         }
         this.permalink = permalink;
+        return this;
     }
 
-    public EmploymentStatus getEmploymentStatus() {
+    public EmploymentStatus employmentStatus() {
         return employmentStatus;
     }
 
-    public void setEmploymentStatus(EmploymentStatus employmentStatus) {
+    public XingUser employmentStatus(EmploymentStatus employmentStatus) {
         this.employmentStatus = employmentStatus;
+        return this;
     }
 
-    public void setEmploymentStatus(String employmentStatus) {
-        this.employmentStatus = EmploymentStatus.valueOf(employmentStatus);
-    }
-
-    public SafeCalendar getBirthDate() {
+    public SafeCalendar birthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(SafeCalendar birthDate) {
+    public XingUser birthDate(SafeCalendar birthDate) {
         this.birthDate = birthDate;
+        return this;
     }
 
-    public String getActiveEmail() {
+    public String activeEmail() {
         return activeEmail;
     }
 
-    public void setActiveEmail(String activeEmail) {
+    public XingUser activeEmail(String activeEmail) {
+        // TODO same as above.
         if (!Patterns.EMAIL_ADDRESS.matcher(activeEmail).matches()) {
             throw new IllegalArgumentException(activeEmail + " is not a valid email");
         }
         this.activeEmail = activeEmail;
+        return this;
     }
 
-    public List<PremiumService> getPremiumServices() {
+    public List<PremiumService> premiumServices() {
         return premiumServices;
     }
 
-    public void setPremiumServices(List<PremiumService> premiumServices) {
+    public XingUser premiumServices(List<PremiumService> premiumServices) {
         this.premiumServices = premiumServices;
+        return this;
     }
 
-    public void addPremiumService(PremiumService premiumService) {
+    public XingUser addPremiumService(PremiumService premiumService) {
         if (premiumServices == null) premiumServices = new ArrayList<>(1);
         premiumServices.add(premiumService);
+        return this;
     }
 
-    public List<Badge> getBadges() {
+    public List<Badge> badges() {
         return badges;
     }
 
-    public void setBadges(List<Badge> badges) {
+    public XingUser badges(List<Badge> badges) {
         this.badges = badges;
+        return this;
     }
 
-    public void addToBadges(Badge badge) {
+    public XingUser addToBadges(Badge badge) {
         if (badges == null) badges = new ArrayList<>(1);
         badges.add(badge);
+        return this;
     }
 
-    public void addAllToBadges(List<Badge> badges) {
+    public XingUser addAllToBadges(List<Badge> badges) {
         if (this.badges == null) {
             this.badges = badges;
         } else {
             this.badges.addAll(badges);
         }
+        return this;
     }
 
-    public List<String> getWants() {
+    public List<String> wants() {
         return wants;
     }
 
-    public void setWants(List<String> wants) {
+    public XingUser wants(List<String> wants) {
         this.wants = wants;
+        return this;
     }
 
-    public void addToWants(String want) {
+    public XingUser addToWants(String want) {
         if (wants == null) wants = new ArrayList<>(1);
         wants.add(want);
+        return this;
     }
 
-    public void addAllToWants(List<String> wants) {
+    public XingUser addAllToWants(List<String> wants) {
         if (this.wants == null) {
             this.wants = wants;
         } else {
             this.wants.addAll(wants);
         }
+        return this;
     }
 
-    public List<String> getHaves() {
+    public List<String> haves() {
         return haves;
     }
 
-    public void setHaves(List<String> haves) {
+    public XingUser haves(List<String> haves) {
         this.haves = haves;
+        return this;
     }
 
-    public void addToHaves(String has) {
+    public XingUser addToHaves(String has) {
         if (haves == null) haves = new ArrayList<>(1);
         haves.add(has);
+        return this;
     }
 
-    public void addAllToHaves(List<String> haves) {
+    public XingUser addAllToHaves(List<String> haves) {
         if (this.haves == null) {
             this.haves = haves;
         } else {
             this.haves.addAll(haves);
         }
+        return this;
     }
 
-    public List<String> getInterests() {
+    public List<String> interests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public XingUser interests(List<String> interests) {
         this.interests = interests;
+        return this;
     }
 
-    public void addToInterests(String interest) {
+    public XingUser addToInterests(String interest) {
         if (interests == null) interests = new ArrayList<>(1);
         interests.add(interest);
+        return this;
     }
 
-    public void addAllToInterests(List<String> interests) {
+    public XingUser addAllToInterests(List<String> interests) {
         if (this.interests == null) {
             this.interests = interests;
         } else {
             this.interests.addAll(interests);
         }
+        return this;
     }
 
-    public List<String> getOrganizations() {
+    public List<String> organizations() {
         return organizations;
     }
 
-    public void setOrganizations(List<String> organizations) {
+    public XingUser organizations(List<String> organizations) {
         this.organizations = organizations;
+        return this;
     }
 
-    public void addToOrganisations(String organization) {
+    public XingUser addToOrganisations(String organization) {
         if (organizations == null) organizations = new ArrayList<>(1);
         organizations.add(organization);
+        return this;
     }
 
-    public void addAllToOrganizations(List<String> organizations) {
+    public XingUser addAllToOrganizations(List<String> organizations) {
         if (this.organizations == null) {
             this.organizations = organizations;
         } else {
             this.organizations.addAll(organizations);
         }
+        return this;
     }
 
-    public Map<Language, LanguageSkill> getLanguages() {
+    public Map<Language, LanguageSkill> languages() {
         return languages;
     }
 
-    public void setLanguages(Map<Language, LanguageSkill> languages) {
+    public XingUser languages(Map<Language, LanguageSkill> languages) {
         this.languages = languages;
+        return this;
     }
 
-    public LanguageSkill getLanguageSkill(Language language) {
+    public LanguageSkill languageSkill(Language language) {
         return languages.get(language);
     }
 
-    public void addLanguage(Language language, LanguageSkill languageSkill) {
+    public XingUser addLanguage(Language language, LanguageSkill languageSkill) {
         if (languages == null) languages = new LinkedHashMap<>();
         languages.put(language, languageSkill);
+        return this;
     }
 
-    public Address getPrivateAddress() {
+    public Address privateAddress() {
         return privateAddress;
     }
 
-    public void setPrivateAddress(Address privateAddress) {
+    public XingUser privateAddress(Address privateAddress) {
         this.privateAddress = privateAddress;
+        return this;
     }
 
-    public Address getBusinessAddress() {
+    public Address businessAddress() {
         return businessAddress;
     }
 
-    public void setBusinessAddress(Address businessAddress) {
+    public XingUser businessAddress(Address businessAddress) {
         this.businessAddress = businessAddress;
+        return this;
     }
 
-    public Map<WebProfile, Set<String>> getWebProfiles() {
+    public Map<WebProfile, Set<String>> webProfiles() {
         return webProfiles;
     }
 
-    public void setWebProfiles(Map<WebProfile, Set<String>> webProfiles) {
+    public XingUser webProfiles(Map<WebProfile, Set<String>> webProfiles) {
         this.webProfiles = webProfiles;
+        return this;
     }
 
-    public void setWebProfiles(WebProfile webProfile, Set<String> profiles) {
+    public XingUser webProfiles(WebProfile webProfile, Set<String> profiles) {
         if (webProfiles == null) webProfiles = new LinkedHashMap<>();
         webProfiles.put(webProfile, profiles);
+        return this;
     }
 
-    public void addTpWebProfile(WebProfile webProfile, String accountName) {
+    public XingUser addTpWebProfile(WebProfile webProfile, String accountName) {
         if (webProfiles == null) webProfiles = new LinkedHashMap<>();
         if (!webProfiles.containsKey(webProfile)) webProfiles.put(webProfile, new LinkedHashSet<String>());
         webProfiles.get(webProfile).add(accountName);
+        return this;
     }
 
-    public void addAllToWebProfile(WebProfile webProfile, Set<String> profiles) {
+    public XingUser addAllToWebProfile(WebProfile webProfile, Set<String> profiles) {
         if (webProfiles == null) webProfiles = new LinkedHashMap<>();
         if (!webProfiles.containsKey(webProfile)) webProfiles.put(webProfile, new LinkedHashSet<String>());
         if (profiles != null) webProfiles.get(webProfile).addAll(profiles);
+        return this;
     }
 
-    public EducationalBackground getEducationBackground() {
+    public EducationalBackground educationBackground() {
         return educationBackground;
     }
 
-    public void setEducationBackground(EducationalBackground educationBackground) {
+    public XingUser educationBackground(EducationalBackground educationBackground) {
         this.educationBackground = educationBackground;
+        return this;
     }
 
-    public PhotoUrls getPhotoUrls() {
+    public PhotoUrls photoUrls() {
         return photoUrls;
     }
 
-    public void setPhotoUrls(PhotoUrls photoUrls) {
+    public XingUser photoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
+        return this;
     }
 
-    public TimeZone getTimeZone() {
+    public TimeZone timeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
+    public XingUser timeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
+        return this;
     }
 
-    public Map<MessagingAccount, String> getMessagingAccounts() {
+    public Map<MessagingAccount, String> messagingAccounts() {
         return messagingAccounts;
     }
 
-    public void setMessagingAccounts(Map<MessagingAccount, String> messagingAccounts) {
+    public XingUser messagingAccounts(Map<MessagingAccount, String> messagingAccounts) {
         this.messagingAccounts = messagingAccounts;
+        return this;
     }
 
-    public void addMessagingAccount(@NonNull MessagingAccount account, String accountValue) {
+    public XingUser addMessagingAccount(@NonNull MessagingAccount account, String accountValue) {
         if (messagingAccounts == null) messagingAccounts = new LinkedHashMap<>();
         messagingAccounts.put(account, accountValue);
+        return this;
     }
 
-    public ProfessionalExperience getProfessionalExperience() {
+    public ProfessionalExperience professionalExperience() {
         return professionalExperience;
     }
 
-    public void setProfessionalExperience(ProfessionalExperience professionalExperience) {
+    public XingUser professionalExperience(ProfessionalExperience professionalExperience) {
         this.professionalExperience = professionalExperience;
+        return this;
     }
 
     /**
@@ -553,20 +593,20 @@ public class XingUser implements Serializable {
      * user is a student.
      */
     @Nullable
-    public String getPrimaryInstitutionName() {
+    public String primaryInstitutionName() {
         String primaryInstitution = null;
 
         // Check if we have a primary company
-        if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
-            Company company = professionalExperience.getPrimaryCompany();
-            primaryInstitution = company.getName();
+        if (professionalExperience != null && professionalExperience.primaryCompany() != null) {
+            Company company = professionalExperience.primaryCompany();
+            primaryInstitution = company.name();
         }
 
         // If the primary company not available try to use the primary school (the user may be a student)
         if (primaryInstitution == null || primaryInstitution.isEmpty()) {
-            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-                School primarySchool = educationBackground.getPrimarySchool();
-                primaryInstitution = primarySchool.getName();
+            if (educationBackground != null && educationBackground.primarySchool() != null) {
+                School primarySchool = educationBackground.primarySchool();
+                primaryInstitution = primarySchool.name();
             }
         }
 
@@ -578,20 +618,20 @@ public class XingUser implements Serializable {
      * student.
      */
     @Nullable
-    public String getPrimaryOccupationName() {
+    public String primaryOccupationName() {
         String primaryOccupation = null;
 
         // Check if we have a primary company
-        if (professionalExperience != null && professionalExperience.getPrimaryCompany() != null) {
-            Company company = professionalExperience.getPrimaryCompany();
-            primaryOccupation = company.getTitle();
+        if (professionalExperience != null && professionalExperience.primaryCompany() != null) {
+            Company company = professionalExperience.primaryCompany();
+            primaryOccupation = company.title();
         }
 
         // If the primary company not available try to use the primary school (the user may be a student)
         if (primaryOccupation == null || primaryOccupation.isEmpty()) {
-            if (educationBackground != null && educationBackground.getPrimarySchool() != null) {
-                School primarySchool = educationBackground.getPrimarySchool();
-                primaryOccupation = primarySchool.getDegree();
+            if (educationBackground != null && educationBackground.primarySchool() != null) {
+                School primarySchool = educationBackground.primarySchool();
+                primaryOccupation = primarySchool.degree();
             }
         }
 

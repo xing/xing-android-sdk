@@ -63,7 +63,7 @@ public class BookmarksResourceTest extends ResourceTestCase<BookmarksResource> {
         Response<List<Bookmark>, HttpError> response = resource.getListOfOwnBookmarks().execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().size()).isEqualTo(2);
-        assertThat(response.body().get(1).user().getId()).isEqualTo("24324123_bf123d");
+        assertThat(response.body().get(1).user().id()).isEqualTo("24324123_bf123d");
     }
 
     @Test

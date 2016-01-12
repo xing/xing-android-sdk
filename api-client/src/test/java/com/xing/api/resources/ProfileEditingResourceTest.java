@@ -93,7 +93,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
 
         Response<XingUser, HttpError> response = resource.updateGeneralInformation().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getId()).isEqualTo("123456_abcdef");
+        assertThat(response.body().id()).isEqualTo("123456_abcdef");
     }
 
     @Test
@@ -129,8 +129,8 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
 
         Response<UploadProgress, HttpError> response = resource.getPictureUploadProgress().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getStatus()).isEqualTo(Status.IN_PROGRESS);
-        assertThat(response.body().getPercentage()).isEqualTo(80);
+        assertThat(response.body().status()).isEqualTo(Status.IN_PROGRESS);
+        assertThat(response.body().percentage()).isEqualTo(80);
     }
 
     @Test
@@ -164,12 +164,12 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
 
         Response<School, HttpError> response1 = resource.addSchool("University of Hamburg").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response1.body().getId()).isEqualTo("42");
+        assertThat(response1.body().id()).isEqualTo("42");
 
         // This would require a name, but the server prevents that in the real world.
         Response<School, HttpError> response2 = resource.addSchool(new School()).execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response2.body().getId()).isEqualTo("42");
+        assertThat(response2.body().id()).isEqualTo("42");
     }
 
     @Test
@@ -188,7 +188,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
 
         Response<School, HttpError> response = resource.updateSchool("42").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getId()).isEqualTo("42");
+        assertThat(response.body().id()).isEqualTo("42");
     }
 
     @Test
@@ -224,7 +224,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
               .FULL_TIME_EMPLOYEE).execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body()).isNotNull();
-        assertThat(response.body().getId()).isEqualTo("23_abcdef");
+        assertThat(response.body().id()).isEqualTo("23_abcdef");
     }
 
     @Test
@@ -234,7 +234,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
         Response<Company, HttpError> response = resource.updateCompany("sdfadf").execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body()).isNotNull();
-        assertThat(response.body().getId()).isEqualTo("23_abcdef");
+        assertThat(response.body().id()).isEqualTo("23_abcdef");
     }
 
     @Test

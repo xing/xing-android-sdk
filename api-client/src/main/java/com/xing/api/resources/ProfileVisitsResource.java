@@ -43,13 +43,13 @@ public class ProfileVisitsResource extends Resource {
      * users returned will contain {@code null} values in the same way as the
      * <a href="https://dev.xing.com/docs/user_profile#empty-user-profile">empty user profile</a>.
      * <p>
-     * The {@linkplain ProfileVisit#getDistance()} value returned will show only first (value = 1) and
+     * The {@linkplain ProfileVisit#distance()} value returned will show only first (value = 1) and
      * second (value = 2) degree contacts.
      * For all other visitors who are XING users the value will be 0. For non-XING users it will be -1.
      * <p>
-     * If the user is a basic member, only {@linkplain ProfileVisit#getPhotoUrls()},
-     * {@linkplain ProfileVisit#getVisitedAt()}, {@linkplain ProfileVisit#getReason()},
-     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} and {@linkplain ProfileVisit#getType()} will be available.
+     * If the user is a basic member, only {@linkplain ProfileVisit#photoUrls()},
+     * {@linkplain ProfileVisit#visitedAt()}, {@linkplain ProfileVisit#reason()},
+     * {@linkplain ProfileVisit#visitedAtEncrypted()} and {@linkplain ProfileVisit#type()} will be available.
      * The remaining fields will be {@code null} or {@code -1}.
      * <p>
      * Possible optional <i>query</i> parameters:
@@ -74,7 +74,7 @@ public class ProfileVisitsResource extends Resource {
      * <tr>
      * <td><b>since</b></td>
      * <td>Only returns visits more recent than the specified time stamp (ISO 8601).
-     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
+     * {@linkplain ProfileVisit#visitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
      * that were more recent than the specified one one.</td>
      * </tr>
      * <tr>
@@ -123,7 +123,7 @@ public class ProfileVisitsResource extends Resource {
      * <tr>
      * <td><b>since</b></td>
      * <td>Only returns visits more recent than the specified time stamp (ISO 8601).
-     * {@linkplain ProfileVisit#getVisitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
+     * {@linkplain ProfileVisit#visitedAtEncrypted()} is also accepted and will allow to retrieve all all visits
      * that were more recent than the specified one one.</td>
      * </tr>
      * <tr>

@@ -35,43 +35,48 @@ public class InvitationStats {
     @Json(name = "invalid_addresses")
     private List<String> invalidAddresses;
 
-    public int getTotalAddresses() {
+    public int totalAddresses() {
         return totalAddresses;
     }
 
-    public void setTotalAddresses(int totalAddresses) {
+    public InvitationStats totalAddresses(int totalAddresses) {
         this.totalAddresses = totalAddresses;
+        return this;
     }
 
-    public int getInvitationsSent() {
+    public int invitationsSent() {
         return invitationsSent;
     }
 
-    public void setInvitationsSent(int invitationsSent) {
+    public InvitationStats invitationsSent(int invitationsSent) {
         this.invitationsSent = invitationsSent;
+        return this;
     }
 
-    public List<String> getAlreadyInvited() {
+    public List<String> alreadyInvited() {
         return alreadyInvited;
     }
 
-    public void setAlreadyInvited(List<String> alreadyInvited) {
+    public InvitationStats alreadyInvited(List<String> alreadyInvited) {
         this.alreadyInvited = alreadyInvited;
+        return this;
     }
 
-    public List<XingUser> getAlreadyMember() {
+    public List<XingUser> alreadyMember() {
         return alreadyMember;
     }
 
-    public void setAlreadyMember(List<XingUser> alreadyMember) {
+    public InvitationStats alreadyMember(List<XingUser> alreadyMember) {
         this.alreadyMember = alreadyMember;
+        return this;
     }
 
-    public List<String> getInvalidAddresses() {
+    public List<String> invalidAddresses() {
         return invalidAddresses;
     }
 
-    public void setInvalidAddresses(List<String> invalidAddresses) {
+    public InvitationStats invalidAddresses(List<String> invalidAddresses) {
         this.invalidAddresses = invalidAddresses;
+        return this;
     }
 }
