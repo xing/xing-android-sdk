@@ -17,13 +17,17 @@ package com.xing.api.data.profile;
 
 import android.support.annotation.NonNull;
 
+import com.squareup.moshi.Json;
+
 /**
  * Represents a {@linkplain XingUser user's} gender.
  *
  * @author david.gonzalez
  */
 public enum Gender {
+    @Json(name = "m")
     MALE("m"),
+    @Json(name = "f")
     FEMALE("f");
 
     private final String value;
