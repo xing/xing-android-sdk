@@ -15,6 +15,8 @@
  */
 package com.xing.api.data.profile;
 
+import com.squareup.moshi.Json;
+
 /**
  * Possible values for the company size.
  * <p>
@@ -22,14 +24,23 @@ package com.xing.api.data.profile;
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum CompanySize {
+    @Json(name = "1")
     SIZE_1("1"),
+    @Json(name = "1-10")
     SIZE_1_10("1-10"),
+    @Json(name = "11-50")
     SIZE_11_50("11-50"),
+    @Json(name = "51-200")
     SIZE_51_200("51-200"),
+    @Json(name = "201-500")
     SIZE_201_500("201-500"),
+    @Json(name = "501-1000")
     SIZE_501_1000("501-1000"),
+    @Json(name = "1001-5000")
     SIZE_1001_5000("1001-5000"),
+    @Json(name = "5001-10000")
     SIZE_5001_10000("5001-10000"),
+    @Json(name = "10001+")
     SIZE_10001PLUS("10001+");
 
     private final String value;
