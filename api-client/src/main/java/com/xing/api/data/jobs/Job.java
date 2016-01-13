@@ -5,7 +5,6 @@ import com.xing.api.data.Location;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.CareerLevel;
 import com.xing.api.data.profile.Company;
-import com.xing.api.data.profile.Industry;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,7 +26,7 @@ public class Job implements Serializable {
     @Json(name = "job_type")
     private JobType jobType;
     @Json(name = "industry")
-    private Industry industry;
+    private String industry;
     @Json(name = "company")
     private Company company;
     @Json(name = "skills")
@@ -88,11 +87,11 @@ public class Job implements Serializable {
         return this;
     }
 
-    public Industry industry() {
+    public String industry() {
         return industry;
     }
 
-    public Job industry(Industry industry) {
+    public Job industry(String industry) {
         this.industry = industry;
         return this;
     }

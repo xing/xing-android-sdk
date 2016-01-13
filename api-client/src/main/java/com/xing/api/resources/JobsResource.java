@@ -15,8 +15,14 @@
  */
 package com.xing.api.resources;
 
+import com.xing.api.CallSpec;
+import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
+import com.xing.api.data.jobs.Job;
+import com.xing.api.data.jobs.PartialJob;
+
+import java.util.List;
 
 /**
  * @author daniel.hartwich
@@ -27,5 +33,36 @@ public class JobsResource extends Resource {
      */
     protected JobsResource(XingApi api) {
         super(api);
+    }
+
+    /**
+     * Returns a full {@linkplain Job} posting.
+     *
+     * Full job postings contain the following fields in addition to minimal job postings (returned by jobs
+     * recommendations and jobs search ): level, job_type, industry, skills, tags, description.
+     * When the contact field is present, it contains either a company or a user.
+     * Warning: The company field does not contain a XING company profile in all cases. This means that the company,
+     * that posted the job, does not have a XING company profile. In this case the id field is null and the links field
+     * contains an empty object.
+     */
+    public CallSpec<Job, HttpError> getJobById(String jobId) {
+        return Resource.<Job, HttpError>newGetSpec(api, "/v1/jobs/{id}")
+              .pathParam("id", jobId)
+              .responseAs(single(Job.class, "job"))
+              .build();
+    }
+
+    public CallSpec<List<PartialJob>, HttpError> getJobsByCriteria(String criteria) {
+        return Resource.<List<PartialJob>, HttpError>newGetSpec(api, "/v1/jobs/find")
+              .queryParam("query", criteria)
+              .responseAs(list(PartialJob.class, "jobs", "items"))
+              .build();
+    }
+
+    public CallSpec<List<PartialJob>, HttpError>  getJobsRecomendationsForUser(String userId) {
+        return Resource.<List<PartialJob>, HttpError>newGetSpec(api, "/v1/users/{user_id}/jobs/recommendations")
+              .pathParam("user_id", userId)
+              .responseAs(list(PartialJob.class, "job_recommendations", "items"))
+              .build();
     }
 }
