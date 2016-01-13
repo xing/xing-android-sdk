@@ -4,7 +4,6 @@ import com.squareup.moshi.Json;
 import com.xing.api.data.Location;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.CareerLevel;
-import com.xing.api.data.profile.Company;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +27,7 @@ public class Job implements Serializable {
     @Json(name = "industry")
     private String industry;
     @Json(name = "company")
-    private Company company;
+    private JobCompany company;
     @Json(name = "skills")
     private List<String> skills;
     @Json(name = "description")
@@ -40,7 +39,7 @@ public class Job implements Serializable {
     @Json(name = "links")
     private JobLinks links;
     @Json(name = "contact")
-    private JobCompany contact;
+    private JobContact contact;
 
     public String id() {
         return id;
@@ -96,11 +95,11 @@ public class Job implements Serializable {
         return this;
     }
 
-    public Company company() {
+    public JobCompany company() {
         return company;
     }
 
-    public Job company(Company company) {
+    public Job company(JobCompany company) {
         this.company = company;
         return this;
     }
@@ -150,11 +149,11 @@ public class Job implements Serializable {
         return this;
     }
 
-    public JobCompany contact() {
+    public JobContact contact() {
         return contact;
     }
 
-    public Job contact(JobCompany contact) {
+    public Job contact(JobContact contact) {
         this.contact = contact;
         return this;
     }
@@ -217,5 +216,42 @@ public class Job implements Serializable {
               ", links=" + links +
               ", contact=" + contact +
               '}';
+    }
+
+    public static class JobContact implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        @Json(name = "company")
+        private final JobCompany jobCompany;
+
+        public JobContact(JobCompany jobCompany) {
+            this.jobCompany = jobCompany;
+        }
+
+        public JobCompany jobCompany() {
+            return jobCompany;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            JobContact that = (JobContact) o;
+
+            return !(jobCompany != null ? !jobCompany.equals(that.jobCompany) : that.jobCompany != null);
+        }
+
+        @Override
+        public int hashCode() {
+            return jobCompany != null ? jobCompany.hashCode() : 0;
+        }
+
+        @Override
+        public String toString() {
+            return "JobContact{" +
+                  "jobCompany=" + jobCompany +
+                  '}';
+        }
     }
 }

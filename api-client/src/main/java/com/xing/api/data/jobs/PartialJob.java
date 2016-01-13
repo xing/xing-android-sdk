@@ -3,6 +3,7 @@ package com.xing.api.data.jobs;
 import com.squareup.moshi.Json;
 import com.xing.api.data.Location;
 import com.xing.api.data.SafeCalendar;
+import com.xing.api.data.jobs.Job.JobContact;
 import com.xing.api.data.profile.Company;
 
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public class PartialJob implements Serializable {
     @Json(name = "links")
     private JobLinks links;
     @Json(name = "contact")
-    private JobCompany contact;
+    private JobContact contact;
 
     public String id() {
         return id;
@@ -93,11 +94,11 @@ public class PartialJob implements Serializable {
         return this;
     }
 
-    public JobCompany contact() {
+    public JobContact contact() {
         return contact;
     }
 
-    public PartialJob contact(JobCompany contact) {
+    public PartialJob contact(JobContact contact) {
         this.contact = contact;
         return this;
     }
