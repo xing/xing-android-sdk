@@ -1,6 +1,8 @@
 package com.xing.api.data;
 
 import com.squareup.moshi.Json;
+import com.xing.api.internal.json.NullDouble;
+import com.xing.api.internal.json.NullInt;
 
 import java.io.Serializable;
 
@@ -11,10 +13,13 @@ public class GeoCode implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "accuracy")
+    @NullInt
     private final int accuracy;
     @Json(name = "latitude")
+    @NullDouble
     private final double latitude;
     @Json(name = "longitude")
+    @NullDouble
     private final double longitude;
 
     public GeoCode(int accuracy, double latitude, double longitude) {
