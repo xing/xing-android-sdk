@@ -25,7 +25,13 @@ import com.xing.api.data.jobs.PartialJob;
 import java.util.List;
 
 /**
+ * Represent the <a href="https://dev.xing.com/docs/resources#jobs">'Jobs'</a> resource.
+ * <p>
+ * Provides methods which allow search for a {@linkplain Job } by id or search a list of {@linkplain Job} by criteria
+ * or recommended to a user by id.
+ *
  * @author daniel.hartwich
+ * @author cristian.monforte
  */
 public class JobsResource extends Resource {
     /**
@@ -52,6 +58,13 @@ public class JobsResource extends Resource {
               .build();
     }
 
+    /**
+     * Returns a list of {@linkplain PartialJob} postings that match the given criteria.
+     *
+     * A minimal job posting consists of the fields id, title, company, location, contact, published_at and links.
+     * If you want to return the full job posting, that contains for example the description, you need to use {@link
+     * #getJobById(String)}. You can also follow the links.self URL, that will also lead you to the full job posting.
+     */
     public CallSpec<List<PartialJob>, HttpError> getJobsByCriteria(String criteria) {
         return Resource.<List<PartialJob>, HttpError>newGetSpec(api, "/v1/jobs/find")
               .queryParam("query", criteria)
@@ -59,7 +72,15 @@ public class JobsResource extends Resource {
               .build();
     }
 
-    public CallSpec<List<PartialJob>, HttpError>  getJobsRecomendationsForUser(String userId) {
+    /**
+     * Returns a list of recommended {@linkplain PartialJob} postings for the specified user.
+     *
+     * A minimal job posting consists of the fields id, title, company, location, contact, published_at and links.
+     * If you want to return the full job posting, that contains for example the description, you need to use
+     * {@link #getJobById(String)}. You can also follow the links.self URL, that will also lead you to the full job
+     * posting.
+     */
+    public CallSpec<List<PartialJob>, HttpError> getJobsRecomendationsForUser(String userId) {
         return Resource.<List<PartialJob>, HttpError>newGetSpec(api, "/v1/users/{user_id}/jobs/recommendations")
               .pathParam("user_id", userId)
               .responseAs(list(PartialJob.class, "job_recommendations", "items"))
