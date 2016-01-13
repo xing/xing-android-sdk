@@ -18,12 +18,15 @@ package com.xing.api.data;
 import com.squareup.moshi.Json;
 import com.xing.api.data.profile.XingUser;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author daniel.hartwich
  */
-public class ContactPaths {
+public class ContactPaths implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Json(name = "paths")
     private List<ContactPath> contactPaths;
     @Json(name = "distance")
@@ -31,32 +34,43 @@ public class ContactPaths {
     @Json(name = "total")
     private int total;
 
-    public int getDistance() {
+    public List<ContactPath> contactPaths() {
+        return contactPaths;
+    }
+
+    public ContactPaths contactPaths(List<ContactPath> contactPaths) {
+        this.contactPaths = contactPaths;
+        return this;
+    }
+
+    public int distance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public ContactPaths distance(int distance) {
         this.distance = distance;
+        return this;
     }
 
-    public int getTotal() {
+    public int total() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public ContactPaths total(int total) {
         this.total = total;
+        return this;
     }
 
-    private static final class ContactPath {
+    public static final class ContactPath {
         @Json(name = "users")
-        private List<XingUser> userList;
+        private final List<XingUser> contacts;
 
-        public List<XingUser> getUserList() {
-            return userList;
+        public ContactPath(List<XingUser> contacts) {
+            this.contacts = contacts;
         }
 
-        public void setUserList(List<XingUser> userList) {
-            this.userList = userList;
+        public List<XingUser> contacts() {
+            return contacts;
         }
     }
 }

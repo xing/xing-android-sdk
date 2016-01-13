@@ -49,7 +49,7 @@ public class MiscellaneousResourceTest extends ResourceTestCase<MiscellaneousRes
         // Randomly check the body.
         List<Industry> industries = response.body().get(Language.EN);
         assertThat(industries.size()).isEqualTo(23);
-        assertThat(industries.get(5).getId()).isEqualTo(190000);
-        assertThat(industries.get(5).getSegments().size()).isEqualTo(6);
+        assertThat(industries.get(5).id()).isEqualTo(190000);
+        assertThat(industries.get(5).segments().size()).isEqualTo(6);
     }
 }

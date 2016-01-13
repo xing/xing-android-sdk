@@ -151,115 +151,125 @@ public class Company implements Serializable {
     }
 
     /** Returns the company id. */
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    /** Set the company id. */
-    public void setId(String id) {
+    /** Sets the company id. */
+    public Company id(String id) {
         this.id = id;
+        return this;
     }
 
     /** Returns begin date (date when the user started to work for <strong>this</strong> company). */
-    public SafeCalendar getBeginDate() {
+    public SafeCalendar beginDate() {
         return beginDate;
     }
 
-    /** Set begin date (date when the user started to work for <strong>this</strong> company). */
-    public void setBeginDate(SafeCalendar beginDate) {
+    /** Sets begin date (date when the user started to work for <strong>this</strong> company). */
+    public Company beginDate(SafeCalendar beginDate) {
         this.beginDate = beginDate;
+        return this;
     }
 
     /** Returns the user's career level. <br><i>Non-mandatory field if creating new company.</i> */
-    public CareerLevel getCareerLevel() {
+    public CareerLevel careerLevel() {
         return careerLevel;
     }
 
-    /** Set the user's career level. <br><i>Non-mandatory field if creating new company.</i> */
-    public void setCareerLevel(CareerLevel careerLevel) {
+    /** Sets the user's career level. <br><i>Non-mandatory field if creating new company.</i> */
+    public Company careerLevel(CareerLevel careerLevel) {
         this.careerLevel = careerLevel;
+        return this;
     }
 
     /** Returns the size of company. Available values in {@link CompanySize}. */
-    public CompanySize getCompanySize() {
+    public CompanySize companySize() {
         return companySize;
     }
 
-    /** Set the size of company. Available values in {@link CompanySize}. */
-    public void setCompanySize(CompanySize companySize) {
+    /** Sets the size of company. Available values in {@link CompanySize}. */
+    public Company companySize(CompanySize companySize) {
         this.companySize = companySize;
+        return this;
     }
 
     /** Returns the job description at <strong>this</strong> company. */
-    public String getDescription() {
+    public String description() {
         return description;
     }
 
     /**
-     * Set the job description at <strong>this</strong> company.
+     * Sets the job description at <strong>this</strong> company.
      * <i>Character limit: {@value Company#LIMIT_DESCRIPTION}</i>
      */
-    public void setDescription(String description) {
+    public Company description(String description) {
         throwIfArgumentToLong("Description", description, LIMIT_DESCRIPTION);
         this.description = description;
+        return this;
     }
 
     /** Returns the end date of employment at <strong>this</strong> company. */
-    public SafeCalendar getEndDate() {
+    public SafeCalendar endDate() {
         return endDate;
     }
 
-    /** Set the end date of employment at <strong>this</strong> company. */
-    public void setEndDate(SafeCalendar endDate) {
+    /** Sets the end date of employment at <strong>this</strong> company. */
+    public Company endDate(SafeCalendar endDate) {
         this.endDate = endDate;
+        return this;
     }
 
     /** Returns form of employment at <strong>this</strong> company. Possible values in {@link FormOfEmployment}. */
-    public FormOfEmployment getFormOfEmployment() {
+    public FormOfEmployment formOfEmployment() {
         return formOfEmployment;
     }
 
-    /** Set form of employment at <strong>this</strong> company. Possible values in {@link FormOfEmployment}. */
-    public void setFormOfEmployment(FormOfEmployment formOfEmployment) {
+    /** Sets form of employment at <strong>this</strong> company. Possible values in {@link FormOfEmployment}. */
+    public Company formOfEmployment(FormOfEmployment formOfEmployment) {
         this.formOfEmployment = formOfEmployment;
+        return this;
     }
 
     /** Returns the company's industries. */
-    public List<Industry> getIndustry() {
+    public List<Industry> industries() {
         return industries;
     }
 
-    /** Set company industries. */
-    public void setIndustries(List<Industry> industries) {
+    /** Sets company industries. */
+    public Company industries(List<Industry> industries) {
         this.industries = industries;
+        return this;
     }
 
     /** Returns the name of <strong>this</strong> company. */
-    public String getName() {
+    public String name() {
         return name;
     }
 
     /**
-     * Set the name of <strong>this</strong> company.
+     * Sets the name of <strong>this</strong> company.
      * * <i>Character limit: {@value Company#LIMIT_NAME}</i>
      */
-    public void setName(String name) {
+    public Company name(String name) {
         throwIfArgumentToLong("Name", name, LIMIT_NAME);
         this.name = name;
+        return this;
     }
 
     /** Returns the user's job title at <strong>this</strong> company. */
-    public String getTitle() {
+    public String title() {
         return title;
     }
 
     /**
-     * Set the user's job title at <strong>this</strong> company.
+     * Sets the user's job title at <strong>this</strong> company.
      * <i>Character limit: {@value Company#LIMIT_TITLE}.</i>
      */
-    public void setTitle(String title) {
+    public Company title(String title) {
         throwIfArgumentToLong("Title", title, LIMIT_TITLE);
         this.title = title;
+        return this;
     }
 
     /** Returns {@code true} if the user's current position is at <strong>this</strong> company. */
@@ -267,43 +277,47 @@ public class Company implements Serializable {
         return untilNow;
     }
 
-    /** Set flag to represent if the user's current position is at <strong>this</strong> company. */
-    public void setUntilNow(boolean untilNow) {
+    /** Sets flag to represent if the user's current position is at <strong>this</strong> company. */
+    public Company untilNow(boolean untilNow) {
         this.untilNow = untilNow;
+        return this;
     }
 
     /** Returns <strong>this</strong> company's url. */
-    public String getUrl() {
+    public String url() {
         return url;
     }
 
     /**
-     * Set <strong>this</strong> company's url.
+     * Sets <strong>this</strong> company's url.
      * <i>Character limit: {@value Company#LIMIT_URL}.</i>
      */
-    public void setUrl(String url) {
+    public Company url(String url) {
         throwIfArgumentToLong("Url", url, LIMIT_URL);
         this.url = url;
+        return this;
     }
 
     /** Returns <strong>this</strong> company's tag. */
-    public String getTag() {
+    public String tag() {
         return tag;
     }
 
-    /** Set <strong>this</strong> company's tag. */
-    public void setTag(String tag) {
+    /** Sets <strong>this</strong> company's tag. */
+    public Company tag(String tag) {
         this.tag = tag;
+        return this;
     }
 
     /** Returns <strong>this</strong> company's discipline. */
-    public Discipline getDiscipline() {
+    public Discipline discipline() {
         return discipline;
     }
 
-    /** Set <strong>this</strong> company's discipline. */
-    public void setDiscipline(Discipline discipline) {
+    /** Sets <strong>this</strong> company's discipline. */
+    public Company discipline(Discipline discipline) {
         this.discipline = discipline;
+        return this;
     }
 
     /** Returns {@code true} if all fields mandatory for 'add company' action are set. */

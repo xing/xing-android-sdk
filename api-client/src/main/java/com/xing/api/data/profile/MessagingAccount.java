@@ -17,18 +17,27 @@ package com.xing.api.data.profile;
 
 import android.support.annotation.NonNull;
 
+import com.squareup.moshi.Json;
+
 /**
  * Possible instant messaging account values returned/accepted by XWS.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum MessagingAccount {
+    @Json(name = "skype")
     SKYPE("skype"),
+    @Json(name = "icq")
     ICQ("icq"),
+    @Json(name = "msn")
     MSN("msn"),
+    @Json(name = "yahoo")
     YAHOO("yahoo"),
+    @Json(name = "aim")
     AIM("aim"),
+    @Json(name = "jabber")
     JABBER("jabber"),
+    @Json(name = "googletalk")
     GOOGLE_TALK("googletalk");
 
     /** The name value received from the json response. */

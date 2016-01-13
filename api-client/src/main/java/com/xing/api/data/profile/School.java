@@ -16,8 +16,8 @@
 package com.xing.api.data.profile;
 
 import com.squareup.moshi.Json;
-import com.xing.api.internal.json.CsvCollection;
 import com.xing.api.data.SafeCalendar;
+import com.xing.api.internal.json.CsvCollection;
 
 import java.io.Serializable;
 import java.util.List;
@@ -97,72 +97,79 @@ public class School implements Serializable {
     }
 
     /** Returns the school id. */
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    /** Set the school id. */
-    public void setId(String id) {
+    /** Sets the school id. */
+    public School id(String id) {
         this.id = id;
+        return this;
     }
 
     /** Returns the school name. */
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    /** Set the school name. */
-    public void setName(String name) {
+    /** Sets the school name. */
+    public School name(String name) {
         this.name = name;
+        return this;
     }
 
     /** Returns the {@linkplain XingUser user's} degree. */
-    public String getDegree() {
+    public String degree() {
         return degree;
     }
 
-    /** Set the {@linkplain XingUser user's} degree. */
-    public void setDegree(String degree) {
+    /** Sets the {@linkplain XingUser user's} degree. */
+    public School degree(String degree) {
         this.degree = degree;
+        return this;
     }
 
     /** Returns a list of additional notes (example: specialized subjects, e.t.c.). */
-    public List<String> getNotes() {
+    public List<String> notes() {
         return notes;
     }
 
-    /** Set the list of additional notes. */
-    public void setNotes(List<String> notes) {
+    /** Sets the list of additional notes. */
+    public School notes(List<String> notes) {
         this.notes = notes;
+        return this;
     }
 
     /** Returns the subject of the field of study. */
-    public String getSubject() {
+    public String subject() {
         return subject;
     }
 
-    /** Set the subject of the field of study. */
-    public void setSubject(String subject) {
+    /** Sets the subject of the field of study. */
+    public School subject(String subject) {
         this.subject = subject;
+        return this;
     }
 
     /** Returns the start date. */
-    public SafeCalendar getBeginDate() {
+    public SafeCalendar beginDate() {
         return beginDate;
     }
 
-    /** Set the start date. */
-    public void setBeginDate(SafeCalendar beginDate) {
+    /** Sets the start date. */
+    public School beginDate(SafeCalendar beginDate) {
         this.beginDate = beginDate;
+        return this;
     }
 
     /** Returns the end date. */
-    public SafeCalendar getEndDate() {
+    public SafeCalendar endDate() {
         return endDate;
     }
 
-    /** Returns the end date. */
-    public void setEndDate(SafeCalendar endDate) {
+    /** Sets the end date. */
+    public School endDate(SafeCalendar endDate) {
         this.endDate = endDate;
+        return this;
     }
 }

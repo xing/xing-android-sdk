@@ -26,19 +26,21 @@ public class PendingContactRequest {
     @Json(name = "recipient_id")
     private String recipientId;
 
-    public String getSenderId() {
+    public String senderId() {
         return senderId;
     }
 
-    public void setSenderId(String senderId) {
+    public PendingContactRequest senderId(String senderId) {
         this.senderId = senderId;
+        return this;
     }
 
-    public String getRecipientId() {
+    public String recipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(String recipientId) {
+    public PendingContactRequest recipientId(String recipientId) {
         this.recipientId = recipientId;
+        return this;
     }
 }

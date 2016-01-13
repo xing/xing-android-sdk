@@ -62,20 +62,20 @@ public class VisitorsRecyclerAdapter extends RecyclerView.Adapter<VisitorsRecycl
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ProfileVisit item = items.get(position);
-        if (!TextUtils.isEmpty(item.getDisplayName())) {
-            holder.visitorDisplayName.setText(item.getDisplayName());
-            holder.visitorCompanyName.setText(item.getCompanyName());
-            holder.visitorJobTitle.setText(item.getJobTitle());
-            holder.visitorVisitCount.setText(item.getVisitCount() + ". visit");
+        if (!TextUtils.isEmpty(item.displayName())) {
+            holder.visitorDisplayName.setText(item.displayName());
+            holder.visitorCompanyName.setText(item.companyName());
+            holder.visitorJobTitle.setText(item.jobTitle());
+            holder.visitorVisitCount.setText(item.visitCount() + ". visit");
         } else {
-            holder.visitorDisplayName.setText("External Visitor \n" + item.getReason());
+            holder.visitorDisplayName.setText("External Visitor \n" + item.reason());
             holder.visitorCompanyName.setText("---");
             holder.visitorJobTitle.setText(("---"));
             holder.visitorVisitCount.setText(("---"));
         }
-        if (item.getPhotoUrls().getPhotoSize256Url() != null) {
+        if (item.photoUrls().photoSize256Url() != null) {
             glideRequestManager
-                  .load(item.getPhotoUrls().getPhotoSize256Url())
+                  .load(item.photoUrls().photoSize256Url())
                   .into(holder.visitorPictureView);
         } else {
             glideRequestManager

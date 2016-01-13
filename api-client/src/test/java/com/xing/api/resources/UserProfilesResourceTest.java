@@ -79,7 +79,7 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
 
         Response<XingUser, HttpError> response = resource.getUserById("some_id").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getId()).isEqualTo("123456_abcdef");
+        assertThat(response.body().id()).isEqualTo("123456_abcdef");
     }
 
     @Test
@@ -93,7 +93,7 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
 
         Response<XingUser, HttpError> response = resource.getOwnProfile().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getId()).isEqualTo("123456_abcdef");
+        assertThat(response.body().id()).isEqualTo("123456_abcdef");
     }
 
     @Test
@@ -106,7 +106,7 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
 
         Response<XingUser, HttpError> response = resource.getOwnIdCard().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().getId()).isEqualTo("test_id");
+        assertThat(response.body().id()).isEqualTo("test_id");
     }
 
     @Test
@@ -135,7 +135,7 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
               .findUsersByEmail(Collections.singletonList("mail")).execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().size()).isEqualTo(2);
-        assertThat(response.body().get(0).getId()).isEqualTo("10368_ddec16");
+        assertThat(response.body().get(0).id()).isEqualTo("10368_ddec16");
         assertThat(response.body().get(1)).isNull();
     }
 
@@ -162,8 +162,8 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
         Response<List<XingUser>, HttpError> response = resource.findUsersByKeyword("test").execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().size()).isEqualTo(2);
-        assertThat(response.body().get(0).getId()).isEqualTo("2_abcdef");
-        assertThat(response.body().get(1).getId()).isEqualTo("3_ad7e12");
+        assertThat(response.body().get(0).id()).isEqualTo("2_abcdef");
+        assertThat(response.body().get(1).id()).isEqualTo("3_ad7e12");
     }
 
     @Test
@@ -180,13 +180,13 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
 
         Response<ProfileMessage, HttpError> response1 = resource.getUserProfileMessage("test").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response1.body().getUpdatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
-        assertThat(response1.body().getMessage()).isEqualTo("My new profile message.");
+        assertThat(response1.body().updatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
+        assertThat(response1.body().message()).isEqualTo("My new profile message.");
 
         Response<ProfileMessage, HttpError> response2 = resource.getOwnProfileMessage().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response2.body().getUpdatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
-        assertThat(response2.body().getMessage()).isEqualTo("My new profile message.");
+        assertThat(response2.body().updatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
+        assertThat(response2.body().message()).isEqualTo("My new profile message.");
     }
 
     @Test

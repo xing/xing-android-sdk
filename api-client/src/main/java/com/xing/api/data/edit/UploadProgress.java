@@ -65,11 +65,11 @@ public class UploadProgress {
               + '}';
     }
 
-    public Status getStatus() {
+    public Status status() {
         return status;
     }
 
-    public int getPercentage() {
+    public int percentage() {
         return percentage;
     }
 }

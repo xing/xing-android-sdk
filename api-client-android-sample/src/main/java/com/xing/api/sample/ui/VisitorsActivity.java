@@ -98,7 +98,7 @@ public class VisitorsActivity extends BaseActivity implements OnItemClickListene
 
     @Override
     public void onItemClick(View view, int position) {
-        String userId = adapter.getItem(position).getUserId();
+        String userId = adapter.getItem(position).userId();
         if (userId != null && !TextUtils.isEmpty(userId)) {
             showToast("Item clicked with id " + userId);
             Intent intent = new Intent(this, ProfileActivity.class);

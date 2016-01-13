@@ -71,11 +71,11 @@ public class ProfileVisitsResourceTest extends ResourceTestCase<ProfileVisitsRes
         assertThat(response.body().size()).isEqualTo(4);
         // Check fist entry (contains nulls)
         ProfileVisit visit1 = response.body().get(0);
-        assertThat(visit1.getVisitCount()).isEqualTo(-1);
-        assertThat(visit1.getDistance()).isEqualTo(-1);
-        assertThat(visit1.getType()).isEqualTo(Type.LOGGED_OUT);
+        assertThat(visit1.visitCount()).isEqualTo(-1);
+        assertThat(visit1.distance()).isEqualTo(-1);
+        assertThat(visit1.type()).isEqualTo(Type.LOGGED_OUT);
         // Check one more entry for reason.
-        assertThat(response.body().get(2).getReason().getText()).isEqualTo("Click on contact path to <a "
+        assertThat(response.body().get(2).reason().text()).isEqualTo("Click on contact path to <a "
               + "href=\"https://www.xing.com/profile/Maria_Mueller/N7.04c521\">Maria Müller</a>");
     }
 }

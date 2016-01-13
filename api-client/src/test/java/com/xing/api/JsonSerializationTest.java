@@ -70,25 +70,25 @@ public class JsonSerializationTest {
         XingUser user = adapter.fromJson(json);
 
         // General info.
-        assertThat(user.getId()).isEqualTo("123456_abcdef");
-        assertThat(user.getAcademicTitle()).isNull();
-        assertThat(user.getFirstName()).isEqualTo("Max");
-        assertThat(user.getLastName()).isEqualTo("Mustermann");
-        assertThat(user.getDisplayName()).isEqualTo("Max Mustermann");
-        assertThat(user.getPageName()).isEqualTo("Max_Mustermann");
-        assertThat(user.getPermalink()).isEqualTo("https://www.xing.com/profile/Max_Mustermann");
-        assertThat(user.getEmploymentStatus()).isEqualTo(EmploymentStatus.EMPLOYEE);
-        assertThat(user.getGender()).isEqualTo(Gender.MALE);
-        assertThat(user.getBirthDate()).isEqualTo(new SafeCalendar(1963, Calendar.AUGUST, 12));
-        assertThat(user.getActiveEmail()).isEqualTo("max.mustermann@xing.com");
-        assertThat(user.getTimeZone()).isEqualTo(new TimeZone("Europe/Copenhagen", 2.0f));
-        assertThat(user.getPremiumServices()).containsExactly(PremiumService.SEARCH, PremiumService.PRIVATE_MESSAGES);
-        assertThat(user.getBadges()).containsExactly(Badge.PREMIUM, Badge.MODERATOR);
-        assertThat(user.getWants()).containsExactly("einen neuen Job", "android");
-        assertThat(user.getHaves()).containsExactly("viele tolle Skills");
-        assertThat(user.getInterests()).containsExactly("Flitzebogen schießen and so on");
-        assertThat(user.getOrganizations()).containsExactly("ACM", "GI");
-        assertThat(user.getLanguages()).containsExactly(
+        assertThat(user.id()).isEqualTo("123456_abcdef");
+        assertThat(user.academicTitle()).isNull();
+        assertThat(user.firstName()).isEqualTo("Max");
+        assertThat(user.lastName()).isEqualTo("Mustermann");
+        assertThat(user.displayName()).isEqualTo("Max Mustermann");
+        assertThat(user.pageName()).isEqualTo("Max_Mustermann");
+        assertThat(user.permalink()).isEqualTo("https://www.xing.com/profile/Max_Mustermann");
+        assertThat(user.employmentStatus()).isEqualTo(EmploymentStatus.EMPLOYEE);
+        assertThat(user.gender()).isEqualTo(Gender.MALE);
+        assertThat(user.birthDate()).isEqualTo(new SafeCalendar(1963, Calendar.AUGUST, 12));
+        assertThat(user.activeEmail()).isEqualTo("max.mustermann@xing.com");
+        assertThat(user.timeZone()).isEqualTo(new TimeZone("Europe/Copenhagen", 2.0f));
+        assertThat(user.premiumServices()).containsExactly(PremiumService.SEARCH, PremiumService.PRIVATE_MESSAGES);
+        assertThat(user.badges()).containsExactly(Badge.PREMIUM, Badge.MODERATOR);
+        assertThat(user.wants()).containsExactly("einen neuen Job", "android");
+        assertThat(user.haves()).containsExactly("viele tolle Skills");
+        assertThat(user.interests()).containsExactly("Flitzebogen schießen and so on");
+        assertThat(user.organizations()).containsExactly("ACM", "GI");
+        assertThat(user.languages()).containsExactly(
               MapEntry.entry(Language.DE, LanguageSkill.NATIVE), MapEntry.entry(Language.EN, LanguageSkill.FLUENT),
               MapEntry.entry(Language.FR, null), MapEntry.entry(Language.ZH, LanguageSkill.BASIC));
 
@@ -97,29 +97,29 @@ public class JsonSerializationTest {
         assertBusinessAddress(user);
 
         // Web profiles.
-        assertThat(user.getWebProfiles().keySet()).containsExactly(
+        assertThat(user.webProfiles().keySet()).containsExactly(
               WebProfile.QYPE, WebProfile.GOOGLE_PLUS, WebProfile.OTHER, WebProfile.HOMEPAGE);
-        assertThat(user.getWebProfiles().get(WebProfile.QYPE)).containsExactly("http://qype.de/users/foo");
-        assertThat(user.getWebProfiles().get(WebProfile.GOOGLE_PLUS)).containsExactly("http://plus.google.com/foo");
-        assertThat(user.getWebProfiles().get(WebProfile.OTHER)).containsExactly("http://blog.example.org");
-        assertThat(user.getWebProfiles().get(WebProfile.HOMEPAGE)).containsExactly("http://example.org",
+        assertThat(user.webProfiles().get(WebProfile.QYPE)).containsExactly("http://qype.de/users/foo");
+        assertThat(user.webProfiles().get(WebProfile.GOOGLE_PLUS)).containsExactly("http://plus.google.com/foo");
+        assertThat(user.webProfiles().get(WebProfile.OTHER)).containsExactly("http://blog.example.org");
+        assertThat(user.webProfiles().get(WebProfile.HOMEPAGE)).containsExactly("http://example.org",
               "http://other-example.org");
 
         // Messaging accounts.
-        assertThat(user.getMessagingAccounts()).containsExactly(
+        assertThat(user.messagingAccounts()).containsExactly(
               MapEntry.entry(MessagingAccount.SKYPE, "1122334455"),
               MapEntry.entry(MessagingAccount.GOOGLE_TALK, "max.mustermann"));
 
         // Professional experience.
         assertPrimaryCompany(user);
         assertCompanies(user);
-        assertThat(user.getProfessionalExperience().getAwards())
+        assertThat(user.professionalExperience().awards())
               .containsExactly(new Award("Awesome Dude Of The Year", new SafeCalendar(2007), null));
 
         // Education background.
-        assertThat(user.getEducationBackground().getDegree()).isEqualTo("MSc CE/CS");
+        assertThat(user.educationBackground().degree()).isEqualTo("MSc CE/CS");
         assertSchools(user);
-        assertThat(user.getEducationBackground().getQualifications())
+        assertThat(user.educationBackground().qualifications())
               .containsExactly("TOEFLS", "PADI AOWD");
 
         // Photos.
@@ -135,137 +135,136 @@ public class JsonSerializationTest {
     }
 
     private static void assertBusinessAddress(XingUser user) throws Exception {
-        Address businessAddress = new Address();
-        businessAddress.city("Hamburg");
-        businessAddress.setCountry("DE");
-        businessAddress.setZipCode("20357");
-        businessAddress.setStreet("Geschäftsstraße 1a");
-        businessAddress.setPhone(new Phone("49", "40", "1234569"));
-        businessAddress.setFax(new Phone("49", "40", "1234561"));
-        businessAddress.setMobilePhone(new Phone("49", "160", "66666661"));
-        businessAddress.setProvince("Hamburg");
-        businessAddress.setEmail("max.mustermann@xing.com");
-        assertThat(user.getBusinessAddress()).isEqualTo(businessAddress);
+        assertThat(user.businessAddress()).isEqualTo(
+              new Address()
+                    .city("Hamburg")
+                    .country("DE")
+                    .zipCode("20357")
+                    .street("Geschäftsstraße 1a")
+                    .phone(new Phone("49", "40", "1234569"))
+                    .fax(new Phone("49", "40", "1234561"))
+                    .mobilePhone(new Phone("49", "160", "66666661"))
+                    .province("Hamburg")
+                    .email("max.mustermann@xing.com"));
     }
 
     private static void assertPrivateAddress(XingUser user) throws Exception {
-        Address privateAddress = new Address();
-        privateAddress.city("Hamburg");
-        privateAddress.setCountry("DE");
-        privateAddress.setZipCode("20357");
-        privateAddress.setStreet("Privatstraße 1");
-        privateAddress.setPhone(new Phone("49", "40", "1234560"));
-        privateAddress.setFax(new Phone("", "", ""));
-        privateAddress.setMobilePhone(new Phone("49", "0155", "1234567"));
-        privateAddress.setProvince("Hamburg");
-        privateAddress.setEmail("max@mustermann.de");
-        assertThat(user.getPrivateAddress()).isEqualTo(privateAddress);
+        assertThat(user.privateAddress()).isEqualTo(
+              new Address()
+                    .city("Hamburg")
+                    .country("DE")
+                    .zipCode("20357")
+                    .street("Privatstraße 1")
+                    .phone(new Phone("49", "40", "1234560"))
+                    .fax(new Phone("", "", ""))
+                    .mobilePhone(new Phone("49", "0155", "1234567"))
+                    .province("Hamburg")
+                    .email("max@mustermann.de"));
     }
 
     private static void assertPrimaryCompany(XingUser user) {
         Company primaryCompany = buildPrimaryCompany();
-        assertThat(user.getProfessionalExperience().getPrimaryCompany()).isEqualTo(primaryCompany);
+        assertThat(user.professionalExperience().primaryCompany()).isEqualTo(primaryCompany);
     }
 
     private static void assertCompanies(XingUser user) throws Exception {
         Company first = buildPrimaryCompany();
 
-        Company second = new Company();
-        second.setId("24_abcdef");
-        second.setName("Ninja Ltd.");
-        second.setTitle("DevOps");
-        second.setTag("NINJA");
-        second.setUrl("http://www.ninja-ltd.co.uk");
-        second.setBeginDate(new SafeCalendar(2009, Calendar.APRIL));
-        second.setEndDate(new SafeCalendar(2010, Calendar.JULY));
-        second.setIndustries(Collections.singletonList(new Industry(220800, "Athletes, organisers and associations")));
-        second.setFormOfEmployment(FormOfEmployment.OWNER);
-        second.setDiscipline(new Discipline("12_05e01e", "IT_AND_SOFTWARE_DEVELOPMENT"));
+        Company second = new Company()
+              .id("24_abcdef")
+              .name("Ninja Ltd.")
+              .title("DevOps")
+              .tag("NINJA")
+              .url("http://www.ninja-ltd.co.uk")
+              .beginDate(new SafeCalendar(2009, Calendar.APRIL))
+              .endDate(new SafeCalendar(2010, Calendar.JULY))
+              .industries(Collections.singletonList(new Industry(220800, "Athletes, organisers and associations")))
+              .formOfEmployment(FormOfEmployment.OWNER)
+              .discipline(new Discipline("12_05e01e", "IT_AND_SOFTWARE_DEVELOPMENT"));
 
-        Company third = new Company();
-        third.setId("45_abcdef");
-        third.setTitle("Wiss. Mitarbeiter");
-        third.setTag("OFFIS");
-        third.setUrl("http://www.uni.de");
-        third.setBeginDate(new SafeCalendar(2007));
-        third.setEndDate(new SafeCalendar(2008));
-        third.setIndustries(Collections.singletonList(new Industry(20400, "Fashion and textiles")));
-        third.setFormOfEmployment(FormOfEmployment.PART_TIME_EMPLOYEE);
-        third.setDiscipline(new Discipline("9_5e231a", "TEACHING_R_AND_D"));
+        Company third = new Company()
+              .id("45_abcdef")
+              .title("Wiss. Mitarbeiter")
+              .tag("OFFIS")
+              .url("http://www.uni.de")
+              .beginDate(new SafeCalendar(2007))
+              .endDate(new SafeCalendar(2008))
+              .industries(Collections.singletonList(new Industry(20400, "Fashion and textiles")))
+              .formOfEmployment(FormOfEmployment.PART_TIME_EMPLOYEE)
+              .discipline(new Discipline("9_5e231a", "TEACHING_R_AND_D"));
 
-        Company forth = new Company();
-        forth.setId("176_abcdef");
-        forth.setTitle("TEST NINJA");
-        forth.setCompanySize(CompanySize.SIZE_201_500);
-        forth.setTag("TESTCOMPANY");
-        forth.setCareerLevel(CareerLevel.ENTRY_LEVEL);
-        forth.setBeginDate(new SafeCalendar(1998, Calendar.DECEMBER));
-        forth.setEndDate(new SafeCalendar(1999, Calendar.MAY));
-        forth.setIndustries(Collections.singletonList(new Industry(220800, "Athletes, organisers and associations")));
-        forth.setFormOfEmployment(FormOfEmployment.INTERN);
+        Company forth = new Company()
+              .id("176_abcdef")
+              .title("TEST NINJA")
+              .companySize(CompanySize.SIZE_201_500)
+              .tag("TESTCOMPANY")
+              .careerLevel(CareerLevel.ENTRY_LEVEL)
+              .beginDate(new SafeCalendar(1998, Calendar.DECEMBER))
+              .endDate(new SafeCalendar(1999, Calendar.MAY))
+              .industries(Collections.singletonList(new Industry(220800, "Athletes, organisers and associations")))
+              .formOfEmployment(FormOfEmployment.INTERN);
 
-        assertThat(user.getProfessionalExperience().getCompanies())
+        assertThat(user.professionalExperience().companies())
               .containsExactly(first, second, third, forth);
     }
 
     private static void assertSchools(XingUser user) {
         School primarySchool = new School();
-        primarySchool.setId("42_abcdef");
-        primarySchool.setName("Carl-von-Ossietzky Universtät Schellenburg");
-        primarySchool.setDegree("MSc CE/CS");
+        primarySchool.id("42_abcdef");
+        primarySchool.name("Carl-von-Ossietzky Universtät Schellenburg");
+        primarySchool.degree("MSc CE/CS");
         List<String> notes = new ArrayList<>();
         notes.add("CS");
         notes.add("IT");
         notes.add("Android");
-        primarySchool.setNotes(notes);
-        primarySchool.setBeginDate(new SafeCalendar(1998, Calendar.AUGUST));
-        primarySchool.setEndDate(new SafeCalendar(2005, Calendar.FEBRUARY));
-        assertThat(user.getEducationBackground().getPrimarySchool()).isEqualTo(primarySchool);
+        primarySchool.notes(notes);
+        primarySchool.beginDate(new SafeCalendar(1998, Calendar.AUGUST));
+        primarySchool.endDate(new SafeCalendar(2005, Calendar.FEBRUARY));
+        assertThat(user.educationBackground().primarySchool()).isEqualTo(primarySchool);
 
         School otherSchool = new School();
-        otherSchool.setId("42_abcdef");
-        otherSchool.setName("Carl-von-Ossietzky Universtät Schellenburg");
-        otherSchool.setDegree("MSc CE/CS");
-        otherSchool.setSubject("CE");
-        otherSchool.setBeginDate(new SafeCalendar(1998, Calendar.AUGUST));
-        otherSchool.setEndDate(new SafeCalendar(2005, Calendar.FEBRUARY));
-        assertThat(user.getEducationBackground().getSchools())
+        otherSchool.id("42_abcdef");
+        otherSchool.name("Carl-von-Ossietzky Universtät Schellenburg");
+        otherSchool.degree("MSc CE/CS");
+        otherSchool.subject("CE");
+        otherSchool.beginDate(new SafeCalendar(1998, Calendar.AUGUST));
+        otherSchool.endDate(new SafeCalendar(2005, Calendar.FEBRUARY));
+        assertThat(user.educationBackground().schools())
               .containsExactly(otherSchool);
     }
 
     private static void assertPhotoUrls(XingUser user) {
-        PhotoUrls urls = new PhotoUrls();
-        urls.setPhotoLargeUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg");
-        urls.setPhotoMaxiThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg");
-        urls.setPhotoMediumThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg");
-        urls.setPhotoMiniThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg");
-        urls.setPhotoThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg");
-        urls.setPhotoSize32Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg");
-        urls.setPhotoSize48Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg");
-        urls.setPhotoSize64Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg");
-        urls.setPhotoSize96Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg");
-        urls.setPhotoSize128Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg");
-        urls.setPhotoSize192Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg");
-        urls.setPhotoSize256Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg");
-        urls.setPhotoSize1024Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg");
-        urls.setPhotoSizeOriginalUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg");
-        assertThat(user.getPhotoUrls()).isEqualTo(urls);
+        PhotoUrls urls = new PhotoUrls()
+              .photoLargeUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.140x185.jpg")
+              .photoMaxiThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.70x93.jpg")
+              .photoMediumThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.57x75.jpg")
+              .photoMiniThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.18x24.jpg")
+              .photoThumbUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.30x40.jpg")
+              .photoSize32Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.32x32.jpg")
+              .photoSize48Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.48x48.jpg")
+              .photoSize64Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.64x64.jpg")
+              .photoSize96Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.96x96.jpg")
+              .photoSize128Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.128x128.jpg")
+              .photoSize192Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.192x192.jpg")
+              .photoSize256Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg")
+              .photoSize1024Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg")
+              .photoSizeOriginalUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg");
+        assertThat(user.photoUrls()).isEqualTo(urls);
     }
 
     @NonNull
     private static Company buildPrimaryCompany() {
-        Company primaryCompany = new Company();
-        primaryCompany.setId("1_abcdef");
-        primaryCompany.setName("XING AG");
-        primaryCompany.setTitle("Softwareentwickler");
-        primaryCompany.setCompanySize(CompanySize.SIZE_201_500);
-        primaryCompany.setUrl("http://www.xing.com");
-        primaryCompany.setCareerLevel(CareerLevel.PROFESSIONAL_EXPERIENCED);
-        primaryCompany.setBeginDate(new SafeCalendar(2010, Calendar.JANUARY));
-        primaryCompany.setIndustries(Collections.singletonList(new Industry(90700, "Internet and online media")));
-        primaryCompany.setFormOfEmployment(FormOfEmployment.FULL_TIME_EMPLOYEE);
-        primaryCompany.setUntilNow(true);
-        primaryCompany.setDiscipline(new Discipline("12_05e01e", "IT_AND_SOFTWARE_DEVELOPMENT"));
-        return primaryCompany;
+        return new Company()
+              .id("1_abcdef")
+              .name("XING AG")
+              .title("Softwareentwickler")
+              .companySize(CompanySize.SIZE_201_500)
+              .url("http://www.xing.com")
+              .careerLevel(CareerLevel.PROFESSIONAL_EXPERIENCED)
+              .beginDate(new SafeCalendar(2010, Calendar.JANUARY))
+              .industries(Collections.singletonList(new Industry(90700, "Internet and online media")))
+              .formOfEmployment(FormOfEmployment.FULL_TIME_EMPLOYEE)
+              .untilNow(true)
+              .discipline(new Discipline("12_05e01e", "IT_AND_SOFTWARE_DEVELOPMENT"));
     }
 }

@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Java representation of a user's <strong>educational background</strong> field..
+ * Java representation of a user's <strong>educational background</strong> field.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
@@ -76,42 +76,46 @@ public class EducationalBackground implements Serializable {
     }
 
     /** Returns the user's degree. */
-    public String getDegree() {
+    public String degree() {
         return degree;
     }
 
-    /** Set the user's degree. */
-    public void setDegree(String degree) {
+    /** Sets the user's degree. */
+    public EducationalBackground degree(String degree) {
         this.degree = degree;
+        return this;
     }
 
     /** Returns user's primary school. */
-    public School getPrimarySchool() {
+    public School primarySchool() {
         return primarySchool;
     }
 
-    /** Set user's primary school. */
-    public void setPrimarySchool(School primarySchool) {
+    /** Sets user's primary school. */
+    public EducationalBackground primarySchool(School primarySchool) {
         this.primarySchool = primarySchool;
+        return this;
     }
 
     /** Returns a list of schools attended by the user. */
-    public List<School> getSchools() {
+    public List<School> schools() {
         return schools;
     }
 
-    /** Set a list of schools attended by the user. */
-    public void setSchools(List<School> mSchools) {
+    /** Sets a list of schools attended by the user. */
+    public EducationalBackground schools(List<School> mSchools) {
         schools = mSchools;
+        return this;
     }
 
     /** Returns a list of qualifications. */
-    public List<String> getQualifications() {
+    public List<String> qualifications() {
         return qualifications;
     }
 
-    /** Set the list of qualifications. */
-    public void setQualifications(List<String> qualifications) {
+    /** Sets the list of qualifications. */
+    public EducationalBackground qualifications(List<String> qualifications) {
         this.qualifications = qualifications;
+        return this;
     }
 }

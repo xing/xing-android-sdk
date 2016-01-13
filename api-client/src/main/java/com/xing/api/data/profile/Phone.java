@@ -72,17 +72,17 @@ public class Phone implements Serializable {
     }
 
     /** Returns the phones country code. */
-    public String getCountryCode() {
+    public String countryCode() {
         return countryCode;
     }
 
     /** Returns the phones area code. */
-    public String getAreaCode() {
+    public String areaCode() {
         return areaCode;
     }
 
     /** Returns the phone number without country and area code. */
-    public String getNumber() {
+    public String number() {
         return number;
     }
 }

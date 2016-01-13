@@ -69,32 +69,35 @@ public class ProfessionalExperience implements Serializable {
     }
 
     /** Returns the {@linkplain XingUser user's} primary company. */
-    public Company getPrimaryCompany() {
+    public Company primaryCompany() {
         return primaryCompany;
     }
 
-    /** Set the {@linkplain XingUser user's} primary company. */
-    public void setPrimaryCompany(Company primaryCompany) {
+    /** Sets the {@linkplain XingUser user's} primary company. */
+    public ProfessionalExperience primaryCompany(Company primaryCompany) {
         this.primaryCompany = primaryCompany;
+        return this;
     }
 
     /** Returns a list of companies the user has made part of his professional experience. */
-    public List<Company> getCompanies() {
+    public List<Company> companies() {
         return companies;
     }
 
-    /** Set the list of companies. */
-    public void setCompanies(List<Company> companies) {
+    /** Sets the list of companies. */
+    public ProfessionalExperience companies(List<Company> companies) {
         this.companies = companies;
+        return this;
     }
 
     /** Returns a list of awards of the user. */
-    public List<Award> getAwards() {
+    public List<Award> awards() {
         return awards;
     }
 
-    /** Set the list of user awards. */
-    public void setAwards(List<Award> awards) {
+    /** Sets the list of user awards. */
+    public ProfessionalExperience awards(List<Award> awards) {
         this.awards = awards;
+        return this;
     }
 }

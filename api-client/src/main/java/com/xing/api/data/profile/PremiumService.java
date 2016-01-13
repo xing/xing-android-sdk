@@ -15,14 +15,19 @@
  */
 package com.xing.api.data.profile;
 
+import com.squareup.moshi.Json;
+
 /**
  * Possible values for premium services a {@linkplain XingUser user} may access.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 public enum PremiumService {
+    @Json(name = "SEARCH")
     SEARCH("SEARCH"),
+    @Json(name = "PRIVATEMESSAGES")
     PRIVATE_MESSAGES("PRIVATEMESSAGES"),
+    @Json(name = "NOADVERTISING")
     NO_ADVERTISING("NOADVERTISING");
 
     /** The json representation of this instance. */

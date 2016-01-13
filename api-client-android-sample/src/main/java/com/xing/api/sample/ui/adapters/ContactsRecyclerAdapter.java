@@ -58,16 +58,16 @@ public class ContactsRecyclerAdapter extends RecyclerView.Adapter<ContactsRecycl
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         XingUser item = items.get(position);
-        holder.contactDisplayNameView.setText(item.getDisplayName());
+        holder.contactDisplayNameView.setText(item.displayName());
         // TODO Re-Enable this
 //        if (item.getProfessionalExperience() != null) {
-            holder.contactOccupationTitleView.setText(item.getPrimaryOccupationName());
-            holder.contactCompanyView.setText(item.getPrimaryInstitutionName());
+            holder.contactOccupationTitleView.setText(item.primaryOccupationName());
+            holder.contactCompanyView.setText(item.primaryInstitutionName());
 //        } else {
 //            holder.contactOccupationTitleView.setText(item.getEducationBackground().getDegree());
 //            holder.contactCompanyView.setText(item.getEducationBackground().getPrimarySchool().getName());
 //        }
-        glideRequestManager.load(item.getPhotoUrls().getPhotoSize256Url()).into(holder.contactPictureView);
+        glideRequestManager.load(item.photoUrls().photoSize256Url()).into(holder.contactPictureView);
         holder.itemView.setTag(item);
     }
 

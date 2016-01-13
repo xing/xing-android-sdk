@@ -64,12 +64,12 @@ public class TimeZone implements Serializable {
     }
 
     /** Returns the  name of timezone. */
-    public String getName() {
+    public String name() {
         return name;
     }
 
     /** Returns the UTC offset. */
-    public float getUtcOffset() {
+    public float utcOffset() {
         return utcOffset;
     }
 }

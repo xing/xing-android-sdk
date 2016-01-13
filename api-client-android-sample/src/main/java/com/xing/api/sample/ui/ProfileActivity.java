@@ -153,17 +153,17 @@ public class ProfileActivity extends BaseActivity {
     private static String formatAddress(Address address) {
         if (address != null) {
             StringBuilder sb = new StringBuilder();
-            if (!TextUtils.isEmpty(address.getStreet())) {
-                sb.append(address.getStreet()).append('\n');
+            if (!TextUtils.isEmpty(address.street())) {
+                sb.append(address.street()).append('\n');
             }
-            if (!TextUtils.isEmpty(address.getZipCode())) {
-                sb.append(address.getZipCode()).append(' ');
+            if (!TextUtils.isEmpty(address.zipCode())) {
+                sb.append(address.zipCode()).append(' ');
             }
             if (!TextUtils.isEmpty(address.city())) {
                 sb.append(address.city()).append('\n');
             }
-            if (!TextUtils.isEmpty(address.getCountry())) {
-                sb.append(address.getCountry());
+            if (!TextUtils.isEmpty(address.country())) {
+                sb.append(address.country());
             }
             return sb.toString();
         } else {
@@ -210,19 +210,19 @@ public class ProfileActivity extends BaseActivity {
         @Override
         protected void onPostExecute(XingUser xingUser) {
             super.onPostExecute(xingUser);
-            if (xingUser.getPhotoUrls().getPhotoSize256Url() != null) {
+            if (xingUser.photoUrls().photoSize256Url() != null) {
                 Glide.with(userProfilePictureView.getContext())
-                      .load(xingUser.getPhotoUrls().getPhotoSize256Url())
+                      .load(xingUser.photoUrls().photoSize256Url())
                       .into(userProfilePictureView);
             }
-            populateTextView(userDisplayNameView, xingUser.getDisplayName());
-            populateTextView(userCompanyView, xingUser.getPrimaryInstitutionName());
-            populateTextView(userPositionView, xingUser.getPrimaryOccupationName());
-            populateTextView(userPrivateAddress, formatAddress(xingUser.getPrivateAddress()));
-            populateTextView(userWorkAddress, formatAddress(xingUser.getBusinessAddress()));
-            populateTextView(userHaves, xingUser.getHaves());
-            populateTextView(userInterests, xingUser.getInterests());
-            populateTextView(userWants, xingUser.getWants());
+            populateTextView(userDisplayNameView, xingUser.displayName());
+            populateTextView(userCompanyView, xingUser.primaryInstitutionName());
+            populateTextView(userPositionView, xingUser.primaryOccupationName());
+            populateTextView(userPrivateAddress, formatAddress(xingUser.privateAddress()));
+            populateTextView(userWorkAddress, formatAddress(xingUser.businessAddress()));
+            populateTextView(userHaves, xingUser.haves());
+            populateTextView(userInterests, xingUser.interests());
+            populateTextView(userWants, xingUser.wants());
         }
     }
 }
