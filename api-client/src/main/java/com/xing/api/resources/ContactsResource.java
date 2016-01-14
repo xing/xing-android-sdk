@@ -19,47 +19,98 @@ import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
-import com.xing.api.internal.Experimental;
-import com.xing.api.data.ContactPaths;
-import com.xing.api.data.InvitationStats;
-import com.xing.api.data.PendingContactRequest;
-import com.xing.api.data.profile.ContactRequest;
+import com.xing.api.data.contact.ContactPaths;
+import com.xing.api.data.contact.ContactRequest;
+import com.xing.api.data.contact.InvitationStats;
+import com.xing.api.data.contact.PendingContactRequest;
 import com.xing.api.data.profile.XingUser;
+import com.xing.api.internal.Experimental;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
+ * Represent the <a href="https://dev.xing.com/docs/resources#contacts">'Contacts'</a> resource.
+ * <p>
+ * Provides methods which allow access a {@linkplain XingUser user's} contact list, as well as read, send and
+ * respond to contact requests.
+ *
  * @author daniel.hartwich
+ * @author serj.lotutovici
  */
-public class ContactsResource extends Resource {
-    private static final String ME = "me";
-
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
-    protected ContactsResource(XingApi api) {
+public final class ContactsResource extends Resource {
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
+    ContactsResource(XingApi api) {
         super(api);
     }
 
     /**
-     * Get contacts of a user
-     *
-     * Returns the requested user’s contacts. The nested user data this call returns are the same as the get user
-     * details call. You can’t request more than 100 contacts at once (see limit parameter), but you can perform
-     * several requests in parallel. If you execute this call with limit=0, it will tell you how many contacts the
-     * user has without returning any user data.
-     * <p></p>
-     * If the current user doesn’t have access to the requested user’s contacts, the value for the user’s key will be
-     * null (not an empty list!).
-     * <p></p>
-     * By default this call can <b>only</b> access the contacts of your direct contacts, i.e. second-level contacts. If
-     * you need further access, please get in touch with us.
-     *
+     * Returns the requested {@linkplain XingUser user’s} contacts.
+     * <p>
+     * No more than 100 contacts at once (see limit parameter) can be requested, but several requests in parallel can
+     * be performed. If executed with {@code limit=0} only the number of contacts will be returned.
+     * <p>
+     * If the authorizing {@linkplain XingUser user} does not have access to the requested user’s contacts, the value
+     * for the user’s key will be {@code null} (not an empty list!).
+     * <p>
+     * By default this call can <b>only</b> access the contacts of the authorizing user direct contacts, i.e.
+     * second-level contacts. For further level access, please get <a href="api@xing.com">in touch with the support
+     * team.</a>
+     * <p>
+     * Possible optional <i>query</i> parameters:
      * <table>
-     * <h4>Possible OPTIONAL parameters</h4>
      * <tr>
-     * <th>Paramter Name</th>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><b>limit</b></td>
+     * <td>Restrict the number of attachments to be returned. Must be a positive number. Default: 10</td>
+     * </tr>
+     * <tr>
+     * <td><b>offset</b></td>
+     * <td>Offset. Must be a positive number. Default: 0</td>
+     * </tr>
+     * <tr>
+     * <td><b>order_by</b></td>
+     * <td>Field that determines the ascending order of the returned list. Currently only <b>“last_name”</b> is
+     * supported. Defaults to “id”</td>
+     * </tr>
+     * <tr>
+     * <td><b>user_fields</b></td>
+     * <td>List of user attributes to be returned. If not used, only the ID will be returned. For a list
+     * of available profile user attributes, refer to the {@link XingUser user profile} representation.</td>
+     * </tr>
+     * </table>
+     *
+     * @param userId Id of the {@linkplain XingUser user} who's contact list should be returned.
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contacts">'Get contacts' resource page</a>
+     */
+    public CallSpec<List<XingUser>, HttpError> getUserContacts(String userId) {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts")
+              .pathParam("user_id", userId)
+              .responseAs(list(XingUser.class, "contacts", "users"))
+              .build();
+    }
+
+    /**
+     * Returns the authorizing {@linkplain XingUser user’s} contacts.
+     * <p>
+     * No more than 100 contacts at once (see limit parameter) can be requested, but several requests in parallel can
+     * be performed. If executed with {@code limit=0} only the number of contacts will be returned.
+     * <p>
+     * If the authorizing {@linkplain XingUser user} does not have access to the requested user’s contacts, the value
+     * for the user’s key will be {@code null} (not an empty list!).
+     * <p>
+     * By default this call can <b>only</b> access the contacts of the authorizing user direct contacts, i.e.
+     * second-level contacts. For further level access, please get <a href="api@xing.com">in touch with the support
+     * team.</a>
+     * <p>
+     * Possible optional <i>query</i> parameters:
+     * <table>
+     * <tr>
+     * <th>Parameter Name</th>
      * <th><b>Description</b></th>
      * </tr>
      * <tr>
@@ -71,55 +122,60 @@ public class ContactsResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>limit</b></td>
-     * <td>Restrict the number of attachments to be returned. This must be a positive number. Default: 10</td>
+     * <td>Restrict the number of attachments to be returned. Must be a positive number. Default: 10</td>
      * </tr>
      * <tr>
      * <td><b>offset</b></td>
-     * <td>Offset. This must be a positive number. Default: 0</td>
+     * <td>Offset. Must be a positive number. Default: 0</td>
      * </tr>
      * <tr>
      * <td><b>order_by</b></td>
-     * <td>Field that determines the ascending order of the returned list. Currently only supports “last_name”.
-     * Defaults
-     * to “id”</td>
+     * <td>Field that determines the ascending order of the returned list. Currently only <b>“last_name”</b> is
+     * supported. Defaults to “id”</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
-     * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a list
-     * of
-     * available profile user attributes, please refer to the get user details call. {@link XingUser}</td>
+     * <td>List of user attributes to be returned. If not used, only the ID will be returned. For a list
+     * of available profile user attributes, refer to the {@link XingUser user profile} representation.</td>
      * </tr>
      * </table>
+     *
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contacts">'Get contacts' resource page</a>
      */
-    public CallSpec<List<XingUser>, HttpError> getContacts(String userId) {
-        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts")
-              .pathParam("user_id", userId)
-              .responseAs(list(XingUser.class, "contacts, users"))
-              .build();
+    public CallSpec<List<XingUser>, HttpError> getOwnContacts() {
+        return getUserContacts(ME);
     }
 
     /**
-     * Get the current users's contacts.
+     * Returns all contact IDs of the authorizing {@linkplain XingUser user}.
+     * <p>
+     * If only the number on contacts is required, use {@link #getOwnContacts()} with {@code limit=0}.
+     *
+     * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
+     *
+     * @see <a href="https://dev.xing.com/docs/get/users/me/contact_ids">'Get the current user's contact IDs' resource
+     * page</a>
      */
-    public CallSpec<List<XingUser>, HttpError> getYourContacts() {
-        return getContacts(ME);
-    }
-
-    /**
-     * Get the current user's contact IDs.
-     * Returns all contact IDs of the current user.
-     * If you only need the number of contact IDs, please use the contacts call with limit=0.
-     */
-    public CallSpec<List<String>, HttpError> getYourContactIds() {
+    public CallSpec<List<String>, HttpError> getOwnContactsIds() {
         return Resource.<List<String>, HttpError>newGetSpec(api, "/v1/users/me/contact_ids")
               .responseAs(list(String.class, "contact_ids", "items"))
               .build();
     }
 
-    // TODO SerjLtt Implement New or extended CompositeType to be able to handle weird looking json like
-    // TODO  https://dev.xing.com/docs/get/users/:user_id/contacts/:contact_id/tags
-    public CallSpec<Type, String> retrieveAssignedTags() {
-        return null;
+    // TODO docs.
+    public CallSpec<List<String>, HttpError> getAssignedTags(String userId, String contactId) {
+        return Resource.<List<String>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/{contact_id}/tags")
+              .pathParam("user_id", userId)
+              .pathParam("contact_id", contactId)
+              .responseAs(list(single(String.class, "tag"), "tags", "items"))
+              .build();
+    }
+
+    // TODO docs.
+    public CallSpec<List<String>, HttpError> getOwnAssignedTags(String contactId) {
+        return getAssignedTags(ME, contactId);
     }
 
     /**
@@ -137,7 +193,7 @@ public class ContactsResource extends Resource {
      * <table>
      * <h4>Possible OPTIONAL parameters</h4>
      * <tr>
-     * <th>Paramter Name</th>
+     * <th>Parameter Name</th>
      * <th><b>Description</b></th>
      * </tr>
      * <tr>
@@ -162,6 +218,7 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
+    // TODO docs.
     public CallSpec<List<XingUser>, HttpError> getSharedContacts(String userId) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
@@ -175,7 +232,7 @@ public class ContactsResource extends Resource {
      * <table>
      * <h4>Possible OPTIONAL parameters</h4>
      * <tr>
-     * <th>Paramter Name</th>
+     * <th>Parameter Name</th>
      * <th><b>Description</b></th>
      * </tr>
      * <tr>
@@ -186,10 +243,10 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
+    // TODO docs.
     @Experimental
-    public CallSpec<List<XingUser>, HttpError> getUpcomingBirthdays(String userId) {
-        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
-              .pathParam("user_id", userId)
+    public CallSpec<List<XingUser>, HttpError> getUpcomingBirthdays() {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/me/contacts/upcoming_birthdays")
               .responseAs(list(XingUser.class, "users"))
               .build();
     }
@@ -222,6 +279,7 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
+    // TODO docs.
     public CallSpec<List<ContactRequest>, HttpError> getIncomingContactRequests() {
         return Resource.<List<ContactRequest>, HttpError>newGetSpec(api, "/v1/users/me/contact_requests")
               .responseAs(list(ContactRequest.class, "contact_requests"))
@@ -253,6 +311,7 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
+    // TODO docs.
     public CallSpec<List<PendingContactRequest>, HttpError> getPendingContactRequests() {
         return Resource.<List<PendingContactRequest>, HttpError>newGetSpec(api, " /v1/users/me/contact_requests/sent")
               .responseAs(list(PendingContactRequest.class, "contact_requests"))
@@ -278,10 +337,11 @@ public class ContactsResource extends Resource {
      *
      * @param userId ID of the user receiving the contact request
      */
-    public CallSpec<String, HttpError> sendContactRequest(String userId) {
-        return Resource.<String, HttpError>newPostSpec(api, "/v1/users/{user_id}/contact_requests", false)
+    // TODO docs.
+    public CallSpec<Void, HttpError> sendContactRequest(String userId) {
+        return Resource.<Void, HttpError>newPostSpec(api, "/v1/users/{user_id}/contact_requests", false)
               .pathParam("user_id", userId)
-              .responseAs(String.class)
+              .responseAs(Void.class)
               .build();
     }
 
@@ -293,11 +353,13 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    public CallSpec<String, HttpError> acceptContactRequest(String recipientId, String senderId) {
-        return Resource.<String, HttpError>newPutSpec(api, "/v1/users/{user_id}/contact_requests/{id}/accept", false)
+    // TODO docs.
+    public CallSpec<Void, HttpError> acceptContactRequest(String recipientId, String senderId) {
+        return Resource
+              .<Void, HttpError>newPutSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}/accept", false)
               .pathParam("user_id", recipientId)
-              .pathParam("id", senderId)
-              .responseAs(String.class)
+              .pathParam("sender_id", senderId)
+              .responseAs(Void.class)
               .build();
     }
 
@@ -316,11 +378,12 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    public CallSpec<String, HttpError> denyOrRevokeContactRequest(String recipientId, String senderId) {
-        return Resource.<String, HttpError>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{id}")
+    // TODO docs.
+    public CallSpec<Void, HttpError> revokeContactRequest(String recipientId, String senderId) {
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}")
               .pathParam("user_id", recipientId)
-              .pathParam("id", senderId)
-              .responseAs(String.class)
+              .pathParam("sender_id", senderId)
+              .responseAs(Void.class)
               .build();
     }
 
@@ -350,6 +413,7 @@ public class ContactsResource extends Resource {
      * @param userId ID of the user whose contact path(s) are to be returned
      * @param otherUserId ID of any other XING user
      */
+    // TODO docs.
     public CallSpec<ContactPaths, HttpError> getContactPaths(String userId, String otherUserId) {
         return Resource.<ContactPaths, HttpError>newGetSpec(api, "/v1/users/{user_id}/network/{other_user_id}/paths")
               .pathParam("user_id", userId)
@@ -382,12 +446,13 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      *
-     * @param toEmails List of one or more comma-separated email addresses.
+     * @param emails List of one or more comma-separated email addresses.
      * NOTE: The current user’s email address will be filtered out.
      */
-    public CallSpec<InvitationStats, HttpError> sendInvitation(String... toEmails) {
+    // TODO docs.
+    public CallSpec<InvitationStats, HttpError> inviteByMail(String... emails) {
         return Resource.<InvitationStats, HttpError>newPostSpec(api, "/v1/users/invite", true)
-              .pathParam("to_emails", toEmails)
+              .queryParam("to_emails", emails)
               .responseAs(single(InvitationStats.class, "invitation_stats"))
               .build();
     }

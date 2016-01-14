@@ -20,7 +20,6 @@ import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
-import com.xing.api.internal.Experimental;
 import com.xing.api.data.edit.PictureUpload;
 import com.xing.api.data.edit.UploadProgress;
 import com.xing.api.data.profile.Address;
@@ -33,6 +32,7 @@ import com.xing.api.data.profile.MessagingAccount;
 import com.xing.api.data.profile.School;
 import com.xing.api.data.profile.WebProfile;
 import com.xing.api.data.profile.XingUser;
+import com.xing.api.internal.Experimental;
 
 import java.util.Calendar;
 import java.util.List;
@@ -45,12 +45,9 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public class ProfileEditingResource extends Resource {
-
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
-    protected ProfileEditingResource(XingApi api) {
+public final class ProfileEditingResource extends Resource {
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
+    ProfileEditingResource(XingApi api) {
         super(api);
     }
 

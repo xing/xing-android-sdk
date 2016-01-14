@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonReader.Token;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -57,6 +58,13 @@ public final class BirthDateJsonAdapter extends JsonAdapter<SafeCalendar> {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
+
+            // May contain null values, so just skip them.
+            if (reader.peek() == Token.NULL) {
+                reader.skipValue();
+                continue;
+            }
+
             if ("year".equals(name)) {
                 calendar.set(Calendar.YEAR, reader.nextInt());
             } else if ("month".equals(name)) {
@@ -74,10 +82,24 @@ public final class BirthDateJsonAdapter extends JsonAdapter<SafeCalendar> {
 
     @Override
     public void toJson(JsonWriter writer, SafeCalendar value) throws IOException {
+        writer.setSerializeNulls(true);
         writer.beginObject();
-        if (value.isSet(Calendar.YEAR)) writer.name("year").value(value.get(Calendar.YEAR));
-        if (value.isSet(Calendar.MONTH)) writer.name("month").value(value.get(Calendar.MONTH) + 1);
-        if (value.isSet(Calendar.DAY_OF_MONTH)) writer.name("day").value(value.get(Calendar.DAY_OF_MONTH));
+        writeValueOrNull(writer, value, "year", Calendar.YEAR);
+        writeValueOrNull(writer, value, "month", Calendar.MONTH);
+        writeValueOrNull(writer, value, "day", Calendar.DAY_OF_MONTH);
         writer.endObject();
+        writer.setSerializeNulls(false);
+    }
+
+    private static void writeValueOrNull(JsonWriter writer, SafeCalendar calendar, String name, int field)
+          throws IOException {
+        writer.name(name);
+        if (calendar.isSet(field)) {
+            // Calendar and XWS understand month differently.
+            int value = calendar.get(field);
+            writer.value(field == Calendar.MONTH ? value + 1 : value);
+        } else {
+            writer.nullValue();
+        }
     }
 }

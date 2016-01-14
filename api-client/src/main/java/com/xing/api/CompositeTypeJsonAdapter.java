@@ -113,7 +113,9 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
                 while (reader.hasNext()) reader.skipValue();
                 reader.endObject();
             }
-            throw Utils.ioError("Json does not match expected structure for roots %s.", Arrays.asList(roots));
+            throw new IOException(String.format(
+                  "Json does not match expected structure for roots %s.",
+                  Arrays.asList(roots)));
         }
     }
 

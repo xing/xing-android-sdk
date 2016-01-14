@@ -82,11 +82,6 @@ final class Utils {
         return error;
     }
 
-    /** Returns a {@link IOException} with a formatted message. */
-    static IOException ioError(String message, Object... args) {
-        return new IOException(String.format(message, args));
-    }
-
     private Utils() {
         // No instances.
     }
