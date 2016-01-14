@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author cristian.monforte
  */
-public class JobCompany implements Serializable{
+public class JobCompany implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String name;
@@ -44,9 +44,9 @@ public class JobCompany implements Serializable{
 
     @Override
     public String toString() {
-        return "JobCompany{" +
-              "name='" + name + '\'' +
-              ", links=" + links +
-              '}';
+        return "JobCompany{"
+              + "name='" + name + '\''
+              + ", links=" + links
+              + '}';
     }
 }

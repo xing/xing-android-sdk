@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @author cristian.monforte
  */
-public class JobLinks implements Serializable{
+public class JobLinks implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "pdf")
@@ -57,10 +57,10 @@ public class JobLinks implements Serializable{
 
     @Override
     public String toString() {
-        return "JobLinks{" +
-              "pdf='" + pdf + '\'' +
-              ", self='" + self + '\'' +
-              ", xing='" + xing + '\'' +
-              '}';
+        return "JobLinks{"
+              + "pdf='" + pdf + '\''
+              + ", self='" + self + '\''
+              + ", xing='" + xing + '\''
+              + '}';
     }
 }

@@ -66,10 +66,10 @@ public class GeoCode implements Serializable {
 
     @Override
     public String toString() {
-        return "GeoCode{" +
-              "accuracy=" + accuracy +
-              ", latitude=" + latitude +
-              ", longitude=" + longitude +
-              '}';
+        return "GeoCode{"
+              + "accuracy=" + accuracy
+              + ", latitude=" + latitude
+              + ", longitude=" + longitude
+              + '}';
     }
 }

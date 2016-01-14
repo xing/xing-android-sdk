@@ -135,15 +135,15 @@ public class PartialJob implements Serializable {
 
     @Override
     public String toString() {
-        return "PartialJob{" +
-              "id='" + id + '\'' +
-              ", location=" + location +
-              ", title='" + title + '\'' +
-              ", jobType=" + jobType +
-              ", company=" + company +
-              ", publishedAt=" + publishedAt +
-              ", links=" + links +
-              ", contact=" + contact +
-              '}';
+        return "PartialJob{"
+              + "id='" + id + '\''
+              + ", location=" + location
+              + ", title='" + title + '\''
+              + ", jobType=" + jobType
+              + ", company=" + company
+              + ", publishedAt=" + publishedAt
+              + ", links=" + links
+              + ", contact=" + contact
+              + '}';
     }
 }

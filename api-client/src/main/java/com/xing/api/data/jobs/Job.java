@@ -201,21 +201,21 @@ public class Job implements Serializable {
 
     @Override
     public String toString() {
-        return "Job{" +
-              "id='" + id + '\'' +
-              ", location=" + location +
-              ", title='" + title + '\'' +
-              ", level=" + level +
-              ", jobType=" + jobType +
-              ", industry=" + industry +
-              ", company=" + company +
-              ", skills=" + skills +
-              ", description='" + description + '\'' +
-              ", tags=" + tags +
-              ", publishedAt=" + publishedAt +
-              ", links=" + links +
-              ", contact=" + contact +
-              '}';
+        return "Job{"
+              + "id='" + id + '\''
+              + ", location=" + location
+              + ", title='" + title + '\''
+              + ", level=" + level
+              + ", jobType=" + jobType
+              + ", industry=" + industry
+              + ", company=" + company
+              + ", skills=" + skills
+              + ", description='" + description + '\''
+              + ", tags=" + tags
+              + ", publishedAt=" + publishedAt
+              + ", links=" + links
+              + ", contact=" + contact
+              + '}';
     }
 
     public static class JobContact implements Serializable {
@@ -249,9 +249,9 @@ public class Job implements Serializable {
 
         @Override
         public String toString() {
-            return "JobContact{" +
-                  "jobCompany=" + jobCompany +
-                  '}';
+            return "JobContact{"
+                  + "jobCompany=" + jobCompany
+                  + '}';
         }
     }
 }

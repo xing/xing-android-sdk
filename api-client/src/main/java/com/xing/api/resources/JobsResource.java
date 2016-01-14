@@ -33,7 +33,7 @@ import java.util.List;
  * @author daniel.hartwich
  * @author cristian.monforte
  */
-public class JobsResource extends Resource {
+public final class JobsResource extends Resource {
     /**
      * Creates a resource instance. This should be the only constructor declared by child classes.
      */

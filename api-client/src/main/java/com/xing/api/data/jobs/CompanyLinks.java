@@ -57,10 +57,10 @@ public class CompanyLinks implements Serializable {
 
     @Override
     public String toString() {
-        return "CompanyLinks{" +
-              "xing='" + xing + '\'' +
-              ", thumbnail='" + thumbnail + '\'' +
-              ", logo='" + logo + '\'' +
-              '}';
+        return "CompanyLinks{"
+              + "xing='" + xing + '\''
+              + ", thumbnail='" + thumbnail + '\''
+              + ", logo='" + logo + '\''
+              + '}';
     }
 }

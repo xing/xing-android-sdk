@@ -105,13 +105,13 @@ public class Location implements Serializable {
 
     @Override
     public String toString() {
-        return "Location{" +
-              "geoCode=" + geoCode +
-              ", city='" + city + '\'' +
-              ", country='" + country + '\'' +
-              ", street='" + street + '\'' +
-              ", zipCode='" + zipCode + '\'' +
-              ", region='" + region + '\'' +
-              '}';
+        return "Location{"
+              + "geoCode=" + geoCode
+              + ", city='" + city + '\''
+              + ", country='" + country + '\''
+              + ", street='" + street + '\''
+              + ", zipCode='" + zipCode + '\''
+              + ", region='" + region + '\''
+              + '}';
     }
 }
