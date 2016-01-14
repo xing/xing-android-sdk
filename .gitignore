@@ -16,4 +16,4 @@
 
 # ignore api-client specific properties
 # contains singning configuration
-api-client/gradle.properties
+*/gradle.properties
