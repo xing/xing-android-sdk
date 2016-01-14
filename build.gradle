@@ -57,8 +57,8 @@ allprojects {
                 supportRecyclerView: 'com.android.support:recyclerview-v7:22.2.0',
 
                 // Network
-                okhttp             : 'com.squareup.okhttp:okhttp:2.4.0',
-                okhttpUrlConnection: 'com.squareup.okhttp:okhttp-urlconnection:2.4.0',
+                okhttp             : 'com.squareup.okhttp:okhttp:2.7.1',
+                okhttpUrlConnection: 'com.squareup.okhttp:okhttp-urlconnection:2.7.1',
                 singpost           : 'oauth.signpost:signpost-core:1.2.1.2@jar',
                 glide              : 'com.github.bumptech.glide:glide:3.6.0',
 
@@ -66,7 +66,7 @@ allprojects {
                 junit              : 'junit:junit:4.12',
                 mockito            : 'org.mockito:mockito-all:1.10.19',
                 robolectric        : 'org.robolectric:robolectric:3.0',
-                mockWebServer      : 'com.squareup.okhttp:mockwebserver:2.3.0',
+                mockWebServer      : 'com.squareup.okhttp:mockwebserver:2.7.1',
                 commonsIo          : 'commons-io:commons-io:2.4'
         ]
     }
