@@ -23,6 +23,7 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.EnumJsonAdapter;
+import com.xing.api.internal.json.NullDoubleJsonAdapter;
 import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
@@ -189,6 +190,7 @@ public final class XingApi {
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
             moshiBuilder.add(NullIntJsonAdapter.FACTORY);
+            moshiBuilder.add(NullDoubleJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
             moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);

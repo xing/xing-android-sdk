@@ -16,7 +16,7 @@
 package com.xing.api.data.profile;
 
 /**
- * Possible values for the user's career level at a {@link Company}.
+ * Possible values for the user's career level at a {@link Company} or a {@linkplain com.xing.api.data.jobs.Job Job}.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */

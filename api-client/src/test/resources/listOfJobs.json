@@ -1,0 +1,124 @@
+{
+  "jobs": {
+    "total": 1,
+    "items": [
+      {
+        "id": "61723_4cae01",
+        "location": {
+          "geo_code": {
+            "accuracy": null,
+            "latitude": null,
+            "longitude": null
+          },
+          "city": "Hamburg",
+          "country": "DE",
+          "street": "Zeiseweg 40",
+          "zipcode": "22765",
+          "region": "Hamburg"
+        },
+        "title": "Softwareentwickler Ruby on Rails",
+        "company": {
+          "name": "Rails Heroes",
+          "links": {
+            "xing": "http://www.xing.com/companies/railsheroes",
+            "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+            "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+          }
+        },
+        "published_at": "2011-08-09T13:14:48Z",
+        "links": {
+          "self": "https://api.xing.com/v1/jobs/61723_4cae01",
+          "xing": "http://www.xing.com/jobs/hamburg-railsheroes-13"
+        },
+        "contact": {
+          "company": {
+            "name": "Rails Heroes",
+            "links": {
+              "xing": "http://www.xing.com/companies/railsheroes",
+              "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+              "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+            }
+          }
+        }
+      },
+      {
+        "id": "61723_4cae02",
+        "location": {
+          "geo_code": {
+            "accuracy": null,
+            "latitude": null,
+            "longitude": null
+          },
+          "city": "Hamburg",
+          "country": "DE",
+          "street": "Zeiseweg 40",
+          "zipcode": "22765",
+          "region": "Hamburg"
+        },
+        "title": "Softwareentwickler Ruby on Rails",
+        "company": {
+          "name": "Rails Heroes",
+          "links": {
+            "xing": "http://www.xing.com/companies/railsheroes",
+            "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+            "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+          }
+        },
+        "published_at": "2011-08-09T13:14:48Z",
+        "links": {
+          "self": "https://api.xing.com/v1/jobs/61723_4cae01",
+          "xing": "http://www.xing.com/jobs/hamburg-railsheroes-13"
+        },
+        "contact": {
+          "company": {
+            "name": "Rails Heroes",
+            "links": {
+              "xing": "http://www.xing.com/companies/railsheroes",
+              "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+              "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+            }
+          }
+        }
+      },
+      {
+        "id": "61723_4cae03",
+        "location": {
+          "geo_code": {
+            "accuracy": null,
+            "latitude": null,
+            "longitude": null
+          },
+          "city": "Hamburg",
+          "country": "DE",
+          "street": "Zeiseweg 40",
+          "zipcode": "22765",
+          "region": "Hamburg"
+        },
+        "title": "Softwareentwickler Ruby on Rails",
+        "company": {
+          "name": "Rails Heroes",
+          "links": {
+            "xing": "http://www.xing.com/companies/railsheroes",
+            "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+            "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+          }
+        },
+        "published_at": "2011-08-09T13:14:48Z",
+        "links": {
+          "self": "https://api.xing.com/v1/jobs/61723_4cae01",
+          "xing": "http://www.xing.com/jobs/hamburg-railsheroes-13"
+        },
+        "contact": {
+          "company": {
+            "name": "Rails Heroes",
+            "links": {
+              "xing": "http://www.xing.com/companies/railsheroes",
+              "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+              "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

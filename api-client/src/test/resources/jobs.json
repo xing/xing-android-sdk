@@ -1,0 +1,57 @@
+{
+  "job": {
+    "id": "61723_4cae01",
+    "location": {
+      "geo_code": {
+        "accuracy": 12,
+        "latitude": 53.558572,
+        "longitude": 9.927822
+      },
+      "city": "Hamburg",
+      "country": "DE",
+      "street": "Dammtorstraße 29-32",
+      "zipcode": "20354",
+      "region": "Hamburg"
+    },
+    "title": "Programmierer",
+    "level": "PROFESSIONAL_EXPERIENCED",
+    "job_type": "FULL_TIME",
+    "industry": "INTERNET",
+    "company": {
+      "name": "XING AG",
+      "links": {
+        "xing": "http://www.xing.com/companies/xingag-qadept.",
+        "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+        "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+      }
+    },
+    "skills": [
+      "API design",
+      "Ruby",
+      "Foosball",
+      "Kicker",
+      "Rails"
+    ],
+    "description": "Für unseren Hauptsitz in Hamburg suchen wir zum schnellstmöglichen Einstiegstermin:\\r\\nSoftware Engineer – Ruby on Rails (m/w)\\r\\n\\r\\nIhre Aufgaben:",
+    "tags": [
+      "computer",
+      "it"
+    ],
+    "published_at": "2012-08-06T13:14:48Z",
+    "links": {
+      "pdf": null,
+      "self": "https://api.xing.com/v1/jobs/61723_4cae01",
+      "xing": "http://www.xing.com/jobs/hamburg-programmierer-13"
+    },
+    "contact": {
+      "company": {
+        "name": "Mr. Recruiter",
+        "links": {
+          "xing": "http://www.xing.com/companies/recruiters-inc",
+          "thumbnail": "http://www.xing.com/img/xing/xe/corporate_pages/default_logo_80x25.png",
+          "logo": "http://www.xing.com/img/xing/xe/corporate_pages/default-logo.png"
+        }
+      }
+    }
+  }
+}
