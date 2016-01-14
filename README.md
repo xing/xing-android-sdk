@@ -26,7 +26,7 @@ Add the XING API Client as a dependency:
 Either through Gradle:
 
 ```gradle
-compile 'com.xing.api:api-client:${latest_version}'
+compile 'com.xing.api:api-client:2.0.0-alpha1'
 ```
 or by using Maven:
 
@@ -34,7 +34,7 @@ or by using Maven:
 <dependency>
   <groupId>com.xing.api</groupId>
   <artifactId>api-client</artifactId>
-  <version>${latest_version}</version>
+  <version>2.0.0-alpha1</version>
 </dependency>
 ```
 
