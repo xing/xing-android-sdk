@@ -31,9 +31,9 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public class BookmarksResource extends Resource {
+public final class BookmarksResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected BookmarksResource(XingApi api) {
+    BookmarksResource(XingApi api) {
         super(api);
     }
 

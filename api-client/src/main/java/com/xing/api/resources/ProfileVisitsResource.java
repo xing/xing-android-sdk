@@ -30,9 +30,9 @@ import java.util.List;
  *
  * @author daniel.hartwich
  */
-public class ProfileVisitsResource extends Resource {
+public final class ProfileVisitsResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected ProfileVisitsResource(XingApi api) {
+    ProfileVisitsResource(XingApi api) {
         super(api);
     }
 

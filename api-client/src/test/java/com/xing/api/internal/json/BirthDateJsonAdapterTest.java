@@ -125,7 +125,7 @@ public class BirthDateJsonAdapterTest {
         calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
 
         String toJson = validBirthdayAdapter().toJson(calendar);
-        assertThat(toJson).isEqualTo("{\"year\":1990,\"month\":2}");
+        assertThat(toJson).isEqualTo("{\"year\":1990,\"month\":2,\"day\":null}");
 
         SafeCalendar fromJson = validBirthdayAdapter().fromJson("{\n"
               + "  \"year\": 1987,\n"
@@ -133,6 +133,20 @@ public class BirthDateJsonAdapterTest {
               + '}');
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(1987);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.MARCH);
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isFalse();
+    }
+
+    /** For some cases the api may return {"year":null,"month":null,"day":null}. */
+    @Test
+    public void nullBirthDay() throws Exception {
+        SafeCalendar fromJson = validBirthdayAdapter().fromJson("{\n"
+              + "  \"year\":null,\n"
+              + "  \"month\":null,\n"
+              + "  \"day\":null\n"
+              + '}');
+
+        assertThat(fromJson.isSet(Calendar.YEAR)).isFalse();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isFalse();
         assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isFalse();
     }
 

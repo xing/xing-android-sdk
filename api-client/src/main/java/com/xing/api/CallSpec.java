@@ -302,9 +302,10 @@ public final class CallSpec<RT, ET> implements Cloneable {
     @Nullable
     private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
-        if (Types.getRawType(type) == Void.class) return null;
         BufferedSource source = body.source();
         try {
+            // Don't consume the body, if the user expects a void.
+            if (Types.getRawType(type) == Void.class) return null;
             JsonAdapter<PT> adapter = api.converter.adapter(type);
             JsonReader reader = JsonReader.of(source);
             return adapter.fromJson(reader);

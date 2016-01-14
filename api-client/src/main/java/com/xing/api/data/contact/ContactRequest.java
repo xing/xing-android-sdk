@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.data.profile;
+package com.xing.api.data.contact;
 
 import com.squareup.moshi.Json;
 import com.xing.api.data.SafeCalendar;
+import com.xing.api.data.profile.XingUser;
 
 import java.io.Serializable;
 
 /**
  * Represents a contact request.
  *
- * TODO Move this to appropriate package.
- *
  * @author ciprian.ursu
- * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">Contact Request</a>
+ * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests">'Contact Request' resource page.</a>
  */
 @SuppressWarnings("unused")
 public class ContactRequest implements Serializable {
@@ -78,37 +77,45 @@ public class ContactRequest implements Serializable {
               + '}';
     }
 
+    /** Returns the sender id. */
     public String senderId() {
         return senderId;
     }
 
+    /** Sets the sender id. */
     public ContactRequest senderId(String id) {
         senderId = id;
         return this;
     }
 
+    /** Returns the date the contact request was sent. */
     public SafeCalendar receivedAt() {
         return receivedAt;
     }
 
+    /** Sets the date the contact request was received. */
     public ContactRequest receivedAt(SafeCalendar receivedAt) {
         this.receivedAt = receivedAt;
         return this;
     }
 
+    /** Returns the contact request message. */
     public String message() {
         return message;
     }
 
+    /** Sets the contact request message. */
     public ContactRequest message(String message) {
         this.message = message;
         return this;
     }
 
+    /** Returns the contact request sender profile. */
     public XingUser sender() {
         return sender;
     }
 
+    /** Sets the contact request sender profile. */
     public ContactRequest sender(XingUser sender) {
         this.sender = sender;
         return this;

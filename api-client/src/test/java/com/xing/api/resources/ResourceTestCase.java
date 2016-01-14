@@ -26,7 +26,11 @@ import com.xing.api.XingApi;
 import org.junit.Before;
 import org.junit.Rule;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /** Reduces resource testing boilerplate. */
 public class ResourceTestCase<T extends Resource> {
@@ -43,11 +47,31 @@ public class ResourceTestCase<T extends Resource> {
 
     @Before
     public void setUp() throws Exception {
+        validateResource();
         mockApi = new XingApi.Builder()
               .apiEndpoint(server.url("/"))
               .loggedOut()
               .build();
         resource = mockApi.resource(resourceClass);
+    }
+
+    /**
+     * Validate the resource before starting the setup.
+     * <li>1. Resource must be {@code final}.</li>
+     * <li>2. Each {@code public} method declared in the {@linkplain Resource} must return a {@linkplain CallSpec}.</li>
+     */
+    private void validateResource() throws Exception {
+        // Resource must be final.
+        assertTrue("Resource should be final.", Modifier.isFinal(resourceClass.getModifiers()));
+
+        // All public methods must return a call spec.
+        Method[] methods = resourceClass.getDeclaredMethods();
+        for (Method method : methods) {
+            if (Modifier.isPublic(method.getModifiers())) {
+                Class<?> returnType = method.getReturnType();
+                assertThat(returnType).isEqualTo(CallSpec.class);
+            }
+        }
     }
 
     /** Asserts a spec that expects 204 as success response. */

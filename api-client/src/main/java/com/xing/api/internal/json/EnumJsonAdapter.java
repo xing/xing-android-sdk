@@ -70,7 +70,7 @@ public final class EnumJsonAdapter<T extends Enum<T>> extends JsonAdapter<T> {
                 constantToName.put(constant, name);
             }
         } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Missing field in " + enumType.getName(), e);
+            throw new AssertionError(e);
         }
     }
 

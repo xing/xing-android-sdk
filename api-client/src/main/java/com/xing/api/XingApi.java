@@ -21,6 +21,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
+import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.EnumJsonAdapter;
 import com.xing.api.internal.json.NullDoubleJsonAdapter;
@@ -57,7 +58,7 @@ public final class XingApi {
 
     /** Return a {@link Resource} instance specified by the provided class. */
     @SuppressWarnings("unchecked")
-    public <T extends Resource> T resource(Class<? extends Resource> resource) {
+    public <T extends Resource> T resource(Class<T> resource) {
         Resource res = resourcesCache.get(checkNotNull(resource, "resource == null"));
         if (res == null) {
             checkResourceClassDeclaration(resource);
@@ -189,6 +190,7 @@ public final class XingApi {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
+            moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
             moshiBuilder.add(NullIntJsonAdapter.FACTORY);
             moshiBuilder.add(NullDoubleJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
