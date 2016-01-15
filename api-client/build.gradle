@@ -60,14 +60,12 @@ dependencies {
 
     compile libraries.okio
     compile libraries.okhttp
-    compile libraries.okhttpLoggingInterceptor
     compile libraries.moshi
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
     testCompile libraries.assertj
     testCompile libraries.mockito
-    testCompile libraries.robolectric
     testCompile libraries.commonsIo
     testCompile libraries.apacheCommons3
 }

@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /** Reduces resource testing boilerplate. */
 public class ResourceTestCase<T extends Resource> {
@@ -57,13 +56,10 @@ public class ResourceTestCase<T extends Resource> {
 
     /**
      * Validate the resource before starting the setup.
-     * <li>1. Resource must be {@code final}.</li>
-     * <li>2. Each {@code public} method declared in the {@linkplain Resource} must return a {@linkplain CallSpec}.</li>
+     * <p>
+     * Each {@code public} method declared in the {@linkplain Resource} must return a {@linkplain CallSpec}.
      */
     private void validateResource() throws Exception {
-        // Resource must be final.
-        assertTrue("Resource should be final.", Modifier.isFinal(resourceClass.getModifiers()));
-
         // All public methods must return a call spec.
         Method[] methods = resourceClass.getDeclaredMethods();
         for (Method method : methods) {
