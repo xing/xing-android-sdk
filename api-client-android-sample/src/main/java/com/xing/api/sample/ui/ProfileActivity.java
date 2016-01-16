@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.XingApi;
@@ -182,7 +181,6 @@ public class ProfileActivity extends BaseActivity {
                   .accessToken(Prefs.getInstance(ProfileActivity.this).getOauthToken())
                   .accessSecret(Prefs.getInstance(ProfileActivity.this).getOauthSecret())
                   .apiEndpoint("https://api.xing.com")
-                  .logLevel(Level.BODY)
                   .build();
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
             Response<XingUser, HttpError> response = null;

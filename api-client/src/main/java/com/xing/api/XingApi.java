@@ -18,8 +18,6 @@ package com.xing.api;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -74,10 +72,12 @@ public final class XingApi {
         return (T) res;
     }
 
-    /** Throws an exception if class was declared non-static. */
+    /** Throws an exception if class was declared non-static or non-final. */
     private static void checkResourceClassDeclaration(Class<? extends Resource> resource) {
-        if (resource.isLocalClass() || (resource.isMemberClass() && !Modifier.isStatic(resource.getModifiers()))) {
-            throw new IllegalArgumentException("Resource class must be static.");
+        int modifiers = resource.getModifiers();
+        if (!Modifier.isFinal(modifiers)) throw new IllegalArgumentException("Resource class must be declared final.");
+        if (resource.isLocalClass() || (resource.isMemberClass() && !Modifier.isStatic(modifiers))) {
+            throw new IllegalArgumentException("Resource class must be declared static.");
         }
     }
 
@@ -90,7 +90,6 @@ public final class XingApi {
         private HttpUrl apiEndpoint;
         private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
-        private Level level;
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
@@ -142,22 +141,17 @@ public final class XingApi {
             return this;
         }
 
-        public Builder logLevel(Level level) {
-            this.level = level;
-            return this;
-        }
-
         /**
          * Adds a moshi instance to build on <b>top</b>.
          * <p>
          * <b>DISCLAIMER: </b> This will extract all custom adapter factories declared in the provided instance
-         * and create a builder to which internal declared factories will be added. Keep in mind that for {@link
+         * and create a builder to which internal declared factories will be added. Keep in mind that for {@linkplain
          * Moshi} the order of custom factories maters and the resulting object will favor factories from the
          * provided {@linkplain Moshi moshi}, which can brake expected behaviour. This means that by adding your own
          * {@link Moshi} you may override adapters declared internally by {@link XingApi}, but you should do that at
          * your own risk.
          * <p>
-         * <b>NOTE: </b> This method can be called only once, otherwise an exception will be thrown.
+         * <b>NOTE: </b>This method can be called only once, otherwise an exception will be thrown.
          *
          * @throws java.lang.IllegalStateException If the internal builder was already initialized.
          */
@@ -175,12 +169,6 @@ public final class XingApi {
             } else {
                 client = new OkHttpClient();
             }
-
-            // Set the Logging Interceptor
-            if (level == null) level = Level.NONE;
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(level);
-            client.interceptors().add(loggingInterceptor);
 
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {

@@ -42,19 +42,30 @@ public class XingApiTest {
     }
 
     @Test
+    public void throwsForNonFinalResourceClass() throws Exception {
+        try {
+            api.resource(IllegalTestResource1.class);
+        } catch (Exception ex) {
+            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
+                  .hasMessage("Resource class must be declared final.");
+        }
+    }
+
+    @Test
     public void throwsForNonStaticResourceClass() throws Exception {
         try {
-            api.resource(IllegalTestResource.class);
+            api.resource(IllegalTestResource2.class);
             fail("Should fail on non-static class.");
         } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class).hasMessage("Resource class must be static.");
+            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
+                  .hasMessage("Resource class must be declared static.");
         }
     }
 
     @Test
     public void throwsForMethodInnerResourceClass() throws Exception {
-        class InnerTestResource extends Resource {
-            protected InnerTestResource(XingApi api) {
+        final class InnerTestResource extends Resource {
+            InnerTestResource(XingApi api) {
                 super(api);
             }
         }
@@ -63,10 +74,23 @@ public class XingApiTest {
             api.resource(InnerTestResource.class);
             fail("Should fail on non-static class.");
         } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class).hasMessage("Resource class must be static.");
+            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
+                  .hasMessage("Resource class must be declared static.");
         }
     }
 
+    @Test
+    public void throwsForResourceClassOverridingConstructor() throws Exception {
+        try {
+            api.resource(LegalTestResourceOverridesConstructor.class);
+        } catch (Exception ex) {
+            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
+                  .hasMessage("Resource class malformed.")
+                  .hasCauseInstanceOf(NoSuchMethodException.class);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions") // Passes nulls intentionally.
     @Test
     public void builder() throws Exception {
         XingApi.Builder builder = new XingApi.Builder();
@@ -150,14 +174,28 @@ public class XingApiTest {
         }
     }
 
-    static class LegalTestResource extends Resource {
-        protected LegalTestResource(XingApi api) {
+    static final class LegalTestResource extends Resource {
+        LegalTestResource(XingApi api) {
             super(api);
         }
     }
 
-    class IllegalTestResource extends Resource {
-        protected IllegalTestResource(XingApi api) {
+    @SuppressWarnings("ConstantConditions") // Intentional.
+    static final class LegalTestResourceOverridesConstructor extends Resource {
+        LegalTestResourceOverridesConstructor() {
+            super(null);
+        }
+    }
+
+    static class IllegalTestResource1 extends Resource {
+        protected IllegalTestResource1(XingApi api) {
+            super(api);
+        }
+    }
+
+    @SuppressWarnings("InnerClassMayBeStatic") // Intentional.
+    final class IllegalTestResource2 extends Resource {
+        IllegalTestResource2(XingApi api) {
             super(api);
         }
     }
