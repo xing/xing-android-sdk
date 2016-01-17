@@ -214,6 +214,11 @@ public final class CallSpec<RT, ET> implements Cloneable {
         if (rawCall != null) rawCall.cancel();
     }
 
+    public CallSpec<RT, ET> queryParam(String name, Object value) {
+        builder.queryParam(name, value);
+        return this;
+    }
+
     public CallSpec<RT, ET> queryParam(String name, String value) {
         builder.queryParam(name, value);
         return this;
@@ -241,11 +246,6 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
     public CallSpec<RT, ET> formField(String name, List<String> values) {
         builder.formField(name, values);
-        return this;
-    }
-
-    public <U> CallSpec<RT, ET> body(Class<U> cls, U body) {
-        builder.body(cls, body);
         return this;
     }
 
@@ -277,6 +277,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
                 catchingBody.throwIfCaught();
                 throw e;
             } finally {
+                // FIXME I don't think we need to close the body twice.
                 closeQuietly(catchingBody);
             }
         }
@@ -295,22 +296,27 @@ public final class CallSpec<RT, ET> implements Cloneable {
             catchingBody.throwIfCaught();
             throw e;
         } finally {
+            // FIXME I don't think we need to close the body twice.
             closeQuietly(catchingBody);
         }
     }
 
     @Nullable
+    @SuppressWarnings("unchecked") // Type is declared on CallSpec creation. Type matching is the caller responsibility.
     private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
-        BufferedSource source = body.source();
+
         try {
-            // Don't consume the body, if the user expects a void.
-            if (Types.getRawType(type) == Void.class) return null;
+            // Don't parse the response body, if the caller doesn't expect a json.
+            Class<?> rawType = Types.getRawType(type);
+            if (rawType == Void.class) return null;
+            if (rawType == String.class) return (PT) body.string();
+
             JsonAdapter<PT> adapter = api.converter.adapter(type);
-            JsonReader reader = JsonReader.of(source);
+            JsonReader reader = JsonReader.of(body.source());
             return adapter.fromJson(reader);
         } finally {
-            closeQuietly(source);
+            closeQuietly(body);
         }
     }
 
@@ -347,7 +353,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
             resourcePathParams = parseResourcePathParams(resourcePath);
             apiEndpoint = api.apiEndpoint;
-            requestBuilder = new Request.Builder();
+            requestBuilder = new Request.Builder().header("Accept", "application/json");
 
             if (isFormEncoded) formEncodingBuilder = new FormEncodingBuilder();
         }
@@ -493,8 +499,6 @@ public final class CallSpec<RT, ET> implements Cloneable {
                     body = RequestBody.create(null, new byte[0]);
                 }
             }
-
-            //TODO (SerjLtt) set content type.
 
             return requestBuilder
                   .url(url)

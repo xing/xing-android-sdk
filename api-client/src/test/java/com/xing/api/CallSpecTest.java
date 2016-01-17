@@ -143,6 +143,27 @@ public class CallSpecTest {
     }
 
     @Test
+    public void builderSetsAcceptHeader() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class);
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.headers().values("Accept")).containsExactly("application/json");
+    }
+
+    @Test
+    public void builderAllowsCustomAcceptHeader() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .header("Accept", "some.value");
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.headers().values("Accept")).containsExactly("some.value");
+    }
+
+    @Test
     public void builderFailsOnMalformedParams() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.GET, "/{%sdf}/", false);
         try {
@@ -321,20 +342,13 @@ public class CallSpecTest {
     }
 
     @Test
-    public void builderAndSpecAllowJsonBody() throws Exception {
-        TestMsg expectedBody1 = new TestMsg("Hey!", 42);
-        CallSpec.Builder builder1 = builder(HttpMethod.PUT, "", false).responseAs(Object.class)
-              .body(TestMsg.class, expectedBody1);
+    public void builderAllowsJsonBody() throws Exception {
+        TestMsg expectedBody = new TestMsg("Hey!", 42);
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", false).responseAs(Object.class)
+              .body(TestMsg.class, expectedBody);
         // Build the CallSpec so that we can build the request.
-        builder1.build();
-        assertRequestHasBody(builder1.request(), expectedBody1, 24);
-
-        TestMsg expectedBody2 = new TestMsg("Fallout 4", 111);
-        CallSpec.Builder builder2 = builder(HttpMethod.PUT, "", false).responseAs(Object.class);
-        // Build the CallSpec so that we can build the request.
-        CallSpec spec = builder2.build();
-        spec.body(TestMsg.class, expectedBody2);
-        assertRequestHasBody(builder2.request(), expectedBody2, 30);
+        builder.build();
+        assertRequestHasBody(builder.request(), expectedBody, 24);
     }
 
     @Test
@@ -418,6 +432,30 @@ public class CallSpecTest {
 
         Response<TestMsg, Object> response = spec.execute();
         assertSuccessResponse(response, new TestMsg("success", 42));
+    }
+
+    @Test
+    public void specHandlesSuccessResponseAsVoid() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hello"));
+
+        CallSpec<Void, Object> spec = this.<Void, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(Void.class)
+              .build();
+
+        Response<Void, Object> response = spec.execute();
+        assertThat(response.body()).isNull();
+    }
+
+    @Test
+    public void specHandlesSuccessResponseAsString() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hello"));
+
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(String.class)
+              .build();
+
+        Response<String, Object> response = spec.execute();
+        assertThat(response.body()).isEqualTo("Hello");
     }
 
     @Test

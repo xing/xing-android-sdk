@@ -15,82 +15,66 @@ import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Test each resource method against a success server response. This test is a minimal safety major to ensure that each
+ * method works as expected. In case if the json response changes on the server side, this test WILL NOT reflect that.
+ *
  * @author cristian.monforte
  */
 @SuppressWarnings("ConstantConditions")
 public class JobsResourceTest extends ResourceTestCase<JobsResource> {
-
-    private String jobsJson;
-
     public JobsResourceTest() {
         super(JobsResource.class);
     }
 
     @Test
     public void getJobById() throws Exception {
-        String userId = "1";
-        jobsJson = file("jobs.json");
-        server.enqueue(new MockResponse().setBody(jobsJson));
+        server.enqueue(new MockResponse().setBody(file("jobs.json")));
 
-        Response<Job, HttpError> response = resource.getJobById(userId).execute();
-
+        Response<Job, HttpError> response = resource.getJobById("some_id").execute();
         assertThat(response.body().id()).isEqualTo("61723_4cae01");
         assertThat(response.body().contact().jobCompany().name()).isEqualTo("Mr. Recruiter");
     }
 
     @Test
     public void getJobsByCriteria() throws Exception {
-        String searchCriteria = "1";
-        jobsJson = file("listOfJobs.json");
-        server.enqueue(new MockResponse().setBody(jobsJson));
+        server.enqueue(new MockResponse().setBody(file("list_of_jobs.json")));
 
-        Response<List<PartialJob>, HttpError> response = resource.getJobsByCriteria(searchCriteria).execute();
-
+        Response<List<PartialJob>, HttpError> response = resource.getJobsByCriteria("some_criteria").execute();
         assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
         assertThat(response.body().get(0).contact().jobCompany().name()).isEqualTo("Rails Heroes");
     }
 
     @Test
-    public void getJobsRecomendations() throws Exception {
-        String userId = "1";
-        jobsJson = file("recommendedJobs.json");
-        server.enqueue(new MockResponse().setBody(jobsJson));
+    public void getJobsRecommendations() throws Exception {
+        server.enqueue(new MockResponse().setBody(file("recommended_jobs.json")));
 
-        Response<List<PartialJob>, HttpError> response = resource.getJobsRecomendationsForUser(userId).execute();
-
+        Response<List<PartialJob>, HttpError> response = resource.getJobsRecommendationsForUser("some_id").execute();
         assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
         assertThat(response.body().get(0).contact().jobCompany().name()).isEqualTo("Rails Heroes");
     }
 
     @Test
-    public void getJobsRecomendationsWithPagination() throws Exception {
-        String userId = "1";
-        jobsJson = file("recommendedJobs.json");
-        server.enqueue(new MockResponse().setBody(jobsJson));
-        server.enqueue(new MockResponse().setBody(jobsJson));
+    public void getJobsRecommendationsWithPagination() throws Exception {
+        server.enqueue(new MockResponse().setBody(file("recommended_jobs.json")));
+        server.enqueue(new MockResponse().setBody(file("recommended_jobs.json")));
 
-        CallSpec<List<PartialJob>, HttpError> jobsRecomendationsForUser = resource.getJobsRecomendationsForUser(userId);
-        jobsRecomendationsForUser.execute();
-        CallSpec<List<PartialJob>, HttpError> clonedJobsRecommendationsForUser = jobsRecomendationsForUser.clone();
-        Response<List<PartialJob>, HttpError> response =
-              clonedJobsRecommendationsForUser.queryParam("limit", "10").queryParam("offset", "1").execute();
+        CallSpec<List<PartialJob>, HttpError> spec = resource.getJobsRecommendationsForUser("some_id");
+        spec.execute();
+
+        CallSpec<List<PartialJob>, HttpError> clonedSpec = spec.clone();
+        Response<List<PartialJob>, HttpError> response = clonedSpec.queryParam("limit", 10)
+              .queryParam("offset", 1)
+              .execute();
 
         assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
     }
 
     @Test(expected = IllegalStateException.class)
-    public void getJobsRecomendations_reusingCallSpecShouldThrowException() throws Exception {
-        String userId = "1";
-        jobsJson = file("recommendedJobs.json");
-        server.enqueue(new MockResponse().setBody(jobsJson));
-        server.enqueue(new MockResponse().setBody(jobsJson));
+    public void getJobsRecommendationsReusingCallSpecShouldThrowException() throws Exception {
+        server.enqueue(new MockResponse().setBody(file("recommended_jobs.json")));
 
-        CallSpec<List<PartialJob>, HttpError> jobsRecomendationsForUser = resource.getJobsRecomendationsForUser(userId);
-        jobsRecomendationsForUser.execute();
-
-        Response<List<PartialJob>, HttpError> response =
-              jobsRecomendationsForUser.queryParam("limit", "10").queryParam("offset", "1").execute();
-
-        assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
+        CallSpec<List<PartialJob>, HttpError> spec = resource.getJobsRecommendationsForUser("some_id");
+        spec.execute();
+        spec.execute();
     }
 }
