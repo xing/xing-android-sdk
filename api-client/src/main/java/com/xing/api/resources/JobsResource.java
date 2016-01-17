@@ -27,17 +27,15 @@ import java.util.List;
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#jobs">'Jobs'</a> resource.
  * <p>
- * Provides methods which allow search for a {@linkplain Job } by id or search a list of {@linkplain Job} by criteria
- * or recommended to a user by id.
+ * Provides methods which allow search for a {@linkplain Job}'s by id or search for a list of {@linkplain Job job's} by
+ * criteria or recommended to a user by id.
  *
  * @author daniel.hartwich
  * @author cristian.monforte
  */
 public final class JobsResource extends Resource {
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
-    protected JobsResource(XingApi api) {
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
+    JobsResource(XingApi api) {
         super(api);
     }
 
@@ -80,7 +78,7 @@ public final class JobsResource extends Resource {
      * {@link #getJobById(String)}. You can also follow the links.self URL, that will also lead you to the full job
      * posting.
      */
-    public CallSpec<List<PartialJob>, HttpError> getJobsRecomendationsForUser(String userId) {
+    public CallSpec<List<PartialJob>, HttpError> getJobsRecommendationsForUser(String userId) {
         return Resource.<List<PartialJob>, HttpError>newGetSpec(api, "/v1/users/{user_id}/jobs/recommendations")
               .pathParam("user_id", userId)
               .responseAs(list(PartialJob.class, "job_recommendations", "items"))
