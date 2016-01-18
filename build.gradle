@@ -56,8 +56,8 @@ allprojects {
               supportRecyclerView     : 'com.android.support:recyclerview-v7:22.2.0',
 
               // Ok stack
-              okhttp                  : 'com.squareup.okhttp:okhttp:2.7.1',
-              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.1',
+              okhttp                  : 'com.squareup.okhttp:okhttp:2.7.2',
+              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.2',
               okio                    : 'com.squareup.okio:okio:1.6.0',
               moshi                   : 'com.squareup.moshi:moshi:1.1.0-20160111.083258-14',
 
