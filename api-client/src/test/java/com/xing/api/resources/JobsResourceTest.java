@@ -33,6 +33,7 @@ public class JobsResourceTest extends ResourceTestCase<JobsResource> {
         Response<Job, HttpError> response = resource.getJobById("some_id").execute();
         assertThat(response.body().id()).isEqualTo("61723_4cae01");
         assertThat(response.body().contact().jobCompany().name()).isEqualTo("Mr. Recruiter");
+        assertThat(response.body().contact().user().id()).isEqualTo("3456gt_35345");
     }
 
     @Test

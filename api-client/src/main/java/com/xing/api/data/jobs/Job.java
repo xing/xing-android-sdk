@@ -4,6 +4,7 @@ import com.squareup.moshi.Json;
 import com.xing.api.data.Location;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.CareerLevel;
+import com.xing.api.data.profile.XingUser;
 
 import java.io.Serializable;
 import java.util.List;
@@ -223,13 +224,12 @@ public class Job implements Serializable {
 
         @Json(name = "company")
         private final JobCompany jobCompany;
+        @Json(name = "user")
+        private final XingUser user;
 
-        public JobContact(JobCompany jobCompany) {
+        public JobContact(JobCompany jobCompany, XingUser user) {
             this.jobCompany = jobCompany;
-        }
-
-        public JobCompany jobCompany() {
-            return jobCompany;
+            this.user = user;
         }
 
         @Override
@@ -237,21 +237,32 @@ public class Job implements Serializable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            JobContact that = (JobContact) o;
-
-            return !(jobCompany != null ? !jobCompany.equals(that.jobCompany) : that.jobCompany != null);
+            JobContact other = (JobContact) o;
+            return (jobCompany != null ? jobCompany.equals(other.jobCompany) : other.jobCompany == null)
+                  && (user != null ? user.equals(other.user) : other.user == null);
         }
 
         @Override
         public int hashCode() {
-            return jobCompany != null ? jobCompany.hashCode() : 0;
+            int result = jobCompany != null ? jobCompany.hashCode() : 0;
+            result = 31 * result + (user != null ? user.hashCode() : 0);
+            return result;
         }
 
         @Override
         public String toString() {
             return "JobContact{"
                   + "jobCompany=" + jobCompany
+                  + ", user=" + user
                   + '}';
+        }
+
+        public JobCompany jobCompany() {
+            return jobCompany;
+        }
+
+        public XingUser user() {
+            return user;
         }
     }
 }
