@@ -59,7 +59,7 @@ allprojects {
               okhttp                  : 'com.squareup.okhttp:okhttp:2.7.2',
               okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.2',
               okio                    : 'com.squareup.okio:okio:1.6.0',
-              moshi                   : 'com.squareup.moshi:moshi:1.1.0-20160111.083258-14',
+              moshi                   : 'com.squareup.moshi:moshi:1.1.0',
 
               // Additional network libraries
               singpost                : 'oauth.signpost:signpost-core:1.2.1.2@jar',

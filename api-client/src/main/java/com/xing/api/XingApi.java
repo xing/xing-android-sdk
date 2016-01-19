@@ -21,7 +21,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
-import com.xing.api.internal.json.EnumJsonAdapter;
 import com.xing.api.internal.json.NullDoubleJsonAdapter;
 import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
@@ -185,7 +184,6 @@ public final class XingApi {
             moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
-            moshiBuilder.add(EnumJsonAdapter.FACTORY);
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());
         }
