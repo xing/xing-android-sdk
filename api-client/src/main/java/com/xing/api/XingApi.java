@@ -171,7 +171,8 @@ public final class XingApi {
 
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {
-                client.interceptors().add(oauth1Builder.build());
+                // This makes sure that signing is always first in line.
+                client.interceptors().add(0, oauth1Builder.build());
             }
 
             // Add the custom JSON Adapters to Moshi
