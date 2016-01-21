@@ -38,6 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -84,10 +85,19 @@ public class SafeCalendarJsonAdapterTest {
     }
 
     @Test
-    public void nullForEmptyOrUnknown() throws Exception {
-        assertNull(calendarAdapter().fromJson("\"null\""));
+    public void nullIfEmpty() throws Exception {
         assertNull(calendarAdapter().fromJson("\"\""));
-        assertNull(calendarAdapter().fromJson("\"2010-MAY-13\""));
+    }
+
+    @Test
+    public void throwsUnknown() throws Exception {
+        try {
+            calendarAdapter().fromJson("\"2010-MAY-13\"");
+            fail();
+        } catch (Throwable e) {
+            assertThat(e).isInstanceOf(AssertionError.class)
+                  .hasMessage("Unsupported date format! Expecting ISO 8601, but found: 2010-MAY-13");
+        }
     }
 
     @Test
@@ -187,7 +197,32 @@ public class SafeCalendarJsonAdapterTest {
         TimeZone preTestTimeZone = TimeZone.getDefault();
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
-        Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
+        try {
+            Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
+            assertNotNull(fromJson);
+
+            assertTrue(fromJson.isSet(Calendar.SECOND));
+            assertTrue(fromJson.isSet(Calendar.MINUTE));
+            assertTrue(fromJson.isSet(Calendar.HOUR));
+            assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+            assertTrue(fromJson.isSet(Calendar.MONTH));
+            assertTrue(fromJson.isSet(Calendar.YEAR));
+
+            assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
+            assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
+            assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(27);
+            assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(21);
+            assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(0);
+            assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(23);
+        } finally {
+            // Return pre test time zone.
+            TimeZone.setDefault(preTestTimeZone);
+        }
+    }
+
+    @Test
+    public void iso8601withMilliseconds() throws Exception {
+        Calendar fromJson = calendarAdapter().fromJson("\"2016-01-15T07:42:01.000Z\"");
         assertNotNull(fromJson);
 
         assertTrue(fromJson.isSet(Calendar.SECOND));
@@ -197,15 +232,12 @@ public class SafeCalendarJsonAdapterTest {
         assertTrue(fromJson.isSet(Calendar.MONTH));
         assertTrue(fromJson.isSet(Calendar.YEAR));
 
-        assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
-        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
-        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(27);
-        assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(21);
-        assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(0);
-        assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(23);
-
-        // Return pre test time zone.
-        TimeZone.setDefault(preTestTimeZone);
+        assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2016);
+        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.JANUARY);
+        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(15);
+        assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(7);
+        assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(42);
+        assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(1);
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})
