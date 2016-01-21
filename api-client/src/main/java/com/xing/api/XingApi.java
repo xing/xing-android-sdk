@@ -18,6 +18,7 @@ package com.xing.api;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+import com.xing.api.internal.GeoCodeJsonAdapter;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -185,6 +186,7 @@ public final class XingApi {
             moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
+            moshiBuilder.add(GeoCodeJsonAdapter.FACTORY);
 
             return new XingApi(client, apiEndpoint, moshiBuilder.build());
         }
