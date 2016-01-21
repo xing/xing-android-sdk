@@ -185,7 +185,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
         return rawStream().flatMap(new Func1<Response<RT, ET>, Observable<RT>>() {
             @Override
             public Observable<RT> call(Response<RT, ET> response) {
-                if (response.isSuccess()) return Observable.just(response.body());
+                if (response.isSuccessful()) return Observable.just(response.body());
                 return Observable.error(new HttpException(response));
             }
         });

@@ -721,7 +721,7 @@ public class CallSpecTest {
         BlockingObservable<Response<Object, HttpError>> blocking = spec.rawStream().toBlocking();
         Response<Object, HttpError> response = blocking.first();
 
-        assertThat(response.isSuccess()).isFalse();
+        assertThat(response.isSuccessful()).isFalse();
         assertNotNull(response.error());
         assertThat(response.error().message()).isEqualTo("Terrible Error.");
         assertThat(response.error().name()).isEqualTo("TEST_ERROR");
@@ -829,7 +829,7 @@ public class CallSpecTest {
     }
 
     private static void assertErrorResponse(Response<Object, TestMsg> response, TestMsg expected, int code) {
-        assertThat(response.isSuccess()).isFalse();
+        assertThat(response.isSuccessful()).isFalse();
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.body()).isNull();
 
@@ -858,7 +858,7 @@ public class CallSpecTest {
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.error()).isNull();
         assertThat(response.body()).isNull();
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isSuccessful()).isTrue();
 
         ResponseBody body = response.raw().body();
         assertThat(body).isNotNull();
