@@ -237,7 +237,7 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         server.enqueue(new MockResponse().setResponseCode(201));
         Response<Void, HttpError> response = resource.sendContactRequest("11187562").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).isNull();
     }
 

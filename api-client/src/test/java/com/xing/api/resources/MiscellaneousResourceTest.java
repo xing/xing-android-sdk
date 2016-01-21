@@ -45,7 +45,7 @@ public class MiscellaneousResourceTest extends ResourceTestCase<MiscellaneousRes
 
         Response<Map<Language, List<Industry>>, HttpError> response = resource.getTranslatedIndustries(null).execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isSuccessful()).isTrue();
         // Randomly check the body.
         List<Industry> industries = response.body().get(Language.EN);
         assertThat(industries.size()).isEqualTo(23);

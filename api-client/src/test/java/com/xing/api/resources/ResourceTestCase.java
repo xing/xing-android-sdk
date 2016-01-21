@@ -74,7 +74,7 @@ public class ResourceTestCase<T extends Resource> {
     protected void testVoidSpec(CallSpec<Void, HttpError> spec) throws Exception {
         server.enqueue(new MockResponse().setResponseCode(204));
         Response<Void, HttpError> response = spec.execute();
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).isNull();
     }
 }

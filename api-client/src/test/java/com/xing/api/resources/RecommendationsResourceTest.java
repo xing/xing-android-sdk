@@ -62,7 +62,7 @@ public final class RecommendationsResourceTest extends ResourceTestCase<Recommen
 
         Response<List<XingUser>, HttpError> response = resource.getOwnRecommendations().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).containsExactly(
               new XingUser()
                     .id("123123_abcdef")

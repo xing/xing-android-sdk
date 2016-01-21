@@ -66,17 +66,17 @@ public final class Response<RT, ET> {
     }
 
     /** {@code true} if {@link #code()} is in the range [200..300]. */
-    public boolean isSuccess() {
+    public boolean isSuccessful() {
         return rawResponse.isSuccessful();
     }
 
-    /** The de-serialized response body of a {@linkplain #isSuccess() successful} response. */
+    /** The de-serialized response body of a {@linkplain #isSuccessful() successful} response. */
     @Nullable
     public RT body() {
         return body;
     }
 
-    /** The parsed error response of an {@linkplain #isSuccess() unsuccessful} response. */
+    /** The parsed error response of an {@linkplain #isSuccessful() unsuccessful} response. */
     @Nullable
     public ET error() {
         return error;
