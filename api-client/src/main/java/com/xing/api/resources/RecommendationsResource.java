@@ -15,17 +15,39 @@
  */
 package com.xing.api.resources;
 
+import com.xing.api.CallSpec;
+import com.xing.api.HttpError;
 import com.xing.api.Resource;
 import com.xing.api.XingApi;
+import com.xing.api.data.profile.XingUser;
+
+import java.util.List;
 
 /**
+ * Represents the <a href="https://dev.xing.com/docs/resources#recommendations">'Recommendations'</a> resource.
+ * <p>
+ * Allows access to the specified user's contacts recommendations.
+ *
  * @author daniel.hartwich
  */
-public class RecommendationsResource extends Resource {
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
-    protected RecommendationsResource(XingApi api) {
+public final class RecommendationsResource extends Resource {
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
+    RecommendationsResource(XingApi api) {
         super(api);
+    }
+
+    // TODO docs.
+    public CallSpec<List<XingUser>, HttpError> getOwnRecommendations() {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/me/network/recommendations")
+              .responseAs(list(single(XingUser.class, "user"), "user_recommendations", "recommendations"))
+              .build();
+    }
+
+    // TODO docs.
+    public CallSpec<Void, HttpError> blockRecommendation(String userId) {
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/network/recommendations/user/{id}")
+              .pathParam("id", userId)
+              .responseAs(Void.class)
+              .build();
     }
 }
