@@ -1,9 +1,5 @@
 package com.xing.api.internal.json;
 
-/**
- * @author cristian.monforte
- */
-
 import com.squareup.moshi.JsonQualifier;
 
 import java.lang.annotation.Documented;

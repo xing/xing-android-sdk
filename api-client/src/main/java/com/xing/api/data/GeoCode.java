@@ -1,25 +1,21 @@
 package com.xing.api.data;
 
-import com.squareup.moshi.Json;
-import com.xing.api.internal.json.NullDouble;
-import com.xing.api.internal.json.NullInt;
-
 import java.io.Serializable;
 
 /**
+ * Represents the geo code object returned with several response objects.
+ * <p>
+ * When parsed from the api response, the internal converter will <strong>not</strong> return a malformed geo code.
+ * Instead {@code null} will returned. Minimum validation rule is non {@code null} <strong>longitude</strong> and
+ * <strong>latitude</strong> values.
+ *
  * @author cristian.monforte
  */
 public class GeoCode implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Json(name = "accuracy")
-    @NullInt
     private final int accuracy;
-    @Json(name = "latitude")
-    @NullDouble
     private final double latitude;
-    @Json(name = "longitude")
-    @NullDouble
     private final double longitude;
 
     public GeoCode(int accuracy, double latitude, double longitude) {
@@ -28,14 +24,17 @@ public class GeoCode implements Serializable {
         this.longitude = longitude;
     }
 
+    /** Returns the geo codes accuracy. */
     public int accuracy() {
         return accuracy;
     }
 
+    /** Returns the coordinate latitude. */
     public double latitude() {
         return latitude;
     }
 
+    /** Returns the coordinate longitude. */
     public double longitude() {
         return longitude;
     }
@@ -46,10 +45,9 @@ public class GeoCode implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         GeoCode geoCode = (GeoCode) o;
-
-        if (accuracy != geoCode.accuracy) return false;
-        if (Double.compare(geoCode.latitude, latitude) != 0) return false;
-        return Double.compare(geoCode.longitude, longitude) == 0;
+        return accuracy == geoCode.accuracy
+              && Double.compare(geoCode.latitude, latitude) == 0
+              && Double.compare(geoCode.longitude, longitude) == 0;
     }
 
     @Override
