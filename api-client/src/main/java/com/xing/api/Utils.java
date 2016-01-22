@@ -17,8 +17,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.Nullable;
-
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -62,7 +60,7 @@ final class Utils {
     }
 
     /** Returns a {@link RuntimeException} with a formatted error message. */
-    static RuntimeException assertionError(@Nullable Throwable cause, String message, Object... args) {
+    static RuntimeException assertionError(Throwable cause, String message, Object... args) {
         message = String.format(message, args);
         IllegalArgumentException error = new IllegalArgumentException(message);
         error.initCause(cause);
@@ -75,7 +73,7 @@ final class Utils {
     }
 
     /** Returns a state {@link RuntimeException} with a formatted error message. */
-    static RuntimeException stateError(@Nullable Throwable cause, String message, Object... args) {
+    static RuntimeException stateError(Throwable cause, String message, Object... args) {
         message = String.format(message, args);
         IllegalStateException error = new IllegalStateException(message);
         error.initCause(cause);

@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.Nullable;
-
 /**
  * Utility class that converts literal text into a format safe for inclusion in a url form context.
  *
@@ -154,7 +152,6 @@ final class UrlEscapeUtils {
 
     /** Escapes the given Unicode code point in UTF-8. */
     @SuppressWarnings("MagicNumber")
-    @Nullable
     static char[] escape(int cp) {
         // We should never get negative values here but if we do it will throw an
         // IndexOutOfBoundsException, so at least it will get spotted.

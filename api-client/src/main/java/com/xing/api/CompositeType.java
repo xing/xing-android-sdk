@@ -15,8 +15,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.Nullable;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -70,7 +68,7 @@ final class CompositeType implements ParameterizedType {
     final String[] roots;
     final Structure structure;
 
-    CompositeType(@Nullable Type ownerType, Type searchFor, Structure structure, String... roots) {
+    CompositeType(Type ownerType, Type searchFor, Structure structure, String... roots) {
         this.ownerType = ownerType;
         this.searchFor = searchFor;
         this.structure = structure;
@@ -82,7 +80,6 @@ final class CompositeType implements ParameterizedType {
         return new Type[]{toFind()};
     }
 
-    @Nullable
     @Override
     public Type getOwnerType() {
         return ownerType;
@@ -161,7 +158,6 @@ final class CompositeType implements ParameterizedType {
             return typeArguments;
         }
 
-        @Nullable
         @Override
         public Type getOwnerType() {
             return null;

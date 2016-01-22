@@ -1,7 +1,5 @@
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
@@ -45,7 +43,7 @@ public class NullDoubleJsonAdapterTest {
         WITH_NO_NI_ANNOTATION2.add(new Annotation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return Nullable.class;
+                return Deprecated.class;
             }
         });
     }
@@ -91,7 +89,6 @@ public class NullDoubleJsonAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private <T> JsonAdapter<T> nullDoubleAdapter(Type type,
           Set<? extends Annotation> annotations) {
         return (JsonAdapter<T>) NullDoubleJsonAdapter.FACTORY.create(type, annotations, moshi);

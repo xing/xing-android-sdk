@@ -15,8 +15,6 @@
  */
 package com.xing.api.data.profile;
 
-import android.support.annotation.NonNull;
-
 import com.squareup.moshi.Json;
 
 /**
@@ -26,18 +24,7 @@ import com.squareup.moshi.Json;
  */
 public enum Gender {
     @Json(name = "m")
-    MALE("m"),
+    MALE,
     @Json(name = "f")
-    FEMALE("f");
-
-    private final String value;
-
-    Gender(@NonNull String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
+    FEMALE
 }

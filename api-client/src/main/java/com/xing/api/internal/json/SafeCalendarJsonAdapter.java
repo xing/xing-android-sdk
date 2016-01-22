@@ -15,10 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -38,6 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +44,6 @@ import java.util.Set;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-@SuppressLint("SimpleDateFormat")
 public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapter<T> {
     private static final String REG_EX_YEAR = "^(19|20)\\d{2}";
     private static final String REG_EX_YEAR_MONTH = "^(19|20)\\d{2}-\\d{2}$";
@@ -67,16 +63,15 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final Map<String, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
 
     static {
-        DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new SimpleDateFormat(ISO_DATE_FORMAT_Z));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new SimpleDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
     }
 
     public static final Factory FACTORY = new Factory() {
-        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
@@ -92,7 +87,6 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     SafeCalendarJsonAdapter() {
     }
 
-    @Nullable
     @Override
     public T fromJson(JsonReader reader) throws IOException {
         String dateStr = reader.nextString();
@@ -193,7 +187,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
      *
      * @return True if has all the fields set, false otherwise.
      */
-    private static boolean isFilledToTime(@NonNull Calendar calendar) {
+    private static boolean isFilledToTime(Calendar calendar) {
         return calendar.isSet(Calendar.HOUR_OF_DAY)
               && calendar.isSet(Calendar.MINUTE)
               && calendar.isSet(Calendar.SECOND);

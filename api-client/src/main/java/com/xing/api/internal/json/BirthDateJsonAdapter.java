@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonReader.Token;
@@ -34,7 +32,6 @@ import java.util.Set;
 /** Adapter that parses a birthday object into a {@link SafeCalendar}. */
 public final class BirthDateJsonAdapter extends JsonAdapter<SafeCalendar> {
     public static final JsonAdapter.Factory FACTORY = new Factory() {
-        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (annotations.isEmpty() || annotations.size() != 1

@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
@@ -64,7 +62,7 @@ public class BirthDateJsonAdapterTest {
         WITH_NO_BD_ANNOTATION2.add(new Annotation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return Nullable.class;
+                return Deprecated.class;
             }
         });
     }
@@ -151,13 +149,11 @@ public class BirthDateJsonAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private JsonAdapter<SafeCalendar> validBirthdayAdapter() {
         return birthdayAdapter(SafeCalendar.class, WITH_BD_ANNOTATION);
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private <T> JsonAdapter<T> birthdayAdapter(Type type,
           Set<? extends Annotation> annotations) {
         return (JsonAdapter<T>) BirthDateJsonAdapter.FACTORY.create(type, annotations, moshi);

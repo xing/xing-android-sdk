@@ -18,7 +18,7 @@ package com.xing.api;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
-import com.xing.api.internal.GeoCodeJsonAdapter;
+import com.xing.api.internal.json.GeoCodeJsonAdapter;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;

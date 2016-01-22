@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.data.profile.Phone;
@@ -81,7 +79,6 @@ public class PhoneJsonAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private JsonAdapter<Phone> phoneAdapter() {
         return (JsonAdapter<Phone>) PhoneJsonAdapter.FACTORY.create(
               Phone.class, Collections.<Annotation>emptySet(), moshi).lenient();

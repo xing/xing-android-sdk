@@ -29,15 +29,10 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-
-        // TODO Remove this for release.
-        maven { // Sonatype snapshot repo.
-            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
     }
 
     project.ext {
-        /** Contains global constants shared with all modules */
+        /** Contains global constants shared with all modules. */
         versions = [
               COMPILE_SDK_VERSION: 22,
               BUILD_TOOLS_VERSION: '22.0.1',
@@ -45,7 +40,7 @@ allprojects {
               TARGET_SDK_VERSION : 22
         ]
 
-        /** Used dependencies */
+        /** Used dependencies. */
         libraries = [
               // Android
               supportAnnotations      : 'com.android.support:support-annotations:23.1.0',
@@ -73,7 +68,7 @@ allprojects {
               assertj                 : 'org.assertj:assertj-core:1.7.0',
               mockito                 : 'org.mockito:mockito-all:1.10.19',
               robolectric             : 'org.robolectric:robolectric:3.0',
-              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.7.1',
+              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.7.2',
               commonsIo               : 'commons-io:commons-io:2.4',
               apacheCommons3          : 'org.apache.commons:commons-lang3:3.4'
         ]
@@ -91,7 +86,7 @@ subprojects { project ->
     task checkstyle(type: Checkstyle) {
         group 'verification'
         configFile rootProject.file('checkstyle.xml')
-        source 'src/main/java'
+        source = ['src/main/java', 'src/test/java']
 
         ignoreFailures false
         showViolations true
