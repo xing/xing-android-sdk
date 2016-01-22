@@ -63,7 +63,7 @@ public class JsonSerializationTest {
 
     @Test
     public void user() throws Exception {
-        JsonAdapter<XingUser> adapter = api.converter.adapter(XingUser.class);
+        JsonAdapter<XingUser> adapter = api.converter().adapter(XingUser.class);
         String json = file("user.json");
 
         // Test that the user object reflects the json.

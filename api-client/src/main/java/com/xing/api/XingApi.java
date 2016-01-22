@@ -44,9 +44,9 @@ public final class XingApi {
     @SuppressWarnings("CollectionWithoutInitialCapacity")
     private final Map<Class<? extends Resource>, Resource> resourcesCache = new LinkedHashMap<>();
 
-    final OkHttpClient client;
-    final HttpUrl apiEndpoint;
-    final Moshi converter;
+    private final OkHttpClient client;
+    private final HttpUrl apiEndpoint;
+    private final Moshi converter;
 
     XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter) {
         this.client = client;
@@ -70,6 +70,23 @@ public final class XingApi {
             }
         }
         return (T) res;
+    }
+
+    /** Returns the api endpoint for <strong>this</strong> client instance. */
+    public HttpUrl apiEndpoint() {
+        return apiEndpoint;
+    }
+
+    /**
+     * Returns the json converter ({@linkplain Moshi} instance) associated with <strong>this</strong> client
+     * instance.
+     */
+    public Moshi converter() {
+        return converter;
+    }
+
+    OkHttpClient client() {
+        return client;
     }
 
     /** Throws an exception if class was declared non-static or non-final. */

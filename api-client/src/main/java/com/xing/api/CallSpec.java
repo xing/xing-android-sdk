@@ -251,7 +251,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
-        return api.client.newCall(builder.request());
+        return api.client().newCall(builder.request());
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
@@ -312,7 +312,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             if (rawType == Void.class) return null;
             if (rawType == String.class) return (PT) body.string();
 
-            JsonAdapter<PT> adapter = api.converter.adapter(type);
+            JsonAdapter<PT> adapter = api.converter().adapter(type);
             JsonReader reader = JsonReader.of(body.source());
             return adapter.fromJson(reader);
         } finally {
@@ -352,7 +352,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             this.resourcePath = checkNotNull(resourcePath, "resourcePath == null");
 
             resourcePathParams = parseResourcePathParams(resourcePath);
-            apiEndpoint = api.apiEndpoint;
+            apiEndpoint = api.apiEndpoint();
             requestBuilder = new Request.Builder().header("Accept", "application/json");
 
             if (isFormEncoded) formEncodingBuilder = new FormEncodingBuilder();
@@ -441,7 +441,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
         //TODO Avoid converting response body on main thread?
         public <U> Builder<RT, ET> body(Type type, U body) {
             Buffer buffer = new Buffer();
-            JsonAdapter<U> jsonAdapter = api.converter.adapter(type);
+            JsonAdapter<U> jsonAdapter = api.converter().adapter(type);
             try {
                 jsonAdapter.toJson(buffer, body);
             } catch (IOException ignored) {
