@@ -15,8 +15,6 @@
  */
 package com.xing.api;
 
-import android.annotation.SuppressLint;
-
 import java.io.InputStream;
 
 import okio.BufferedSource;
@@ -24,7 +22,6 @@ import okio.Okio;
 
 /** Test scoped helper methods. */
 public final class TestUtils {
-    @SuppressLint("NewApi")
     public static String file(String file) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try (InputStream is = classLoader.getResourceAsStream(file)) {

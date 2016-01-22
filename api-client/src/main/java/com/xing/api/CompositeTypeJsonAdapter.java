@@ -15,9 +15,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -38,7 +35,6 @@ import java.util.Set;
  */
 final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     static final JsonAdapter.Factory FACTORY = new Factory() {
-        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
@@ -58,7 +54,6 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
         structure = type.structure();
     }
 
-    @Nullable
     @Override
     public T fromJson(JsonReader reader) throws IOException {
         Object result = readRootLeafs(adapter, reader, roots, 0);
@@ -88,8 +83,7 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
     }
 
     /** Recursively goes through the JSON and finds the given root. Returns the object(s) found in provided roots. */
-    @Nullable
-    private static <T> T readRootLeafs(JsonAdapter<T> adapter, @NonNull JsonReader reader, String[] roots, int index)
+    private static <T> T readRootLeafs(JsonAdapter<T> adapter, JsonReader reader, String[] roots, int index)
           throws IOException {
         if (roots == null || index == roots.length) {
             //noinspection unchecked This puts full responsibility on the caller.
@@ -123,7 +117,7 @@ final class CompositeTypeJsonAdapter<T> extends JsonAdapter<T> {
      * Recursively writes the respective roots forming a json object that resembles the {@code roots} and {@code
      * structure} of the {@linkplain CompositeType}.
      */
-    private static <T> void writeRootLeafs(JsonAdapter<T> adapter, @NonNull JsonWriter writer, T value,
+    private static <T> void writeRootLeafs(JsonAdapter<T> adapter, JsonWriter writer, T value,
           String[] roots, int index) throws IOException {
         if (roots == null || index == roots.length) {
             adapter.toJson(writer, value);

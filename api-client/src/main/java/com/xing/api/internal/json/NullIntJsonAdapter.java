@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
@@ -31,7 +29,6 @@ import java.util.Set;
 /** Adapter for integer values annotated with {@linkplain NullInt}. */
 public final class NullIntJsonAdapter extends JsonAdapter<Integer> {
     public static final JsonAdapter.Factory FACTORY = new Factory() {
-        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (annotations.isEmpty() || annotations.size() != 1

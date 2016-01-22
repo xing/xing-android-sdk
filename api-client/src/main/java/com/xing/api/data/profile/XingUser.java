@@ -15,10 +15,6 @@
  */
 package com.xing.api.data.profile;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Patterns;
-
 import com.squareup.moshi.Json;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.internal.json.BirthDate;
@@ -297,10 +293,6 @@ public class XingUser implements Serializable {
     }
 
     public XingUser permalink(String permalink) {
-        // TODO Remove this? or replace with pure java solution.
-        if (!Patterns.WEB_URL.matcher(permalink).matches()) {
-            throw new IllegalArgumentException(permalink + " is not an url.");
-        }
         this.permalink = permalink;
         return this;
     }
@@ -328,10 +320,6 @@ public class XingUser implements Serializable {
     }
 
     public XingUser activeEmail(String activeEmail) {
-        // TODO same as above.
-        if (!Patterns.EMAIL_ADDRESS.matcher(activeEmail).matches()) {
-            throw new IllegalArgumentException(activeEmail + " is not a valid email");
-        }
         this.activeEmail = activeEmail;
         return this;
     }
@@ -573,7 +561,7 @@ public class XingUser implements Serializable {
         return this;
     }
 
-    public XingUser addMessagingAccount(@NonNull MessagingAccount account, String accountValue) {
+    public XingUser addMessagingAccount(MessagingAccount account, String accountValue) {
         if (messagingAccounts == null) messagingAccounts = new LinkedHashMap<>();
         messagingAccounts.put(account, accountValue);
         return this;
@@ -592,7 +580,6 @@ public class XingUser implements Serializable {
      * Returns the primary institution name. This method will try to return a primary {@link School} in case the
      * user is a student.
      */
-    @Nullable
     public String primaryInstitutionName() {
         String primaryInstitution = null;
 
@@ -617,7 +604,6 @@ public class XingUser implements Serializable {
      * Returns the user primary occupation. This method will also check the users education fields if the user is a
      * student.
      */
-    @Nullable
     public String primaryOccupationName() {
         String primaryOccupation = null;
 

@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonWriter;
 import com.squareup.moshi.Moshi;
@@ -68,7 +66,7 @@ public class CsvCollectionJsonAdapterTest {
         WITH_NO_CS_ANNOTATION2.add(new Annotation() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return Nullable.class;
+                return Deprecated.class;
             }
         });
     }
@@ -130,13 +128,11 @@ public class CsvCollectionJsonAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private <C extends Collection<String>> JsonAdapter<C> validCsAdapter(Type collectionType) {
         return this.<C, String>csAdapter(collectionType, String.class, WITH_CS_ANNOTATION);
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     private <C extends Collection<T>, T> JsonAdapter<C> csAdapter(Type collectionType, Type elementType,
           Set<? extends Annotation> annotations) {
         return (JsonAdapter<C>) CsvCollectionJsonAdapter.FACTORY.create(

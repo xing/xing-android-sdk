@@ -15,8 +15,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.NonNull;
-
 import com.squareup.moshi.JsonAdapter;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.Address;
@@ -252,7 +250,6 @@ public class JsonSerializationTest {
         assertThat(user.photoUrls()).isEqualTo(urls);
     }
 
-    @NonNull
     private static Company buildPrimaryCompany() {
         return new Company()
               .id("1_abcdef")

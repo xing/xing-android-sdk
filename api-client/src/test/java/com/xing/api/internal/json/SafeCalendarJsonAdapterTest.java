@@ -15,8 +15,6 @@
  */
 package com.xing.api.internal.json;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
@@ -42,11 +40,14 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 /**
+ * Test for {@linkplain SafeCalendarJsonAdapter}.
+ * <p>
  * Currently supporting the next formats:
  * <li>"yyyy"</li>
  * <li>"yyyy-MM"</li>
  * <li>"yyyy-MM-dd"</li>
- * <li>"yyyy-MM-dd'T'HH:mmZ"</li>
+ * <li>"yyyy-MM-dd'T'HH:mm.ssZ"</li>
+ * <li>"yyyy-MM-dd'T'HH:mm.ss.SSSZ"</li>
  * <p>
  *
  * @author serj.lotutovici
@@ -241,7 +242,6 @@ public class SafeCalendarJsonAdapterTest {
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})
-    @Nullable
     private <T extends Calendar> JsonAdapter<T> calendarAdapter() {
         return (JsonAdapter<T>) SafeCalendarJsonAdapter.FACTORY.create(
               SafeCalendar.class, Collections.<Annotation>emptySet(), moshi).lenient();

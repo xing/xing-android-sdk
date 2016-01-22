@@ -26,7 +26,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author daniel.hartwich
@@ -110,7 +111,7 @@ public class CompositeTypeJsonAdapterTest {
 
     @Test
     public void singleObjectsWithRootsNull() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, null);
+        Type type = compose(TestData.class, Structure.SINGLE, (String[]) null);
         TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -171,7 +172,7 @@ public class CompositeTypeJsonAdapterTest {
                   + "  \"content\": []\n"
                   + '}');
 
-            fail("Adapter should throw.");
+            fail();
         } catch (IOException ioe) {
             assertThat(ioe).hasMessage("Json does not match expected structure for roots [asdasdasd].");
         }
@@ -247,14 +248,14 @@ public class CompositeTypeJsonAdapterTest {
     @Test
     public void firstAsNullIfListEmpty() throws Exception {
         Type compositeType1 = compose(TestData.class, Structure.FIRST, "empty");
-        assertThat(fromJson(compositeType1, "{\n"
+        assertNull(fromJson(compositeType1, "{\n"
               + "  \"empty\": null\n"
-              + '}')).isNull();
+              + '}'));
 
         Type compositeType2 = compose(TestData.class, Structure.FIRST, "empty");
-        assertThat(fromJson(compositeType2, "{\n"
+        assertNull(fromJson(compositeType2, "{\n"
               + "  \"empty\": []\n"
-              + '}')).isNull();
+              + '}'));
     }
 
     @Test

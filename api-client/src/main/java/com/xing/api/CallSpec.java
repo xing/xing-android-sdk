@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
@@ -301,7 +299,6 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
     }
 
-    @Nullable
     @SuppressWarnings("unchecked") // Type is declared on CallSpec creation. Type matching is the caller responsibility.
     private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
         if (body == null) return null;
@@ -405,7 +402,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return this;
         }
 
-        public Builder<RT, ET> queryParam(String name, @Nullable Object value) {
+        public Builder<RT, ET> queryParam(String name, Object value) {
             if (resourcePath != null) buildUrlBuilder();
             urlBuilder.addEncodedQueryParameter(name, escape(String.valueOf(value)));
             return this;
@@ -419,7 +416,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             return queryParam(name, toCsv(values, true));
         }
 
-        public Builder<RT, ET> formField(String name, @Nullable Object value) {
+        public Builder<RT, ET> formField(String name, Object value) {
             stateNotNull(formEncodingBuilder, "form fields are not accepted by this request.");
             formEncodingBuilder.add(name, String.valueOf(value));
             return this;

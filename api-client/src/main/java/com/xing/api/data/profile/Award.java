@@ -15,8 +15,6 @@
  */
 package com.xing.api.data.profile;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.Json;
 import com.xing.api.data.SafeCalendar;
 
@@ -43,7 +41,7 @@ public class Award implements Serializable {
     @Json(name = "url")
     private final String url;
 
-    public Award(String name, SafeCalendar dateAwarded, @Nullable String url) {
+    public Award(String name, SafeCalendar dateAwarded, String url) {
         this.name = name;
         this.dateAwarded = dateAwarded;
         this.url = url;
@@ -89,13 +87,11 @@ public class Award implements Serializable {
     }
 
     /** Returns the year of award as a {@link String} if set, otherwise {@code null}. */
-    @Nullable
     public String yearOfAwardAsString() {
         return dateAwarded != null ? Integer.toString(dateAwarded.get(Calendar.YEAR)) : null;
     }
 
     /** Returns the url of the award if present. */
-    @Nullable
     public String url() {
         return url;
     }

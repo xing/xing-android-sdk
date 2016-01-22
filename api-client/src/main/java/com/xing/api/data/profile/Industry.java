@@ -15,8 +15,6 @@
  */
 package com.xing.api.data.profile;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.moshi.Json;
 
 import java.io.Serializable;
@@ -56,7 +54,7 @@ public class Industry implements Serializable {
     }
 
     /** Construct an industry with it's list of segments. */
-    public Industry(int id, String name, @Nullable List<Industry> segments) {
+    public Industry(int id, String name, List<Industry> segments) {
         this.id = id;
         this.name = name;
         this.segments = segments;
@@ -101,8 +99,7 @@ public class Industry implements Serializable {
         return name;
     }
 
-    /** Returns the industry segments (a list of sub-industries). */
-    @Nullable
+    /** Returns the industry segments (a list of sub-industries) or {@code null} if no segments for industry. */
     public List<Industry> segments() {
         return segments;
     }

@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.okhttp.Headers;
 
 import static com.xing.api.Utils.checkNotNull;
@@ -27,12 +25,12 @@ import static com.xing.api.Utils.checkNotNull;
  */
 public final class Response<RT, ET> {
     /** Returns a successful {@link Response} with a {@code null} error body. */
-    static <RT, ET> Response<RT, ET> success(@Nullable RT body, com.squareup.okhttp.Response rawResponse) {
+    static <RT, ET> Response<RT, ET> success(RT body, com.squareup.okhttp.Response rawResponse) {
         return new Response<>(rawResponse, body, null);
     }
 
     /** Returns a error {@link Response} with a {@code null} response body. */
-    static <RT, ET> Response<RT, ET> error(@Nullable ET error, com.squareup.okhttp.Response rawResponse) {
+    static <RT, ET> Response<RT, ET> error(ET error, com.squareup.okhttp.Response rawResponse) {
         return new Response<>(rawResponse, null, error);
     }
 
@@ -40,7 +38,7 @@ public final class Response<RT, ET> {
     private final RT body;
     private final ET error;
 
-    private Response(com.squareup.okhttp.Response rawResponse, @Nullable RT body, @Nullable ET error) {
+    private Response(com.squareup.okhttp.Response rawResponse, RT body, ET error) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
         this.body = body;
         this.error = error;
@@ -71,13 +69,11 @@ public final class Response<RT, ET> {
     }
 
     /** The de-serialized response body of a {@linkplain #isSuccessful() successful} response. */
-    @Nullable
     public RT body() {
         return body;
     }
 
     /** The parsed error response of an {@linkplain #isSuccessful() unsuccessful} response. */
-    @Nullable
     public ET error() {
         return error;
     }

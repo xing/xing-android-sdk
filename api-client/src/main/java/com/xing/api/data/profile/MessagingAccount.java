@@ -15,8 +15,6 @@
  */
 package com.xing.api.data.profile;
 
-import android.support.annotation.NonNull;
-
 import com.squareup.moshi.Json;
 
 /**
@@ -43,7 +41,7 @@ public enum MessagingAccount {
     /** The name value received from the json response. */
     private final String value;
 
-    MessagingAccount(@NonNull String value) {
+    MessagingAccount(String value) {
         this.value = value;
     }
 

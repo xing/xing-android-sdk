@@ -18,7 +18,6 @@ package com.xing.api.internal.json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.data.GeoCode;
-import com.xing.api.internal.GeoCodeJsonAdapter;
 
 import org.junit.Test;
 

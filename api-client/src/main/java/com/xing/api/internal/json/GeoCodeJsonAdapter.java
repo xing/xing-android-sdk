@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xing.api.internal;
-
-import android.support.annotation.Nullable;
+package com.xing.api.internal.json;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
@@ -36,7 +34,6 @@ import java.util.Set;
  */
 public final class GeoCodeJsonAdapter extends JsonAdapter<GeoCode> {
     public static final JsonAdapter.Factory FACTORY = new JsonAdapter.Factory() {
-        @Nullable
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (!annotations.isEmpty()) return null;
@@ -49,7 +46,6 @@ public final class GeoCodeJsonAdapter extends JsonAdapter<GeoCode> {
     GeoCodeJsonAdapter() {
     }
 
-    @Nullable
     @Override
     public GeoCode fromJson(JsonReader reader) throws IOException {
         // Using nulls to ensure the values where set.
