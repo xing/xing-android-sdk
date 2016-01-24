@@ -73,7 +73,6 @@ android {
 }
 
 dependencies {
-    compile project(':api-client')
     compile project(':api-client-android-oauth')
 
     compile libraries.okhttpLoggingInterceptor

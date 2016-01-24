@@ -17,23 +17,34 @@ package com.xing.api;
 
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.SocketPolicy;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+@SuppressWarnings("NullableProblems")
 public class XingApiTest {
-    private XingApi api;
-
-    @Before
-    public void setUp() {
-        api = new XingApi.Builder().loggedOut().build();
-    }
+    @Rule
+    public final MockWebServer server = new MockWebServer();
 
     @Test
     public void getRightResourceImpl() throws Exception {
+        XingApi api = buildDefaultApi();
         Resource resource = api.resource(LegalTestResource.class);
         assertThat(resource).isInstanceOf(LegalTestResource.class);
 
@@ -44,7 +55,7 @@ public class XingApiTest {
     @Test
     public void throwsForNonFinalResourceClass() throws Exception {
         try {
-            api.resource(IllegalTestResource1.class);
+            buildDefaultApi().resource(IllegalTestResource1.class);
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(IllegalArgumentException.class)
                   .hasMessage("Resource class must be declared final.");
@@ -54,7 +65,7 @@ public class XingApiTest {
     @Test
     public void throwsForNonStaticResourceClass() throws Exception {
         try {
-            api.resource(IllegalTestResource2.class);
+            buildDefaultApi().resource(IllegalTestResource2.class);
             fail("Should fail on non-static class.");
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(IllegalArgumentException.class)
@@ -71,7 +82,7 @@ public class XingApiTest {
         }
 
         try {
-            api.resource(InnerTestResource.class);
+            buildDefaultApi().resource(InnerTestResource.class);
             fail("Should fail on non-static class.");
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(IllegalArgumentException.class)
@@ -82,7 +93,7 @@ public class XingApiTest {
     @Test
     public void throwsForResourceClassOverridingConstructor() throws Exception {
         try {
-            api.resource(LegalTestResourceOverridesConstructor.class);
+            buildDefaultApi().resource(LegalTestResourceOverridesConstructor.class);
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(IllegalArgumentException.class)
                   .hasMessage("Resource class malformed.")
@@ -152,6 +163,13 @@ public class XingApiTest {
         }
 
         try {
+            builder.callbackExecutor(null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected).hasMessage("callbackExecutor == null");
+        }
+
+        try {
             builder.moshi(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
@@ -174,9 +192,121 @@ public class XingApiTest {
         }
     }
 
+    @Test
+    public void apiEndpointDefault() throws Exception {
+        XingApi api = buildDefaultApi();
+        assertThat(api.apiEndpoint().toString()).isEqualTo("https://api.xing.com/");
+    }
+
+    @Test
+    public void apiEndpointPropagated() throws Exception {
+        XingApi api1 = new XingApi.Builder()
+              .apiEndpoint(HttpUrl.parse("http://test.com/"))
+              .loggedOut()
+              .build();
+        assertThat(api1.apiEndpoint().toString()).isEqualTo("http://test.com/");
+
+        XingApi api2 = new XingApi.Builder()
+              .apiEndpoint("https://test2.com/")
+              .loggedOut()
+              .build();
+        assertThat(api2.apiEndpoint().toString()).isEqualTo("https://test2.com/");
+    }
+
+    @Test
+    public void callbackExecutorNoDefault() throws Exception {
+        XingApi api = buildDefaultApi();
+        assertThat(api.callbackExecutor()).isNull();
+    }
+
+    @Test
+    public void callbackExecutorPropagated() throws Exception {
+        Executor executor = mock(Executor.class);
+        XingApi api = new XingApi.Builder()
+              .loggedOut()
+              .callbackExecutor(executor)
+              .build();
+        assertThat(api.callbackExecutor()).isSameAs(executor);
+    }
+
+    @Test
+    public void callbackExecutorUsedForEnqueueResponse() throws Exception {
+        Executor executor = spy(new Executor() {
+            @Override public void execute(Runnable command) {
+                command.run();
+            }
+        });
+        XingApi api = new XingApi.Builder()
+              .apiEndpoint(server.url("/"))
+              .callbackExecutor(executor)
+              .loggedOut()
+              .build();
+
+        LegalTestResource resource = api.resource(LegalTestResource.class);
+        CallSpec<String, HttpError> spec = resource.simpleSpec();
+
+        server.enqueue(new MockResponse());
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        spec.enqueue(new Callback<String, HttpError>() {
+            @Override public void onResponse(Response response) {
+                latch.countDown();
+            }
+
+            @Override public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+
+        verify(executor).execute(any(Runnable.class));
+        verifyNoMoreInteractions(executor);
+    }
+
+    @Test
+    public void callbackExecutorUsedForEnqueueFailure() throws Exception {
+        Executor executor = spy(new Executor() {
+            @Override public void execute(Runnable command) {
+                command.run();
+            }
+        });
+        XingApi api = new XingApi.Builder()
+              .apiEndpoint(server.url("/"))
+              .callbackExecutor(executor)
+              .loggedOut()
+              .build();
+        LegalTestResource resource = api.resource(LegalTestResource.class);
+        CallSpec<String, HttpError> spec = resource.simpleSpec();
+
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        spec.enqueue(new Callback<String, HttpError>() {
+            @Override public void onResponse(Response response) {
+                throw new AssertionError();
+            }
+
+            @Override public void onFailure(Throwable t) {
+                latch.countDown();
+            }
+        });
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+
+        verify(executor).execute(any(Runnable.class));
+        verifyNoMoreInteractions(executor);
+    }
+
+    private static XingApi buildDefaultApi() {
+        return new XingApi.Builder().loggedOut().build();
+    }
+
     static final class LegalTestResource extends Resource {
         LegalTestResource(XingApi api) {
             super(api);
+        }
+
+        public CallSpec<String, HttpError> simpleSpec() {
+            return Resource.<String, HttpError>newGetSpec(api, "/").responseAs(String.class).build();
         }
     }
 

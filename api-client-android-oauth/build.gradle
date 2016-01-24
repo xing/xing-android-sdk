@@ -55,9 +55,11 @@ android {
 }
 
 dependencies {
-    provided libraries.supportAnnotations
+    compile(project(':api-client')) {
+        exclude group: 'com.google.android', module: 'android'
+    }
 
-    compile project(':api-client')
+    provided libraries.supportAnnotations
     compile libraries.singpost
 }
 /*
