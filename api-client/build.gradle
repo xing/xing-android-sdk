@@ -38,6 +38,7 @@ checkstyle {
 
 dependencies {
     provided libraries.rxjava
+    provided libraries.android
 
     compile libraries.okio
     compile libraries.okhttp

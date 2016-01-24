@@ -125,15 +125,14 @@ public final class CallSpec<RT, ET> implements Cloneable {
             callback.onFailure(t);
             return;
         }
-        if (canceled) {
-            rawCall.cancel();
-        }
+
+        if (canceled) rawCall.cancel();
         this.rawCall = rawCall;
 
         rawCall.enqueue(new com.squareup.okhttp.Callback() {
             private void callFailure(Throwable e) {
                 try {
-                    callback.onFailure(e);
+                    api.callbackAdapter().adapt(callback).onFailure(e);
                 } catch (Throwable t) {
                     // TODO add some logging
                 }
@@ -141,7 +140,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
             private void callSuccess(Response<RT, ET> response) {
                 try {
-                    callback.onResponse(response);
+                    api.callbackAdapter().adapt(callback).onResponse(response);
                 } catch (Throwable t) {
                     // TODO add some logging
                 }

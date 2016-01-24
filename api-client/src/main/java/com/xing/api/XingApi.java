@@ -18,10 +18,10 @@ package com.xing.api;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
-import com.xing.api.internal.json.GeoCodeJsonAdapter;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
+import com.xing.api.internal.json.GeoCodeJsonAdapter;
 import com.xing.api.internal.json.NullDoubleJsonAdapter;
 import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
@@ -31,6 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.stateNull;
@@ -47,11 +48,16 @@ public final class XingApi {
     private final OkHttpClient client;
     private final HttpUrl apiEndpoint;
     private final Moshi converter;
+    private final CallbackAdapter callbackAdapter;
+    private final Executor callbackExecutor;
 
-    XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter) {
+    XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter, CallbackAdapter callbackAdapter,
+          Executor callbackExecutor) {
         this.client = client;
         this.apiEndpoint = apiEndpoint;
         this.converter = converter;
+        this.callbackAdapter = callbackAdapter;
+        this.callbackExecutor = callbackExecutor;
     }
 
     /** Return a {@link Resource} instance specified by the provided class. */
@@ -85,6 +91,15 @@ public final class XingApi {
         return converter;
     }
 
+    /** Returns the executor throw which the callbacks will be invoked. */
+    public Executor callbackExecutor() {
+        return callbackExecutor;
+    }
+
+    CallbackAdapter callbackAdapter() {
+        return callbackAdapter;
+    }
+
     OkHttpClient client() {
         return client;
     }
@@ -107,6 +122,7 @@ public final class XingApi {
         private HttpUrl apiEndpoint;
         private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
+        private Executor callbackExecutor;
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
@@ -178,6 +194,12 @@ public final class XingApi {
             return this;
         }
 
+        /** Sets the executor which will determine the thread on which callback will be invoked. */
+        public Builder callbackExecutor(Executor callbackExecutor) {
+            this.callbackExecutor = checkNotNull(callbackExecutor, "callbackExecutor == null");
+            return this;
+        }
+
         public XingApi build() {
             // Setup the network client.
             OkHttpClient client;
@@ -205,7 +227,10 @@ public final class XingApi {
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
             moshiBuilder.add(GeoCodeJsonAdapter.FACTORY);
 
-            return new XingApi(client, apiEndpoint, moshiBuilder.build());
+            // Select adapter by platform.
+            CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);
+
+            return new XingApi(client, apiEndpoint, moshiBuilder.build(), adapter, callbackExecutor);
         }
     }
 }
