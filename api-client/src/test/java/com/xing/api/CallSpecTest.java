@@ -498,6 +498,22 @@ public class CallSpecTest {
     }
 
     @Test
+    public void specThrowsIfUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.execute();
+            fail("Spec should throw on auth error.");
+        } catch (IOException e) {
+            assertThat(e).hasMessage("401 Unauthorized");
+        }
+    }
+
+    @Test
     public void specHandlesSuccessResponseAsync() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
               + "  \"msg\": \"success\",\n"
@@ -635,6 +651,35 @@ public class CallSpecTest {
         assertThat(t.getMessage()).contains("malformed JSON");
     }
 
+    @SuppressWarnings("unchecked") // We don't care about type safety at this point.
+    @Test
+    public void specThrowsIfUnauthorizedAsync() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        final AtomicReference<Throwable> responseRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        spec.enqueue(new Callback() {
+            @Override
+            public void onResponse(Response response) {
+                fail("unexpected #onResponse() call");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                responseRef.set(t);
+                latch.countDown();
+            }
+        });
+
+        latch.await(2, TimeUnit.SECONDS);
+        Throwable t = responseRef.get();
+        assertThat(t).isInstanceOf(IOException.class).hasMessage("401 Unauthorized");
+    }
+
     @Test
     public void exceptionCatchingBodyThrows() throws Exception {
         ResponseBody throwingBody = new ResponseBody() {
@@ -741,8 +786,27 @@ public class CallSpecTest {
         try {
             blocking.first();
             fail("This should throw an error.");
-        } catch (RuntimeException t) {
+        } catch (Throwable t) {
             assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specRawStreamErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Response<Object, Object>> blocking = spec.rawStream().toBlocking();
+        try {
+            blocking.first();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause())
+                  .isInstanceOf(IOException.class)
+                  .hasMessage("401 Unauthorized");
         }
     }
 
@@ -813,6 +877,25 @@ public class CallSpecTest {
             fail("Observable should throw.");
         } catch (Throwable t) {
             assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specStreamErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingObservable<Object> blocking = spec.stream().toBlocking();
+        try {
+            blocking.first();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause())
+                  .isInstanceOf(IOException.class)
+                  .hasMessage("401 Unauthorized");
         }
     }
 

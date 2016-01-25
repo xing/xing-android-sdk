@@ -23,10 +23,18 @@ interface CallbackAdapter {
     /** Adapts the passed callback. */
     <RT, ET> Callback<RT, ET> adapt(Callback<RT, ET> callback);
 
+    /** Adapts the passed auth callback. */
+    AuthErrorCallback adapt(AuthErrorCallback callback);
+
     /** Default callback adapter. DOESN'T alter the passed callbacks. */
     final class Default implements CallbackAdapter {
         @Override
         public <RT, ET> Callback<RT, ET> adapt(Callback<RT, ET> callback) {
+            return callback;
+        }
+
+        @Override
+        public AuthErrorCallback adapt(AuthErrorCallback callback) {
             return callback;
         }
     }

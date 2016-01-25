@@ -511,7 +511,7 @@ public class XingUser implements Serializable {
         return this;
     }
 
-    public XingUser addTpWebProfile(WebProfile webProfile, String accountName) {
+    public XingUser addToWebProfile(WebProfile webProfile, String accountName) {
         if (webProfiles == null) webProfiles = new LinkedHashMap<>();
         if (!webProfiles.containsKey(webProfile)) webProfiles.put(webProfile, new LinkedHashSet<String>());
         webProfiles.get(webProfile).add(accountName);

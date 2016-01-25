@@ -50,6 +50,7 @@ import rx.subscriptions.Subscriptions;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
+import static com.xing.api.Utils.buffer;
 import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.closeQuietly;
 import static com.xing.api.Utils.stateError;
@@ -265,6 +266,14 @@ public final class CallSpec<RT, ET> implements Cloneable {
         int code = rawResponse.code();
         if (code < 200 || code >= 300) {
             try {
+
+                // Bypass the body parsing, and return the raw data.
+                if (code == 401) {
+                    ResponseBody bufferedBody = buffer(catchingBody);
+                    api.notifyAuthError(Response.error(bufferedBody, rawResponse));
+                    throw new IOException("401 Unauthorized");
+                }
+
                 // Buffer the entire body to avoid future I/O.
                 ET errorBody = parseBody(errorType, catchingBody);
                 return Response.error(errorBody, rawResponse);

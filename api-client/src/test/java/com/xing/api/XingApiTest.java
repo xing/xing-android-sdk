@@ -17,6 +17,7 @@ package com.xing.api;
 
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.ResponseBody;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.SocketPolicy;
@@ -24,9 +25,11 @@ import com.squareup.okhttp.mockwebserver.SocketPolicy;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -34,6 +37,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -232,7 +236,8 @@ public class XingApiTest {
     @Test
     public void callbackExecutorUsedForEnqueueResponse() throws Exception {
         Executor executor = spy(new Executor() {
-            @Override public void execute(Runnable command) {
+            @Override
+            public void execute(Runnable command) {
                 command.run();
             }
         });
@@ -249,11 +254,13 @@ public class XingApiTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
         spec.enqueue(new Callback<String, HttpError>() {
-            @Override public void onResponse(Response response) {
+            @Override
+            public void onResponse(Response response) {
                 latch.countDown();
             }
 
-            @Override public void onFailure(Throwable t) {
+            @Override
+            public void onFailure(Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -266,7 +273,8 @@ public class XingApiTest {
     @Test
     public void callbackExecutorUsedForEnqueueFailure() throws Exception {
         Executor executor = spy(new Executor() {
-            @Override public void execute(Runnable command) {
+            @Override
+            public void execute(Runnable command) {
                 command.run();
             }
         });
@@ -282,11 +290,13 @@ public class XingApiTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
         spec.enqueue(new Callback<String, HttpError>() {
-            @Override public void onResponse(Response response) {
+            @Override
+            public void onResponse(Response response) {
                 throw new AssertionError();
             }
 
-            @Override public void onFailure(Throwable t) {
+            @Override
+            public void onFailure(Throwable t) {
                 latch.countDown();
             }
         });
@@ -294,6 +304,96 @@ public class XingApiTest {
 
         verify(executor).execute(any(Runnable.class));
         verifyNoMoreInteractions(executor);
+    }
+
+    @Test
+    public void callbackExecutorUsedForAuthError() throws Exception {
+        Executor executor = spy(new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                command.run();
+            }
+        });
+        XingApi api = new XingApi.Builder()
+              .apiEndpoint(server.url("/"))
+              .callbackExecutor(executor)
+              .loggedOut()
+              .build();
+        LegalTestResource resource = api.resource(LegalTestResource.class);
+        CallSpec<String, HttpError> spec = resource.simpleSpec();
+
+        final AtomicReference<Response<?, ResponseBody>> ref = new AtomicReference<>();
+        api.addAuthErrorCallback(new AuthErrorCallback() {
+            @Override
+            public void onAuthError(Response<?, ResponseBody> errorResponse) {
+                ref.set(errorResponse);
+            }
+        });
+
+        server.enqueue(new MockResponse().setResponseCode(401).setBody("Ups"));
+        try {
+            spec.execute();
+            fail("Expecting auth error to be thrown.");
+        } catch (IOException e) {
+            assertThat(e).hasMessage("401 Unauthorized");
+        }
+
+        Response<?, ResponseBody> response = ref.get();
+        assertThat(response).isNotNull();
+        assertThat(response.body()).isNull();
+        assertThat(response.error().string()).isEqualTo("Ups");
+
+        verify(executor).execute(any(Runnable.class));
+        verifyNoMoreInteractions(executor);
+    }
+
+    @SuppressWarnings("unchecked") // We don't care about type safety at this point.
+    @Test
+    public void allowsMultipleErrorCallbacks() throws Exception {
+        XingApi api = new XingApi.Builder()
+              .apiEndpoint(server.url("/"))
+              .loggedOut()
+              .build();
+
+        LegalTestResource resource = api.resource(LegalTestResource.class);
+        CallSpec<String, HttpError> spec = resource.simpleSpec();
+
+        AuthErrorCallback callback1 = spy(new AuthErrorCallback() {
+            @Override
+            public void onAuthError(Response<?, ResponseBody> errorResponse) {
+            }
+        });
+        AuthErrorCallback callback2 = spy(new AuthErrorCallback() {
+            @Override
+            public void onAuthError(Response<?, ResponseBody> errorResponse) {
+            }
+        });
+
+        api.addAuthErrorCallback(callback1).addAuthErrorCallback(callback2);
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        try {
+            spec.execute();
+            fail("Expecting auth error to be thrown.");
+        } catch (IOException e) {
+            assertThat(e).hasMessage("401 Unauthorized");
+        }
+
+        api.removeAuthErrorCallback(callback2);
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        spec = spec.clone();
+        try {
+            spec.execute();
+            fail("Expecting auth error to be thrown.");
+        } catch (IOException e) {
+            assertThat(e).hasMessage("401 Unauthorized");
+        }
+
+        verify(callback1, times(2)).onAuthError(any(Response.class));
+        verifyNoMoreInteractions(callback1);
+        verify(callback2, times(1)).onAuthError(any(Response.class));
+        verifyNoMoreInteractions(callback2);
     }
 
     private static XingApi buildDefaultApi() {

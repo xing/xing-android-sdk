@@ -15,6 +15,8 @@
  */
 package com.xing.api;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.util.concurrent.Executor;
 
 /** Callback adapter that allows invoking callback methods on the set executor thread. */
@@ -44,6 +46,21 @@ final class ExecutorCallbackAdapter implements CallbackAdapter {
                     @Override
                     public void run() {
                         callback.onFailure(t);
+                    }
+                });
+            }
+        };
+    }
+
+    @Override
+    public AuthErrorCallback adapt(final AuthErrorCallback callback) {
+        return new AuthErrorCallback() {
+            @Override
+            public void onAuthError(final Response<?, ResponseBody> errorResponse) {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onAuthError(errorResponse);
                     }
                 });
             }
