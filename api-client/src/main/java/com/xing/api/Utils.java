@@ -17,8 +17,12 @@
  */
 package com.xing.api;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.io.Closeable;
 import java.io.IOException;
+
+import okio.Buffer;
 
 final class Utils {
     /**
@@ -52,6 +56,13 @@ final class Utils {
             closeable.close();
         } catch (IOException ignored) {
         }
+    }
+
+    /** Buffers the response body, allowing to close the original source. */
+    static ResponseBody buffer(ResponseBody body) throws IOException {
+        Buffer buffer = new Buffer();
+        body.source().readAll(buffer);
+        return ResponseBody.create(body.contentType(), body.contentLength(), buffer);
     }
 
     /** Returns a {@link RuntimeException} with a formatted error message. */

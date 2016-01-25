@@ -18,6 +18,7 @@ package com.xing.api;
 import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.ResponseBody;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -30,6 +31,8 @@ import com.xing.api.internal.json.SafeCalendarJsonAdapter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -44,6 +47,7 @@ import static com.xing.api.Utils.stateNull;
 public final class XingApi {
     @SuppressWarnings("CollectionWithoutInitialCapacity")
     private final Map<Class<? extends Resource>, Resource> resourcesCache = new LinkedHashMap<>();
+    private final List<AuthErrorCallback> authErrorCallbacks = new LinkedList<>();
 
     private final OkHttpClient client;
     private final HttpUrl apiEndpoint;
@@ -96,12 +100,31 @@ public final class XingApi {
         return callbackExecutor;
     }
 
+    /** Adds an auth error callback that will be invoked each time the server responses with an auth failure. */
+    public XingApi addAuthErrorCallback(AuthErrorCallback errorCallback) {
+        authErrorCallbacks.add(errorCallback);
+        return this;
+    }
+
+    /** Removes the callback from being notified when the server responds with an auth failure. */
+    public XingApi removeAuthErrorCallback(AuthErrorCallback errorCallback) {
+        authErrorCallbacks.remove(errorCallback);
+        return this;
+    }
+
     CallbackAdapter callbackAdapter() {
         return callbackAdapter;
     }
 
     OkHttpClient client() {
         return client;
+    }
+
+    /** Notify all callbacks that the server returned an auth error. */
+    void notifyAuthError(Response<?, ResponseBody> rawResponse) {
+        for (AuthErrorCallback callback : authErrorCallbacks) {
+            callbackAdapter.adapt(callback).onAuthError(rawResponse);
+        }
     }
 
     /** Throws an exception if class was declared non-static or non-final. */
