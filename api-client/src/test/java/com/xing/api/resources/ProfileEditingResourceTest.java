@@ -291,7 +291,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
 
         assertThat(request.getPath()).isEqualTo("/v1/users/me/web_profiles/stumble%20upon?"
               + "url=http%3A%2F%2Fwww.stumbleupon.com%2Flists%2F667513592373069968%2F"
-              + "%2C%20" // comma & space
+              + "%2C" // comma
               + "http%3A%2F%2Fwww.stumbleupon.com%2Finterest%2Fcats");
     }
 
