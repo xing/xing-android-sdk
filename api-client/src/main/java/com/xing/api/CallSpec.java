@@ -26,6 +26,7 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
+import com.xing.api.XingApi.Builder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -417,11 +418,11 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         public Builder<RT, ET> queryParam(String name, String... values) {
-            return queryParam(name, toCsv(values, true));
+            return queryParam(name, toCsv(values, false));
         }
 
         public Builder<RT, ET> queryParam(String name, List<String> values) {
-            return queryParam(name, toCsv(values, true));
+            return queryParam(name, toCsv(values, false));
         }
 
         public Builder<RT, ET> formField(String name, Object value) {

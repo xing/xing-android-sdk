@@ -237,7 +237,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2C%20testL&w=testL%2C%20testL");
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
     }
 
@@ -255,7 +255,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2C%20testL&w=testL%2C%20testL");
+        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
     }
 
