@@ -13,7 +13,7 @@
           "city": "Hamburg",
           "country": "DE",
           "street": "Zeiseweg 40",
-          "zipcode": "22765",
+          "zip_code": "22765",
           "region": "Hamburg"
         },
         "title": "Softwareentwickler Ruby on Rails",
@@ -52,7 +52,7 @@
           "city": "Hamburg",
           "country": "DE",
           "street": "Zeiseweg 40",
-          "zipcode": "22765",
+          "zip_code": "22765",
           "region": "Hamburg"
         },
         "title": "Softwareentwickler Ruby on Rails",

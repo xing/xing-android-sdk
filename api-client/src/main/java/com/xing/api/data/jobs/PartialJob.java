@@ -31,6 +31,49 @@ public class PartialJob implements Serializable {
     @Json(name = "contact")
     private JobContact contact;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PartialJob partialJob = (PartialJob) o;
+        return id != null ? id.equals(partialJob.id) : partialJob.id == null
+              && (location != null ? location.equals(partialJob.location) : partialJob.location == null
+              && (title != null ? title.equals(partialJob.title) : partialJob.title == null
+              && jobType == partialJob.jobType
+              && (company != null ? company.equals(partialJob.company) : partialJob.company == null
+              && (publishedAt != null ? publishedAt.equals(partialJob.publishedAt) : partialJob.publishedAt == null
+              && (links != null ? links.equals(partialJob.links) : partialJob.links == null
+              && (contact != null ? contact.equals(partialJob.contact) : partialJob.contact == null))))));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
+        result = 31 * result + (company != null ? company.hashCode() : 0);
+        result = 31 * result + (publishedAt != null ? publishedAt.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + (contact != null ? contact.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PartialJob{"
+              + "id='" + id + '\''
+              + ", location=" + location
+              + ", title='" + title + '\''
+              + ", jobType=" + jobType
+              + ", company=" + company
+              + ", publishedAt=" + publishedAt
+              + ", links=" + links
+              + ", contact=" + contact
+              + '}';
+    }
+
     public String id() {
         return id;
     }
@@ -101,49 +144,5 @@ public class PartialJob implements Serializable {
     public PartialJob contact(JobContact contact) {
         this.contact = contact;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PartialJob that = (PartialJob) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (jobType != that.jobType) return false;
-        if (company != null ? !company.equals(that.company) : that.company != null) return false;
-        if (publishedAt != null ? !publishedAt.equals(that.publishedAt) : that.publishedAt != null) return false;
-        if (links != null ? !links.equals(that.links) : that.links != null) return false;
-        return !(contact != null ? !contact.equals(that.contact) : that.contact != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
-        result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (publishedAt != null ? publishedAt.hashCode() : 0);
-        result = 31 * result + (links != null ? links.hashCode() : 0);
-        result = 31 * result + (contact != null ? contact.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PartialJob{"
-              + "id='" + id + '\''
-              + ", location=" + location
-              + ", title='" + title + '\''
-              + ", jobType=" + jobType
-              + ", company=" + company
-              + ", publishedAt=" + publishedAt
-              + ", links=" + links
-              + ", contact=" + contact
-              + '}';
     }
 }

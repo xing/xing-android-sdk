@@ -42,6 +42,65 @@ public class Job implements Serializable {
     @Json(name = "contact")
     private JobContact contact;
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Job job = (Job) o;
+        if (id != null ? !id.equals(job.id) : job.id != null) return false;
+        if (location != null ? !location.equals(job.location) : job.location != null) return false;
+        if (title != null ? !title.equals(job.title) : job.title != null) return false;
+        if (level != job.level) return false;
+        if (jobType != job.jobType) return false;
+        if (industry != null ? !industry.equals(job.industry) : job.industry != null) return false;
+        if (company != null ? !company.equals(job.company) : job.company != null) return false;
+        if (skills != null ? !skills.equals(job.skills) : job.skills != null) return false;
+        if (description != null ? !description.equals(job.description) : job.description != null) return false;
+        if (tags != null ? !tags.equals(job.tags) : job.tags != null) return false;
+        if (publishedAt != null ? !publishedAt.equals(job.publishedAt) : job.publishedAt != null) return false;
+        if (links != null ? !links.equals(job.links) : job.links != null) return false;
+        return !(contact != null ? !contact.equals(job.contact) : job.contact != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (level != null ? level.hashCode() : 0);
+        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
+        result = 31 * result + (industry != null ? industry.hashCode() : 0);
+        result = 31 * result + (company != null ? company.hashCode() : 0);
+        result = 31 * result + (skills != null ? skills.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (publishedAt != null ? publishedAt.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + (contact != null ? contact.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Job{"
+              + "id='" + id + '\''
+              + ", location=" + location
+              + ", title='" + title + '\''
+              + ", level=" + level
+              + ", jobType=" + jobType
+              + ", industry=" + industry
+              + ", company=" + company
+              + ", skills=" + skills
+              + ", description='" + description + '\''
+              + ", tags=" + tags
+              + ", publishedAt=" + publishedAt
+              + ", links=" + links
+              + ", contact=" + contact
+              + '}';
+    }
+
     public String id() {
         return id;
     }
@@ -157,66 +216,6 @@ public class Job implements Serializable {
     public Job contact(JobContact contact) {
         this.contact = contact;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Job job = (Job) o;
-
-        if (id != null ? !id.equals(job.id) : job.id != null) return false;
-        if (location != null ? !location.equals(job.location) : job.location != null) return false;
-        if (title != null ? !title.equals(job.title) : job.title != null) return false;
-        if (level != job.level) return false;
-        if (jobType != job.jobType) return false;
-        if (industry != null ? !industry.equals(job.industry) : job.industry != null) return false;
-        if (company != null ? !company.equals(job.company) : job.company != null) return false;
-        if (skills != null ? !skills.equals(job.skills) : job.skills != null) return false;
-        if (description != null ? !description.equals(job.description) : job.description != null) return false;
-        if (tags != null ? !tags.equals(job.tags) : job.tags != null) return false;
-        if (publishedAt != null ? !publishedAt.equals(job.publishedAt) : job.publishedAt != null) return false;
-        if (links != null ? !links.equals(job.links) : job.links != null) return false;
-        return !(contact != null ? !contact.equals(job.contact) : job.contact != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (level != null ? level.hashCode() : 0);
-        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
-        result = 31 * result + (industry != null ? industry.hashCode() : 0);
-        result = 31 * result + (company != null ? company.hashCode() : 0);
-        result = 31 * result + (skills != null ? skills.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 31 * result + (publishedAt != null ? publishedAt.hashCode() : 0);
-        result = 31 * result + (links != null ? links.hashCode() : 0);
-        result = 31 * result + (contact != null ? contact.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Job{"
-              + "id='" + id + '\''
-              + ", location=" + location
-              + ", title='" + title + '\''
-              + ", level=" + level
-              + ", jobType=" + jobType
-              + ", industry=" + industry
-              + ", company=" + company
-              + ", skills=" + skills
-              + ", description='" + description + '\''
-              + ", tags=" + tags
-              + ", publishedAt=" + publishedAt
-              + ", links=" + links
-              + ", contact=" + contact
-              + '}';
     }
 
     public static class JobContact implements Serializable {

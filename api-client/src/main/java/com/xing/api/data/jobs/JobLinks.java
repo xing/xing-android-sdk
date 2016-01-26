@@ -23,18 +23,6 @@ public class JobLinks implements Serializable {
         this.xing = xing;
     }
 
-    public String pdf() {
-        return pdf;
-    }
-
-    public String self() {
-        return self;
-    }
-
-    public String xing() {
-        return xing;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,9 +30,9 @@ public class JobLinks implements Serializable {
 
         JobLinks jobLinks = (JobLinks) o;
 
-        if (pdf != null ? !pdf.equals(jobLinks.pdf) : jobLinks.pdf != null) return false;
-        if (self != null ? !self.equals(jobLinks.self) : jobLinks.self != null) return false;
-        return !(xing != null ? !xing.equals(jobLinks.xing) : jobLinks.xing != null);
+        return pdf != null ? pdf.equals(jobLinks.pdf) : jobLinks.pdf == null
+              && (self != null ? self.equals(jobLinks.self) : jobLinks.self == null
+              && (xing != null ? xing.equals(jobLinks.xing) : jobLinks.xing == null));
     }
 
     @Override
@@ -62,5 +50,17 @@ public class JobLinks implements Serializable {
               + ", self='" + self + '\''
               + ", xing='" + xing + '\''
               + '}';
+    }
+
+    public String pdf() {
+        return pdf;
+    }
+
+    public String self() {
+        return self;
+    }
+
+    public String xing() {
+        return xing;
     }
 }

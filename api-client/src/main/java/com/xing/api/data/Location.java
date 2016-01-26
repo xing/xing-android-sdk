@@ -18,10 +18,47 @@ public class Location implements Serializable {
     private String country;
     @Json(name = "street")
     private String street;
-    @Json(name = "zipcode")
+    @Json(name = "zip_code")
     private String zipCode;
     @Json(name = "region")
     private String region;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+        return geoCode != null ? geoCode.equals(location.geoCode) : location.geoCode == null
+              && (city != null ? city.equals(location.city) : location.city == null
+              && (country != null ? country.equals(location.country) : location.country == null
+              && (street != null ? street.equals(location.street) : location.street == null
+              && (zipCode != null ? zipCode.equals(location.zipCode) : location.zipCode == null
+              && (region != null ? region.equals(location.region) : location.region == null)))));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = geoCode != null ? geoCode.hashCode() : 0;
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (street != null ? street.hashCode() : 0);
+        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{"
+              + "geoCode=" + geoCode
+              + ", city='" + city + '\''
+              + ", country='" + country + '\''
+              + ", street='" + street + '\''
+              + ", zipCode='" + zipCode + '\''
+              + ", region='" + region + '\''
+              + '}';
+    }
 
     public GeoCode geoCode() {
         return geoCode;
@@ -75,43 +112,5 @@ public class Location implements Serializable {
     public Location region(String region) {
         this.region = region;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Location location = (Location) o;
-
-        if (geoCode != null ? !geoCode.equals(location.geoCode) : location.geoCode != null) return false;
-        if (city != null ? !city.equals(location.city) : location.city != null) return false;
-        if (country != null ? !country.equals(location.country) : location.country != null) return false;
-        if (street != null ? !street.equals(location.street) : location.street != null) return false;
-        if (zipCode != null ? !zipCode.equals(location.zipCode) : location.zipCode != null) return false;
-        return !(region != null ? !region.equals(location.region) : location.region != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = geoCode != null ? geoCode.hashCode() : 0;
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
-        result = 31 * result + (region != null ? region.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Location{"
-              + "geoCode=" + geoCode
-              + ", city='" + city + '\''
-              + ", country='" + country + '\''
-              + ", street='" + street + '\''
-              + ", zipCode='" + zipCode + '\''
-              + ", region='" + region + '\''
-              + '}';
     }
 }
