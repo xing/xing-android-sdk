@@ -16,23 +16,14 @@ public class JobCompany implements Serializable {
         this.links = links;
     }
 
-    public String name() {
-        return name;
-    }
-
-    public CompanyLinks links() {
-        return links;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        JobCompany that = (JobCompany) o;
-
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return !(links != null ? !links.equals(that.links) : that.links != null);
+        JobCompany company = (JobCompany) o;
+        return name != null ? name.equals(company.name) : company.name == null
+              && (links != null ? links.equals(company.links) : company.links == null);
     }
 
     @Override
@@ -48,5 +39,13 @@ public class JobCompany implements Serializable {
               + "name='" + name + '\''
               + ", links=" + links
               + '}';
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public CompanyLinks links() {
+        return links;
     }
 }

@@ -31,9 +31,11 @@ public class JobsResourceTest extends ResourceTestCase<JobsResource> {
         server.enqueue(new MockResponse().setBody(file("jobs.json")));
 
         Response<Job, HttpError> response = resource.getJobById("some_id").execute();
+        // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().id()).isEqualTo("61723_4cae01");
         assertThat(response.body().contact().jobCompany().name()).isEqualTo("Mr. Recruiter");
         assertThat(response.body().contact().user().id()).isEqualTo("3456gt_35345");
+        assertThat(response.body().location().zipCode()).isEqualTo("20354");
     }
 
     @Test
@@ -41,6 +43,7 @@ public class JobsResourceTest extends ResourceTestCase<JobsResource> {
         server.enqueue(new MockResponse().setBody(file("list_of_jobs.json")));
 
         Response<List<PartialJob>, HttpError> response = resource.getJobsByCriteria("some_criteria").execute();
+        // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
         assertThat(response.body().get(0).contact().jobCompany().name()).isEqualTo("Rails Heroes");
     }
@@ -50,6 +53,7 @@ public class JobsResourceTest extends ResourceTestCase<JobsResource> {
         server.enqueue(new MockResponse().setBody(file("recommended_jobs.json")));
 
         Response<List<PartialJob>, HttpError> response = resource.getJobsRecommendationsForUser("some_id").execute();
+        // If no exception was thrown then the spec is build correctly.
         assertThat(response.body().get(0).id()).isEqualTo("61723_4cae01");
         assertThat(response.body().get(0).contact().jobCompany().name()).isEqualTo("Rails Heroes");
     }

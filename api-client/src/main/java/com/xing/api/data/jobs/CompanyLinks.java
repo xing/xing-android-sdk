@@ -23,28 +23,15 @@ public class CompanyLinks implements Serializable {
         this.logo = logo;
     }
 
-    public String xing() {
-        return xing;
-    }
-
-    public String thumbnail() {
-        return thumbnail;
-    }
-
-    public String logo() {
-        return logo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompanyLinks that = (CompanyLinks) o;
-
-        if (xing != null ? !xing.equals(that.xing) : that.xing != null) return false;
-        if (thumbnail != null ? !thumbnail.equals(that.thumbnail) : that.thumbnail != null) return false;
-        return !(logo != null ? !logo.equals(that.logo) : that.logo != null);
+        CompanyLinks links = (CompanyLinks) o;
+        return xing != null ? xing.equals(links.xing) : links.xing == null
+              && (thumbnail != null ? thumbnail.equals(links.thumbnail) : links.thumbnail == null
+              && (logo != null ? logo.equals(links.logo) : links.logo == null));
     }
 
     @Override
@@ -62,5 +49,17 @@ public class CompanyLinks implements Serializable {
               + ", thumbnail='" + thumbnail + '\''
               + ", logo='" + logo + '\''
               + '}';
+    }
+
+    public String xing() {
+        return xing;
+    }
+
+    public String thumbnail() {
+        return thumbnail;
+    }
+
+    public String logo() {
+        return logo;
     }
 }

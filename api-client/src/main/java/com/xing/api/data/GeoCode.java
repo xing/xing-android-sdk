@@ -24,21 +24,6 @@ public class GeoCode implements Serializable {
         this.longitude = longitude;
     }
 
-    /** Returns the geo codes accuracy. */
-    public int accuracy() {
-        return accuracy;
-    }
-
-    /** Returns the coordinate latitude. */
-    public double latitude() {
-        return latitude;
-    }
-
-    /** Returns the coordinate longitude. */
-    public double longitude() {
-        return longitude;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,5 +54,20 @@ public class GeoCode implements Serializable {
               + ", latitude=" + latitude
               + ", longitude=" + longitude
               + '}';
+    }
+
+    /** Returns the geo codes accuracy. */
+    public int accuracy() {
+        return accuracy;
+    }
+
+    /** Returns the coordinate latitude. */
+    public double latitude() {
+        return latitude;
+    }
+
+    /** Returns the coordinate longitude. */
+    public double longitude() {
+        return longitude;
     }
 }
