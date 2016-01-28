@@ -88,7 +88,9 @@ public enum WebProfile {
     @Json(name = "youtube")
     YOUTUBE("youtube"),
     @Json(name = "zoominfo")
-    ZOOMINFO("zoominfo");
+    ZOOMINFO("zoominfo"),
+    @Json(name = "blog")
+    BLOG("blog");
 
     /** Name value that is received form the json response. */
     private final String value;
