@@ -34,6 +34,8 @@ import com.xing.api.data.profile.MessagingAccount;
 import com.xing.api.data.profile.Phone;
 import com.xing.api.data.profile.PhotoUrls;
 import com.xing.api.data.profile.PremiumService;
+import com.xing.api.data.profile.ProfileVisit;
+import com.xing.api.data.profile.ProfileVisit.Type;
 import com.xing.api.data.profile.School;
 import com.xing.api.data.profile.TimeZone;
 import com.xing.api.data.profile.WebProfile;
@@ -132,6 +134,38 @@ public class JsonSerializationTest {
         assertThat(clone.toString()).isEqualTo(user.toString());
     }
 
+    @Test
+    public void profileVisit() throws Exception {
+        JsonAdapter<ProfileVisit> adapter = api.converter().adapter(ProfileVisit.class);
+        String json = file("visit.json");
+
+        // Test that the visit reflects the json
+        ProfileVisit visit = adapter.fromJson(json);
+
+        assertThat(visit.userId()).isEqualTo("3205259_e868c1");
+        assertThat(visit.companyName()).isEqualTo("XING AG");
+        assertThat(visit.visitedAtEncrypted()).isEqualTo("_GhT3Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nKJJ52=");
+        assertThat(visit.reason()).isEqualTo(new ProfileVisit.Reason("Search for interests, city"));
+        assertThat(visit.displayName()).isEqualTo("Matthias Männich");
+        assertThat(visit.visitedAt()).isEqualTo(new SafeCalendar(2011, Calendar.JANUARY, 13));
+        assertThat(visit.visitCount()).isEqualTo(1);
+        assertThat(visit.gender()).isEqualTo(Gender.MALE);
+        assertThat(visit.distance()).isEqualTo(0);
+        assertThat(visit.type()).isEqualTo(Type.LOGGED_IN);
+        assertThat(visit.sharedContacts()).isEmpty();
+        assertThat(visit.jobTitle()).isEqualTo("Software Developer");
+
+        assertPhotoUrls(visit);
+
+        // Check that the object with all it's set fields is serializable.
+        // NOTE: This is NOT fool proof and may be unreliable if a field is not java.util.Serializable
+        // and is null.
+        ProfileVisit clone = SerializationUtils.clone(visit);
+        assertThat(clone).isEqualTo(visit);
+        assertThat(clone.hashCode()).isEqualTo(visit.hashCode());
+        assertThat(clone.toString()).isEqualTo(visit.toString());
+    }
+
     private static void assertBusinessAddress(XingUser user) throws Exception {
         assertThat(user.businessAddress()).isEqualTo(
               new Address()
@@ -211,7 +245,7 @@ public class JsonSerializationTest {
         primarySchool.id("42_abcdef");
         primarySchool.name("Carl-von-Ossietzky Universtät Schellenburg");
         primarySchool.degree("MSc CE/CS");
-        List<String> notes = new ArrayList<>();
+        List<String> notes = new ArrayList<>(3);
         notes.add("CS");
         notes.add("IT");
         notes.add("Android");
@@ -248,6 +282,25 @@ public class JsonSerializationTest {
               .photoSize1024Url("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg")
               .photoSizeOriginalUrl("http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg");
         assertThat(user.photoUrls()).isEqualTo(urls);
+    }
+
+    private static void assertPhotoUrls(ProfileVisit visit) {
+        PhotoUrls urls = new PhotoUrls()
+              .photoLargeUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666.jpg")
+              .photoMaxiThumbUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoMediumThumbUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s4.jpg")
+              .photoMiniThumbUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s1.jpg")
+              .photoThumbUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s2.jpg")
+              .photoSize32Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize48Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize64Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize96Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize128Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize192Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize256Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSize1024Url("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg")
+              .photoSizeOriginalUrl("https://x1.xingassets.com/img/users/8/a/e/6a71d7eb9.6666666_s3.jpg");
+        assertThat(visit.photoUrls()).isEqualTo(urls);
     }
 
     private static Company buildPrimaryCompany() {
