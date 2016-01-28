@@ -277,12 +277,28 @@ public class ProfileVisit implements Serializable {
     }
 
     /** Reason for the profile visit. */
-    public static class Reason {
+    public static class Reason implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         @Json(name = "text")
         private final String text;
 
         public Reason(String text) {
             this.text = text;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Reason reason = (Reason) o;
+            return text != null ? text.equals(reason.text) : reason.text == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return text != null ? text.hashCode() : 0;
         }
 
         @Override
