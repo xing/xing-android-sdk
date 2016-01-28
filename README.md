@@ -26,7 +26,7 @@ Add the XING API Client as a dependency:
 Either through Gradle:
 
 ```gradle
-compile 'com.xing.api:api-client:2.0.0-alpha1'
+compile 'com.xing.api:api-client:2.0.0-alpha2'
 ```
 or by using Maven:
 
@@ -34,7 +34,7 @@ or by using Maven:
 <dependency>
   <groupId>com.xing.api</groupId>
   <artifactId>api-client</artifactId>
-  <version>2.0.0-alpha1</version>
+  <version>2.0.0-alpha2</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ For Android we made an additional step and implemented an oauth helper library, 
 implementation in your app. To benefit from this library just add the following dependency in you gradle build file:
 
 ```gradle
-compile 'com.xing.api:android-oauth:${latest_version}'
+compile 'com.xing.api:android-oauth:2.0.0-alpha2'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/xing/api/).
