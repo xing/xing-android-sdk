@@ -28,7 +28,6 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 @SuppressWarnings("ConstantConditions")
 public final class GeoCodeJsonAdapterTest {
@@ -65,19 +64,8 @@ public final class GeoCodeJsonAdapterTest {
         assertNull(adapter.fromJson("{\"accuracy\":12,\"latitude\":null,\"longitude\":null}"));
         assertNull(adapter.fromJson("{\"latitude\":34.2,\"longitude\":null}"));
         assertNull(adapter.fromJson("{\"latitude\":null,\"longitude\":24.45}"));
+        assertNull(adapter.fromJson("{\"unknown\":null,\"longitude\":24.45}"));
         assertNull(adapter.fromJson("{}"));
-    }
-
-    // This in a fail mechanism, which will trigger the error only if the passed key is not null.
-    @Test
-    public void throwsOnInvalidJson() throws Exception {
-        try {
-            geoCodeAdapter(GeoCode.class).fromJson("{\"invalid_key\":34}");
-            fail();
-        } catch (Throwable th) {
-            assertThat(th).isInstanceOf(AssertionError.class)
-                  .hasMessage("Expecting one of [accuracy, latitude, longitude], found: invalid_key");
-        }
     }
 
     @SuppressWarnings("unchecked") // It's the callers responsibility.

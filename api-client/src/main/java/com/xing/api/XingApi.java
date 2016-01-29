@@ -28,6 +28,7 @@ import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
 import com.xing.api.internal.json.SafeEnumJsonAdapter;
+import com.xing.api.internal.json.TimeZoneJsonAdapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -251,6 +252,7 @@ public final class XingApi {
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
             moshiBuilder.add(GeoCodeJsonAdapter.FACTORY);
+            moshiBuilder.add(TimeZoneJsonAdapter.FACTORY);
 
             // Select adapter by platform.
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);

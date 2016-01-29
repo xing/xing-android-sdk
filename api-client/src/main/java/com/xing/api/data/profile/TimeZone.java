@@ -19,9 +19,7 @@ import com.squareup.moshi.Json;
 
 import java.io.Serializable;
 
-/**
- * Java representation of the time zone in which the {@linkplain XingUser user} is located.
- */
+/** Java representation of the time zone in which the {@linkplain XingUser user} is located. */
 public class TimeZone implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -30,9 +28,9 @@ public class TimeZone implements Serializable {
     private final String name;
     /** Offset. */
     @Json(name = "utc_offset")
-    private final float utcOffset;
+    private final double utcOffset;
 
-    public TimeZone(String name, float utcOffset) {
+    public TimeZone(String name, double utcOffset) {
         this.name = name;
         this.utcOffset = utcOffset;
     }
@@ -44,14 +42,17 @@ public class TimeZone implements Serializable {
 
         TimeZone timeZone = (TimeZone) o;
 
-        return Float.compare(timeZone.utcOffset, utcOffset) == 0
+        return Double.compare(timeZone.utcOffset, utcOffset) == 0
               && (name != null ? name.equals(timeZone.name) : timeZone.name == null);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (utcOffset != +0.0f ? Float.floatToIntBits(utcOffset) : 0);
+        int result;
+        long temp;
+        result = name != null ? name.hashCode() : 0;
+        temp = Double.doubleToLongBits(utcOffset);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -69,7 +70,7 @@ public class TimeZone implements Serializable {
     }
 
     /** Returns the UTC offset. */
-    public float utcOffset() {
+    public double utcOffset() {
         return utcOffset;
     }
 }
