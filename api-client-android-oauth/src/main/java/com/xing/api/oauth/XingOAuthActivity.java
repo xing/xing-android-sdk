@@ -36,33 +36,14 @@ import java.lang.ref.WeakReference;
  *
  * @author david.gonzalez
  * @author daniel.hartwich
+ * @author serj.lotutovici
  */
-public class XingOauthActivity extends Activity {
-    public static final int REQUEST_CODE = 600;
-    public static final int RESULT_BACK = 601;
-    public static final String TOKEN = "token";
-    public static final String TOKEN_SECRET = "tokenSecret";
-
-    private static final String EXPECTED_URL_PREFIX = "xingsdk";
-    private static final String CONSUMER_KEY = "consumerKey";
-    private static final String CONSUMER_SECRET = "consumerSecret";
-
+@SuppressWarnings("ClassNamingConvention")
+public final class XingOAuthActivity extends Activity {
     private WebView webView;
-    private OauthHelper helper;
+    private OAuthHelper helper;
 
-    /**
-     * TODO docs.
-     */
-    public static void startOauthProcess(Activity activity, String consumerKey, String consumerSecret) {
-        Intent intent = new Intent(activity, XingOauthActivity.class);
-        intent.putExtra(CONSUMER_KEY, consumerKey);
-        intent.putExtra(CONSUMER_SECRET, consumerSecret);
-        activity.startActivityForResult(intent, REQUEST_CODE);
-    }
-
-    /**
-     * Clear all cookies.
-     */
+    /** Clear all cookies. */
     @SuppressWarnings("deprecation")
     private static void clearCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
@@ -78,7 +59,14 @@ public class XingOauthActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_oauth_callback);
-        initializeOAuthAuthenticatorHelper();
+
+        Bundle extras = getIntent().getExtras();
+        //noinspection ConstantConditions The asumption is that this activity is started through a null safe mechanism.
+        helper = new OAuthHelper(
+              extras.getString(Shared.CONSUMER_KEY),
+              extras.getString(Shared.CONSUMER_SECRET),
+              extras.getString(Shared.CALLBACK_URL));
+
         webView = (WebView) findViewById(R.id.webView);
         webView.clearCache(true);
         webView.getSettings().setAppCacheEnabled(false);
@@ -90,8 +78,8 @@ public class XingOauthActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (!TextUtils.isEmpty(url) && url.startsWith(EXPECTED_URL_PREFIX)) {
-                    new RetrieveAccessTokenTask(XingOauthActivity.this, helper).
+                if (helper.overrideRedirect(url)) {
+                    new RetrieveAccessTokenTask(XingOAuthActivity.this, helper).
                           executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Uri.parse(url));
                     return true;
                 } else {
@@ -100,31 +88,22 @@ public class XingOauthActivity extends Activity {
             }
         });
         clearCookies();
-        new OauthRequestTokenTask(this, helper).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new OauthRequestTokenTask(this, helper)
+              .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_BACK);
+        setResult(Shared.RESULT_BACK);
         super.onBackPressed();
-    }
-
-    /**
-     * Initializes the OAuthAuthenticationHelper with the values that reads from the extras received.
-     */
-    public void initializeOAuthAuthenticatorHelper() {
-        Bundle extras = getIntent().getExtras();
-        helper = new OauthHelper(
-              extras.getString(CONSUMER_KEY),
-              extras.getString(CONSUMER_SECRET));
     }
 
     /** Invokes in background the oauthAuthenticationHelper to retrieve the request token. */
     private static class OauthRequestTokenTask extends AsyncTask<Void, Void, String> {
-        private final OauthHelper helper;
-        private final WeakReference<XingOauthActivity> activityRef;
+        private final OAuthHelper helper;
+        private final WeakReference<XingOAuthActivity> activityRef;
 
-        OauthRequestTokenTask(XingOauthActivity activity, OauthHelper helper) {
+        OauthRequestTokenTask(XingOAuthActivity activity, OAuthHelper helper) {
             activityRef = new WeakReference<>(activity);
             this.helper = helper;
         }
@@ -144,12 +123,12 @@ public class XingOauthActivity extends Activity {
         @Override
         protected void onPostExecute(String url) {
             super.onPostExecute(url);
-            XingOauthActivity activity = activityRef.get();
+            XingOAuthActivity activity = activityRef.get();
             if (TextUtils.isEmpty(url)) {
                 helper.clean();
                 if (activity != null) {
                     activity.setResult(Activity.RESULT_CANCELED);
-                    activity.finishActivity(REQUEST_CODE);
+                    activity.finishActivity(Shared.REQUEST_CODE);
                     activity.finish();
                 }
             } else {
@@ -162,23 +141,23 @@ public class XingOauthActivity extends Activity {
 
     /** Invokes in background the oauthAuthenticationHelper to retrieve the access token. */
     private static class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Boolean> {
-        private final OauthHelper helper;
-        private final WeakReference<XingOauthActivity> activityRef;
+        private final OAuthHelper helper;
+        private final WeakReference<XingOAuthActivity> activityRef;
 
-        RetrieveAccessTokenTask(XingOauthActivity activity, OauthHelper helper) {
+        RetrieveAccessTokenTask(XingOAuthActivity activity, OAuthHelper helper) {
             activityRef = new WeakReference<>(activity);
             this.helper = helper;
         }
 
         @Override
         protected Boolean doInBackground(Uri... uris) {
-            Boolean ret = Boolean.TRUE;
+            boolean result = true;
             try {
                 helper.retrieveAccessToken(uris[0]);
             } catch (Exception ex) {
-                ret = Boolean.FALSE;
+                result = false;
             }
-            return ret;
+            return result;
         }
 
         @Override
@@ -186,7 +165,7 @@ public class XingOauthActivity extends Activity {
             super.onPostExecute(result);
             Intent data = null;
             int activityResult;
-            XingOauthActivity activity = activityRef.get();
+            Activity activity = activityRef.get();
 
             String token = helper.getToken();
             String tokenSecret = helper.getTokenSecret();
@@ -196,13 +175,14 @@ public class XingOauthActivity extends Activity {
                 activityResult = RESULT_CANCELED;
             } else {
                 data = new Intent();
-                data.putExtra(TOKEN, token);
-                data.putExtra(TOKEN_SECRET, tokenSecret);
+                data.putExtra(Shared.TOKEN, token);
+                data.putExtra(Shared.TOKEN_SECRET, tokenSecret);
                 activityResult = RESULT_OK;
             }
+
             if (activity != null) {
                 activity.setResult(activityResult, data);
-                activity.finishActivity(REQUEST_CODE);
+                activity.finishActivity(Shared.REQUEST_CODE);
                 activity.finish();
             }
         }

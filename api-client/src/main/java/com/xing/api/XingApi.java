@@ -142,7 +142,7 @@ public final class XingApi {
      * TODO docs.
      */
     public static final class Builder {
-        private final Oauth1SigningInterceptor.Builder oauth1Builder;
+        private final OAuth1SigningInterceptor.Builder oauth1Builder;
         private OkHttpClient client;
         private HttpUrl apiEndpoint;
         private Moshi.Builder moshiBuilder;
@@ -151,7 +151,7 @@ public final class XingApi {
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
-            oauth1Builder = new Oauth1SigningInterceptor.Builder();
+            oauth1Builder = new OAuth1SigningInterceptor.Builder();
             loggedOut = false;
         }
 

@@ -38,10 +38,14 @@ import javax.crypto.spec.SecretKeySpec;
 import okio.Buffer;
 import okio.ByteString;
 
+import static com.xing.api.Utils.checkNotNull;
+import static com.xing.api.Utils.stateNotNull;
+
 /**
  * Request {@link Interceptor} that handel's Oauth1 request signing.
  */
-final class Oauth1SigningInterceptor implements Interceptor {
+@SuppressWarnings("ClassNamingConvention")
+final class OAuth1SigningInterceptor implements Interceptor {
     private static final Pattern CHARACTER_PATTERN = Pattern.compile("\\W");
     private static final int NUANCE_BYTES = 32;
     private static final String OAUTH_CONSUMER_KEY = "oauth_consumer_key";
@@ -61,7 +65,7 @@ final class Oauth1SigningInterceptor implements Interceptor {
     private final Random random;
     private final Clock clock;
 
-    private Oauth1SigningInterceptor(String consumerKey, String consumerSecret, String accessToken, String accessSecret,
+    OAuth1SigningInterceptor(String consumerKey, String consumerSecret, String accessToken, String accessSecret,
           Random random, Clock clock) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
@@ -174,42 +178,42 @@ final class Oauth1SigningInterceptor implements Interceptor {
         private Clock clock = new Clock();
 
         public Builder consumerKey(String consumerKey) {
-            this.consumerKey = Utils.checkNotNull(consumerKey, "consumerKey == null");
+            this.consumerKey = checkNotNull(consumerKey, "consumerKey == null");
             return this;
         }
 
         public Builder consumerSecret(String consumerSecret) {
-            this.consumerSecret = Utils.checkNotNull(consumerSecret, "consumerSecret == null");
+            this.consumerSecret = checkNotNull(consumerSecret, "consumerSecret == null");
             return this;
         }
 
         public Builder accessToken(String accessToken) {
-            this.accessToken = Utils.checkNotNull(accessToken, "accessToken == null");
+            this.accessToken = checkNotNull(accessToken, "accessToken == null");
             return this;
         }
 
         public Builder accessSecret(String accessSecret) {
-            this.accessSecret = Utils.checkNotNull(accessSecret, "accessSecret == null");
+            this.accessSecret = checkNotNull(accessSecret, "accessSecret == null");
             return this;
         }
 
         public Builder random(Random random) {
-            this.random = Utils.checkNotNull(random, "random == null");
+            this.random = checkNotNull(random, "random == null");
             return this;
         }
 
         /** Set clock, this is required mainly for testing (Or when we will have full Java 8 support). */
         public Builder clock(Clock clock) {
-            this.clock = Utils.checkNotNull(clock, "clock == null");
+            this.clock = checkNotNull(clock, "clock == null");
             return this;
         }
 
-        public Oauth1SigningInterceptor build() {
-            Utils.stateNotNull(consumerKey, "consumerKey not set");
-            Utils.stateNotNull(consumerSecret, "consumerSecret not set");
-            Utils.stateNotNull(accessToken, "accessToken not set");
-            Utils.stateNotNull(accessSecret, "accessSecret not set");
-            return new Oauth1SigningInterceptor(consumerKey, consumerSecret, accessToken, accessSecret, random, clock);
+        public OAuth1SigningInterceptor build() {
+            stateNotNull(consumerKey, "consumerKey not set");
+            stateNotNull(consumerSecret, "consumerSecret not set");
+            stateNotNull(accessToken, "accessToken not set");
+            stateNotNull(accessSecret, "accessSecret not set");
+            return new OAuth1SigningInterceptor(consumerKey, consumerSecret, accessToken, accessSecret, random, clock);
         }
     }
 

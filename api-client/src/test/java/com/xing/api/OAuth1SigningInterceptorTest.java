@@ -32,8 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class Oauth1SigningInterceptorTest {
-    Oauth1SigningInterceptor oauth1;
+@SuppressWarnings("ClassNamingConvention")
+public final class OAuth1SigningInterceptorTest {
+    OAuth1SigningInterceptor oauth1;
 
     @Before
     public void setUp() throws IOException {
@@ -52,10 +53,10 @@ public final class Oauth1SigningInterceptorTest {
         };
 
         // Mock the time :)
-        Oauth1SigningInterceptor.Clock clock = mock(Oauth1SigningInterceptor.Clock.class);
+        OAuth1SigningInterceptor.Clock clock = mock(OAuth1SigningInterceptor.Clock.class);
         when(clock.millis()).thenReturn("1318622958");
 
-        oauth1 = new Oauth1SigningInterceptor.Builder() //
+        oauth1 = new OAuth1SigningInterceptor.Builder() //
                 .consumerKey("xvz1evFS4wEEPTGEFPHBog")
                 .consumerSecret("kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw")
                 .accessToken("370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb")
