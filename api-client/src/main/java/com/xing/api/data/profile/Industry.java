@@ -16,6 +16,7 @@
 package com.xing.api.data.profile;
 
 import com.squareup.moshi.Json;
+import com.xing.api.internal.json.NullInt;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class Industry implements Serializable {
     }
 
     @Json(name = "id")
+    @NullInt
     private final int id;
     @Json(name = "localized_name")
     private final String name;
