@@ -27,6 +27,7 @@ import com.xing.api.internal.json.NullDoubleJsonAdapter;
 import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
+import com.xing.api.internal.json.SafeEnumJsonAdapter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -240,6 +241,7 @@ public final class XingApi {
 
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
+            moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
             moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
             moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
             moshiBuilder.add(NullIntJsonAdapter.FACTORY);
