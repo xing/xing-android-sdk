@@ -16,7 +16,8 @@
 package com.xing.api.oauth;
 
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
@@ -28,14 +29,15 @@ import oauth.signpost.basic.DefaultOAuthProvider;
  * @author david.gonzalez
  * @author daniel.hartwich
  */
-class OauthHelper {
+@SuppressWarnings("ClassNamingConvention")
+final class OAuthHelper {
     private static final String REQUEST_TOKEN_URL = "https://api.xing.com/v1/request_token";
     private static final String ACCESS_TOKEN_URL = "https://api.xing.com/v1/access_token";
     private static final String AUTHORIZE_URL = "https://api.xing.com/v1/authorize";
-    private static final String CALLBACK_URL = "xingsdk://callback";
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
+    private final String callbackUrl;
 
     /**
      * Initializes the instance of OAuthAuthenticatorHelper.
@@ -43,8 +45,9 @@ class OauthHelper {
      * @param consumerKey Consumer key of the app in the server.
      * @param consumerSecret Consumer secret of the app in the server.
      */
-    public OauthHelper(@Nullable String consumerKey, @Nullable String consumerSecret) {
+    public OAuthHelper(@NonNull String consumerKey, @NonNull String consumerSecret, @NonNull String callbackUrl) {
         //TODO Replace this with the OKHttp implementation.
+        this.callbackUrl = callbackUrl;
         consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
         provider = new DefaultOAuthProvider(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, AUTHORIZE_URL);
     }
@@ -54,15 +57,15 @@ class OauthHelper {
      *
      * @throws Exception signpost exception.
      */
-    protected String retrieveRequestTokenUrl() throws Exception {
-        return provider.retrieveRequestToken(consumer, CALLBACK_URL);
+    public String retrieveRequestTokenUrl() throws Exception {
+        return provider.retrieveRequestToken(consumer, callbackUrl);
     }
 
     /**
      * @param uri Uri that contains the oauth_verifier, necessary for retrieve the access token.
      * @throws Exception signpost exception.
      */
-    protected void retrieveAccessToken(Uri uri) throws Exception {
+    public void retrieveAccessToken(Uri uri) throws Exception {
         try {
             String oauthVerifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);
             provider.retrieveAccessToken(consumer, oauthVerifier);
@@ -71,15 +74,19 @@ class OauthHelper {
         }
     }
 
-    protected String getToken() {
+    public boolean overrideRedirect(String url) {
+        return !TextUtils.isEmpty(url) && url.startsWith(callbackUrl);
+    }
+
+    public String getToken() {
         return consumer.getToken();
     }
 
-    protected String getTokenSecret() {
+    public String getTokenSecret() {
         return consumer.getTokenSecret();
     }
 
-    protected void clean() {
+    public void clean() {
         consumer.setTokenWithSecret(null, null);
     }
 }

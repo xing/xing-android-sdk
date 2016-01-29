@@ -22,12 +22,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.xing.api.oauth.XingOauthActivity;
+import com.xing.api.oauth.XingOAuthCallback;
+import com.xing.api.oauth.XingOAuth;
 import com.xing.api.sample.BuildConfig;
-import com.xing.api.sample.R;
 import com.xing.api.sample.Prefs;
+import com.xing.api.sample.R;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, XingOAuthCallback {
+    private XingOAuth xingOAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             loginButton.setEnabled(false);
             missingCredentialsTV.setVisibility(View.VISIBLE);
             showToast(R.string.missing_credentials);
+        } else {
+            xingOAuth = new XingOAuth.Builder()
+                  .consumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
+                  .consumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
+                  .oauthCallback(this)
+                  .callbackUrlDebug()
+                  .build();
         }
     }
 
@@ -49,48 +58,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_login:
-                XingOauthActivity.startOauthProcess(this, BuildConfig.OAUTH_CONSUMER_KEY,
-                      BuildConfig.OAUTH_CONSUMER_SECRET);
-                break;
+                xingOAuth.loginWithXing(this);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case XingOauthActivity.REQUEST_CODE: {
-                onLoginActivityResult(resultCode, data);
-                break;
-            }
-        }
+        xingOAuth.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onLoginActivityResult(int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_OK:
-                showToast("ok");
-                Bundle extras = data.getExtras();
-                initializeXingController(extras);
-                startActivity(new Intent(this, ProfileActivity.class).
-                      setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                finish();
-                break;
+    @Override
+    public void onSuccess(String token, String tokenSecret) {
+        showToast("ok");
 
-            case RESULT_CANCELED:
-                showToast("error");
-                break;
-
-            case XingOauthActivity.RESULT_BACK:
-                //Back pressed
-                break;
-        }
-    }
-
-    private void initializeXingController(Bundle extras) {
-        String token = extras.getString(XingOauthActivity.TOKEN, "");
-        String tokenSecret = extras.getString(XingOauthActivity.TOKEN_SECRET, "");
         Prefs.getInstance(this).setOauthToken(token);
         Prefs.getInstance(this).setOauthSecret(tokenSecret);
+
+        startActivity(new Intent(this, ProfileActivity.class).setFlags(
+              Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        finish();
+    }
+
+    @Override
+    public void onError() {
+        showToast("error");
     }
 }
