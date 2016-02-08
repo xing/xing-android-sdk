@@ -26,7 +26,6 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
-import com.xing.api.XingApi.Builder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -317,6 +316,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             Class<?> rawType = Types.getRawType(type);
             if (rawType == Void.class) return null;
             if (rawType == String.class) return (PT) body.string();
+            if (rawType == ResponseBody.class) return (PT) buffer(body);
 
             JsonAdapter<PT> adapter = api.converter().adapter(type);
             JsonReader reader = JsonReader.of(body.source());
