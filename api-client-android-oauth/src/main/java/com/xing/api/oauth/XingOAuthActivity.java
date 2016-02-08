@@ -88,8 +88,7 @@ public final class XingOAuthActivity extends Activity {
             }
         });
         clearCookies();
-        new OauthRequestTokenTask(this, helper)
-              .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new OauthRequestTokenTask(this, helper).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

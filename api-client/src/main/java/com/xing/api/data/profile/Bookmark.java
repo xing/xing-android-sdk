@@ -21,10 +21,9 @@ import com.xing.api.data.SafeCalendar;
 import java.io.Serializable;
 
 /**
- * Represents a bookmark response object.
+ * Represents a bookmark response object. See {@linkplain com.xing.api.resources.BookmarksResource Bookmarks Resource}.
  *
  * @author serj.lotutovici
- * @see {@linkplain com.xing.api.resources.BookmarksResource BookmarkResource}.
  */
 public class Bookmark implements Serializable {
     private static final long serialVersionUID = 1L;
