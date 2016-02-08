@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
  */
 public abstract class Resource {
     protected static final String ME = "me";
+
     protected final XingApi api;
 
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
@@ -49,8 +50,9 @@ public abstract class Resource {
     }
 
     /** Returns a {@link CallSpec.Builder} for a DELETE request. */
-    protected static <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(XingApi api, String resourcePath) {
-        return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, false);
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newDeleteSpec(XingApi api, String resourcePath,
+          boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, isFormEncoded);
     }
 
     /** Returns a {@link Type} that will expect a single object in the root json tree. */

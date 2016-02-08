@@ -158,7 +158,7 @@ public final class ProfileEditingResource extends Resource {
      * resource page</a>
      */
     public CallSpec<Void, HttpError> deleteProfilePicture() {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "v1/users/me/photo")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "v1/users/me/photo", false)
               .responseAs(Void.class)
               .build();
     }
@@ -478,7 +478,7 @@ public final class ProfileEditingResource extends Resource {
      * resource page.</a>
      */
     public CallSpec<Void, HttpError> deleteSchool(String schoolId) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/educational_background/schools/{id}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/educational_background/schools/{id}", false)
               .responseAs(Void.class)
               .pathParam("id", schoolId)
               .build();
@@ -689,7 +689,8 @@ public final class ProfileEditingResource extends Resource {
      * resource page.</a>
      */
     public CallSpec<Void, HttpError> deleteCompany(String companyId) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/professional_experience/companies/{id}")
+        return Resource.<Void, HttpError>newDeleteSpec(api,
+              "/v1/users/me/professional_experience/companies/{id}", false)
               .responseAs(Void.class)
               .pathParam("id", companyId)
               .build();
@@ -759,7 +760,7 @@ public final class ProfileEditingResource extends Resource {
      * @see <a href="https://dev.xing.com/docs/delete/users/me/languages/:language">'Delete Language' resource page.</a>
      */
     public CallSpec<Void, HttpError> deleteLanguage(Language language) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/languages/{language}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/languages/{language}", false)
               .responseAs(Void.class)
               .pathParam("language", language.toString())
               .build();
@@ -814,7 +815,7 @@ public final class ProfileEditingResource extends Resource {
      * page.</a>
      */
     public CallSpec<Void, HttpError> deleteWebProfile(WebProfile profile) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/web_profiles/{profile}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/web_profiles/{profile}", false)
               .responseAs(Void.class)
               .pathParam("profile", profile.toString())
               .build();
@@ -852,7 +853,7 @@ public final class ProfileEditingResource extends Resource {
      */
     @Experimental
     public CallSpec<Void, HttpError> deleteMessagingAccount(MessagingAccount account) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/instant_messaging_accounts/{account}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/instant_messaging_accounts/{account}", false)
               .responseAs(Void.class)
               .pathParam("account", account.toString())
               .build();

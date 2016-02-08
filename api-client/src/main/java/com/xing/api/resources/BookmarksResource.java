@@ -97,7 +97,7 @@ public final class BookmarksResource extends Resource {
      * page.</a>
      */
     public CallSpec<Void, HttpError> deleteOwnBookmark(String userId) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/bookmarks/{id}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/bookmarks/{id}", false)
               .responseAs(Void.class)
               .pathParam("id", userId)
               .build();
