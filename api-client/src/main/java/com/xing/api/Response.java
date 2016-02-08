@@ -26,20 +26,27 @@ import static com.xing.api.Utils.checkNotNull;
 public final class Response<RT, ET> {
     /** Returns a successful {@link Response} with a {@code null} error body. */
     static <RT, ET> Response<RT, ET> success(RT body, com.squareup.okhttp.Response rawResponse) {
-        return new Response<>(rawResponse, body, null);
+        return new Response<>(rawResponse, null, body, null);
+    }
+
+    /** Returns a successful {@link Response} with 'possibly' non null {@linkplain ContentRange}. */
+    static <RT, ET> Response<RT, ET> success(RT body, ContentRange range, com.squareup.okhttp.Response rawResponse) {
+        return new Response<>(rawResponse, range, body, null);
     }
 
     /** Returns a error {@link Response} with a {@code null} response body. */
     static <RT, ET> Response<RT, ET> error(ET error, com.squareup.okhttp.Response rawResponse) {
-        return new Response<>(rawResponse, null, error);
+        return new Response<>(rawResponse, null, null, error);
     }
 
     private final com.squareup.okhttp.Response rawResponse;
     private final RT body;
     private final ET error;
+    private final ContentRange range;
 
-    private Response(com.squareup.okhttp.Response rawResponse, RT body, ET error) {
+    private Response(com.squareup.okhttp.Response rawResponse, ContentRange range, RT body, ET error) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
+        this.range = range;
         this.body = body;
         this.error = error;
     }
@@ -76,5 +83,10 @@ public final class Response<RT, ET> {
     /** The parsed error response of an {@linkplain #isSuccessful() unsuccessful} response. */
     public ET error() {
         return error;
+    }
+
+    /** The {@code Xing-Content-Rage} value of the response. Available only if the response is paginated. */
+    public ContentRange range() {
+        return range;
     }
 }
