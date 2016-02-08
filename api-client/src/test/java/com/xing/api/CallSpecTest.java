@@ -352,6 +352,16 @@ public class CallSpecTest {
     }
 
     @Test
+    public void builderEnsuresDeleteRequestDoesNotHaveABody() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.DELETE, "", false).responseAs(Object.class);
+        // Build the CallSpec so that we can build the request.
+        builder.build();
+
+        Request request = builder.request();
+        assertThat(request.body()).isNull();
+    }
+
+    @Test
     public void specThrowsIfCanceled() throws Exception {
         CallSpec spec = builder(HttpMethod.GET, "", false).responseAs(Object.class).build();
         spec.cancel();

@@ -45,7 +45,7 @@ public final class RecommendationsResource extends Resource {
 
     // TODO docs.
     public CallSpec<Void, HttpError> blockRecommendation(String userId) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/network/recommendations/user/{id}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/network/recommendations/user/{id}", false)
               .pathParam("id", userId)
               .responseAs(Void.class)
               .build();

@@ -380,7 +380,7 @@ public final class ContactsResource extends Resource {
      */
     // TODO docs.
     public CallSpec<Void, HttpError> revokeContactRequest(String recipientId, String senderId) {
-        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}")
+        return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}", false)
               .pathParam("user_id", recipientId)
               .pathParam("sender_id", senderId)
               .responseAs(Void.class)
