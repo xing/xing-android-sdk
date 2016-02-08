@@ -459,6 +459,18 @@ public class CallSpecTest {
     }
 
     @Test
+    public void specHandlesSuccessResponseAsResponseBody() throws Exception {
+        server.enqueue(new MockResponse().setBody("Testing"));
+
+        CallSpec<ResponseBody, Object> spec = this.<ResponseBody, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(ResponseBody.class)
+              .build();
+
+        Response<ResponseBody, Object> response = spec.execute();
+        assertThat(response.body().string()).isEqualTo("Testing");
+    }
+
+    @Test
     public void specHandlesEmptyBodyResponse() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(204));
         CallSpec spec = builder(HttpMethod.GET, "/", false).responseAs(Object.class).build();
@@ -541,6 +553,36 @@ public class CallSpecTest {
 
         latch.await(2, TimeUnit.SECONDS);
         assertSuccessResponse(responseRef.get(), new TestMsg("success", 42));
+    }
+
+    @Test
+    public void specHandlesSuccessResponseAsResponseBodyAsync() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("Hello"));
+
+        CallSpec<ResponseBody, Object> spec = this.<ResponseBody, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(ResponseBody.class)
+              .build();
+
+        final AtomicReference<Response<ResponseBody, Object>> responseRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        spec.enqueue(new Callback<ResponseBody, Object>() {
+            @Override
+            public void onResponse(Response<ResponseBody, Object> response) {
+                responseRef.set(response);
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                fail("unexpected #onFailure() call");
+            }
+        });
+
+        latch.await(2, TimeUnit.SECONDS);
+        Response<ResponseBody, Object> response = responseRef.get();
+        assertThat(response.isSuccessful()).isTrue();
+        assertThat(response.error()).isNull();
+        assertThat(response.body().string()).isEqualTo("Hello");
     }
 
     @Test
