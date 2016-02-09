@@ -36,7 +36,9 @@ public enum MessagingAccount {
     @Json(name = "jabber")
     JABBER("jabber"),
     @Json(name = "googletalk")
-    GOOGLE_TALK("googletalk");
+    GOOGLE_TALK("googletalk"),
+    @Json(name = "lync")
+    LYNC("lync");
 
     /** The name value received from the json response. */
     private final String value;
