@@ -76,6 +76,9 @@ public class XingUser implements Serializable {
     @Json(name = "haves")
     private List<String> haves;
     @CsvCollection
+    @Json(name = "top_haves")
+    private List<String> topHaves;
+    @CsvCollection
     @Json(name = "interests")
     private List<String> interests;
     @CsvCollection
@@ -131,6 +134,7 @@ public class XingUser implements Serializable {
         if (badges != null ? !badges.equals(xingUser.badges) : xingUser.badges != null) return false;
         if (wants != null ? !wants.equals(xingUser.wants) : xingUser.wants != null) return false;
         if (haves != null ? !haves.equals(xingUser.haves) : xingUser.haves != null) return false;
+        if (topHaves != null ? !topHaves.equals(xingUser.topHaves) : xingUser.topHaves != null) return false;
         if (interests != null ? !interests.equals(xingUser.interests) : xingUser.interests != null) return false;
         if (organizations != null ? !organizations.equals(xingUser.organizations) : xingUser.organizations != null) {
             return false;
@@ -180,6 +184,7 @@ public class XingUser implements Serializable {
         result = 31 * result + (badges != null ? badges.hashCode() : 0);
         result = 31 * result + (wants != null ? wants.hashCode() : 0);
         result = 31 * result + (haves != null ? haves.hashCode() : 0);
+        result = 31 * result + (topHaves != null ? topHaves.hashCode() : 0);
         result = 31 * result + (interests != null ? interests.hashCode() : 0);
         result = 31 * result + (organizations != null ? organizations.hashCode() : 0);
         result = 31 * result + (languages != null ? languages.hashCode() : 0);
@@ -211,6 +216,7 @@ public class XingUser implements Serializable {
               + ", badges=" + badges
               + ", wants=" + wants
               + ", haves=" + haves
+              + ", topHaves=" + topHaves
               + ", interests=" + interests
               + ", organizations=" + organizations
               + ", languages=" + languages
@@ -407,6 +413,30 @@ public class XingUser implements Serializable {
             this.haves = haves;
         } else {
             this.haves.addAll(haves);
+        }
+        return this;
+    }
+
+    public List<String> topHaves() {
+        return topHaves;
+    }
+
+    public XingUser topHaves(List<String> topHaves) {
+        this.topHaves = topHaves;
+        return this;
+    }
+
+    public XingUser addToTopHaves(String has) {
+        if (topHaves == null) topHaves = new ArrayList<>(1);
+        topHaves.add(has);
+        return this;
+    }
+
+    public XingUser addAllToTopHaves(List<String> topHaves) {
+        if (this.topHaves == null) {
+            this.topHaves = topHaves;
+        } else {
+            this.topHaves.addAll(topHaves);
         }
         return this;
     }

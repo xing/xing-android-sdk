@@ -86,6 +86,7 @@ public class JsonSerializationTest {
         assertThat(user.badges()).containsExactly(Badge.PREMIUM, Badge.MODERATOR);
         assertThat(user.wants()).containsExactly("einen neuen Job", "android");
         assertThat(user.haves()).containsExactly("viele tolle Skills");
+        assertThat(user.topHaves()).containsExactly("viele tolle top Skills");
         assertThat(user.interests()).containsExactly("Flitzebogen schießen and so on");
         assertThat(user.organizations()).containsExactly("ACM", "GI");
         assertThat(user.languages()).containsExactly(
