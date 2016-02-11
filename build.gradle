@@ -52,8 +52,8 @@ allprojects {
               android                 : 'com.google.android:android:4.1.1.4',
 
               // Ok stack
-              okhttp                  : 'com.squareup.okhttp:okhttp:2.7.2',
-              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.2',
+              okhttp                  : 'com.squareup.okhttp:okhttp:2.7.4',
+              okhttpLoggingInterceptor: 'com.squareup.okhttp:logging-interceptor:2.7.4',
               okio                    : 'com.squareup.okio:okio:1.6.0',
               moshi                   : 'com.squareup.moshi:moshi:1.1.0',
 
@@ -69,7 +69,7 @@ allprojects {
               assertj                 : 'org.assertj:assertj-core:1.7.0',
               mockito                 : 'org.mockito:mockito-all:1.10.19',
               robolectric             : 'org.robolectric:robolectric:3.0',
-              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.7.2',
+              mockWebServer           : 'com.squareup.okhttp:mockwebserver:2.7.4',
               commonsIo               : 'commons-io:commons-io:2.4',
               apacheCommons3          : 'org.apache.commons:commons-lang3:3.4'
         ]
