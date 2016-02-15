@@ -653,4 +653,12 @@ public class XingUser implements Serializable {
 
         return primaryOccupation;
     }
+
+    /**
+     * Returns true or false depending on the size of the PremiumServices list. If it's false it means the user is
+     * basic, otherwise he is premium.
+     */
+    public boolean isPremium() {
+        return premiumServices != null && !premiumServices.isEmpty();
+    }
 }
