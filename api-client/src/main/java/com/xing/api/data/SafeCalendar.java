@@ -101,6 +101,12 @@ public final class SafeCalendar extends GregorianCalendar {
               + ']';
     }
 
+    @Override
+    public void set(int field, int value) {
+        super.set(field, value);
+        if (field == DAY_OF_YEAR) super.complete();
+    }
+
     /**
      * {@inheritDoc}
      * <p>
