@@ -41,14 +41,22 @@
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <!--<module name="ConstantName"/>-->
+        <module name="ConstantName" />
         <module name="LocalFinalVariableName" />
         <module name="LocalVariableName" />
-        <module name="MemberName" />
+        <module name="MemberName">
+            <property name="format" value="^(?!m[A-Z][a-zA-Z0-9]*)([a-z][a-zA-Z0-9]*)$" />
+            <message key="name.invalidPattern"
+                value="Hungarian notation belongs in the 90's. Use your IDE's shiny colors. Member ''{0}'' should be named with camelCase and without prefixes." />
+        </module>
         <module name="MethodName" />
         <module name="PackageName" />
         <module name="ParameterName" />
-        <module name="StaticVariableName" />
+        <module name="StaticVariableName">
+            <property name="format" value="^(?!s[A-Z][a-zA-Z0-9]*)([a-z][a-zA-Z0-9]*)$" />
+            <message key="name.invalidPattern"
+                value="Hungarian notation belongs in the 90's. Use your IDE's shiny colors. Member ''{0}'' should be named with camelCase and without prefixes." />
+        </module>
         <module name="TypeName" />
 
 
@@ -64,7 +72,7 @@
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
         <module name="LineLength">
-            <property name="max" value="120" />
+            <property name="max" value="124" />
         </module>
         <module name="MethodLength" />
 
@@ -111,8 +119,8 @@
         <!--module name="MagicNumber"/-->
         <!--module name="MissingSwitchDefault"/-->
         <!--<module name="RedundantThrows">-->
-            <!--<property name="allowUnchecked" value="true"/>-->
-            <!--<property name="allowSubclasses" value="true"/>-->
+        <!--<property name="allowUnchecked" value="true"/>-->
+        <!--<property name="allowSubclasses" value="true"/>-->
         <!--</module>-->
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
