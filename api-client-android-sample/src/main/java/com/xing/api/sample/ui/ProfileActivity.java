@@ -53,7 +53,7 @@ public class ProfileActivity extends BaseActivity {
     private TextView userInterests;
     private TextView userWants;
 
-    private String mUserId = "";
+    private String userId = "";
 
     public static final String EXTRA_USER_ID = "userid";
 
@@ -74,8 +74,8 @@ public class ProfileActivity extends BaseActivity {
         userWants = (TextView) findViewById(R.id.user_wants);
 
         if (getIntent() != null) {
-            mUserId = getIntent().getStringExtra(EXTRA_USER_ID);
-            if (!TextUtils.isEmpty(mUserId)) {
+            userId = getIntent().getStringExtra(EXTRA_USER_ID);
+            if (!TextUtils.isEmpty(userId)) {
             } else {
                 //Execute the task in order to get the users profile
                 new OwnProfileTask().execute(this);
@@ -86,7 +86,7 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (TextUtils.isEmpty(mUserId)) {
+        if (TextUtils.isEmpty(userId)) {
             //If User is on his own profile go ahead and show the menu
             getMenuInflater().inflate(R.menu.menu_profile, menu);
         } else {
