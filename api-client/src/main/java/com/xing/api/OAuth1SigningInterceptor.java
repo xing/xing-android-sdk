@@ -18,6 +18,7 @@ package com.xing.api;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
@@ -57,6 +58,8 @@ final class OAuth1SigningInterceptor implements Interceptor {
     private static final String OAUTH_ACCESS_TOKEN = "oauth_token";
     private static final String OAUTH_VERSION = "oauth_version";
     private static final String OAUTH_VERSION_VALUE = "1.0";
+    private static final String ENCRYPTION_TYPE = "HmacSHA1";
+    private static final MediaType FORM_ENCODED_CONTENT_TYPE = MediaType.parse("application/x-www-form-urlencoded");
 
     private final String consumerKey;
     private final String consumerSecret;
@@ -65,6 +68,10 @@ final class OAuth1SigningInterceptor implements Interceptor {
     private final Random random;
     private final Clock clock;
 
+    /**
+     * Creates a new instance of <strong>this</strong> interceptor. {@linkplain XingApi} should use only one OAuth
+     * interceptor.
+     */
     OAuth1SigningInterceptor(String consumerKey, String consumerSecret, String accessToken, String accessSecret,
           Random random, Clock clock) {
         this.consumerKey = consumerKey;
@@ -80,7 +87,12 @@ final class OAuth1SigningInterceptor implements Interceptor {
         return chain.proceed(signRequest(chain.request()));
     }
 
-    public Request signRequest(Request request) throws IOException {
+    /**
+     * Returns the same request with an 'Authorization' header.
+     *
+     * @throws IOException If the request body could not be read.
+     */
+    Request signRequest(Request request) throws IOException {
         byte[] nonce = new byte[NUANCE_BYTES];
         random.nextBytes(nonce);
         String oauthNonce = CHARACTER_PATTERN.matcher(ByteString.of(nonce).base64()).replaceAll("");
@@ -105,23 +117,20 @@ final class OAuth1SigningInterceptor implements Interceptor {
 
         Buffer body = new Buffer();
         RequestBody requestBody = request.body();
-        if (requestBody != null) {
+        if (requestBody != null && FORM_ENCODED_CONTENT_TYPE.equals(requestBody.contentType())) {
             requestBody.writeTo(body);
         }
 
         while (!body.exhausted()) {
             long keyEnd = body.indexOf((byte) '=');
-            if (keyEnd == -1) {
-                throw new IllegalStateException("Key with no value: " + body.readUtf8());
-            }
+            if (keyEnd == -1) throw new IllegalStateException("Key with no value: " + body.readUtf8());
+
             String key = body.readUtf8(keyEnd);
             body.skip(1); // Equals.
 
             long valueEnd = body.indexOf((byte) '&');
             String value = valueEnd == -1 ? body.readUtf8() : body.readUtf8(valueEnd);
-            if (valueEnd != -1) {
-                body.skip(1); // Ampersand.
-            }
+            if (valueEnd != -1) body.skip(1); // Ampersand.
 
             parameters.put(key, value);
         }
@@ -134,10 +143,9 @@ final class OAuth1SigningInterceptor implements Interceptor {
         base.writeByte('&');
 
         boolean first = true;
+        //noinspection SSBasedInspection
         for (Entry<String, String> entry : parameters.entrySet()) {
-            if (!first) {
-                base.writeUtf8(UrlEscapeUtils.escape("&"));
-            }
+            if (!first) base.writeUtf8(UrlEscapeUtils.escape("&"));
             first = false;
             base.writeUtf8(UrlEscapeUtils.escape(entry.getKey()));
             base.writeUtf8(UrlEscapeUtils.escape("="));
@@ -145,10 +153,10 @@ final class OAuth1SigningInterceptor implements Interceptor {
         }
 
         String signingKey = UrlEscapeUtils.escape(consumerSecret) + '&' + UrlEscapeUtils.escape(accessSecret);
-        SecretKeySpec keySpec = new SecretKeySpec(signingKey.getBytes(), "HmacSHA1");
+        SecretKeySpec keySpec = new SecretKeySpec(signingKey.getBytes(), ENCRYPTION_TYPE);
         Mac mac;
         try {
-            mac = Mac.getInstance("HmacSHA1");
+            mac = Mac.getInstance(ENCRYPTION_TYPE);
             mac.init(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             throw new IllegalStateException(e);
@@ -156,19 +164,20 @@ final class OAuth1SigningInterceptor implements Interceptor {
         byte[] result = mac.doFinal(base.readByteArray());
         String signature = ByteString.of(result).base64();
 
-        String authorization = "OAuth " //
-              + OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", " //
-              + OAUTH_NONCE + "=\"" + oauthNonce + "\", "  //
-              + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature) + "\", " //
-              + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", " //
-              + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "  //
-              + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", " //
+        String authorization = "OAuth "
+              + OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", "
+              + OAUTH_NONCE + "=\"" + oauthNonce + "\", "
+              + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature) + "\", "
+              + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", "
+              + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "
+              + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", "
               + OAUTH_VERSION + "=\"" + OAUTH_VERSION_VALUE + '"';
 
         return request.newBuilder().addHeader("Authorization", authorization).build();
     }
 
     /** Simple builder class, to simplify interceptor initialization. */
+    @SuppressWarnings({"DuplicateStringLiteralInspection", "JavaDoc"})
     public static final class Builder {
         private String consumerKey;
         private String consumerSecret;
