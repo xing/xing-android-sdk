@@ -1,0 +1,31 @@
+{
+  "conversation": {
+    "id": "52769_afddcc",
+    "subject": "The subject!",
+    "message_count": 1,
+    "unread_message_count": 0,
+    "updated_at": "2012-04-17T14:32:02Z",
+    "read_only": false,
+    "participants": [
+      {
+        "id": "61723_4cae01"
+      },
+      {
+        "id": "146614_5a51da"
+      }
+    ],
+    "latest_messages": [
+      {
+        "id": "81723_4cae01",
+        "created_at": "2012-04-17T14:32:02Z",
+        "content": "Can you tell me?",
+        "read": true,
+        "sender": {
+          "id": "61723_4cae01"
+        },
+        "attachments": [
+        ]
+      }
+    ]
+  }
+}

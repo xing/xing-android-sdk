@@ -1,0 +1,11 @@
+{
+  "message": {
+    "id": "106743_466a00",
+    "created_at": "2012-07-02T17:00:00Z",
+    "content": "New message",
+    "read": true,
+    "sender": {
+      "id": "33_cd5170"
+    }
+  }
+}
