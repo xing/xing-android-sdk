@@ -1,0 +1,72 @@
+{
+  "conversations": {
+    "total": "2",
+    "unread_count": "1",
+    "items": [
+      {
+        "id": "51626_4be761",
+        "subject": "Business opportunities",
+        "message_count": 2,
+        "unread_message_count": 1,
+        "updated_at": "2012-04-04T16:30:00Z",
+        "read_only": false,
+        "participants": [
+          {
+            "id": "61723_4cae01",
+            "display_name": "Vladimir"
+          },
+          {
+            "id": "146234_dc52a7",
+            "display_name": "Hans"
+          }
+        ],
+        "latest_messages": [
+          {
+            "id": "104401_09361f",
+            "created_at": "2012-04-04T16:30:00Z",
+            "content": "Yes of course!",
+            "read": false,
+            "sender": {
+              "id": "146234_dc52a7",
+              "display_name": "Hans"
+            },
+            "attachments": [
+            ]
+          }
+        ]
+      },
+      {
+        "id": "512_fe2fd4",
+        "subject": "Welcome to XING",
+        "message_count": 1,
+        "unread_message_count": 0,
+        "updated_at": "2007-06-05T08:32:15Z",
+        "read_only": true,
+        "participants": [
+          {
+            "id": "61723_4cae01",
+            "display_name": "Vladimir"
+          },
+          {
+            "id": "0_73fa2b",
+            "display_name": "XING"
+          }
+        ],
+        "latest_messages": [
+          {
+            "id": "104401_08461f",
+            "created_at": "2012-04-04T14:30:00Z",
+            "content": "Welcome!",
+            "read": false,
+            "sender": {
+              "id": "61723_4cae01",
+              "display_name": "XING"
+            },
+            "attachments": [
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
