@@ -45,7 +45,7 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public final class ProfileEditingResource extends Resource {
+public class ProfileEditingResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     ProfileEditingResource(XingApi api) {
         super(api);

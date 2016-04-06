@@ -28,7 +28,6 @@ import java.util.List;
 
 import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
 
 /**
  * Test each resource method against a valid json object. This test is a minimal safety major to ensure that each
@@ -43,7 +42,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
     public void getConversationsByUserId() throws Exception {
         server.enqueue(new MockResponse().setBody(file("list_of_conversations.json")));
 
-        Response<List<Conversation>, HttpError> response = resource.getConversationsByUserId(anyString()).execute();
+        Response<List<Conversation>, HttpError> response = resource.getConversationsByUserId("").execute();
         assertThat(response.body().size()).isEqualTo(2);
     }
 
@@ -51,9 +50,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
     public void createConversation() throws Exception {
         server.enqueue(new MockResponse().setBody(file("conversation.json")));
 
-        Response<Conversation, HttpError> response =
-              resource.createConversation(anyString(), anyString(), anyString(), anyString()).execute();
-
+        Response<Conversation, HttpError> response = resource.createConversation("", "", "", "").execute();
         assertThat(response.body().subject()).isEqualTo("The subject!");
     }
 
@@ -61,9 +58,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
     public void sendMessageToConversation() throws Exception {
         server.enqueue(new MockResponse().setBody(file("conversation_message.json")));
 
-        Response<ConversationMessage, HttpError> response =
-              resource.sendMessageToConversation(anyString(), anyString(), anyString()).execute();
-
+        Response<ConversationMessage, HttpError> response = resource.sendMessageToConversation("", "", "").execute();
         assertThat(response.body().content()).isEqualTo("New message");
     }
 }

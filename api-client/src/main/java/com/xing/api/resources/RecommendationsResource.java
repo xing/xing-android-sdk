@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author daniel.hartwich
  */
-public final class RecommendationsResource extends Resource {
+public class RecommendationsResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     RecommendationsResource(XingApi api) {
         super(api);
