@@ -123,15 +123,15 @@ public final class XingApi {
 
     /** Notify all callbacks that the server returned an auth error. */
     void notifyAuthError(Response<?, ResponseBody> rawResponse) {
-        for (AuthErrorCallback callback : authErrorCallbacks) {
-            callbackAdapter.adapt(callback).onAuthError(rawResponse);
+        for (int i = 0, size = authErrorCallbacks.size(); i < size; i++) {
+            AuthErrorCallback callback = authErrorCallbacks.get(i);
+            if (callback != null) callbackAdapter.adapt(callback).onAuthError(rawResponse);
         }
     }
 
     /** Throws an exception if class was declared non-static or non-final. */
     private static void checkResourceClassDeclaration(Class<? extends Resource> resource) {
         int modifiers = resource.getModifiers();
-        if (!Modifier.isFinal(modifiers)) throw new IllegalArgumentException("Resource class must be declared final.");
         if (resource.isLocalClass() || (resource.isMemberClass() && !Modifier.isStatic(modifiers))) {
             throw new IllegalArgumentException("Resource class must be declared static.");
         }

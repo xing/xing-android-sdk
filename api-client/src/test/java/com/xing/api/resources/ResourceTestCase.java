@@ -62,6 +62,7 @@ public class ResourceTestCase<T extends Resource> {
     private void validateResource() throws Exception {
         // All public methods must return a call spec.
         Method[] methods = resourceClass.getDeclaredMethods();
+        //noinspection SSBasedInspection
         for (Method method : methods) {
             if (Modifier.isPublic(method.getModifiers())) {
                 Class<?> returnType = method.getReturnType();

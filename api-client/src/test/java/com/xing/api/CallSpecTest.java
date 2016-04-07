@@ -469,6 +469,19 @@ public class CallSpecTest {
     }
 
     @Test
+    public void specHandlesSuccessResponseAsStringIfResponseIsVoid() throws Exception {
+        server.enqueue(new MockResponse().setBody(new Buffer()));
+
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.POST, "/", false)
+              .responseAs(Void.class)
+              .build();
+
+        Response<String, Object> response = spec.execute();
+        assertThat(response.isSuccessful()).isTrue();
+        assertThat(response.body()).isNull();
+    }
+
+    @Test
     public void specHandlesSuccessResponseAsResponseBody() throws Exception {
         server.enqueue(new MockResponse().setBody("Testing"));
 

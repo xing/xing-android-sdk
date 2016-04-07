@@ -37,7 +37,7 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-public final class ContactsResource extends Resource {
+public class ContactsResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     ContactsResource(XingApi api) {
         super(api);

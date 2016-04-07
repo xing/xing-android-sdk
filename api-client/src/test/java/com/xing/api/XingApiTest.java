@@ -57,16 +57,6 @@ public class XingApiTest {
     }
 
     @Test
-    public void throwsForNonFinalResourceClass() throws Exception {
-        try {
-            buildDefaultApi().resource(IllegalTestResource1.class);
-        } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("Resource class must be declared final.");
-        }
-    }
-
-    @Test
     public void throwsForNonStaticResourceClass() throws Exception {
         try {
             buildDefaultApi().resource(IllegalTestResource2.class);
@@ -98,6 +88,7 @@ public class XingApiTest {
     public void throwsForResourceClassOverridingConstructor() throws Exception {
         try {
             buildDefaultApi().resource(LegalTestResourceOverridesConstructor.class);
+            fail("Should fail on overridden constructor.");
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(IllegalArgumentException.class)
                   .hasMessage("Resource class malformed.")
@@ -307,6 +298,32 @@ public class XingApiTest {
     }
 
     @Test
+    public void callbackExecutorSupportsNullCallbacks() throws Exception {
+        Executor executor = spy(new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                command.run();
+            }
+        });
+        XingApi api = new XingApi.Builder()
+              .apiEndpoint(server.url("/"))
+              .callbackExecutor(executor)
+              .loggedOut()
+              .build();
+        LegalTestResource resource = api.resource(LegalTestResource.class);
+        CallSpec<String, HttpError> spec = resource.simpleSpec();
+
+        server.enqueue(new MockResponse());
+        spec.enqueue(null);
+
+        // FIXME this is error prone, we need a better solution for this.
+        Thread.sleep(500);
+
+        verify(executor).execute(any(Runnable.class));
+        verifyNoMoreInteractions(executor);
+    }
+
+    @Test
     public void callbackExecutorUsedForAuthError() throws Exception {
         Executor executor = spy(new Executor() {
             @Override
@@ -358,16 +375,8 @@ public class XingApiTest {
         LegalTestResource resource = api.resource(LegalTestResource.class);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
-        AuthErrorCallback callback1 = spy(new AuthErrorCallback() {
-            @Override
-            public void onAuthError(Response<?, ResponseBody> errorResponse) {
-            }
-        });
-        AuthErrorCallback callback2 = spy(new AuthErrorCallback() {
-            @Override
-            public void onAuthError(Response<?, ResponseBody> errorResponse) {
-            }
-        });
+        AuthErrorCallback callback1 = spy(AuthErrorCallback.class);
+        AuthErrorCallback callback2 = spy(AuthErrorCallback.class);
 
         api.addAuthErrorCallback(callback1).addAuthErrorCallback(callback2);
         server.enqueue(new MockResponse().setResponseCode(401));
@@ -414,12 +423,6 @@ public class XingApiTest {
     static final class LegalTestResourceOverridesConstructor extends Resource {
         LegalTestResourceOverridesConstructor() {
             super(null);
-        }
-    }
-
-    static class IllegalTestResource1 extends Resource {
-        protected IllegalTestResource1(XingApi api) {
-            super(api);
         }
     }
 

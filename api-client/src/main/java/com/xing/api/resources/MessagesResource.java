@@ -30,7 +30,7 @@ import java.util.List;
  * <p>
  * Provides methods which allow access to user's {@linkplain Conversation conversations}.
  */
-public final class MessagesResource extends Resource {
+public class MessagesResource extends Resource {
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     MessagesResource(XingApi api) {
         super(api);
