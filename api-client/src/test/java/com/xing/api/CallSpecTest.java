@@ -42,7 +42,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import okio.Buffer;
 import okio.BufferedSource;
+import rx.Observable;
 import rx.observables.BlockingObservable;
+import rx.observers.TestSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -793,6 +795,28 @@ public class CallSpecTest {
     }
 
     @Test
+    public void  specRawStreamRespectsBackpressure() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        TestSubscriber<Response<String, Object>> subscriber = new TestSubscriber<>(0);
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(String.class)
+              .errorAs(Object.class)
+              .build();
+
+        Observable<Response<String, Object>> o = spec.rawStream();
+
+        o.subscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(0);
+
+        subscriber.requestMore(1);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+
+        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
+        assertThat(server.getRequestCount()).isEqualTo(1);
+    }
+
+    @Test
     public void specRawStreamsSuccessResponse() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
               + "  \"msg\": \"success\",\n"
@@ -873,6 +897,28 @@ public class CallSpecTest {
                   .isInstanceOf(IOException.class)
                   .hasMessage("401 Unauthorized");
         }
+    }
+
+    @Test
+    public void specStreamRespectsBackpressure() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        TestSubscriber<String> subscriber = new TestSubscriber<>(0);
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(String.class)
+              .errorAs(Object.class)
+              .build();
+
+        Observable<String> o = spec.stream();
+
+        o.subscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(0);
+
+        subscriber.requestMore(1);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+
+        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
+        assertThat(server.getRequestCount()).isEqualTo(1);
     }
 
     @Test
