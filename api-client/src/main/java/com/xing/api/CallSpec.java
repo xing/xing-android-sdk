@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2015 XING AG (http://xing.com/)
- * Copyright (C) 2015 Square, Inc.
+ * Copyright (C) 2016 XING AG (http://xing.com/)
+ * Copyright (C) 2016 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,11 +43,12 @@ import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
 import rx.Observable;
+import rx.Observable.Operator;
+import rx.Producer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.exceptions.Exceptions;
-import rx.functions.Action0;
 import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -180,13 +182,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
      * For a more richer and controllable api consider calling {@link #rawStream()}.
      */
     public Observable<RT> stream() {
-        return rawStream().flatMap(new Func1<Response<RT, ET>, Observable<RT>>() {
-            @Override
-            public Observable<RT> call(Response<RT, ET> response) {
-                if (response.isSuccessful()) return Observable.just(response.body());
-                return Observable.error(new HttpException(response));
-            }
-        });
+        return rawStream().lift(OperatorMapResponseToBodyOrError.<RT, ET>instance());
     }
 
     /**
@@ -677,6 +673,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
     static final class SpecOnSubscribe<RT, ET> implements Observable.OnSubscribe<Response<RT, ET>> {
         private final CallSpec<RT, ET> originalSpec;
 
+        /** Creates on instance of {@linkplain SpecOnSubscribe} for the provided spec. */
         SpecOnSubscribe(CallSpec<RT, ET> originalSpec) {
             this.originalSpec = originalSpec;
         }
@@ -684,15 +681,31 @@ public final class CallSpec<RT, ET> implements Cloneable {
         @Override
         public void call(Subscriber<? super Response<RT, ET>> subscriber) {
             // Since Call is a one-shot type, clone it for each new subscriber.
-            final CallSpec<RT, ET> spec = originalSpec.clone();
+            CallSpec<RT, ET> spec = originalSpec.clone();
 
-            // Attempt to cancel the call if it is still in-flight on un-subscription.
-            subscriber.add(Subscriptions.create(new Action0() {
-                @Override
-                public void call() {
-                    spec.cancel();
-                }
-            }));
+            // Wrap the call in a helper which handles both unsubscription and backpressure.
+            RequestArbiter<RT, ET> requestArbiter = new RequestArbiter<>(spec, subscriber);
+            subscriber.add(requestArbiter);
+            subscriber.setProducer(requestArbiter);
+        }
+    }
+
+    /** Helper/Arbiter that will honor request back-pressure on observable creation. */
+    static final class RequestArbiter<RT, ET> extends AtomicBoolean implements Subscription, Producer {
+        private final CallSpec<RT, ET> spec;
+        private final Subscriber<? super Response<RT, ET>> subscriber;
+
+        /** Creates an instance of {@linkplain RequestArbiter} for the provided spec and subscriber. */
+        RequestArbiter(CallSpec<RT, ET> spec, Subscriber<? super Response<RT, ET>> subscriber) {
+            this.spec = spec;
+            this.subscriber = subscriber;
+        }
+
+        @Override
+        public void request(long n) {
+            if (n < 0) throw new IllegalArgumentException("n < 0: " + n);
+            if (n == 0) return; // Nothing to do when requesting 0.
+            if (!compareAndSet(false, true)) return; // Request was already triggered.
 
             try {
                 Response<RT, ET> response = spec.execute();
@@ -710,6 +723,58 @@ public final class CallSpec<RT, ET> implements Cloneable {
             if (!subscriber.isUnsubscribed()) {
                 subscriber.onCompleted();
             }
+        }
+
+        @Override
+        public void unsubscribe() {
+            spec.cancel();
+        }
+
+        @Override
+        public boolean isUnsubscribed() {
+            return spec.isCanceled();
+        }
+    }
+
+    /**
+     * A version of {@link Observable#map(Func1)} which lets us trigger {@code onError} without having
+     * to use {@link Observable#flatMap(Func1)} which breaks producer requests from propagating.
+     */
+    static final class OperatorMapResponseToBodyOrError<RT, ET> implements Operator<RT, Response<RT, ET>> {
+        private static final OperatorMapResponseToBodyOrError<Object, Object> INSTANCE =
+              new OperatorMapResponseToBodyOrError<>();
+
+        /**
+         * Returns a static instance of {@linkplain OperatorMapResponseToBodyOrError}.
+         * This allows us to avoid multiple instantiations for each request (saves memory).
+         */
+        @SuppressWarnings("unchecked") // Safe because of erasure.
+        static <RT, ET> OperatorMapResponseToBodyOrError<RT, ET> instance() {
+            return (OperatorMapResponseToBodyOrError<RT, ET>) INSTANCE;
+        }
+
+        @Override
+        public Subscriber<? super Response<RT, ET>> call(final Subscriber<? super RT> child) {
+            return new Subscriber<Response<RT, ET>>(child) {
+                @Override
+                public void onNext(Response<RT, ET> response) {
+                    if (response.isSuccessful()) {
+                        child.onNext(response.body());
+                    } else {
+                        child.onError(new HttpException(response));
+                    }
+                }
+
+                @Override
+                public void onCompleted() {
+                    child.onCompleted();
+                }
+
+                @Override
+                public void onError(Throwable th) {
+                    child.onError(th);
+                }
+            };
         }
     }
 }
