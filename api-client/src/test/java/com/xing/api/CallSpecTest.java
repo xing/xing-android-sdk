@@ -433,10 +433,11 @@ public class CallSpecTest {
 
     @Test
     public void specHandlesSuccessResponse() throws Exception {
-        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
-              + "  \"msg\": \"success\",\n"
-              + "  \"code\": 42\n"
-              + '}'));
+        server.enqueue(new MockResponse().setResponseCode(200)
+              .setBody("{\n"
+                    + "  \"msg\": \"success\",\n"
+                    + "  \"code\": 42\n"
+                    + '}'));
 
         CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
               .responseAs(TestMsg.class)
@@ -444,6 +445,16 @@ public class CallSpecTest {
 
         Response<TestMsg, Object> response = spec.execute();
         assertSuccessResponse(response, new TestMsg("success", 42));
+    }
+
+    @Test
+    public void specHandlesRangeHeader() throws Exception {
+        server.enqueue(new MockResponse().addHeader("Xing-Content-Range: items 1-10/20"));
+
+        CallSpec spec = builder(HttpMethod.GET, "/", false).responseAs(Void.class).build();
+
+        Response response = spec.execute();
+        assertThat(response.range()).isNotNull().isEqualTo(new ContentRange(1, 10, 20));
     }
 
     @Test
@@ -455,6 +466,7 @@ public class CallSpecTest {
               .build();
 
         Response<Void, Object> response = spec.execute();
+        assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).isNull();
     }
 
@@ -468,19 +480,6 @@ public class CallSpecTest {
 
         Response<String, Object> response = spec.execute();
         assertThat(response.body()).isEqualTo("Hello");
-    }
-
-    @Test
-    public void specHandlesSuccessResponseAsStringIfResponseIsVoid() throws Exception {
-        server.enqueue(new MockResponse().setBody(new Buffer()));
-
-        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.POST, "/", false)
-              .responseAs(Void.class)
-              .build();
-
-        Response<String, Object> response = spec.execute();
-        assertThat(response.isSuccessful()).isTrue();
-        assertThat(response.body()).isNull();
     }
 
     @Test
@@ -578,6 +577,32 @@ public class CallSpecTest {
 
         latch.await(2, TimeUnit.SECONDS);
         assertSuccessResponse(responseRef.get(), new TestMsg("success", 42));
+    }
+
+    @Test
+    public void specHandlesRangeHeaderAsync() throws Exception {
+        server.enqueue(new MockResponse().addHeader("Xing-Content-Range: items 20-30/42"));
+
+        CallSpec spec = builder(HttpMethod.GET, "/", false).responseAs(Void.class).build();
+
+        final AtomicReference<Response<Object, Object>> responseRef = new AtomicReference<>();
+        final CountDownLatch latch = new CountDownLatch(1);
+        //noinspection unchecked we don't care at this point
+        spec.enqueue(new Callback<Object, Object>() {
+            @Override
+            public void onResponse(Response<Object, Object> response) {
+                responseRef.set(response);
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                fail("unexpected #onFailure() call");
+            }
+        });
+
+        latch.await(2, TimeUnit.SECONDS);
+        assertThat(responseRef.get().range()).isNotNull().isEqualTo(new ContentRange(20, 30, 42));
     }
 
     @Test
@@ -795,7 +820,7 @@ public class CallSpecTest {
     }
 
     @Test
-    public void  specRawStreamRespectsBackpressure() throws Exception {
+    public void specRawStreamRespectsBackpressure() throws Exception {
         server.enqueue(new MockResponse().setBody("Hi"));
 
         TestSubscriber<Response<String, Object>> subscriber = new TestSubscriber<>(0);

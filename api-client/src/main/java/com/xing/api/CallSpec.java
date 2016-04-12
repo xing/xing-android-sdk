@@ -284,14 +284,15 @@ public final class CallSpec<RT, ET> implements Cloneable {
             }
         }
 
-        // No need to parse the response body since the response should not contain a body.
+        // No need to parse the response body since the response should not contain any content.
         if (code == 204 || code == 205) {
             return Response.success(null, rawResponse);
         }
 
         try {
             RT body = parseBody(responseType, catchingBody);
-            return Response.success(body, rawResponse);
+            String contentRange = rawResponse.header(ContentRange.HEADER_NAME);
+            return Response.success(body, ContentRange.parse(contentRange), rawResponse);
         } catch (RuntimeException e) {
             // If the underlying source threw an exception, propagate that, rather than indicating it was
             // a runtime exception.
