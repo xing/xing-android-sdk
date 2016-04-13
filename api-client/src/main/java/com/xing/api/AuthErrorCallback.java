@@ -15,7 +15,7 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.ResponseBody;
+import okhttp3.ResponseBody;
 
 /** A callback contract that allows to intercept auth errors in a centralized way. */
 public interface AuthErrorCallback {

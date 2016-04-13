@@ -1,6 +1,5 @@
 package com.xing.api.resources;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
@@ -10,6 +9,8 @@ import com.xing.api.data.jobs.PartialJob;
 import org.junit.Test;
 
 import java.util.List;
+
+import okhttp3.mockwebserver.MockResponse;
 
 import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;

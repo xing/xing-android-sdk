@@ -15,7 +15,6 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.RequestBody;
 import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
@@ -36,6 +35,8 @@ import com.xing.api.internal.Experimental;
 
 import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.RequestBody;
 
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#profile-editing">'Profile Editing'</a> resource.

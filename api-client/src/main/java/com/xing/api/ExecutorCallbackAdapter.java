@@ -15,9 +15,9 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.ResponseBody;
-
 import java.util.concurrent.Executor;
+
+import okhttp3.ResponseBody;
 
 /** Callback adapter that allows invoking callback methods on the set executor thread. */
 final class ExecutorCallbackAdapter implements CallbackAdapter {

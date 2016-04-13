@@ -21,14 +21,14 @@ public final class HttpException extends Exception {
     private final int code;
     private final String message;
     private final Object error;
-    private final transient com.squareup.okhttp.Response rawResponse;
+    private final transient okhttp3.Response rawResponse;
 
     public HttpException(Response<?, ?> response) {
-        super("HTTP " + response.code() + " " + response.message());
-        this.code = response.code();
-        this.message = response.message();
-        this.error = response.error();
-        this.rawResponse = response.raw();
+        super("HTTP " + response.code() + ' ' + response.message());
+        code = response.code();
+        message = response.message();
+        error = response.error();
+        rawResponse = response.raw();
     }
 
     /** HTTP status code. */
@@ -42,7 +42,7 @@ public final class HttpException extends Exception {
     }
 
     /** The full HTTP response. */
-    public com.squareup.okhttp.Response response() {
+    public okhttp3.Response response() {
         return rawResponse;
     }
 

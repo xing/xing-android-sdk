@@ -17,11 +17,10 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.ResponseBody;
-
 import java.io.Closeable;
 import java.io.IOException;
 
+import okhttp3.ResponseBody;
 import okio.Buffer;
 
 final class Utils {

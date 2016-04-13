@@ -15,17 +15,6 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.SocketPolicy;
-import com.xing.api.CallSpec.ExceptionCatchingRequestBody;
 import com.xing.api.HttpError.Error.Reason;
 
 import org.junit.After;
@@ -40,8 +29,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 import okio.Buffer;
-import okio.BufferedSource;
 import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
@@ -94,7 +90,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "test1/test2");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "test1/test2");
         assertThat(request.body()).isNull();
     }
 
@@ -107,7 +103,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "one,two,three");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "one,two,three");
         assertThat(request.body()).isNull();
     }
 
@@ -125,7 +121,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "one,two,three");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "one,two,three");
         assertThat(request.body()).isNull();
     }
 
@@ -225,7 +221,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=test1&w=test2");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=test1&w=test2");
         assertThat(request.body()).isNull();
     }
 
@@ -239,7 +235,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
     }
 
@@ -257,7 +253,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.urlString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
+        assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
     }
 
@@ -271,7 +267,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
-        assertThat(request.httpUrl()).isEqualTo(httpUrl);
+        assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
 
         RequestBody body = request.body();
@@ -295,7 +291,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
-        assertThat(request.httpUrl()).isEqualTo(httpUrl);
+        assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
 
         RequestBody body = request.body();
@@ -314,7 +310,7 @@ public class CallSpecTest {
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
-        assertThat(request.httpUrl()).isEqualTo(httpUrl);
+        assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
 
         RequestBody body = request.body();
@@ -646,43 +642,6 @@ public class CallSpecTest {
         assertNoBodySuccessResponseAsync(spec, 205);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void specHandlesRequestBuildFailure() throws Exception {
-        XingApi failingApi = new XingApi.Builder()
-              .loggedOut()
-              .apiEndpoint(httpUrl)
-              .client(new OkHttpClient() {
-                  @Override
-                  public Call newCall(Request request) {
-                      throw new UnsupportedOperationException("I'm broken!");
-                  }
-              }).build();
-
-        CallSpec spec = new CallSpec.Builder(failingApi, HttpMethod.GET, "/", false)
-              .responseAs(Object.class).build();
-
-        final AtomicReference<Throwable> responseRef = new AtomicReference<>();
-        final CountDownLatch latch = new CountDownLatch(1);
-        spec.enqueue(new Callback<Object, Object>() {
-            @Override
-            public void onResponse(Response<Object, Object> response) {
-                fail("unexpected #onSuccess() call");
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                responseRef.set(t);
-                latch.countDown();
-            }
-        });
-
-        latch.await(2, TimeUnit.SECONDS);
-        assertThat(responseRef.get())
-              .isInstanceOf(UnsupportedOperationException.class)
-              .hasMessage("I'm broken!");
-    }
-
     @Test
     public void specHandlesErrorResponseAsync() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(189).setBody("{\n"
@@ -770,53 +729,6 @@ public class CallSpecTest {
         latch.await(2, TimeUnit.SECONDS);
         Throwable t = responseRef.get();
         assertThat(t).isInstanceOf(IOException.class).hasMessage("401 Unauthorized");
-    }
-
-    @Test
-    public void exceptionCatchingBodyThrows() throws Exception {
-        ResponseBody throwingBody = new ResponseBody() {
-            @Override
-            public MediaType contentType() {
-                //noinspection ConstantConditions
-                return MediaType.parse("application/h");
-            }
-
-            @Override
-            public long contentLength() throws IOException {
-                throw new IOException("Broken body!");
-            }
-
-            @Override
-            public BufferedSource source() throws IOException {
-                throw new IOException("Broken body!");
-            }
-        };
-
-        // Test content length throws
-        ExceptionCatchingRequestBody body = new ExceptionCatchingRequestBody(throwingBody);
-        assertThat(body.contentType()).isEqualTo(throwingBody.contentType());
-        try {
-            body.contentLength();
-        } catch (IOException ignored) {
-        }
-        try {
-            body.throwIfCaught();
-        } catch (IOException e) {
-            assertThat(e.getMessage()).isEqualTo("Broken body!");
-        }
-
-        // Test source throws, here we need new object
-        body = new ExceptionCatchingRequestBody(throwingBody);
-        assertThat(body.contentType()).isEqualTo(throwingBody.contentType());
-        try {
-            body.source();
-        } catch (IOException ignored) {
-        }
-        try {
-            body.throwIfCaught();
-        } catch (IOException e) {
-            assertThat(e.getMessage()).isEqualTo("Broken body!");
-        }
     }
 
     @Test
@@ -990,7 +902,7 @@ public class CallSpecTest {
 
             HttpException exception = (HttpException) t.getCause();
             assertThat(exception.code()).isEqualTo(405);
-            assertThat(exception.message()).isEqualTo("OK");
+            assertThat(exception.message()).isEqualTo("Client Error");
 
             HttpError error = (HttpError) exception.error();
             assertThat(error.name()).isEqualTo("TEST_ERROR2");
@@ -1073,7 +985,7 @@ public class CallSpecTest {
               .hasSize(contentLength);
     }
 
-    private static void assertNoBodySuccessResponse(Response response, int code) throws IOException {
+    private static void assertNoBodySuccessResponse(Response response, int code) {
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.error()).isNull();
         assertThat(response.body()).isNull();
