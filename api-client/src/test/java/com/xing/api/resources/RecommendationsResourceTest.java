@@ -15,7 +15,6 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.data.profile.Gender;
@@ -24,6 +23,8 @@ import com.xing.api.data.profile.XingUser;
 import org.junit.Test;
 
 import java.util.List;
+
+import okhttp3.mockwebserver.MockResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

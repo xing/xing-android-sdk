@@ -19,13 +19,6 @@ package com.xing.api;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -38,6 +31,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
@@ -121,18 +121,11 @@ public final class CallSpec<RT, ET> implements Cloneable {
             executed = true;
         }
 
-        Call rawCall;
-        try {
-            rawCall = createRawCall();
-        } catch (Throwable t) {
-            callback.onFailure(t);
-            return;
-        }
-
+        Call rawCall = createRawCall();
         if (canceled) rawCall.cancel();
         this.rawCall = rawCall;
 
-        rawCall.enqueue(new com.squareup.okhttp.Callback() {
+        rawCall.enqueue(new okhttp3.Callback() {
             private void callFailure(Throwable e) {
                 try {
                     api.callbackAdapter().adapt(callback).onFailure(e);
@@ -150,12 +143,12 @@ public final class CallSpec<RT, ET> implements Cloneable {
             }
 
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 callFailure(e);
             }
 
             @Override
-            public void onResponse(com.squareup.okhttp.Response rawResponse) {
+            public void onResponse(Call call, okhttp3.Response rawResponse) {
                 Response<RT, ET> response;
                 try {
                     response = parseResponse(rawResponse);
@@ -250,7 +243,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
     @SuppressWarnings("MagicNumber") // These codes are specific to this method and to the http protocol.
-    private Response<RT, ET> parseResponse(com.squareup.okhttp.Response rawResponse) throws IOException {
+    private Response<RT, ET> parseResponse(okhttp3.Response rawResponse) throws IOException {
         ResponseBody rawBody = rawResponse.body();
 
         // Remove the body's source (the only stateful object) so we can pass the response along.
@@ -341,7 +334,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
         private String resourcePath;
 
         private HttpUrl.Builder urlBuilder;
-        private FormEncodingBuilder formEncodingBuilder;
+        private FormBody.Builder formEncodingBuilder;
         private RequestBody body;
 
         final XingApi api;
@@ -358,7 +351,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
             apiEndpoint = api.apiEndpoint();
             requestBuilder = new Request.Builder().header("Accept", "application/json");
 
-            if (isFormEncoded) formEncodingBuilder = new FormEncodingBuilder();
+            if (isFormEncoded) formEncodingBuilder = new FormBody.Builder();
         }
 
         private Builder(Builder<RT, ET> builder) {
@@ -625,24 +618,13 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         @Override
-        public long contentLength() throws IOException {
-            try {
-                return delegate.contentLength();
-            } catch (IOException e) {
-                thrownException = e;
-                throw e;
-            }
+        public long contentLength() {
+            return delegate.contentLength();
         }
 
         @Override
-        public BufferedSource source() throws IOException {
-            BufferedSource delegateSource;
-            try {
-                delegateSource = delegate.source();
-            } catch (IOException e) {
-                thrownException = e;
-                throw e;
-            }
+        public BufferedSource source() {
+            BufferedSource delegateSource = delegate.source();
             return Okio.buffer(new ForwardingSource(delegateSource) {
                 @Override
                 public long read(Buffer sink, long byteCount) throws IOException {
@@ -657,7 +639,7 @@ public final class CallSpec<RT, ET> implements Cloneable {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
             delegate.close();
         }
 

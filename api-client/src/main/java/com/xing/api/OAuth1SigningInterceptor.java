@@ -16,13 +16,6 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -36,6 +29,12 @@ import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import okio.Buffer;
 import okio.ByteString;
 
@@ -109,7 +108,7 @@ final class OAuth1SigningInterceptor implements Interceptor {
         parameters.put(OAUTH_SIGNATURE_METHOD, OAUTH_SIGNATURE_METHOD_VALUE);
         parameters.put(OAUTH_VERSION, OAUTH_VERSION_VALUE);
 
-        HttpUrl url = request.httpUrl();
+        HttpUrl url = request.url();
         for (int i = 0; i < url.querySize(); i++) {
             parameters.put(UrlEscapeUtils.escape(url.queryParameterName(i)),
                   UrlEscapeUtils.escape(url.queryParameterValue(i)));
@@ -139,7 +138,7 @@ final class OAuth1SigningInterceptor implements Interceptor {
         String method = request.method();
         base.writeUtf8(method);
         base.writeByte('&');
-        base.writeUtf8(UrlEscapeUtils.escape(request.httpUrl().newBuilder().query(null).build().toString()));
+        base.writeUtf8(UrlEscapeUtils.escape(request.url().newBuilder().query(null).build().toString()));
         base.writeByte('&');
 
         boolean first = true;

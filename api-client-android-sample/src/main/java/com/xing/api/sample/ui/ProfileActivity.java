@@ -180,7 +180,6 @@ public class ProfileActivity extends BaseActivity {
                   .consumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
                   .accessToken(Prefs.getInstance(ProfileActivity.this).getOauthToken())
                   .accessSecret(Prefs.getInstance(ProfileActivity.this).getOauthSecret())
-                  .apiEndpoint("https://api.xing.com")
                   .build();
             UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
             Response<XingUser, HttpError> response = null;

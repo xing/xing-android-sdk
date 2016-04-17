@@ -16,16 +16,15 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
 
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import okio.ByteString;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +67,7 @@ public final class OAuth1SigningInterceptorTest {
 
     @Test
     public void withFormBody() throws Exception {
-        RequestBody body = new FormEncodingBuilder()
+        RequestBody body = new FormBody.Builder()
               .add("status", "Hello Ladies + Gentlemen, a signed OAuth request!")
               .build();
         Request request = new Request.Builder()

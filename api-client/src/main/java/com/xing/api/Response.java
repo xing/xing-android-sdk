@@ -16,7 +16,7 @@
  */
 package com.xing.api;
 
-import com.squareup.okhttp.Headers;
+import okhttp3.Headers;
 
 import static com.xing.api.Utils.checkNotNull;
 
@@ -25,26 +25,26 @@ import static com.xing.api.Utils.checkNotNull;
  */
 public final class Response<RT, ET> {
     /** Returns a successful {@link Response} with a {@code null} error body. */
-    static <RT, ET> Response<RT, ET> success(RT body, com.squareup.okhttp.Response rawResponse) {
+    static <RT, ET> Response<RT, ET> success(RT body, okhttp3.Response rawResponse) {
         return new Response<>(rawResponse, null, body, null);
     }
 
     /** Returns a successful {@link Response} with 'possibly' non null {@linkplain ContentRange}. */
-    static <RT, ET> Response<RT, ET> success(RT body, ContentRange range, com.squareup.okhttp.Response rawResponse) {
+    static <RT, ET> Response<RT, ET> success(RT body, ContentRange range, okhttp3.Response rawResponse) {
         return new Response<>(rawResponse, range, body, null);
     }
 
     /** Returns a error {@link Response} with a {@code null} response body. */
-    static <RT, ET> Response<RT, ET> error(ET error, com.squareup.okhttp.Response rawResponse) {
+    static <RT, ET> Response<RT, ET> error(ET error, okhttp3.Response rawResponse) {
         return new Response<>(rawResponse, null, null, error);
     }
 
-    private final com.squareup.okhttp.Response rawResponse;
+    private final okhttp3.Response rawResponse;
     private final RT body;
     private final ET error;
     private final ContentRange range;
 
-    private Response(com.squareup.okhttp.Response rawResponse, ContentRange range, RT body, ET error) {
+    private Response(okhttp3.Response rawResponse, ContentRange range, RT body, ET error) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
         this.range = range;
         this.body = body;
@@ -52,7 +52,7 @@ public final class Response<RT, ET> {
     }
 
     /** The raw response from the HTTP client. */
-    public com.squareup.okhttp.Response raw() {
+    public okhttp3.Response raw() {
         return rawResponse;
     }
 

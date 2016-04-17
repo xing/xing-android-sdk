@@ -15,8 +15,8 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;

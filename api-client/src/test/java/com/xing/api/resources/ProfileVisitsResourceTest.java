@@ -15,17 +15,17 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
-import com.xing.api.XingApi;
 import com.xing.api.data.profile.ProfileVisit;
 import com.xing.api.data.profile.ProfileVisit.Type;
 
 import org.junit.Test;
 
 import java.util.List;
+
+import okhttp3.mockwebserver.MockResponse;
 
 import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,14 +49,6 @@ public class ProfileVisitsResourceTest extends ResourceTestCase<ProfileVisitsRes
     public void getOwnProfileVisits() throws Exception {
         testGetProfileVisits(resource.getOwnProfileVisits());
     }
-
-    private final XingApi realApi = new XingApi.Builder()
-          .apiEndpoint("https://preview.xing.com")
-          .consumerKey("ae57a83582900aa7ea2f")
-          .consumerSecret("96156ed002c47be0dcc6af8fd957e66ef827f178")
-          .accessToken("cd921a5e286d8b7dcbde")
-          .accessSecret("381a5558328ca9a033b9")
-          .build();
 
     @Test
     public void createProfileVisits() throws Exception {

@@ -16,9 +16,6 @@
 package com.xing.api;
 
 import com.squareup.moshi.Moshi;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.ResponseBody;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -36,6 +33,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 
 import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.stateNull;
@@ -141,8 +143,8 @@ public final class XingApi {
      * TODO docs.
      */
     public static final class Builder {
-        private final OAuth1SigningInterceptor.Builder oauth1Builder;
-        private OkHttpClient client;
+        private final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        private final OAuth1SigningInterceptor.Builder oauth1Builder = new OAuth1SigningInterceptor.Builder();
         private HttpUrl apiEndpoint;
         private Moshi.Builder moshiBuilder;
         private boolean loggedOut;
@@ -150,7 +152,6 @@ public final class XingApi {
 
         public Builder() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
-            oauth1Builder = new OAuth1SigningInterceptor.Builder();
             loggedOut = false;
         }
 
@@ -179,14 +180,18 @@ public final class XingApi {
             return this;
         }
 
-        public Builder client(OkHttpClient client) {
-            this.client = checkNotNull(client, "client == null");
+        public Builder addInterceptor(Interceptor interceptor) {
+            clientBuilder.addInterceptor(checkNotNull(interceptor, "interceptor == null"));
+            return this;
+        }
+
+        public Builder addNetworkInterceptor(Interceptor interceptor) {
+            clientBuilder.addNetworkInterceptor(checkNotNull(interceptor, "interceptor == null"));
             return this;
         }
 
         public Builder apiEndpoint(String apiEndpoint) {
-            checkNotNull(apiEndpoint, "apiEndpoint == null");
-            HttpUrl httpUrl = HttpUrl.parse(apiEndpoint);
+            HttpUrl httpUrl = HttpUrl.parse(checkNotNull(apiEndpoint, "apiEndpoint == null"));
             if (httpUrl == null) {
                 throw new IllegalArgumentException("Illegal endpoint URL: " + apiEndpoint);
             }
@@ -225,18 +230,9 @@ public final class XingApi {
         }
 
         public XingApi build() {
-            // Setup the network client.
-            OkHttpClient client;
-            if (this.client != null) {
-                client = this.client;
-            } else {
-                client = new OkHttpClient();
-            }
-
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {
-                // This makes sure that signing is always first in line.
-                client.interceptors().add(0, oauth1Builder.build());
+                clientBuilder.addInterceptor(oauth1Builder.build());
             }
 
             // Add the custom JSON Adapters to Moshi
@@ -255,7 +251,7 @@ public final class XingApi {
             // Select adapter by platform.
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);
 
-            return new XingApi(client, apiEndpoint, moshiBuilder.build(), adapter, callbackExecutor);
+            return new XingApi(clientBuilder.build(), apiEndpoint, moshiBuilder.build(), adapter, callbackExecutor);
         }
     }
 }

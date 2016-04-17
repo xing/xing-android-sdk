@@ -16,11 +16,6 @@
 package com.xing.api;
 
 import com.squareup.moshi.Moshi;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.ResponseBody;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.SocketPolicy;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,6 +25,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -151,10 +154,17 @@ public class XingApiTest {
         }
 
         try {
-            builder.client(null);
+            builder.addInterceptor(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("client == null");
+            assertThat(expected.getMessage()).isEqualTo("interceptor == null");
+        }
+
+        try {
+            builder.addNetworkInterceptor(null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("interceptor == null");
         }
 
         try {
@@ -185,6 +195,45 @@ public class XingApiTest {
         } catch (IllegalStateException expected) {
             assertThat(expected.getMessage()).contains("not set");
         }
+    }
+
+    @Test
+    public void allInterceptorsArePropagated() throws Exception {
+        XingApi tested = new XingApi.Builder()
+              .addInterceptor(new Interceptor() {
+                  @Override
+                  public okhttp3.Response intercept(Chain chain) {
+                      return null;
+                  }
+
+                  @Override
+                  public String toString() {
+                      return "one";
+                  }
+              })
+              .addInterceptor(new Interceptor() {
+                  @Override
+                  public okhttp3.Response intercept(Chain chain) {
+                      return null;
+                  }
+
+                  @Override
+                  public String toString() {
+                      return "two";
+                  }
+              })
+              .consumerKey("consumer")
+              .consumerSecret("secret")
+              .accessToken("token")
+              .accessSecret("secret")
+              .build();
+
+        OkHttpClient client = tested.client();
+
+        assertThat(client.interceptors()).hasSize(3);
+        assertThat(client.interceptors().get(0).toString()).isEqualTo("one");
+        assertThat(client.interceptors().get(1).toString()).isEqualTo("two");
+        assertThat(client.interceptors().get(2)).isInstanceOf(OAuth1SigningInterceptor.class);
     }
 
     @Test

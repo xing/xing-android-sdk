@@ -15,7 +15,6 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.data.SafeCalendar;
@@ -29,6 +28,8 @@ import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.mockwebserver.MockResponse;
 
 import static com.xing.api.TestUtils.file;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -15,10 +15,6 @@
  */
 package com.xing.api.resources;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import com.xing.api.HttpError;
 import com.xing.api.Response;
 import com.xing.api.data.SafeCalendar;
@@ -43,6 +39,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import okio.Buffer;
 
 import static com.xing.api.TestUtils.file;
