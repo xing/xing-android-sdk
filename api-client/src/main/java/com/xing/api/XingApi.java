@@ -103,6 +103,11 @@ public final class XingApi {
         return callbackExecutor;
     }
 
+    /** Returns the {@linkplain OkHttpClient} associated with <strong>this</strong> instance. */
+    public OkHttpClient client() {
+        return client;
+    }
+
     /** Adds an auth error callback that will be invoked each time the server responses with an auth failure. */
     public XingApi addAuthErrorCallback(AuthErrorCallback errorCallback) {
         authErrorCallbacks.add(errorCallback);
@@ -117,10 +122,6 @@ public final class XingApi {
 
     CallbackAdapter callbackAdapter() {
         return callbackAdapter;
-    }
-
-    OkHttpClient client() {
-        return client;
     }
 
     /** Notify all callbacks that the server returned an auth error. */
