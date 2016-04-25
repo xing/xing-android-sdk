@@ -290,6 +290,10 @@ public interface CallSpec<RT, ET> extends Cloneable {
 
         //This is needed for XING internal APIs that return the error message in a custom format.
         public Builder<RT, ET> errorAs(Class<ET> type) {
+            return errorAs((Type) type);
+        }
+
+        public Builder<RT, ET> errorAs(Type type) {
             errorType = checkNotNull(type, "type == null");
             return this;
         }
