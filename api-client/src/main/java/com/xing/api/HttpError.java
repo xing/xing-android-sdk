@@ -135,7 +135,7 @@ public class HttpError {
 
         /** Possible error reason values. */
         @SuppressWarnings("InnerClassTooDeeplyNested")
-        enum Reason {
+        public enum Reason {
             UNEXPECTED("UNEXPECTED"),
             UNEXPECTED_VALUE("UNEXPECTED_VALUE"),
             MISSING("MISSING"),
