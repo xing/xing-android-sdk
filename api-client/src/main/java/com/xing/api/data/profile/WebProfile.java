@@ -90,7 +90,11 @@ public enum WebProfile {
     @Json(name = "zoominfo")
     ZOOMINFO("zoominfo"),
     @Json(name = "blog")
-    BLOG("blog");
+    BLOG("blog"),
+    @Json(name = "jabber")
+    JABBER("jabber"),
+    @Json(name = "xing coaches")
+    XING_COACHES("xing coaches");
 
     /** Name value that is received form the json response. */
     private final String value;
