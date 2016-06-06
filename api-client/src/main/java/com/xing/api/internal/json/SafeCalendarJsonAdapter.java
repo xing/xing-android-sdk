@@ -50,10 +50,13 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final String REG_EX_YEAR_MONTH_DAY = "^(19|20)\\d{2}-\\d{2}-\\d{2}$";
     private static final String REG_EX_ISO_DATE_Z = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$";
     private static final String REG_EX_ISO_DATE_TIME = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{4}$";
+    private static final String REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT =
+          "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{2}:\\d{2}$";
     private static final String REG_EX_ISO_DATE_WEIRD = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$";
 
     private static final String ISO_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String THREE_LETTER_ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
     private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String YEAR_DATE_FORMAT = "yyyy";
     private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
@@ -68,6 +71,8 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new SimpleDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
+              new SimpleDateFormat(THREE_LETTER_ISO8601_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
     }
 

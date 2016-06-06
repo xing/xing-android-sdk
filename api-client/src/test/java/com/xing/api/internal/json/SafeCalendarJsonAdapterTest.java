@@ -48,6 +48,7 @@ import static org.mockito.Mockito.mock;
  * <li>"yyyy-MM-dd"</li>
  * <li>"yyyy-MM-dd'T'HH:mm.ssZ"</li>
  * <li>"yyyy-MM-dd'T'HH:mm.ss.SSSZ"</li>
+ * <li>"yyyy-MM-dd'T'HH:mm:ssXXX"</li>
  * <p>
  *
  * @author serj.lotutovici
@@ -215,6 +216,35 @@ public class SafeCalendarJsonAdapterTest {
             assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(21);
             assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(0);
             assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(23);
+        } finally {
+            // Return pre test time zone.
+            TimeZone.setDefault(preTestTimeZone);
+        }
+    }
+
+    @Test
+    public void threeLetterIso8601withTimeZone() throws Exception {
+        // Need to reset time zone.
+        TimeZone preTestTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+        try {
+            Calendar fromJson = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
+            assertNotNull(fromJson);
+
+            assertTrue(fromJson.isSet(Calendar.SECOND));
+            assertTrue(fromJson.isSet(Calendar.MINUTE));
+            assertTrue(fromJson.isSet(Calendar.HOUR));
+            assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+            assertTrue(fromJson.isSet(Calendar.MONTH));
+            assertTrue(fromJson.isSet(Calendar.YEAR));
+
+            assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2003);
+            assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
+            assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(21);
+            assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(14);
+            assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(42);
+            assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(11);
         } finally {
             // Return pre test time zone.
             TimeZone.setDefault(preTestTimeZone);
