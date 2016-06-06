@@ -27,8 +27,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +58,6 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
     private static final String ISO_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    private static final String THREE_LETTER_ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
     private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String YEAR_DATE_FORMAT = "yyyy";
     private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
@@ -72,7 +73,20 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new SimpleDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
-              new SimpleDateFormat(THREE_LETTER_ISO8601_DATE_FORMAT, Locale.ENGLISH));
+              new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH) {
+                  @Override
+                  public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition pos) {
+                      StringBuffer dateString = super.format(date, toAppendTo, pos);
+                      return dateString.insert(dateString.length() - 2, ':');
+                  }
+
+                  @Override
+                  public Date parse(String text, ParsePosition pos) {
+                      int index = text.length() - 3;
+                      text = text.substring(0, index) + text.substring(index + 1);
+                      return super.parse(text, pos);
+                  }
+              });
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
     }
 
