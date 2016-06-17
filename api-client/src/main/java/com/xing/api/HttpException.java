@@ -17,7 +17,7 @@
 package com.xing.api;
 
 /** Exception for an unexpected, non-2xx HTTP response. */
-public final class HttpException extends Exception {
+public class HttpException extends Exception {
     private final int code;
     private final String message;
     private final Object error;
