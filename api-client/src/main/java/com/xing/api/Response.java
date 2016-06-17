@@ -20,9 +20,7 @@ import okhttp3.Headers;
 
 import static com.xing.api.Utils.checkNotNull;
 
-/**
- * TODO docs.
- */
+/** TODO docs. */
 public final class Response<RT, ET> {
     /** Returns a successful {@link Response} with a {@code null} error body. */
     static <RT, ET> Response<RT, ET> success(RT body, okhttp3.Response rawResponse) {
@@ -40,9 +38,9 @@ public final class Response<RT, ET> {
     }
 
     private final okhttp3.Response rawResponse;
+    private final ContentRange range;
     private final RT body;
     private final ET error;
-    private final ContentRange range;
 
     private Response(okhttp3.Response rawResponse, ContentRange range, RT body, ET error) {
         this.rawResponse = checkNotNull(rawResponse, "rawResponse == null");
@@ -75,12 +73,18 @@ public final class Response<RT, ET> {
         return rawResponse.isSuccessful();
     }
 
-    /** The de-serialized response body of a {@linkplain #isSuccessful() successful} response. */
+    /**
+     * The de-serialized response body of a {@linkplain #isSuccessful() successful} response
+     * or null if the response was unsuccessful.
+     */
     public RT body() {
         return body;
     }
 
-    /** The parsed error response of an {@linkplain #isSuccessful() unsuccessful} response. */
+    /**
+     * The parsed error response of an {@linkplain #isSuccessful() unsuccessful} response
+     * or null if the error contains no body.
+     */
     public ET error() {
         return error;
     }
