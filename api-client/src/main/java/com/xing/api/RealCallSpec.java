@@ -20,6 +20,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -46,7 +47,7 @@ import static com.xing.api.Utils.stateError;
 
 /** Implements {@linkplain CallSpec} providing the desired functionality. */
 final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
-    private final XingApi api;
+    final XingApi api;
     private final CallSpec.Builder<RT, ET> builder;
     private final Type responseType;
     private final Type errorType;
@@ -206,7 +207,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
     @SuppressWarnings("MagicNumber") // These codes are specific to this method and to the http protocol.
-    private Response<RT, ET> parseResponse(okhttp3.Response rawResponse) throws IOException {
+    Response<RT, ET> parseResponse(okhttp3.Response rawResponse) throws IOException {
         ResponseBody rawBody = rawResponse.body();
 
         // Remove the body's source (the only stateful object) so we can pass the response along.
@@ -229,6 +230,8 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
                 // Buffer the entire body to avoid future I/O.
                 ET errorBody = parseBody(errorType, catchingBody);
                 return Response.error(errorBody, rawResponse);
+            } catch (EOFException eofe) {
+                return Response.error(null, rawResponse);
             } catch (RuntimeException e) {
                 // If the underlying source threw an exception, propagate that, rather than indicating it was
                 // a runtime exception.
@@ -306,7 +309,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
 
     static final class ExceptionCatchingRequestBody extends ResponseBody {
         private final ResponseBody delegate;
-        private IOException thrownException;
+        IOException thrownException;
 
         ExceptionCatchingRequestBody(ResponseBody delegate) {
             this.delegate = delegate;

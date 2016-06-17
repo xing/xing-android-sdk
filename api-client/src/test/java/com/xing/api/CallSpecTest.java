@@ -530,6 +530,19 @@ public class CallSpecTest {
     }
 
     @Test
+    public void specHandlesErrorResponseWithoutBody() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(300));
+
+        CallSpec<Object, TestMsg> spec = this.<Object, TestMsg>builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .errorAs(TestMsg.class)
+              .build();
+
+        Response<Object, TestMsg> response = spec.execute();
+        assertEnmptyErrorResponse(response, 300);
+    }
+
+    @Test
     public void specThrowsIfUnauthorized() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(401));
 
@@ -968,6 +981,13 @@ public class CallSpecTest {
         assertNotNull(body);
         assertThat(body.msg).isEqualTo(expected.msg);
         assertThat(body.code).isEqualTo(expected.code);
+    }
+
+    private static void assertEnmptyErrorResponse(Response<Object, TestMsg> response, int code) {
+        assertThat(response.isSuccessful()).isFalse();
+        assertThat(response.code()).isEqualTo(code);
+        assertThat(response.body()).isNull();
+        assertThat(response.error()).isNull();
     }
 
     private static void assertRequestHasBody(Request request, TestMsg expected, int contentLength) throws IOException {
