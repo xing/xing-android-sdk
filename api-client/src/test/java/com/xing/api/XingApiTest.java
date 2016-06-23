@@ -17,15 +17,18 @@ package com.xing.api;
 
 import com.squareup.moshi.Moshi;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import okhttp3.Cache;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -168,6 +171,13 @@ public class XingApiTest {
         }
 
         try {
+            builder.cache(null);
+            Assert.fail();
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("cache == null");
+        }
+
+        try {
             builder.callbackExecutor(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
@@ -234,6 +244,17 @@ public class XingApiTest {
         assertThat(client.interceptors().get(0).toString()).isEqualTo("one");
         assertThat(client.interceptors().get(1).toString()).isEqualTo("two");
         assertThat(client.interceptors().get(2)).isInstanceOf(OAuth1SigningInterceptor.class);
+    }
+
+    @Test
+    public void cacheIsPorpagated() throws Exception {
+        Cache cache = new Cache(new File("test"), 42);
+        XingApi tested = new XingApi.Builder()
+              .cache(cache)
+              .loggedOut()
+              .build();
+
+        assertThat(tested.client().cache()).isSameAs(cache);
     }
 
     @Test

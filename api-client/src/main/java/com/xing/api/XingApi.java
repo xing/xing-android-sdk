@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import okhttp3.Cache;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -201,6 +202,11 @@ public final class XingApi {
 
         public Builder apiEndpoint(HttpUrl baseUrl) {
             apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
+            return this;
+        }
+
+        public Builder cache(Cache cache) {
+            clientBuilder.cache(checkNotNull(cache, "cache == null"));
             return this;
         }
 
