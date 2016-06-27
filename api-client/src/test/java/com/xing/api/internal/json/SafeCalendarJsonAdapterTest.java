@@ -23,14 +23,18 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import static com.xing.api.internal.json.SafeCalendarJsonAdapter.ZULU_TIME_ZONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,10 +53,7 @@ import static org.mockito.Mockito.mock;
  * <li>"yyyy-MM-dd'T'HH:mm.ssZ"</li>
  * <li>"yyyy-MM-dd'T'HH:mm.ss.SSSZ"</li>
  * <li>"yyyy-MM-dd'T'HH:mm:ssXXX"</li>
- * <p>
- *
- * @author serj.lotutovici
- * @author daniel.hartwich
+ * </p>
  */
 public class SafeCalendarJsonAdapterTest {
     private static Locale preTestLocale;
@@ -195,9 +196,7 @@ public class SafeCalendarJsonAdapterTest {
 
     @Test
     public void iso8601withTimeZone() throws Exception {
-        // Need to reset time zone.
-        TimeZone preTestTimeZone = TimeZone.getDefault();
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone preTestTimeZone = resetTimeZone();
 
         try {
             Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
@@ -224,9 +223,7 @@ public class SafeCalendarJsonAdapterTest {
 
     @Test
     public void threeLetterIso8601withTimeZone() throws Exception {
-        // Need to reset time zone.
-        TimeZone preTestTimeZone = TimeZone.getDefault();
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone preTestTimeZone = resetTimeZone();
 
         try {
             Calendar fromJson = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
@@ -269,6 +266,29 @@ public class SafeCalendarJsonAdapterTest {
         assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(7);
         assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(42);
         assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(1);
+    }
+
+    @Test
+    public void parsedZuluTimestampShouldHaveZuluTimeZone() throws IOException {
+        List<TimeZone> parsedTimeZones = new ArrayList<>();
+        parsedTimeZones.add(parseZulu("\"2016-06-27T11:35:21.120Z\""));
+        parsedTimeZones.add(parseZulu("\"2016-06-27T11:35:21Z\""));
+
+        //noinspection SSBasedInspection
+        for (TimeZone currentTimeZone : parsedTimeZones) {
+            assertTrue(ZULU_TIME_ZONE.equals(currentTimeZone));
+        }
+    }
+
+    private TimeZone parseZulu(String dateString) throws IOException {
+        Calendar calendar = calendarAdapter().fromJson(dateString);
+        return calendar.getTimeZone();
+    }
+
+    private static TimeZone resetTimeZone() {
+        TimeZone preTestTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        return preTestTimeZone;
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})

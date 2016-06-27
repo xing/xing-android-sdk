@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.mockwebserver.MockResponse;
 
@@ -198,11 +199,13 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
 
         Response<List<ContactRequest>, HttpError> response = resource.getIncomingContactRequests().execute();
         // If no exception was thrown then the spec is build correctly.
+        SafeCalendar safeCalendar = new SafeCalendar(2010, Calendar.NOVEMBER, 17, 10, 56, 16);
+        safeCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertThat(response.body()).containsExactly(
               new ContactRequest()
                     .message("Sehr geehrter Herr Irgendwas, ich würde Sie gern zu meinen Kontakten hinzufügen")
                     .senderId("6055623_5cf823")
-                    .receivedAt(new SafeCalendar(2010, Calendar.NOVEMBER, 17, 10, 56, 16))
+                    .receivedAt(safeCalendar)
                     .sender(new XingUser().id("6055623_5cf823").displayName("John Doe")));
     }
 
