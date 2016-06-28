@@ -19,8 +19,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,7 +29,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -55,24 +53,11 @@ import static org.mockito.Mockito.mock;
  * <li>"yyyy-MM-dd'T'HH:mm:ssXXX"</li>
  * </p>
  */
-public class SafeCalendarJsonAdapterTest {
-    private static Locale preTestLocale;
-
-    @BeforeClass
-    public static void setUp() throws Exception {
-        // Save pre test locale so that we don't screw up other tests
-        preTestLocale = Locale.getDefault();
-        // Pre set the defaults to germany
-        Locale.setDefault(Locale.GERMANY);
-    }
-
-    @AfterClass
-    public static void tearDown() throws Exception {
-        // Return default values to pre test values
-        Locale.setDefault(preTestLocale);
-    }
-
-    private final Moshi moshi = new Moshi.Builder().build();
+public final class SafeCalendarJsonAdapterTest {
+    /** Run all tests in Central European Time. */
+    @Rule
+    public final TimeZoneRule rule = new TimeZoneRule(TimeZone.getTimeZone("CET"));
+    public final Moshi moshi = new Moshi.Builder().build();
 
     @Test
     public void ignoresOtherTypes() throws Exception {
@@ -166,6 +151,7 @@ public class SafeCalendarJsonAdapterTest {
     @Test
     public void iso8601() throws Exception {
         Calendar calendar = new SafeCalendar();
+        calendar.setTimeZone(SafeCalendarJsonAdapter.ZULU_TIME_ZONE);
         calendar.set(Calendar.YEAR, 2011);
         calendar.set(Calendar.MONTH, Calendar.JANUARY);
         calendar.set(Calendar.DAY_OF_MONTH, 23);
@@ -196,56 +182,43 @@ public class SafeCalendarJsonAdapterTest {
 
     @Test
     public void iso8601withTimeZone() throws Exception {
-        TimeZone preTestTimeZone = resetTimeZone();
+        Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
+        assertNotNull(fromJson);
 
-        try {
-            Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
-            assertNotNull(fromJson);
+        assertTrue(fromJson.isSet(Calendar.SECOND));
+        assertTrue(fromJson.isSet(Calendar.MINUTE));
+        assertTrue(fromJson.isSet(Calendar.HOUR));
+        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+        assertTrue(fromJson.isSet(Calendar.MONTH));
+        assertTrue(fromJson.isSet(Calendar.YEAR));
 
-            assertTrue(fromJson.isSet(Calendar.SECOND));
-            assertTrue(fromJson.isSet(Calendar.MINUTE));
-            assertTrue(fromJson.isSet(Calendar.HOUR));
-            assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-            assertTrue(fromJson.isSet(Calendar.MONTH));
-            assertTrue(fromJson.isSet(Calendar.YEAR));
-
-            assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
-            assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
-            assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(27);
-            assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(21);
-            assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(0);
-            assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(23);
-        } finally {
-            // Return pre test time zone.
-            TimeZone.setDefault(preTestTimeZone);
-        }
+        assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
+        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
+        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(27);
+        assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(22);
+        assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(0);
+        assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(23);
+        assertThat(fromJson.getTimeZone()).isEqualTo(TimeZone.getTimeZone("CET"));
     }
 
     @Test
     public void threeLetterIso8601withTimeZone() throws Exception {
-        TimeZone preTestTimeZone = resetTimeZone();
+        Calendar fromJson = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
+        assertNotNull(fromJson);
 
-        try {
-            Calendar fromJson = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
-            assertNotNull(fromJson);
+        assertTrue(fromJson.isSet(Calendar.SECOND));
+        assertTrue(fromJson.isSet(Calendar.MINUTE));
+        assertTrue(fromJson.isSet(Calendar.HOUR));
+        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+        assertTrue(fromJson.isSet(Calendar.MONTH));
+        assertTrue(fromJson.isSet(Calendar.YEAR));
 
-            assertTrue(fromJson.isSet(Calendar.SECOND));
-            assertTrue(fromJson.isSet(Calendar.MINUTE));
-            assertTrue(fromJson.isSet(Calendar.HOUR));
-            assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-            assertTrue(fromJson.isSet(Calendar.MONTH));
-            assertTrue(fromJson.isSet(Calendar.YEAR));
-
-            assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2003);
-            assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
-            assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(21);
-            assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(14);
-            assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(42);
-            assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(11);
-        } finally {
-            // Return pre test time zone.
-            TimeZone.setDefault(preTestTimeZone);
-        }
+        assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2003);
+        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
+        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(21);
+        assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(16);
+        assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(42);
+        assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(11);
     }
 
     @Test
@@ -271,8 +244,8 @@ public class SafeCalendarJsonAdapterTest {
     @Test
     public void parsedZuluTimestampShouldHaveZuluTimeZone() throws IOException {
         List<TimeZone> parsedTimeZones = new ArrayList<>();
-        parsedTimeZones.add(parseZulu("\"2016-06-27T11:35:21.120Z\""));
-        parsedTimeZones.add(parseZulu("\"2016-06-27T11:35:21Z\""));
+        parsedTimeZones.add(parseTimeZone("\"2016-06-27T11:35:21.120Z\""));
+        parsedTimeZones.add(parseTimeZone("\"2016-06-27T11:35:21Z\""));
 
         //noinspection SSBasedInspection
         for (TimeZone currentTimeZone : parsedTimeZones) {
@@ -280,15 +253,22 @@ public class SafeCalendarJsonAdapterTest {
         }
     }
 
-    private TimeZone parseZulu(String dateString) throws IOException {
-        Calendar calendar = calendarAdapter().fromJson(dateString);
-        return calendar.getTimeZone();
+    @Test
+    public void safeCalendarAdapterRespectsTimezoneOffset() throws Exception {
+        Calendar fromJson1 = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
+        Calendar fromJson2 = calendarAdapter().fromJson("\"2003-04-21T14:42:11Z\"");
+        assertThat(fromJson1.getTimeInMillis()).isEqualTo(fromJson2.getTimeInMillis());
+
+        String toJson1 = calendarAdapter().toJson(fromJson1);
+        assertThat(toJson1).isEqualTo("\"2003-04-21T16:42:11+02:00\"");
+
+        String toJson2 = calendarAdapter().toJson(fromJson2);
+        assertThat(toJson2).isEqualTo("\"2003-04-21T14:42:11Z\"");
     }
 
-    private static TimeZone resetTimeZone() {
-        TimeZone preTestTimeZone = TimeZone.getDefault();
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        return preTestTimeZone;
+    private TimeZone parseTimeZone(String dateString) throws IOException {
+        Calendar calendar = calendarAdapter().fromJson(dateString);
+        return calendar.getTimeZone();
     }
 
     @SuppressWarnings({"unchecked", "ConstantConditions"})
