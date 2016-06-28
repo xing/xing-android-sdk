@@ -114,6 +114,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
      * @param calendar The calendar to clear
      * @param regEx The reg ex
      */
+    @SuppressWarnings("fallthrough")
     private static void clearCalendarByRegEx(Calendar calendar, String regEx) {
         switch (regEx) {
             case YEAR_DATE_FORMAT: {
@@ -204,7 +205,19 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
                         output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MINUTE)));
                         output.append(':');
                         output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.SECOND)));
-                        output.append('Z');
+                        if (ZULU_TIME_ZONE.equals(calendar.getTimeZone())) {
+                            output.append('Z');
+                        } else {
+                            TimeZone timeZone = calendar.getTimeZone();
+                            // This will return the initial time milliseconds + offset milliseconds
+                            long millisWithOffset = timeZone.getOffset(calendar.getTimeInMillis());
+                            String offset = String.format("%02d:%02d",
+                                  // Get the amount of hours form the offset
+                                  Math.abs(millisWithOffset / 3600000),
+                                  // Get the amount of minutes form the offset
+                                  Math.abs((millisWithOffset / 60000) % 60));
+                            output.append((millisWithOffset >= 0 ? "+" : "-")).append(offset);
+                        }
                     }
                 }
             }
