@@ -39,56 +39,14 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * {@link JsonAdapter} that parses all types of dates received form XWS and converts them into a {@link SafeCalendar}.
- *
- * @author daniel.hartwich
- * @author serj.lotutovici
  */
 public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapter<T> {
-    private static final String REG_EX_YEAR = "^(19|20)\\d{2}";
-    private static final String REG_EX_YEAR_MONTH = "^(19|20)\\d{2}-\\d{2}$";
-    private static final String REG_EX_YEAR_MONTH_DAY = "^(19|20)\\d{2}-\\d{2}-\\d{2}$";
-    private static final String REG_EX_ISO_DATE_Z = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$";
-    private static final String REG_EX_ISO_DATE_TIME = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{4}$";
-    private static final String REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT =
-          "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{2}:\\d{2}$";
-    private static final String REG_EX_ISO_DATE_WEIRD = "^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$";
-
-    private static final String ISO_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final String YEAR_DATE_FORMAT = "yyyy";
-    private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
-    private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
-
-    private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
-    private static final Map<String, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
-
-    static {
-        DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new SimpleDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
-              new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH) {
-                  @Override
-                  public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition pos) {
-                      StringBuffer dateString = super.format(date, toAppendTo, pos);
-                      return dateString.insert(dateString.length() - 2, ':');
-                  }
-
-                  @Override
-                  public Date parse(String text, ParsePosition pos) {
-                      int index = text.length() - 3;
-                      text = text.substring(0, index) + text.substring(index + 1);
-                      return super.parse(text, pos);
-                  }
-              });
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
-    }
 
     public static final Factory FACTORY = new Factory() {
         @Override
@@ -103,7 +61,86 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         }
     };
 
+    static final TimeZone ZULU_TIME_ZONE = TimeZone.getTimeZone("UTC");
+
+    private static final Pattern REG_EX_YEAR = Pattern.compile("^(19|20)\\d{2}");
+    private static final Pattern REG_EX_YEAR_MONTH = Pattern.compile("^(19|20)\\d{2}-\\d{2}$");
+    private static final Pattern REG_EX_YEAR_MONTH_DAY = Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}$");
+    private static final Pattern REG_EX_ISO_DATE_Z = Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$");
+    private static final Pattern REG_EX_ISO_DATE_TIME =
+          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{4}$");
+    private static final Pattern REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT =
+          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{2}:\\d{2}$");
+    private static final Pattern REG_EX_ISO_DATE_WEIRD =
+          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$");
+
+    private static final String ISO_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String YEAR_DATE_FORMAT = "yyyy";
+    private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
+    private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
+
+    private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
+    private static final Map<Pattern, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
+
+    static {
+        DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
+              new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
+    }
+
     SafeCalendarJsonAdapter() {
+    }
+
+    public static void resolveTimeZone(Calendar calendar, String chosenPattern) {
+        boolean isZuluTimeZone = ISO_DATE_FORMAT_Z.equals(chosenPattern)
+              || ISO_DATE_FORMAT_WEIRD.equals(chosenPattern);
+
+        if (!isZuluTimeZone) {
+            return;
+        }
+        calendar.setTimeZone(ZULU_TIME_ZONE);
+    }
+
+    /**
+     * Clear unused calendar fields by regular expression.
+     *
+     * @param calendar The calendar to clear
+     * @param regEx The reg ex
+     */
+    private static void clearCalendarByRegEx(Calendar calendar, String regEx) {
+        switch (regEx) {
+            case YEAR_DATE_FORMAT: {
+                calendar.clear(Calendar.MONTH);
+            }
+            case YEAR_MONTH_DATE_FORMAT: {
+                calendar.clear(Calendar.DAY_OF_MONTH);
+            }
+            case YEAR_MONTH_DAY_DATE_FORMAT: {
+                calendar.clear(Calendar.HOUR);
+                calendar.clear(Calendar.MINUTE);
+                calendar.clear(Calendar.SECOND);
+                calendar.clear(Calendar.MILLISECOND);
+            }
+        }
+    }
+
+    /**
+     * Checks if a {@link SafeCalendar} has all the necessary fields set to generate a timestamp.
+     * These fields are: year, month, day of month, hour of day, minute and second.
+     *
+     * @return True if has all the fields set, false otherwise.
+     */
+    private static boolean isFilledToTime(Calendar calendar) {
+        return calendar.isSet(Calendar.HOUR_OF_DAY)
+              && calendar.isSet(Calendar.MINUTE)
+              && calendar.isSet(Calendar.SECOND);
     }
 
     @Override
@@ -113,8 +150,9 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
         // Read the format entry
         DateFormat format = null;
-        for (Map.Entry<String, DateFormat> entry : DATE_FORMAT_MAP.entrySet()) {
-            if (dateStr.matches(entry.getKey())) {
+        for (Map.Entry<Pattern, DateFormat> entry : DATE_FORMAT_MAP.entrySet()) {
+            Matcher matcher = entry.getKey().matcher(dateStr);
+            if (matcher.matches()) {
                 format = entry.getValue();
                 break;
             }
@@ -122,19 +160,22 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
         // Throw if no supported format, so that we don't fail silently.
         if (format == null) {
-            throw new AssertionError("Unsupported date format! Expecting ISO 8601, but found: " + dateStr);
+            throw new AssertionError("Unsupported date format! Expecting ISO 8601, but found: "
+                  + dateStr);
         }
 
         try {
             // Try to parse the date
             Date date = format.parse(dateStr);
             // Create a calendar instance, clear it and set the received time
+            String chosenPattern = ((SimpleDateFormat) format).toPattern();
             Calendar calendar = new SafeCalendar();
+            resolveTimeZone(calendar, chosenPattern);
             calendar.clear();
             calendar.setTime(date);
 
             // Clear unnecessary fields form calendar
-            clearCalendarByRegEx(calendar, ((SimpleDateFormat) format).toPattern());
+            clearCalendarByRegEx(calendar, chosenPattern);
 
             //noinspection unchecked
             return (T) calendar;
@@ -177,38 +218,31 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         return "JsonAdapter(" + SafeCalendar.class + ')';
     }
 
-    /**
-     * Clear unused calendar fields by regular expression.
-     *
-     * @param calendar The calendar to clear
-     * @param regEx The reg ex
-     */
-    private static void clearCalendarByRegEx(Calendar calendar, String regEx) {
-        switch (regEx) {
-            case YEAR_DATE_FORMAT: {
-                calendar.clear(Calendar.MONTH);
-            }
-            case YEAR_MONTH_DATE_FORMAT: {
-                calendar.clear(Calendar.DAY_OF_MONTH);
-            }
-            case YEAR_MONTH_DAY_DATE_FORMAT: {
-                calendar.clear(Calendar.HOUR);
-                calendar.clear(Calendar.MINUTE);
-                calendar.clear(Calendar.SECOND);
-                calendar.clear(Calendar.MILLISECOND);
-            }
+    static class ThreeLetterDateFormat extends SimpleDateFormat {
+
+        public ThreeLetterDateFormat(String isoDateFormat, Locale locale) {
+            super(isoDateFormat, locale);
+        }
+
+        @Override
+        public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition pos) {
+            StringBuffer dateString = super.format(date, toAppendTo, pos);
+            return dateString.insert(dateString.length() - 2, ':');
+        }
+
+        @Override
+        public Date parse(String text, ParsePosition pos) {
+            int index = text.length() - 3;
+            text = text.substring(0, index) + text.substring(index + 1);
+            return super.parse(text, pos);
         }
     }
 
-    /**
-     * Checks if a {@link SafeCalendar} has all the necessary fields set to generate a timestamp.
-     * These fields are: year, month, day of month, hour of day, minute and second.
-     *
-     * @return True if has all the fields set, false otherwise.
-     */
-    private static boolean isFilledToTime(Calendar calendar) {
-        return calendar.isSet(Calendar.HOUR_OF_DAY)
-              && calendar.isSet(Calendar.MINUTE)
-              && calendar.isSet(Calendar.SECOND);
+    static class ZuluDateFormat extends SimpleDateFormat {
+
+        public ZuluDateFormat(String isoDateFormat, Locale locale) {
+            super(isoDateFormat, locale);
+            setTimeZone(ZULU_TIME_ZONE);
+        }
     }
 }

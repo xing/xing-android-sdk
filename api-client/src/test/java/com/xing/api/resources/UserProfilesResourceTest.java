@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.mockwebserver.MockResponse;
 
@@ -181,12 +182,14 @@ public final class UserProfilesResourceTest extends ResourceTestCase<UserProfile
 
         Response<ProfileMessage, HttpError> response1 = resource.getUserProfileMessage("test").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response1.body().updatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
+        SafeCalendar safeCalendar = new SafeCalendar(2011, 6, 18, 11, 40, 19);
+        safeCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        assertThat(response1.body().updatedAt()).isEqualTo(safeCalendar);
         assertThat(response1.body().message()).isEqualTo("My new profile message.");
 
         Response<ProfileMessage, HttpError> response2 = resource.getOwnProfileMessage().execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response2.body().updatedAt()).isEqualTo(new SafeCalendar(2011, 6, 18, 11, 40, 19));
+        assertThat(response2.body().updatedAt()).isEqualTo(safeCalendar);
         assertThat(response2.body().message()).isEqualTo("My new profile message.");
     }
 
