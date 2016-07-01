@@ -100,6 +100,8 @@ public class XingUser implements Serializable {
     private EducationalBackground educationBackground;
     @Json(name = "photo_urls")
     private PhotoUrls photoUrls;
+    @Json(name = "legal_information")
+    private LegalInformation legalInformation;
 
     @SuppressWarnings("SimplifiableIfStatement")
     @Override
@@ -163,6 +165,9 @@ public class XingUser implements Serializable {
               : xingUser.educationBackground != null) {
             return false;
         }
+        if (legalInformation != null ? !legalInformation.equals(xingUser.legalInformation)
+              : xingUser.legalInformation != null) return false;
+
         return photoUrls != null ? photoUrls.equals(xingUser.photoUrls) : xingUser.photoUrls == null;
     }
 
@@ -195,6 +200,7 @@ public class XingUser implements Serializable {
         result = 31 * result + (professionalExperience != null ? professionalExperience.hashCode() : 0);
         result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
         result = 31 * result + (photoUrls != null ? photoUrls.hashCode() : 0);
+        result = 31 * result + (legalInformation != null ? legalInformation.hashCode() : 0);
         return result;
     }
 
@@ -228,6 +234,7 @@ public class XingUser implements Serializable {
               + ", educationBackground=" + educationBackground
               + ", professionalExperience=" + professionalExperience
               + ", photoUrls=" + photoUrls
+              + ", legalInformation=" + legalInformation
               + '}';
     }
 
@@ -603,6 +610,15 @@ public class XingUser implements Serializable {
 
     public XingUser professionalExperience(ProfessionalExperience professionalExperience) {
         this.professionalExperience = professionalExperience;
+        return this;
+    }
+
+    public LegalInformation legalInformation() {
+        return legalInformation;
+    }
+
+    public XingUser legalInformation(LegalInformation legalInformation) {
+        this.legalInformation = legalInformation;
         return this;
     }
 
