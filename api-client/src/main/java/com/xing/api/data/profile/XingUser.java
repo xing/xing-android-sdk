@@ -166,7 +166,9 @@ public class XingUser implements Serializable {
             return false;
         }
         if (legalInformation != null ? !legalInformation.equals(xingUser.legalInformation)
-              : xingUser.legalInformation != null) return false;
+              : xingUser.legalInformation != null) {
+            return false;
+        }
 
         return photoUrls != null ? photoUrls.equals(xingUser.photoUrls) : xingUser.photoUrls == null;
     }
@@ -671,10 +673,18 @@ public class XingUser implements Serializable {
     }
 
     /**
-     * Returns true or false depending on the size of the PremiumServices list. If it's false it means the user is
-     * basic, otherwise he is premium.
+     * Returns {@code true} if the user is premium, otherwise {@code false}. The assumption on which this method is based,
+     * is that each premium user has at least one {@linkplain PremiumService premium service} enabled.
      */
     public boolean isPremium() {
         return premiumServices != null && !premiumServices.isEmpty();
+    }
+
+    /**
+     * Returns {@code true} if the user is blacklisted, otherwise {@code false}. The assumption on which this method is
+     * based, is that XWS will always return a user id if the user not blocked or blacklisted.
+     */
+    public boolean isBlacklisted() {
+        return id == null || id.isEmpty();
     }
 }

@@ -71,4 +71,11 @@ public class XingUserTest {
         XingUser nullUser = new XingUser().premiumServices(null);
         assertThat(nullUser.isPremium()).isEqualTo(false);
     }
+
+    @Test
+    public void testIsBlackListed() throws Exception {
+        assertThat(new XingUser().id(null).isBlacklisted()).isTrue();
+        assertThat(new XingUser().id("").isBlacklisted()).isTrue();
+        assertThat(new XingUser().id("some_id").isBlacklisted()).isFalse();
+    }
 }
