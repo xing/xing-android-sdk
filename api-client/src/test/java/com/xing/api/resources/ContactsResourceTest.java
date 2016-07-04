@@ -206,7 +206,7 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
                     .message("Sehr geehrter Herr Irgendwas, ich würde Sie gern zu meinen Kontakten hinzufügen")
                     .senderId("6055623_5cf823")
                     .receivedAt(safeCalendar)
-                    .sender(new XingUser().id("6055623_5cf823").displayName("John Doe")));
+                    .sender(new XingUser("6055623_5cf823").displayName("John Doe")));
     }
 
     @Test

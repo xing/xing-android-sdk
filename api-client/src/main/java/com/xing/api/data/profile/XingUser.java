@@ -41,7 +41,7 @@ public class XingUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "id")
-    private String id;
+    private /* TODO: make final */ String id;
     @Json(name = "academic_title")
     private String academicTitle;
     @Json(name = "first_name")
@@ -102,6 +102,21 @@ public class XingUser implements Serializable {
     private PhotoUrls photoUrls;
     @Json(name = "legal_information")
     private LegalInformation legalInformation;
+
+    /**
+     * Create an instance of {@linkplain XingUser}.
+     *
+     * @deprecated A user can not exist without an {@linkplain #id()}. Use {@linkplain XingUser#XingUser(String)}. The
+     * user id can be returned {@code null} by XWS only if the user is blacklisted, see {@linkplain #isBlacklisted()}.
+     */
+    @Deprecated
+    public XingUser() {
+    }
+
+    /** Create an {@linkplain XingUser} instance with the respective user id. */
+    public XingUser(String id) {
+        this.id = id;
+    }
 
     @SuppressWarnings("SimplifiableIfStatement")
     @Override
@@ -244,6 +259,8 @@ public class XingUser implements Serializable {
         return id;
     }
 
+    /** @deprecated See {@linkplain XingUser#XingUser()}. */
+    @Deprecated
     public XingUser id(String id) {
         this.id = id;
         return this;
