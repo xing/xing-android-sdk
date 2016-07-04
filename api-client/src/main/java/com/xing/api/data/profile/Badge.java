@@ -24,5 +24,6 @@ public enum Badge {
     AMBASSADOR,
     EXPERT,
     MODERATOR,
-    PREMIUM
+    PREMIUM,
+    WORK_LIFE
 }
