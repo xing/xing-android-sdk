@@ -17,7 +17,7 @@ public class XingUserTest {
 
     @Before
     public void setUp() throws Exception {
-        user = new XingUser()
+        user = new XingUser(null)
               .addPremiumService(PremiumService.PRIVATE_MESSAGES)
               .professionalExperience(
                     new ProfessionalExperience()
@@ -66,16 +66,16 @@ public class XingUserTest {
     @Test
     public void testIsPremium() throws Exception {
         assertThat(user.isPremium()).isEqualTo(true);
-        XingUser basicUser = new XingUser().premiumServices(Collections.<PremiumService>emptyList());
+        XingUser basicUser = new XingUser(null).premiumServices(Collections.<PremiumService>emptyList());
         assertThat(basicUser.isPremium()).isEqualTo(false);
-        XingUser nullUser = new XingUser().premiumServices(null);
+        XingUser nullUser = new XingUser(null).premiumServices(null);
         assertThat(nullUser.isPremium()).isEqualTo(false);
     }
 
     @Test
     public void testIsBlackListed() throws Exception {
-        assertThat(new XingUser().id(null).isBlacklisted()).isTrue();
-        assertThat(new XingUser().id("").isBlacklisted()).isTrue();
-        assertThat(new XingUser().id("some_id").isBlacklisted()).isFalse();
+        assertThat(new XingUser(null).isBlacklisted()).isTrue();
+        assertThat(new XingUser("").isBlacklisted()).isTrue();
+        assertThat(new XingUser("some_id").isBlacklisted()).isFalse();
     }
 }

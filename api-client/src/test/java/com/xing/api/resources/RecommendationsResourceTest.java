@@ -65,12 +65,10 @@ public final class RecommendationsResourceTest extends ResourceTestCase<Recommen
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.isSuccessful()).isTrue();
         assertThat(response.body()).containsExactly(
-              new XingUser()
-                    .id("123123_abcdef")
+              new XingUser("123123_abcdef")
                     .displayName("Marianne Musterfrau")
                     .gender(Gender.FEMALE),
-              new XingUser()
-                    .id("111111_cccccc")
+              new XingUser("111111_cccccc")
                     .displayName("Max Musterdude")
                     .gender(Gender.MALE)
         );
