@@ -3,6 +3,8 @@ package com.xing.api.data.profile;
 import com.squareup.moshi.Json;
 import com.xing.api.resources.UserProfilesResource;
 
+import java.io.Serializable;
+
 /**
  * Part of the {@link XingUser} that contains the user's set legal information as a preview.
  * <p>
@@ -10,7 +12,8 @@ import com.xing.api.resources.UserProfilesResource;
  * {@link UserProfilesResource#getUserLegalInformation(String)}
  */
 @SuppressWarnings("unused")
-public class LegalInformation {
+public class LegalInformation implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Json(name = "preview_content")
     private String previewContent;
@@ -27,6 +30,15 @@ public class LegalInformation {
     @Override
     public int hashCode() {
         return previewContent != null ? previewContent.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof LegalInformation)) return false;
+
+        LegalInformation that = (LegalInformation) obj;
+        return previewContent != null ? previewContent.equals(that.previewContent) : that.previewContent == null;
     }
 
     @Override

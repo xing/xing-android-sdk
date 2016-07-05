@@ -253,5 +253,8 @@
     "size_256x256": "http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.256x256.jpg",
     "size_1024x1024": "http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.1024x1024.jpg",
     "size_original": "http://www.xing.com/img/users/e/3/d/f94ef165a.123456,1.original.jpg"
+  },
+  "legal_information": {
+    "preview_content": "Max Mustermann\nMuster AG\nMusterstraße 123\n22992 Musterdorf"
   }
 }
