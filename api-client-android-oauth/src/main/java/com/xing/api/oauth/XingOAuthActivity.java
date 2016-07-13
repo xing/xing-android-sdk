@@ -40,8 +40,8 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("ClassNamingConvention")
 public final class XingOAuthActivity extends Activity {
-    private WebView webView;
-    private OAuthHelper helper;
+    WebView webView;
+    OAuthHelper helper;
 
     /** Clear all cookies. */
     @SuppressWarnings("deprecation")
@@ -98,7 +98,7 @@ public final class XingOAuthActivity extends Activity {
     }
 
     /** Invokes in background the oauthAuthenticationHelper to retrieve the request token. */
-    private static class OauthRequestTokenTask extends AsyncTask<Void, Void, String> {
+    static final class OauthRequestTokenTask extends AsyncTask<Void, Void, String> {
         private final OAuthHelper helper;
         private final WeakReference<XingOAuthActivity> activityRef;
 
@@ -139,7 +139,7 @@ public final class XingOAuthActivity extends Activity {
     }
 
     /** Invokes in background the oauthAuthenticationHelper to retrieve the access token. */
-    private static class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Boolean> {
+    static final class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Boolean> {
         private final OAuthHelper helper;
         private final WeakReference<XingOAuthActivity> activityRef;
 

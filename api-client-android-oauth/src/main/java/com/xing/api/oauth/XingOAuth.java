@@ -105,7 +105,7 @@ public final class XingOAuth {
 
     /** Builds and validates the {@linkplain XingOAuth} helper. */
     public static final class Builder {
-        private static final String CALLBACK_PATTERN = "^[a-z]*\\:\\/\\/+[a-z0-9_\\-]*";
+        private static final String CALLBACK_PATTERN = "^[a-z]*\\:\\/\\/+[a-z0-9_\\-\\.]*";
 
         private String consumerKey;
         private String consumerSecret;

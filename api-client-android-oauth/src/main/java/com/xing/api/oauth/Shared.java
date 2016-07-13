@@ -46,7 +46,7 @@ final class Shared {
     }
 
     static String validate(String input, String pattern) {
-        if (!pattern.matches(input)) {
+        if (!input.matches(pattern)) {
             throw new IllegalArgumentException("Expected input: [" + pattern + "], found: " + input);
         }
         return input;

@@ -61,6 +61,11 @@ dependencies {
 
     provided libraries.supportAnnotations
     compile libraries.singpost
+
+    testCompile libraries.junit
+    testCompile libraries.assertj
+    testCompile libraries.mockito
+    testCompile libraries.robolectric
 }
 /*
  *  ============== Artifacts publishing section ==============
