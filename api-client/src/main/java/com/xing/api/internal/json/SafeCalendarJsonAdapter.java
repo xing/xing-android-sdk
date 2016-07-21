@@ -70,7 +70,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final Pattern REG_EX_ISO_DATE_TIME =
           Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{4}$");
     private static final Pattern REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT =
-          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+]\\d{2}:\\d{2}$");
+          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+|-]\\d{2}:\\d{2}$");
     private static final Pattern REG_EX_ISO_DATE_WEIRD =
           Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$");
 
