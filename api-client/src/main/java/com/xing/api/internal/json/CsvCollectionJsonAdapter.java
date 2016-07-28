@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2015 XING AG (http://xing.com/)
+ * Copyright (c) 2016 XING AG (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,14 @@ import java.util.regex.Pattern;
 
 /** Adapter that parses comma separated value strings into a collection. */
 public abstract class CsvCollectionJsonAdapter<C extends Collection<String>> extends JsonAdapter<C> {
-    private static final String COMMA_DELIMITER = ", ";
+    private static final String COMMA_DELIMITER = ",";
     private static final Pattern COMMA_SEPARATOR = Pattern.compile(COMMA_DELIMITER);
 
+    private static final String COMMA_SPACE_DELIMITER = ", ";
+    private static final Pattern COMMA_SPACE_SEPARATOR = Pattern.compile(COMMA_SPACE_DELIMITER);
+
     /** Comma separated values adapter factory. */
-    public static final JsonAdapter.Factory FACTORY = new Factory() {
+    public static final Factory FACTORY = new Factory() {
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (annotations.isEmpty() || annotations.size() != 1
@@ -94,7 +97,8 @@ public abstract class CsvCollectionJsonAdapter<C extends Collection<String>> ext
     public C fromJson(JsonReader reader) throws IOException {
         C result = newCollection();
         String csString = reader.nextString();
-        String[] strings = COMMA_SEPARATOR.split(csString);
+        String removeSpaces = COMMA_SPACE_SEPARATOR.matcher(csString).replaceAll(COMMA_DELIMITER);
+        String[] strings = COMMA_SEPARATOR.split(removeSpaces);
         for (int index = 0, size = strings.length; index < size; index++) {
             result.add(strings[index]);
         }
