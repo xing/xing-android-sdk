@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.xing.api.internal.json;
 
 import com.squareup.moshi.JsonAdapter;
@@ -40,7 +41,7 @@ public abstract class CsvCollectionJsonAdapter<C extends Collection<String>> ext
     private static final Pattern COMMA_SPACE_SEPARATOR = Pattern.compile(COMMA_SPACE_DELIMITER);
 
     /** Comma separated values adapter factory. */
-    public static final Factory FACTORY = new Factory() {
+    public static final JsonAdapter.Factory FACTORY = new Factory() {
         @Override
         public JsonAdapter<?> create(Type type, Set<? extends Annotation> annotations, Moshi moshi) {
             if (annotations.isEmpty() || annotations.size() != 1
@@ -113,7 +114,7 @@ public abstract class CsvCollectionJsonAdapter<C extends Collection<String>> ext
             if (firstTime) {
                 firstTime = false;
             } else {
-                sb.append(COMMA_DELIMITER);
+                sb.append(COMMA_SPACE_DELIMITER);
             }
             sb.append(token);
         }

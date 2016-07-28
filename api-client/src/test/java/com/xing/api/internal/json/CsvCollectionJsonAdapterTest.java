@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2015 XING AG (http://xing.com/)
+ * Copyright (c) 2016 XING AG (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,6 +109,9 @@ public class CsvCollectionJsonAdapterTest {
 
         C fromJson = fromJson(collectionClass, "\"test1, test2, test3\"");
         assertThat(fromJson).containsExactly("test1", "test2", "test3");
+
+        C fromJsonNoSpace = fromJson(collectionClass, "\"test1,test2,test3\"");
+        assertThat(fromJsonNoSpace).containsExactly("test1", "test2", "test3");
     }
 
     private <C extends Collection<String>> String toJson(Type collectionType, C collection) throws IOException {
