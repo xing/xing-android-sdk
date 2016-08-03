@@ -22,13 +22,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.xing.api.oauth.XingOAuthCallback;
+import com.xing.api.oauth.OAuthResponse;
 import com.xing.api.oauth.XingOAuth;
 import com.xing.api.sample.BuildConfig;
 import com.xing.api.sample.Prefs;
 import com.xing.api.sample.R;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, XingOAuthCallback {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private XingOAuth xingOAuth;
 
     @Override
@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             xingOAuth = new XingOAuth.Builder()
                   .consumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
                   .consumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
-                  .oauthCallback(this)
                   .callbackUrlDebug()
                   .build();
         }
@@ -65,23 +64,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        xingOAuth.onActivityResult(requestCode, resultCode, data);
-    }
+        OAuthResponse response = xingOAuth.onActivityResult(requestCode, resultCode, data);
+        if (response != null) {
+            if (response.isSuccessful()) {
+                showToast("ok");
 
-    @Override
-    public void onSuccess(String token, String tokenSecret) {
-        showToast("ok");
+                Prefs.getInstance(this).setOauthToken(response.token());
+                Prefs.getInstance(this).setOauthSecret(response.tokenSecret());
 
-        Prefs.getInstance(this).setOauthToken(token);
-        Prefs.getInstance(this).setOauthSecret(tokenSecret);
-
-        startActivity(new Intent(this, ProfileActivity.class).setFlags(
-              Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-        finish();
-    }
-
-    @Override
-    public void onError() {
-        showToast("error");
+                startActivity(new Intent(this, ProfileActivity.class).setFlags(
+                      Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                finish();
+            } else {
+                showToast("error");
+            }
+        }
     }
 }

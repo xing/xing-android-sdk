@@ -15,7 +15,12 @@
  */
 package com.xing.api.oauth;
 
-/** Callback used to react on the authentication process. */
+/**
+ * Callback used to react on the authentication process.
+ *
+ * @deprecated Use {@linkplain OAuthResponse} instead.
+ */
+@Deprecated
 public interface XingOAuthCallback {
     void onSuccess(String token, String tokenSecret);
 

@@ -20,6 +20,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import static com.xing.api.oauth.Shared.checkNotNull;
 import static com.xing.api.oauth.Shared.stateNotNull;
@@ -36,7 +37,10 @@ public final class XingOAuth {
     static Context unwrapContext(Object caller) {
         if (caller instanceof Activity) return ((Activity) caller);
         if (caller instanceof Fragment) return ((Fragment) caller).getActivity();
-        throw new IllegalArgumentException("caller should be an instance of Activity or Fragment");
+        if (caller instanceof android.support.v4.app.Fragment) {
+            return ((android.support.v4.app.Fragment) caller).getActivity();
+        }
+        throw buildCallerError(caller);
     }
 
     /** Starts another activity for result via respective method, based on the objects type. */
@@ -49,7 +53,16 @@ public final class XingOAuth {
             ((Fragment) caller).startActivityForResult(intent, Shared.REQUEST_CODE);
             return;
         }
-        throw new IllegalArgumentException("caller should be an instance of Activity or Fragment");
+        if (caller instanceof android.support.v4.app.Fragment) {
+            ((android.support.v4.app.Fragment) caller).startActivityForResult(intent, Shared.REQUEST_CODE);
+            return;
+        }
+        throw buildCallerError(caller);
+    }
+
+    private static IllegalArgumentException buildCallerError(Object caller) {
+        return new IllegalArgumentException("caller should be an instance of Activity or Fragment, got: "
+              + (caller != null ? caller.getClass().getName() : null));
     }
 
     private final String consumerKey;
@@ -82,16 +95,42 @@ public final class XingOAuth {
         startLoginForCaller(fragment);
     }
 
-    /**  */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Shared.REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Bundle extras = data.getExtras();
+    /**
+     * Starts the "Login with XING" process, by showing an auth screen.
+     * <p>
+     * This calls the {@linkplain Fragment#startActivityForResult} method.
+     */
+    public void loginWithXing(android.support.v4.app.Fragment fragment) {
+        startLoginForCaller(fragment);
+    }
+
+    /**
+     * Parses the activity result and deferments if the response was from a {@linkplain XingOAuthActivity}.
+     * Returns a {@linkplain OAuthResponse} with the authentication result, otherwise {@code null}.
+     */
+    @Nullable
+    public OAuthResponse onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != Shared.REQUEST_CODE) return null;
+
+        if (resultCode == Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            String token = extras.getString(Shared.TOKEN, "");
+            String tokenSecret = extras.getString(Shared.TOKEN_SECRET, "");
+            // FIXME: (2.1.0) To be removed. Calling callback to maintain backwards compatibility.
+            if (callback != null) {
                 callback.onSuccess(extras.getString(Shared.TOKEN, ""), extras.getString(Shared.TOKEN_SECRET, ""));
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                callback.onError();
             }
+            // Return success response
+            return OAuthResponse.success(token, tokenSecret);
         }
+
+        // FIXME: (2.1.0) To be removed. Calling callback to maintain backwards compatibility.
+        if (callback != null) {
+            callback.onError();
+        }
+        // TODO: (2.1.0) Parse error reason to provide feedback for the user.
+        // Return error response
+        return OAuthResponse.error("Aborted");
     }
 
     /** Builds the intent and passes it to the auth activity via respective callback. */
@@ -144,9 +183,15 @@ public final class XingOAuth {
             return this;
         }
 
-        /** Required callback for the auth process. */
+        /**
+         * Required callback for the auth process.
+         *
+         * @deprecated Use {@linkplain XingOAuth#onActivityResult(int, int, Intent)}
+         * to retrieve a {@linkplain OAuthResponse}.
+         */
+        @Deprecated
         public Builder oauthCallback(XingOAuthCallback callback) {
-            xingOAuthCallback = checkNotNull(callback, "callback == null");
+            xingOAuthCallback = callback;
             return this;
         }
 
@@ -155,7 +200,6 @@ public final class XingOAuth {
             stateNotNull(consumerKey, "consumerKey is not set");
             stateNotNull(consumerSecret, "consumerSecret is not set");
             stateNotNull(callbackUrl, "callbackUrl is not set. Call callbackUrlDebug if in debug mode");
-            stateNotNull(xingOAuthCallback, "oAuthCallback not set");
             return new XingOAuth(consumerKey, consumerSecret, callbackUrl, xingOAuthCallback);
         }
     }
