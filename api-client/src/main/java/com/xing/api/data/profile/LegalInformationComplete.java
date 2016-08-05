@@ -4,7 +4,7 @@ import com.squareup.moshi.Json;
 
 import java.io.Serializable;
 
-/** Represents full legal information */
+/** Represents full legal information. */
 public class LegalInformationComplete implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,10 +22,9 @@ public class LegalInformationComplete implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof LegalInformationComplete)) return false;
 
         LegalInformationComplete that = (LegalInformationComplete) o;
-
         return content != null ? content.equals(that.content) : that.content == null;
     }
 
@@ -36,8 +35,8 @@ public class LegalInformationComplete implements Serializable {
 
     @Override
     public String toString() {
-        return "LegalInformationComplete{" +
-              "content='" + content + '\'' +
-              '}';
+        return "LegalInformationComplete{"
+              + "content='" + content + '\''
+              + '}';
     }
 }
