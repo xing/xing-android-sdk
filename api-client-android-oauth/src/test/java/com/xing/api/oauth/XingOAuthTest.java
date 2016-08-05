@@ -167,23 +167,6 @@ public final class XingOAuthTest {
     }
 
     @Test
-    public void startersThrowsOnNonSupportedObject() throws Exception {
-        try {
-            XingOAuth.unwrapContext("this_should_throw");
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessage("caller should be an instance of Activity or Fragment, got: java.lang.String");
-        }
-
-        try {
-            XingOAuth.startActivityForResult(1, null);
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessage("caller should be an instance of Activity or Fragment, got: java.lang.Integer");
-        }
-    }
-
-    @Test
     public void onActivityResultHandlesSuccess() throws Exception {
         XingOAuth xingOAuth = buildTestXingOauth();
 

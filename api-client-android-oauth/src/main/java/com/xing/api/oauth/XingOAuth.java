@@ -33,32 +33,6 @@ import static com.xing.api.oauth.Shared.validate;
  */
 @SuppressWarnings("ClassNamingConvention")
 public final class XingOAuth {
-    /** Unwraps the context from the calling object. */
-    static Context unwrapContext(Object caller) {
-        if (caller instanceof Activity) return ((Activity) caller);
-        if (caller instanceof Fragment) return ((Fragment) caller).getActivity();
-        if (caller instanceof android.support.v4.app.Fragment) {
-            return ((android.support.v4.app.Fragment) caller).getActivity();
-        }
-        throw buildCallerError(caller);
-    }
-
-    /** Starts another activity for result via respective method, based on the objects type. */
-    static void startActivityForResult(Object caller, Intent intent) {
-        if (caller instanceof Activity) {
-            ((Activity) caller).startActivityForResult(intent, Shared.REQUEST_CODE);
-            return;
-        }
-        if (caller instanceof Fragment) {
-            ((Fragment) caller).startActivityForResult(intent, Shared.REQUEST_CODE);
-            return;
-        }
-        if (caller instanceof android.support.v4.app.Fragment) {
-            ((android.support.v4.app.Fragment) caller).startActivityForResult(intent, Shared.REQUEST_CODE);
-            return;
-        }
-        throw buildCallerError(caller);
-    }
 
     private static IllegalArgumentException buildCallerError(Object caller) {
         return new IllegalArgumentException("caller should be an instance of Activity or Fragment, got: "
@@ -83,7 +57,7 @@ public final class XingOAuth {
      * This calls the {@linkplain Activity#startActivityForResult} method.
      */
     public void loginWithXing(Activity activity) {
-        startLoginForCaller(activity);
+        activity.startActivityForResult(constructIntent(activity), Shared.REQUEST_CODE);
     }
 
     /**
@@ -92,7 +66,7 @@ public final class XingOAuth {
      * This calls the {@linkplain Fragment#startActivityForResult} method.
      */
     public void loginWithXing(Fragment fragment) {
-        startLoginForCaller(fragment);
+        fragment.startActivityForResult(constructIntent(fragment.getActivity()), Shared.REQUEST_CODE);
     }
 
     /**
@@ -101,7 +75,7 @@ public final class XingOAuth {
      * This calls the {@linkplain Fragment#startActivityForResult} method.
      */
     public void loginWithXing(android.support.v4.app.Fragment fragment) {
-        startLoginForCaller(fragment);
+        fragment.startActivityForResult(constructIntent(fragment.getActivity()), Shared.REQUEST_CODE);
     }
 
     /**
@@ -133,13 +107,12 @@ public final class XingOAuth {
         return OAuthResponse.error("Aborted");
     }
 
-    /** Builds the intent and passes it to the auth activity via respective callback. */
-    void startLoginForCaller(Object caller) {
-        Intent intent = new Intent(unwrapContext(caller), XingOAuthActivity.class);
+    private Intent constructIntent(Context caller) {
+        Intent intent = new Intent(caller, XingOAuthActivity.class);
         intent.putExtra(Shared.CONSUMER_KEY, consumerKey);
         intent.putExtra(Shared.CONSUMER_SECRET, consumerSecret);
         intent.putExtra(Shared.CALLBACK_URL, callbackUrl);
-        startActivityForResult(caller, intent);
+        return intent;
     }
 
     /** Builds and validates the {@linkplain XingOAuth} helper. */
