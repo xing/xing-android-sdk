@@ -27,6 +27,7 @@ import com.xing.api.data.profile.Company;
 import com.xing.api.data.profile.FormOfEmployment;
 import com.xing.api.data.profile.Language;
 import com.xing.api.data.profile.LanguageSkill;
+import com.xing.api.data.profile.LegalInformationComplete;
 import com.xing.api.data.profile.MessagingAccount;
 import com.xing.api.data.profile.School;
 import com.xing.api.data.profile.WebProfile;
@@ -873,7 +874,7 @@ public class ProfileEditingResource extends Resource {
     public CallSpec<Void, HttpError> updateLegalInfo(String legalInfo) {
         return Resource.<Void, HttpError>newPutSpec(api, "/v1/users/me/legal_information", false)
               .responseAs(Void.class)
-              .queryParam("content", legalInfo)
+              .body(LegalInformationComplete.class, new LegalInformationComplete(legalInfo))
               .build();
     }
 

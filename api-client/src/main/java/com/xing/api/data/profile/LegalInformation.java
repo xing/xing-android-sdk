@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused")
 public class LegalInformation implements Serializable {
+    // TODO: FIX ME. Better name would be LegalInformationPreview
     private static final long serialVersionUID = 1L;
 
     @Json(name = "preview_content")
