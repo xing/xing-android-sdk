@@ -1,7 +1,13 @@
 package com.xing.api.data.groups;
 
 /**
- * @author daniel.hartwich
+ * Representation of the possible group membership states.
+ *
+ * @author dhartwich1991
  */
-public class Membership {
+public enum Membership {
+    MEMBER,
+    PENDING_MEMBER,
+    MODERATOR,
+    OWNER
 }
