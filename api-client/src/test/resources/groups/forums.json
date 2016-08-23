@@ -1,0 +1,62 @@
+{
+  "forums": {
+    "total": 7,
+    "items": [
+      {
+        "id": "100646607_fbf3a3",
+        "name": "Vorstellungsrunde",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646608_9f30ef",
+        "name": "Ideen, Vorschläge, Feedback",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646612_a757af",
+        "name": "News",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646613_8a2fac",
+        "name": "Android Phones",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646609_77e8a2",
+        "name": "Fragen und Antworten (Q&A)",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646611_72286f",
+        "name": "App-Talk",
+        "permissions": [
+          "READ",
+          "POST"
+        ]
+      },
+      {
+        "id": "100646544_cf7c94",
+        "name": "Archiv",
+        "permissions": [
+          "READ"
+        ]
+      }
+    ]
+  }
+}

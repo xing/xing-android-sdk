@@ -1,0 +1,197 @@
+{
+  "groups": {
+    "items": [
+      {
+        "group": {
+          "id": "1069100_d5e0fd",
+          "name": "Android Community",
+          "description": "",
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 4781,
+          "post_count": 1589,
+          "unread_posts": 136,
+          "comment_count": 1912,
+          "user_state": "MEMBER"
+        }
+      },
+      {
+        "group": {
+          "id": "1063944_80baa7",
+          "name": "android entwicklung",
+          "description": null,
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 408,
+          "post_count": 254,
+          "unread_posts": 0,
+          "comment_count": 12,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1064321_1e7d81",
+          "name": "iOS and Android Developers",
+          "description": "",
+          "closed": true,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 1512,
+          "post_count": 408,
+          "unread_posts": 0,
+          "comment_count": 32,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1000907_64094c",
+          "name": "Android App Entwicklung",
+          "description": "Diese Gruppe schafft eine Austauschplattform rund um die Android App Entwicklung.",
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/img/custom/communities/communities_files/6/1/6/1558/small/Android_Gruppen_Logo.png?1438784335",
+            "size_70x70": "https://www.xing.com/img/custom/communities/communities_files/6/1/6/1558/medium/Android_Gruppen_Logo.png?1438784335",
+            "size_140x140": "https://www.xing.com/img/custom/communities/communities_files/6/1/6/1558/main/Android_Gruppen_Logo.png?1438784335",
+            "size_280x280": "https://www.xing.com/img/custom/communities/communities_files/6/1/6/1558/large/Android_Gruppen_Logo.png?1438784335"
+          },
+          "member_count": 645,
+          "post_count": 388,
+          "unread_posts": 0,
+          "comment_count": 36,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1060655_5cf519",
+          "name": "Android Applikationen",
+          "description": null,
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 174,
+          "post_count": 137,
+          "unread_posts": 0,
+          "comment_count": 8,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1058813_432a61",
+          "name": "Android Europe",
+          "description": null,
+          "closed": true,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 155,
+          "post_count": 25,
+          "unread_posts": 0,
+          "comment_count": 3,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1077427_c0c9a3",
+          "name": "Android News",
+          "description": "Stay up to date in the world of Android with all the latest Android news delivered to you,development, phone, tablet,app news, rooting news.",
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/img/custom/communities/communities_files/4/d/0/46288/small/android-nougat-7-810x425.png?1471915717",
+            "size_70x70": "https://www.xing.com/img/custom/communities/communities_files/4/d/0/46288/medium/android-nougat-7-810x425.png?1471915717",
+            "size_140x140": "https://www.xing.com/img/custom/communities/communities_files/4/d/0/46288/main/android-nougat-7-810x425.png?1471915717",
+            "size_280x280": "https://www.xing.com/img/custom/communities/communities_files/4/d/0/46288/large/android-nougat-7-810x425.png?1471915717"
+          },
+          "member_count": 137,
+          "post_count": 502,
+          "unread_posts": 0,
+          "comment_count": 1,
+          "user_state": "UNKNOWN"
+        }
+      },
+      {
+        "group": {
+          "id": "1001642_5a8f94",
+          "name": "Android User Group Hamburg",
+          "description": "Dies ist die XING Gruppe der GDG Android Hamburg. Auf google+ findet ihr uns hier: https://plus.google.com/107859748046093089218/",
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/img/custom/communities/communities_files/7/c/3/14275/small/gdg_hamburg_white.png?1438786243",
+            "size_70x70": "https://www.xing.com/img/custom/communities/communities_files/7/c/3/14275/medium/gdg_hamburg_white.png?1438786243",
+            "size_140x140": "https://www.xing.com/img/custom/communities/communities_files/7/c/3/14275/main/gdg_hamburg_white.png?1438786243",
+            "size_280x280": "https://www.xing.com/img/custom/communities/communities_files/7/c/3/14275/large/gdg_hamburg_white.png?1438786243"
+          },
+          "member_count": 438,
+          "post_count": 133,
+          "unread_posts": 27,
+          "comment_count": 9,
+          "user_state": "MEMBER"
+        }
+      },
+      {
+        "group": {
+          "id": "1006711_3750eb",
+          "name": "Android Games, Gamers & Gamedevelopers",
+          "description": "GaGa:u:Ga ANDROID ist ein Spin-Off der größten Gamesbranchen-relevante Gruppe auf XING. Für alle Insider, Entwickler, Fans und Gamer!",
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/img/custom/communities/communities_files/b/b/9/27577/small/XingGaGauGa_Android_003.png?1438788356",
+            "size_70x70": "https://www.xing.com/img/custom/communities/communities_files/b/b/9/27577/medium/XingGaGauGa_Android_003.png?1438788356",
+            "size_140x140": "https://www.xing.com/img/custom/communities/communities_files/b/b/9/27577/main/XingGaGauGa_Android_003.png?1438788356",
+            "size_280x280": "https://www.xing.com/img/custom/communities/communities_files/b/b/9/27577/large/XingGaGauGa_Android_003.png?1438788356"
+          },
+          "member_count": 930,
+          "post_count": 422,
+          "unread_posts": 74,
+          "comment_count": 157,
+          "user_state": "MEMBER"
+        }
+      },
+      {
+        "group": {
+          "id": "1034705_8e56d0",
+          "name": "Embedded Android",
+          "description": null,
+          "closed": false,
+          "logo_urls": {
+            "size_40x40": "https://www.xing.com/assets/communities/communities_icon_default_small-d85a04d62d2671b49f73b077465615ee.png",
+            "size_70x70": "https://www.xing.com/assets/communities/communities_icon_default_medium-cc468623eeb8a75c96fc0b3b17a25f63.png",
+            "size_140x140": "https://www.xing.com/assets/communities/communities_icon_default_main-aba0f9a15e3cdf7f63a7b7880151035e.png",
+            "size_280x280": "https://www.xing.com/assets/communities/communities_icon_default_large-47d7790940b6358aafce77f4191a9432.png"
+          },
+          "member_count": 118,
+          "post_count": 30,
+          "unread_posts": 0,
+          "comment_count": 1,
+          "user_state": "UNKNOWN"
+        }
+      }
+    ],
+    "total": 50
+  }
+}

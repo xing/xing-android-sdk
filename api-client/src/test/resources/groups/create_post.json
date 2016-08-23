@@ -1,0 +1,21 @@
+{
+  "post": {
+    "id": "467742422_9cd66b",
+    "title": "My funny Post",
+    "content": "A funny rabbit goes to a hole",
+    "closed": false,
+    "permissions": [
+      "LIKE",
+      "COMMENT"
+    ],
+    "author": {
+      "id": "1_d56bc0",
+      "display_name": "Vladimir"
+    },
+    "created_at": "2014-11-05T12:16:18Z",
+    "updated_at": "2014-11-05T12:16:18Z",
+    "like_count": 0,
+    "comment_count": 0,
+    "user_liked": false
+  }
+}
