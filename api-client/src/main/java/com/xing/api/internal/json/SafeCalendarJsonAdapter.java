@@ -65,6 +65,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
     private static final Pattern REG_EX_YEAR = Pattern.compile("^(19|20)\\d{2}");
     private static final Pattern REG_EX_YEAR_MONTH = Pattern.compile("^(19|20)\\d{2}-\\d{2}$");
+    private static final Pattern REG_EX_MONTH_DAY = Pattern.compile("\\d{2}-\\d{2}$");
     private static final Pattern REG_EX_YEAR_MONTH_DAY = Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}$");
     private static final Pattern REG_EX_ISO_DATE_Z = Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$");
     private static final Pattern REG_EX_ISO_DATE_TIME =
@@ -79,6 +80,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String YEAR_DATE_FORMAT = "yyyy";
     private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
+    private static final String MONTH_DAY_DATE_FORMAT = "MM-dd";
     private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
 
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
@@ -87,6 +89,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     static {
         DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_MONTH_DAY, new SimpleDateFormat(MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
@@ -119,17 +122,32 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         switch (regEx) {
             case YEAR_DATE_FORMAT: {
                 calendar.clear(Calendar.MONTH);
+                calendar.clear(Calendar.DAY_OF_MONTH);
+                clearTime(calendar);
+                break;
             }
             case YEAR_MONTH_DATE_FORMAT: {
                 calendar.clear(Calendar.DAY_OF_MONTH);
+                clearTime(calendar);
+                break;
+            }
+            case MONTH_DAY_DATE_FORMAT: {
+                calendar.clear(Calendar.YEAR);
+                clearTime(calendar);
+                break;
             }
             case YEAR_MONTH_DAY_DATE_FORMAT: {
-                calendar.clear(Calendar.HOUR);
-                calendar.clear(Calendar.MINUTE);
-                calendar.clear(Calendar.SECOND);
-                calendar.clear(Calendar.MILLISECOND);
+                clearTime(calendar);
+                break;
             }
         }
+    }
+
+    private static void clearTime(Calendar calendar) {
+        calendar.clear(Calendar.HOUR);
+        calendar.clear(Calendar.MINUTE);
+        calendar.clear(Calendar.SECOND);
+        calendar.clear(Calendar.MILLISECOND);
     }
 
     /**
@@ -188,42 +206,43 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
     @Override
     public void toJson(JsonWriter writer, T calendar) throws IOException {
-        StringBuilder output = null;
+        StringBuilder output = new StringBuilder();
         if (calendar.isSet(Calendar.YEAR)) {
-            output = new StringBuilder();
             output.append(calendar.get(Calendar.YEAR));
-            if (calendar.isSet(Calendar.MONTH)) {
+        }
+        if (calendar.isSet(Calendar.MONTH)) {
+            if (calendar.isSet(Calendar.YEAR)) {
                 output.append('-');
-                output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MONTH) + 1));
-                if (calendar.isSet(Calendar.DAY_OF_MONTH)) {
-                    output.append('-');
-                    output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.DAY_OF_MONTH)));
-                    if (isFilledToTime(calendar)) {
-                        output.append('T');
-                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.HOUR_OF_DAY)));
-                        output.append(':');
-                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MINUTE)));
-                        output.append(':');
-                        output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.SECOND)));
-                        if (ZULU_TIME_ZONE.equals(calendar.getTimeZone())) {
-                            output.append('Z');
-                        } else {
-                            TimeZone timeZone = calendar.getTimeZone();
-                            // This will return the initial time milliseconds + offset milliseconds
-                            long millisWithOffset = timeZone.getOffset(calendar.getTimeInMillis());
-                            String offset = String.format("%02d:%02d",
-                                  // Get the amount of hours form the offset
-                                  Math.abs(millisWithOffset / 3600000),
-                                  // Get the amount of minutes form the offset
-                                  Math.abs((millisWithOffset / 60000) % 60));
-                            output.append((millisWithOffset >= 0 ? "+" : "-")).append(offset);
-                        }
+            }
+            output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MONTH) + 1));
+            if (calendar.isSet(Calendar.DAY_OF_MONTH)) {
+                output.append('-');
+                output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.DAY_OF_MONTH)));
+                if (isFilledToTime(calendar)) {
+                    output.append('T');
+                    output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.HOUR_OF_DAY)));
+                    output.append(':');
+                    output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.MINUTE)));
+                    output.append(':');
+                    output.append(TWO_DIGITS_FORMATTER.format(calendar.get(Calendar.SECOND)));
+                    if (ZULU_TIME_ZONE.equals(calendar.getTimeZone())) {
+                        output.append('Z');
+                    } else {
+                        TimeZone timeZone = calendar.getTimeZone();
+                        // This will return the initial time milliseconds + offset milliseconds
+                        long millisWithOffset = timeZone.getOffset(calendar.getTimeInMillis());
+                        String offset = String.format("%02d:%02d",
+                              // Get the amount of hours form the offset
+                              Math.abs(millisWithOffset / 3600000),
+                              // Get the amount of minutes form the offset
+                              Math.abs((millisWithOffset / 60000) % 60));
+                        output.append((millisWithOffset >= 0 ? "+" : "-")).append(offset);
                     }
                 }
             }
         }
 
-        writer.value(output != null ? output.toString() : null);
+        writer.value(output.length() > 0 ? output.toString() : null);
     }
 
     @Override

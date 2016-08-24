@@ -127,6 +127,26 @@ public final class SafeCalendarJsonAdapterTest {
     }
 
     @Test
+    public void monthAndDayOnly() throws Exception {
+        Calendar calendar = new SafeCalendar();
+        calendar.set(Calendar.MONTH, Calendar.OCTOBER);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+
+        String toJson = calendarAdapter().toJson(calendar);
+        assertThat(toJson).isEqualTo("\"10-14\"");
+
+        Calendar fromJson = calendarAdapter().fromJson("\"03-05\"");
+        assertNotNull(fromJson);
+
+        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+        assertTrue(fromJson.isSet(Calendar.MONTH));
+        assertFalse(fromJson.isSet(Calendar.YEAR));
+
+        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.MARCH);
+        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(5);
+    }
+
+    @Test
     public void yearMonthAndDay() throws Exception {
         Calendar calendar = new SafeCalendar();
         calendar.set(Calendar.YEAR, 1991);
