@@ -9,5 +9,6 @@ public enum Membership {
     MEMBER,
     PENDING_MEMBER,
     MODERATOR,
-    OWNER
+    OWNER,
+    UNKNOWN
 }

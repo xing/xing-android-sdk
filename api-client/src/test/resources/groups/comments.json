@@ -1,0 +1,25 @@
+{
+  "comments": {
+    "total": 1,
+    "items": [
+      {
+        "id": "34548805_5b2172",
+        "content": "Hi Dagmar, I take one. Thank you!",
+        "permissions": [
+          "READ",
+          "LIKE",
+          "UNLIKE"
+        ],
+        "created_at": "2016-08-23T12:21:53Z",
+        "updated_at": "2016-08-23T12:21:53Z",
+        "image": null,
+        "author": {
+          "id": "7961724_04b13c"
+        },
+        "user_liked": false,
+        "like_count": 0,
+        "media_preview": null
+      }
+    ]
+  }
+}

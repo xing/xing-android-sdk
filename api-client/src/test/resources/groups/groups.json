@@ -1,0 +1,27 @@
+{
+  "groups": {
+    "total": 4,
+    "items": [
+      {
+        "id": "1000071_abcdef",
+        "name": "XING Developers",
+        "description": "Developers, Developers, Developers!",
+        "closed": false,
+        "logo_urls": {
+          "size_40x40": "https://www.xing.com/img/custom/communities/communities_files/1/e/0/12768/small/Marvin.png?1405349246",
+          "size_70x70": "https://www.xing.com/img/custom/communities/communities_files/1/e/0/12768/medium/Marvin.png?1405349246",
+          "size_140x140": "https://www.xing.com/img/custom/communities/communities_files/1/e/0/12768/main/Marvin.png?1405349246",
+          "size_280x280": "https://www.xing.com/img/custom/communities/communities_files/1/e/0/12768/large/Marvin.png?1405349246"
+        },
+        "member_count": 23,
+        "post_count": 42,
+        "comment_count": 51,
+        "unread_posts": 3,
+        "user_state": "MEMBER",
+        "latest_posts": [
+
+        ]
+      }
+    ]
+  }
+}

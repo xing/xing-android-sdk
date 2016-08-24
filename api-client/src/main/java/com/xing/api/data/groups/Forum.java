@@ -20,7 +20,7 @@ public class Forum implements Serializable {
     @Json(name = "name")
     private String name;
 
-    @Json(name = "forumPermissions")
+    @Json(name = "permissions")
     private List<ForumPermission> forumPermissions;
 
     @Override

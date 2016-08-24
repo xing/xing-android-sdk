@@ -1,0 +1,31 @@
+{
+  "post": {
+    "id": "1011676833_743935",
+    "title": "UL Test Tool User Group Meeting Munich",
+    "content": "Join us for our Mobile Payments Masterclass in Munich on October 5th, followed by our User Group for additional hands-on knowledge!",
+    "closed": false,
+    "author": {
+      "id": "14481969_faacc6"
+    },
+    "created_at": "2016-07-22T09:41:58Z",
+    "updated_at": "2016-07-22T09:41:58Z",
+    "permissions": [
+      "READ",
+      "LIKE",
+      "UNLIKE",
+      "RECOMMEND",
+      "COMMENT"
+    ],
+    "user_liked": false,
+    "like_count": 0,
+    "comment_count": 0,
+    "media_preview": {
+      "id": "2774167_1770bb",
+      "url": "https://www.ul-ts.com/usergroup",
+      "title": "UL Test Tool User Group Meeting Munich",
+      "description": "",
+      "image_url": null
+    },
+    "image_url": null
+  }
+}
