@@ -119,7 +119,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
     /**
      * Adds a form field to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, String value);
@@ -127,7 +127,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
     /**
      * Adds a form field as a csv list to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, String... values);
@@ -135,7 +135,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
     /**
      * Adds a form field as a csv list to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, List<String> values);
@@ -144,7 +144,22 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> clone();
 
     /**
-     * TODO docs.
+     * Serves two purposes, to build the {@linkplain CallSpec} and the underlying {@linkplain Request}.
+     * Only the {@linkplain CallSpec} building is exposed to the caller.
+     *
+     * <p>Basic usage (internal):
+     * <pre>{@code
+     *      CallSpec.Builder<Void, HttpError> builder = new CallSpec.Builder(api, HttpMethod.PUT, "/", true)
+     *          .formField("some_field", "some_field_value");
+     *          CallSpec<Void, HttpError> callSpec = builder.build();
+     * }</pre>
+     *
+     * <p>Basic usage (public):
+     * <pre>{@code
+     *      CallSpec<Void, HttpError> callSpec = Resource.<Void, HttpError>newPutSpec(api, "/", true)
+     *          .formField("some_field", "some_field_value")
+     *          .build();
+     * }</pre>
      */
     final class Builder<RT, ET> {
         // Upper and lower characters, digits, underscores, and hyphens, starting with a character.
