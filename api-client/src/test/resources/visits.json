@@ -1,6 +1,7 @@
 {
   "visits": [
     {
+      "id": "13_abcdef",
       "company_name": null,
       "visited_at_encrypted": "_Dx76Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK6lMs=",
       "reason": {
@@ -16,11 +17,11 @@
       "distance": null,
       "type": "LOGGED_OUT",
       "shared_contacts": [
-
       ],
       "job_title": null
     },
     {
+      "id": "13_abcdefg",
       "company_name": "XING AG",
       "visited_at_encrypted": "_Vu76Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK6lgs=",
       "reason": {
@@ -50,11 +51,11 @@
       "distance": 1,
       "type": "LOGGED_IN",
       "shared_contacts": [
-
       ],
       "job_title": "Software Test Engineer"
     },
     {
+      "id": "13_abcdefgh",
       "company_name": "XING AG",
       "visited_at_encrypted": "_NMB6Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK68Hg=",
       "reason": {
@@ -109,6 +110,7 @@
       "job_title": "Software Architect"
     },
     {
+      "id": "13_abcdefghi",
       "company_name": "XING AG",
       "visited_at_encrypted": "_GhT3Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nKJJ52=",
       "reason": {
@@ -138,7 +140,6 @@
       "distance": 0,
       "type": "LOGGED_IN",
       "shared_contacts": [
-
       ],
       "job_title": "Software Developer"
     }
