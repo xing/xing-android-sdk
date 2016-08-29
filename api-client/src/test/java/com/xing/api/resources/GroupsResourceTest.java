@@ -12,7 +12,6 @@ import com.xing.api.data.groups.Post;
 import com.xing.api.data.groups.PostPermission;
 import com.xing.api.data.profile.XingUser;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ public class GroupsResourceTest extends ResourceTestCase<GroupsResource> {
         assertThat(response.body().size()).isEqualTo(1);
     }
 
-    @Ignore
     @Test
     public void findGroupsByKeyword() throws Exception {
         server.enqueue(new MockResponse().setBody(file("groups/search_result.json")));
