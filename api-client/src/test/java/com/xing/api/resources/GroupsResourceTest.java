@@ -40,7 +40,6 @@ public class GroupsResourceTest extends ResourceTestCase<GroupsResource> {
         assertThat(response.body().size()).isEqualTo(1);
     }
 
-    @Ignore
     @Test
     public void findGroupsByKeyword() throws Exception {
         server.enqueue(new MockResponse().setBody(file("groups/search_result.json")));
