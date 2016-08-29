@@ -12,7 +12,6 @@ import com.xing.api.data.groups.Post;
 import com.xing.api.data.groups.PostPermission;
 import com.xing.api.data.profile.XingUser;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
