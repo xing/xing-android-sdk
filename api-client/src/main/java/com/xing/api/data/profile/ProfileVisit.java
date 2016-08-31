@@ -190,8 +190,9 @@ public class ProfileVisit implements Serializable {
     }
 
     /** Sets the photo URLs of user. */
-    public void photoUrls(PhotoUrls photoUrls) {
+    public ProfileVisit photoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
+        return this;
     }
 
     /** Returns the user ID. */
