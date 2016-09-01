@@ -281,6 +281,27 @@ public final class SafeCalendarJsonAdapterTest {
     }
 
     @Test
+    public void iso8601withMillisecondsAndTimeZone() throws Exception {
+        Calendar fromJson = calendarAdapter().fromJson("\"2014-04-30T10:53:48.000+02:00\"");
+        assertThat(fromJson).isNotNull();
+
+        assertTrue(fromJson.isSet(Calendar.MILLISECOND));
+        assertTrue(fromJson.isSet(Calendar.SECOND));
+        assertTrue(fromJson.isSet(Calendar.MINUTE));
+        assertTrue(fromJson.isSet(Calendar.HOUR));
+        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
+        assertTrue(fromJson.isSet(Calendar.MONTH));
+        assertTrue(fromJson.isSet(Calendar.YEAR));
+
+        assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2014);
+        assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
+        assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(30);
+        assertThat(fromJson.get(Calendar.HOUR_OF_DAY)).isEqualTo(10);
+        assertThat(fromJson.get(Calendar.MINUTE)).isEqualTo(53);
+        assertThat(fromJson.get(Calendar.SECOND)).isEqualTo(48);
+    }
+
+    @Test
     public void parsedZuluTimestampShouldHaveZuluTimeZone() throws IOException {
         List<TimeZone> parsedTimeZones = new ArrayList<>();
         parsedTimeZones.add(parseTimeZone("\"2016-06-27T11:35:21.120Z\""));
@@ -308,7 +329,6 @@ public final class SafeCalendarJsonAdapterTest {
 
         String toJson3 = calendarAdapter().toJson(fromJson3);
         assertThat(toJson3).isEqualTo("\"2016-07-21T23:59:59+02:00\"");
-
     }
 
     private TimeZone parseTimeZone(String dateString) throws IOException {

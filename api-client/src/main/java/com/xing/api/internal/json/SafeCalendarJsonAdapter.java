@@ -74,14 +74,17 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
           Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+|-]\\d{2}:\\d{2}$");
     private static final Pattern REG_EX_ISO_DATE_WEIRD =
           Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$");
+    private static final Pattern REG_EX_ISO_DATE_WEIRD_AND_ZONE =
+          Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}[+|-]\\d{2}:\\d{2}$");
 
     private static final String ISO_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String YEAR_DATE_FORMAT = "yyyy";
     private static final String YEAR_MONTH_DATE_FORMAT = "yyyy-MM";
     private static final String MONTH_DAY_DATE_FORMAT = "MM-dd";
     private static final String YEAR_MONTH_DAY_DATE_FORMAT = "yyyy-MM-dd";
+    private static final String ISO_DATE_FORMAT_WEIRD = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String ISO_DATE_FORMAT_WEIRD_AND_ZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
     private static final Map<Pattern, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
@@ -96,6 +99,8 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
               new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD_AND_ZONE,
+              new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD_AND_ZONE, Locale.ENGLISH));
     }
 
     SafeCalendarJsonAdapter() {
@@ -105,9 +110,8 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
         boolean isZuluTimeZone = ISO_DATE_FORMAT_Z.equals(chosenPattern)
               || ISO_DATE_FORMAT_WEIRD.equals(chosenPattern);
 
-        if (!isZuluTimeZone) {
-            return;
-        }
+        if (!isZuluTimeZone) return;
+
         calendar.setTimeZone(ZULU_TIME_ZONE);
     }
 
