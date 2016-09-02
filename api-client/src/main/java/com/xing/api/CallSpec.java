@@ -17,6 +17,7 @@
 package com.xing.api;
 
 import com.squareup.moshi.JsonAdapter;
+import com.xing.api.internal.Experimental;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -51,8 +52,9 @@ import static com.xing.api.Utils.stateNotNull;
  * to retry a failed call.
  *
  * <p>Calls may be executed synchronously with {@link #execute}, asynchronously with {@link
- * #enqueue}, or as asynchronous observable streams with {@link #stream()} or {@link #rawStream()} (<b>Note:</b> that a
- * dependency to RxJava is required). In either case the call can be canceled at any time with {@link #cancel}. A call that
+ * #enqueue}, or as asynchronous observable streams with {@link #stream()}, {@link #singleStream()},
+ * {@link #completableStream()} or {@link #rawStream()} (<b>Note:</b> that a dependency to RxJava is required). In either
+ * case the call can be canceled at any time with {@link #cancel}. A call that
  * is busy writing its request or reading its response may receive a {@link IOException}; this is working as designed.
  *
  * @param <RT> Successful response body type.
@@ -92,13 +94,14 @@ public interface CallSpec<RT, ET> extends Cloneable {
     Observable<RT> stream();
 
     /**
-     * Same as {@link #stream()} but returning a {@link Single}.
+     * Same as {@linkplain #stream()} but returning a {@linkplain Single}.
      */
     Single<RT> singleStream();
 
     /**
-     * Same as {@link #stream()} but returning a {@link Completable}.
+     * Same as {@linkplain #stream()} but returning a {@linkplain Completable}.
      */
+    @Experimental
     Completable completableStream();
 
     /**

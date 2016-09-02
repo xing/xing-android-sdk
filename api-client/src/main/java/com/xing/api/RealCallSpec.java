@@ -19,6 +19,7 @@ package com.xing.api;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
+import com.xing.api.internal.Experimental;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -148,6 +149,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return stream().toSingle();
     }
 
+    @Experimental
     @Override
     public Completable completableStream() {
         return stream().toCompletable();
