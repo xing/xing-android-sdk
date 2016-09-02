@@ -35,6 +35,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import rx.Observable;
+import rx.Single;
+import rx.Completable;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -88,6 +90,16 @@ public interface CallSpec<RT, ET> extends Cloneable {
      * For a more richer and controllable api consider calling {@link #rawStream()}.
      */
     Observable<RT> stream();
+
+    /**
+     * Same as {@link #stream()} but returning a {@link Single}.
+     */
+    Single<RT> singleStream();
+
+    /**
+     * Same as {@link #stream()} but returning a {@link Completable}.
+     */
+    Completable completableStream();
 
     /**
      * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain #enqueue(Callback)
