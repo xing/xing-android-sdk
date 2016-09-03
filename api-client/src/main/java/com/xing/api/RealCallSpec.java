@@ -19,6 +19,7 @@ package com.xing.api;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
+import com.xing.api.internal.Experimental;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,9 +34,11 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
+import rx.Completable;
 import rx.Observable;
 import rx.Observable.Operator;
 import rx.Producer;
+import rx.Single;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.exceptions.Exceptions;
@@ -139,6 +142,17 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     @Override
     public Observable<RT> stream() {
         return rawStream().lift(OperatorMapResponseToBodyOrError.<RT, ET>instance());
+    }
+
+    @Override
+    public Single<RT> singleStream() {
+        return stream().toSingle();
+    }
+
+    @Experimental
+    @Override
+    public Completable completableStream() {
+        return stream().toCompletable();
     }
 
     @Override
