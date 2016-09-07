@@ -203,6 +203,12 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
+    public CallSpec<RT, ET> formField(String name, Object value) {
+        builder.formField(name, value);
+        return this;
+    }
+
+    @Override
     public CallSpec<RT, ET> formField(String name, String... values) {
         builder.formField(name, values);
         return this;
@@ -220,7 +226,8 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
-    @SuppressWarnings("MagicNumber") // These codes are specific to this method and to the http protocol.
+    @SuppressWarnings("MagicNumber")
+    // These codes are specific to this method and to the http protocol.
     Response<RT, ET> parseResponse(okhttp3.Response rawResponse) throws IOException {
         ResponseBody rawBody = rawResponse.body();
 

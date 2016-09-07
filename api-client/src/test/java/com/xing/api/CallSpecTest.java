@@ -261,9 +261,12 @@ public class CallSpecTest {
     public void builderAttachesFormFields() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
               .responseAs(Object.class)
-              .formField("f", "true");
+              .formField("a", "true")
+              .formField("b", 1);
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().formField("e", "false");
+        builder.build()
+              .formField("c", "false")
+              .formField("d", true);
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
@@ -275,7 +278,29 @@ public class CallSpecTest {
 
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
-        assertThat(buffer.readUtf8()).isEqualTo("f=true&e=false");
+        assertThat(buffer.readUtf8()).isEqualTo("a=true&b=1&c=false&d=true");
+    }
+
+    @Test
+    public void builderEncodesStringFromFields() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
+              .responseAs(Object.class)
+              .formField("f", "some_value");
+        // Build the CallSpec so that we don't test this behaviour twice.
+        builder.build().formField("e", "https://www.xing.com/some_path/20533046");
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
+        assertThat(request.url()).isEqualTo(httpUrl);
+        assertThat(request.body()).isNotNull();
+
+        RequestBody body = request.body();
+        assertThat(body.contentType()).isEqualTo(MediaType.parse("application/x-www-form-urlencoded"));
+
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        assertThat(buffer.readUtf8())
+              .isEqualTo("f=some_value&e=https%253A%252F%252Fwww.xing.com%252Fsome_path%252F20533046");
     }
 
     @Test

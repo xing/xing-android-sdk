@@ -35,9 +35,9 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.Completable;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -138,6 +138,14 @@ public interface CallSpec<RT, ET> extends Cloneable {
      * creation.
      */
     CallSpec<RT, ET> formField(String name, String value);
+
+    /**
+     * Adds a form field to the underlying request's form body.
+     *
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
+     * creation.
+     */
+    CallSpec<RT, ET> formField(String name, Object value);
 
     /**
      * Adds a form field as a csv list to the underlying request's form body.
@@ -272,6 +280,12 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return queryParam(name, toCsv(values, false));
         }
 
+        public Builder<RT, ET> formField(String name, String value) {
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, escape(value));
+            return this;
+        }
+
         public Builder<RT, ET> formField(String name, Object value) {
             stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
             formBodyBuilder.add(name, String.valueOf(value));
@@ -279,11 +293,15 @@ public interface CallSpec<RT, ET> extends Cloneable {
         }
 
         public Builder<RT, ET> formField(String name, String... values) {
-            return formField(name, toCsv(values, true));
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, toCsv(values, true));
+            return this;
         }
 
         public Builder<RT, ET> formField(String name, List<String> values) {
-            return formField(name, toCsv(values, true));
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, toCsv(values, true));
+            return this;
         }
 
         public Builder<RT, ET> body(RequestBody body) {
