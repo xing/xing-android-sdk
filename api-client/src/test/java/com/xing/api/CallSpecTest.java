@@ -286,9 +286,12 @@ public class CallSpecTest {
     public void builderEncodesStringFromFields() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
               .responseAs(Object.class)
-              .formField("f", "some_value");
+              .formField("a", "some_value")
+              .formField("b", "second/value", true);
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().formField("e", "https://www.xing.com/some_path/20533046");
+        builder.build()
+              .formField("c", "https://www.xing.com/some_path/20533046")
+              .formField("d", "fourth/value", true);
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
@@ -301,7 +304,10 @@ public class CallSpecTest {
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
         assertThat(buffer.readUtf8())
-              .isEqualTo("f=some_value&e=https%253A%252F%252Fwww.xing.com%252Fsome_path%252F20533046");
+              .isEqualTo("a=some_value"
+                    + "&b=second%2Fvalue"
+                    + "&c=https%253A%252F%252Fwww.xing.com%252Fsome_path%252F20533046"
+                    + "&d=fourth%2Fvalue");
     }
 
     @Test

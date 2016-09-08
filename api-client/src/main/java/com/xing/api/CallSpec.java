@@ -132,6 +132,15 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> queryParam(String name, List<String> values);
 
     /**
+     * Adds a form field to the underlying request's form body. The form field value will be encoded if {@code encoded} is
+     * {@code false}, otherwise the value escaped.
+     *
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
+     * creation.
+     */
+    CallSpec<RT, ET> formField(String name, String value, boolean encoded);
+
+    /**
      * Adds a form field to the underlying request's form body.
      *
      * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
@@ -280,10 +289,14 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return queryParam(name, toCsv(values, false));
         }
 
-        public Builder<RT, ET> formField(String name, String value) {
+        public Builder<RT, ET> formField(String name, String value, boolean encoded) {
             stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
-            formBodyBuilder.add(name, escape(value));
+            formBodyBuilder.add(name, encoded ? value : escape(value));
             return this;
+        }
+
+        public Builder<RT, ET> formField(String name, String value) {
+            return formField(name, value, false);
         }
 
         public Builder<RT, ET> formField(String name, Object value) {
