@@ -286,12 +286,12 @@ public class CallSpecTest {
     public void builderEncodesStringFromFields() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
               .responseAs(Object.class)
-              .formField("a", "some_value")
-              .formField("b", "second/value", true);
+              .formField("a", "some_value", true)
+              .formField("b", "second/value");
         // Build the CallSpec so that we don't test this behaviour twice.
         builder.build()
-              .formField("c", "https://www.xing.com/some_path/20533046")
-              .formField("d", "fourth/value", true);
+              .formField("c", "https://www.xing.com/some_path/20533046", true)
+              .formField("d", "fourth/value");
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
