@@ -197,8 +197,8 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
-    public CallSpec<RT, ET> formField(String name, String value, boolean encoded) {
-        builder.formField(name, value, encoded);
+    public CallSpec<RT, ET> formField(String name, String value, boolean encode) {
+        builder.formField(name, value, encode);
         return this;
     }
 
