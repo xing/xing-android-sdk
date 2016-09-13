@@ -173,6 +173,12 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
+    public CallSpec<RT, ET> header(String name, String value) {
+        builder.header(name, value);
+        return this;
+    }
+
+    @Override
     public CallSpec<RT, ET> queryParam(String name, Object value) {
         builder.queryParam(name, value);
         return this;

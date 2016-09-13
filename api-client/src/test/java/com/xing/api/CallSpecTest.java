@@ -132,13 +132,18 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .header("Test1", "hello")
               .header("Test2", "hm");
-        builder.build();
+        CallSpec spec = builder.build();
+        spec.header("Test3", "world");
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.headers().names()).contains("Test1").contains("Test2");
+        assertThat(request.headers().names())
+              .contains("Test1")
+              .contains("Test2")
+              .contains("Test3");
         assertThat(request.headers().values("Test1")).isNotEmpty().hasSize(1).contains("hello");
         assertThat(request.headers().values("Test2")).isNotEmpty().hasSize(1).contains("hm");
+        assertThat(request.headers().values("Test3")).isNotEmpty().hasSize(1).contains("world");
     }
 
     @Test

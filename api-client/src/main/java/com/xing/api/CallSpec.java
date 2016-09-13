@@ -119,6 +119,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
      */
     void cancel();
 
+    /** Sets the provided header to the underlying request. */
+    CallSpec<RT, ET> header(String name, String value);
+
     /** Appends a query parameter to the query string of the underlying request's url. */
     CallSpec<RT, ET> queryParam(String name, Object value);
 
