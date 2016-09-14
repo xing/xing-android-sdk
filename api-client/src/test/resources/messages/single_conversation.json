@@ -1,0 +1,42 @@
+{
+  "conversation": {
+    "id": "51626_4be761",
+    "subject": "Business opportunities",
+    "message_count": 2,
+    "unread_message_count": 1,
+    "updated_at": "2012-04-04T16:30:00Z",
+    "read_only": false,
+    "participants": [
+      {
+        "id": "61723_4cae01",
+        "display_name": "Vladimir"
+      },
+      {
+        "id": "146234_dc52a7",
+        "display_name": "Hans"
+      }
+    ],
+    "latest_messages": [
+      {
+        "id": "104401_09361f",
+        "created_at": "2012-04-04T16:30:00Z",
+        "content": "Yes of course!",
+        "read": false,
+        "sender": {
+          "id": "61723_4cae01",
+          "display_name": "Vladimir"
+        }
+      },
+      {
+        "id": "104284_9e4303",
+        "created_at": "2012-04-04T16:20:00Z",
+        "content": "Are you interested in career opportunities?",
+        "read": true,
+        "sender": {
+          "id": "146234_dc52a7",
+          "display_name": "Hans"
+        }
+      }
+    ]
+  }
+}
