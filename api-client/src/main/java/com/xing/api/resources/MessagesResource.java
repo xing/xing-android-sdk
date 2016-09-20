@@ -220,7 +220,7 @@ public class MessagesResource extends Resource {
      */
     public CallSpec<String, HttpError> getAttachmentDownloadLink(String conversationId, String attachmentId) {
         return Resource.<String, HttpError>newPostSpec(api,
-              "/v1/users/conversations/{conversation_id}/attachments/{attachment_id}/download", false)
+              "/v1/users/me/conversations/{conversation_id}/attachments/{attachment_id}/download", false)
               .pathParam("conversation_id", conversationId)
               .pathParam("attachment_id", attachmentId)
               .responseAs(single(String.class, "download", "url"))
