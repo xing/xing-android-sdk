@@ -62,7 +62,7 @@ allprojects {
               glide                   : 'com.github.bumptech.glide:glide:3.6.0',
 
               // ReactiveX
-              rxjava                  : 'io.reactivex:rxjava:1.1.9',
+              rxjava                  : 'io.reactivex:rxjava:1.2.0',
 
               // Test
               junit                   : 'junit:junit:4.12',
