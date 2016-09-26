@@ -54,7 +54,7 @@ allprojects {
               // Ok stack
               okhttp                  : "com.squareup.okhttp3:okhttp:$versions.okHttp",
               okhttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
-              okio                    : 'com.squareup.okio:okio:1.7.0',
+              okio                    : 'com.squareup.okio:okio:1.10.0',
               moshi                   : 'com.squareup.moshi:moshi:1.1.0',
 
               // Additional network libraries
