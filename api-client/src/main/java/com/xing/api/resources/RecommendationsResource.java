@@ -36,14 +36,83 @@ public class RecommendationsResource extends Resource {
         super(api);
     }
 
-    // TODO docs.
+    /**
+     * Get own recommendations.
+     * Returns a list of users the specified user might know.
+     *
+     * <table>
+     * <h4>Possible OPTIONAL parameters</h4>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><b>user_fields</b></td>
+     * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a list
+     * of
+     * available profile user attributes, please refer to the get user details call. {@link XingUser}</td>
+     * </tr>
+     * * <tr>
+     * <td><b>limit</b></td>
+     * <td>Limit the number of recommendations to be returned. This must be a positive number. Default: 10, Maximum:
+     * 100</td>
+     * </tr>
+     * * <tr>
+     * <td><b>offset</b></td>
+     * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a list of
+     * available profile user attributes, please refer to the get user details call.</td>
+     * </tr>
+     * </table>
+     */
     public CallSpec<List<XingUser>, HttpError> getOwnRecommendations() {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/me/network/recommendations")
               .responseAs(list(single(XingUser.class, "user"), "user_recommendations", "recommendations"))
               .build();
     }
 
-    // TODO docs.
+    /**
+     * Get recommendations.
+     * Returns a list of users the specified user might know.
+     *
+     * <table>
+     * <h4>Possible OPTIONAL parameters</h4>
+     * <tr>
+     * <th>Parameter Name</th>
+     * <th><b>Description</b></th>
+     * </tr>
+     * <tr>
+     * <td><b>user_fields</b></td>
+     * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a list
+     * of
+     * available profile user attributes, please refer to the get user details call. {@link XingUser}</td>
+     * </tr>
+     * * <tr>
+     * <td><b>limit</b></td>
+     * <td>Limit the number of recommendations to be returned. This must be a positive number. Default: 10, Maximum:
+     * 100</td>
+     * </tr>
+     * * <tr>
+     * <td><b>offset</b></td>
+     * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a list of
+     * available profile user attributes, please refer to the get user details call.</td>
+     * </tr>
+     * </table>
+     *
+     * @param userId The id for which you want to get the recommendations
+     */
+    public CallSpec<List<XingUser>, HttpError> getRecommendations(String userId) {
+        return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/network/recommendations")
+              .pathParam("user_id", userId)
+              .responseAs(list(single(XingUser.class, "user"), "user_recommendations", "recommendations"))
+              .build();
+    }
+
+    /**
+     * Block recommendation.
+     * Block recommendation for user with given id.
+     *
+     * @param userId id of the user which you want to block from the recommendations.
+     */
     public CallSpec<Void, HttpError> blockRecommendation(String userId) {
         return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/me/network/recommendations/user/{id}", false)
               .pathParam("id", userId)
