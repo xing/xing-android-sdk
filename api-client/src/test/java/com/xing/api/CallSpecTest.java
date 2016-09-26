@@ -54,6 +54,9 @@ import static org.junit.Assert.assertNotNull;
 public class CallSpecTest {
     @Rule
     public final MockWebServer server = new MockWebServer();
+    @Rule
+    public final RecordingSubscriber.Rule subscriberRule = new RecordingSubscriber.Rule();
+
     public XingApi mockApi;
     public HttpUrl httpUrl;
 
@@ -785,19 +788,18 @@ public class CallSpecTest {
     public void specRawStreamRespectsBackpressure() throws Exception {
         server.enqueue(new MockResponse().setBody("Hi"));
 
-        TestSubscriber<Response<String, Object>> subscriber = new TestSubscriber<>(0);
+        RecordingSubscriber<Response<String, Object>> subscriber = subscriberRule.createWithInitialRequest(0);
         CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
               .responseAs(String.class)
               .errorAs(Object.class)
               .build();
 
-        Observable<Response<String, Object>> o = spec.rawStream();
-
-        o.subscribe(subscriber);
-        assertThat(server.getRequestCount()).isEqualTo(0);
+        spec.rawStream().unsafeSubscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertNoEvents();
 
         subscriber.requestMore(1);
-        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertAnyValue().assertCompleted();
 
         subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
         assertThat(server.getRequestCount()).isEqualTo(1);
@@ -890,19 +892,19 @@ public class CallSpecTest {
     public void specStreamRespectsBackpressure() throws Exception {
         server.enqueue(new MockResponse().setBody("Hi"));
 
-        TestSubscriber<String> subscriber = new TestSubscriber<>(0);
+        RecordingSubscriber<String> subscriber = subscriberRule.createWithInitialRequest(0);
+
         CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
               .responseAs(String.class)
               .errorAs(Object.class)
               .build();
 
-        Observable<String> o = spec.stream();
-
-        o.subscribe(subscriber);
-        assertThat(server.getRequestCount()).isEqualTo(0);
+        spec.stream().unsafeSubscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertNoEvents();
 
         subscriber.requestMore(1);
-        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertAnyValue().assertCompleted();
 
         subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
         assertThat(server.getRequestCount()).isEqualTo(1);
