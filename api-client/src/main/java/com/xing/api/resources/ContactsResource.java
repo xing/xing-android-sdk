@@ -164,7 +164,13 @@ public class ContactsResource extends Resource {
               .build();
     }
 
-    // TODO docs.
+    /**
+     * Retrieve assigned tags.
+     * Retrieve all tags the user has assigned to a contact.
+     *
+     * @param contactId ID of the users contact.
+     * @param userId ID of the user who assigned the tags.
+     */
     public CallSpec<List<String>, HttpError> getAssignedTags(String userId, String contactId) {
         return Resource.<List<String>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/{contact_id}/tags")
               .pathParam("user_id", userId)
@@ -173,7 +179,14 @@ public class ContactsResource extends Resource {
               .build();
     }
 
-    // TODO docs.
+    /**
+     * Retrieve assigned tags by current user.
+     * Retrieve all tags the current user has assigned to a contact.
+     * Basically works the same as {@link ContactsResource#getAssignedTags(String, String)}, but already putting the user
+     * id as ME.
+     *
+     * @param contactId ID of the users contact.
+     */
     public CallSpec<List<String>, HttpError> getOwnAssignedTags(String contactId) {
         return getAssignedTags(ME, contactId);
     }
@@ -218,7 +231,6 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    // TODO docs.
     public CallSpec<List<XingUser>, HttpError> getSharedContacts(String userId) {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/{user_id}/contacts/shared")
               .pathParam("user_id", userId)
@@ -243,7 +255,6 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    // TODO docs.
     @Experimental
     public CallSpec<List<XingUser>, HttpError> getUpcomingBirthdays() {
         return Resource.<List<XingUser>, HttpError>newGetSpec(api, "/v1/users/me/contacts/upcoming_birthdays")
@@ -279,7 +290,6 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    // TODO docs.
     public CallSpec<List<ContactRequest>, HttpError> getIncomingContactRequests() {
         return Resource.<List<ContactRequest>, HttpError>newGetSpec(api, "/v1/users/me/contact_requests")
               .responseAs(list(ContactRequest.class, "contact_requests"))
@@ -311,7 +321,6 @@ public class ContactsResource extends Resource {
      * </tr>
      * </table>
      */
-    // TODO docs.
     public CallSpec<List<PendingContactRequest>, HttpError> getPendingContactRequests() {
         return Resource.<List<PendingContactRequest>, HttpError>newGetSpec(api, " /v1/users/me/contact_requests/sent")
               .responseAs(list(PendingContactRequest.class, "contact_requests"))
@@ -337,7 +346,6 @@ public class ContactsResource extends Resource {
      *
      * @param userId ID of the user receiving the contact request
      */
-    // TODO docs.
     public CallSpec<Void, HttpError> sendContactRequest(String userId) {
         return Resource.<Void, HttpError>newPostSpec(api, "/v1/users/{user_id}/contact_requests", false)
               .pathParam("user_id", userId)
@@ -353,7 +361,6 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    // TODO docs.
     public CallSpec<Void, HttpError> acceptContactRequest(String recipientId, String senderId) {
         return Resource
               .<Void, HttpError>newPutSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}/accept", false)
@@ -378,7 +385,6 @@ public class ContactsResource extends Resource {
      * @param recipientId Recipient ID
      * @param senderId Sender ID
      */
-    // TODO docs.
     public CallSpec<Void, HttpError> revokeContactRequest(String recipientId, String senderId) {
         return Resource.<Void, HttpError>newDeleteSpec(api, "/v1/users/{user_id}/contact_requests/{sender_id}", false)
               .pathParam("user_id", recipientId)
@@ -413,7 +419,6 @@ public class ContactsResource extends Resource {
      * @param userId ID of the user whose contact path(s) are to be returned
      * @param otherUserId ID of any other XING user
      */
-    // TODO docs.
     public CallSpec<ContactPaths, HttpError> getContactPaths(String userId, String otherUserId) {
         return Resource.<ContactPaths, HttpError>newGetSpec(api, "/v1/users/{user_id}/network/{other_user_id}/paths")
               .pathParam("user_id", userId)
@@ -449,7 +454,6 @@ public class ContactsResource extends Resource {
      * @param emails List of one or more comma-separated email addresses.
      * NOTE: The current user’s email address will be filtered out.
      */
-    // TODO docs.
     public CallSpec<InvitationStats, HttpError> inviteByMail(String... emails) {
         return Resource.<InvitationStats, HttpError>newPostSpec(api, "/v1/users/invite", true)
               .queryParam("to_emails", emails)
