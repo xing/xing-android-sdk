@@ -150,7 +150,7 @@ public class GroupsResource extends Resource {
     @Experimental
     public CallSpec<List<Group>, HttpError> findGroupByKeyword(String keywords) {
         return Resource.<List<Group>, HttpError>newGetSpec(api, "/v1/groups/find")
-              .responseAs(list(Group.class, "groups", "items"))
+              .responseAs(list(single(Group.class, "group"), "groups", "items"))
               .queryParam("keywords", keywords)
               .build();
     }

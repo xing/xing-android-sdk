@@ -68,6 +68,6 @@ public class ProfileVisitsResourceTest extends ResourceTestCase<ProfileVisitsRes
         assertThat(visit1.type()).isEqualTo(Type.LOGGED_OUT);
         // Check one more entry for reason.
         assertThat(response.body().get(2).reason().text()).isEqualTo("Click on contact path to <a "
-              + "href=\"https://www.xing.com/profile/Maria_Mueller/N7.04c521\">Maria Müller</a>");
+                  + "href=\"https://www.xing.com/profile/Maria_Mueller/N7.04c521\">Maria Müller</a>");
     }
 }

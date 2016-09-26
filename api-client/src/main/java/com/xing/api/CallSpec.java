@@ -17,6 +17,7 @@
 package com.xing.api;
 
 import com.squareup.moshi.JsonAdapter;
+import com.xing.api.internal.Experimental;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -34,7 +35,9 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -49,8 +52,9 @@ import static com.xing.api.Utils.stateNotNull;
  * to retry a failed call.
  *
  * <p>Calls may be executed synchronously with {@link #execute}, asynchronously with {@link
- * #enqueue}, or as asynchronous observable streams with {@link #stream()} or {@link #rawStream()} (<b>Note:</b> that a
- * dependency to RxJava is required). In either case the call can be canceled at any time with {@link #cancel}. A call that
+ * #enqueue}, or as asynchronous observable streams with {@link #stream()}, {@link #singleStream()},
+ * {@link #completableStream()} or {@link #rawStream()} (<b>Note:</b> that a dependency to RxJava is required). In either
+ * case the call can be canceled at any time with {@link #cancel}. A call that
  * is busy writing its request or reading its response may receive a {@link IOException}; this is working as designed.
  *
  * @param <RT> Successful response body type.
@@ -90,6 +94,17 @@ public interface CallSpec<RT, ET> extends Cloneable {
     Observable<RT> stream();
 
     /**
+     * Same as {@linkplain #stream()} but returning a {@linkplain Single}.
+     */
+    Single<RT> singleStream();
+
+    /**
+     * Same as {@linkplain #stream()} but returning a {@linkplain Completable}.
+     */
+    @Experimental
+    Completable completableStream();
+
+    /**
      * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain #enqueue(Callback)
      * enqueued}. It is an error to execute or enqueue a call more than once.
      */
@@ -104,6 +119,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
      */
     void cancel();
 
+    /** Sets the provided header to the underlying request. */
+    CallSpec<RT, ET> header(String name, String value);
+
     /** Appends a query parameter to the query string of the underlying request's url. */
     CallSpec<RT, ET> queryParam(String name, Object value);
 
@@ -117,17 +135,34 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> queryParam(String name, List<String> values);
 
     /**
+     * Adds a form field to the underlying request's form body. The form field value will be utf-8 encoded if {@code
+     * encode} is {@code true}
+     *
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
+     * creation.
+     */
+    CallSpec<RT, ET> formField(String name, String value, boolean encode);
+
+    /**
      * Adds a form field to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, String value);
 
     /**
+     * Adds a form field to the underlying request's form body.
+     *
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
+     * creation.
+     */
+    CallSpec<RT, ET> formField(String name, Object value);
+
+    /**
      * Adds a form field as a csv list to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, String... values);
@@ -135,7 +170,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
     /**
      * Adds a form field as a csv list to the underlying request's form body.
      *
-     * <p>This will throw an {@linkplain NullPointerException} if the form body supprt was not specified during spec
+     * <p>This will throw an {@linkplain NullPointerException} if the form body support was not specified during spec
      * creation.
      */
     CallSpec<RT, ET> formField(String name, List<String> values);
@@ -144,7 +179,22 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> clone();
 
     /**
-     * TODO docs.
+     * Serves two purposes, to build the {@linkplain CallSpec} and the underlying {@linkplain Request}.
+     * Only the {@linkplain CallSpec} building is exposed to the caller.
+     *
+     * <p>Basic usage (internal):
+     * <pre>{@code
+     *      CallSpec.Builder<Void, HttpError> builder = new CallSpec.Builder(api, HttpMethod.PUT, "/", true)
+     *          .formField("some_field", "some_field_value");
+     *          CallSpec<Void, HttpError> callSpec = builder.build();
+     * }</pre>
+     *
+     * <p>Basic usage (public):
+     * <pre>{@code
+     *      CallSpec<Void, HttpError> callSpec = Resource.<Void, HttpError>newPutSpec(api, "/", true)
+     *          .formField("some_field", "some_field_value")
+     *          .build();
+     * }</pre>
      */
     final class Builder<RT, ET> {
         // Upper and lower characters, digits, underscores, and hyphens, starting with a character.
@@ -242,6 +292,16 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return queryParam(name, toCsv(values, false));
         }
 
+        public Builder<RT, ET> formField(String name, String value, boolean encode) {
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, encode ? escape(value) : value);
+            return this;
+        }
+
+        public Builder<RT, ET> formField(String name, String value) {
+            return formField(name, value, false);
+        }
+
         public Builder<RT, ET> formField(String name, Object value) {
             stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
             formBodyBuilder.add(name, String.valueOf(value));
@@ -249,11 +309,15 @@ public interface CallSpec<RT, ET> extends Cloneable {
         }
 
         public Builder<RT, ET> formField(String name, String... values) {
-            return formField(name, toCsv(values, true));
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, toCsv(values, true));
+            return this;
         }
 
         public Builder<RT, ET> formField(String name, List<String> values) {
-            return formField(name, toCsv(values, true));
+            stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
+            formBodyBuilder.add(name, toCsv(values, true));
+            return this;
         }
 
         public Builder<RT, ET> body(RequestBody body) {

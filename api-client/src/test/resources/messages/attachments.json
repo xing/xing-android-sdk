@@ -1,0 +1,17 @@
+{
+  "attachments": {
+    "total": 1,
+    "items": [
+      {
+        "id": "4321_xyza",
+        "uploader": {
+          "id": "123456_abcdef"
+        },
+        "created_at": "2013-01-23T13:37:00Z",
+        "filename": "pretty-cat.jpg",
+        "mime_type": "image/jpeg",
+        "size": 2427
+      }
+    ]
+  }
+}

@@ -34,6 +34,9 @@ import java.util.List;
 public class ProfileVisit implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /** Visit id. */
+    @Json(name = "id")
+    private String id;
     /** User ID. */
     @Json(name = "user_id")
     private String userId;
@@ -83,6 +86,7 @@ public class ProfileVisit implements Serializable {
         ProfileVisit visit = (ProfileVisit) o;
 
         return visitCount == visit.visitCount && distance == visit.distance
+              && (id != null ? id.equals(visit.id) : visit.id == null)
               && (userId != null ? userId.equals(visit.userId) : visit.userId == null)
               && (displayName != null ? displayName.equals(visit.displayName) : visit.displayName == null)
               && (companyName != null ? companyName.equals(visit.companyName) : visit.companyName == null)
@@ -100,6 +104,7 @@ public class ProfileVisit implements Serializable {
     @Override
     public int hashCode() {
         int result = userId != null ? userId.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
         result = 31 * result + (companyName != null ? companyName.hashCode() : 0);
         result = 31 * result + (jobTitle != null ? jobTitle.hashCode() : 0);
@@ -118,6 +123,7 @@ public class ProfileVisit implements Serializable {
     @Override
     public String toString() {
         return "ProfileVisit{"
+              + "id='" + id + '\''
               + "userId='" + userId + '\''
               + ", displayName='" + displayName + '\''
               + ", companyName='" + companyName + '\''
@@ -132,6 +138,17 @@ public class ProfileVisit implements Serializable {
               + ", type=" + type
               + ", sharedContacts=" + sharedContacts
               + '}';
+    }
+
+    /** Returns <strong>this</strong> visits id. */
+    public String id() {
+        return id;
+    }
+
+    /** Sets <strong>this</strong> visits id. */
+    public ProfileVisit id(String id) {
+        this.id = id;
+        return this;
     }
 
     /** Returns the company name. */
@@ -173,8 +190,9 @@ public class ProfileVisit implements Serializable {
     }
 
     /** Sets the photo URLs of user. */
-    public void photoUrls(PhotoUrls photoUrls) {
+    public ProfileVisit photoUrls(PhotoUrls photoUrls) {
         this.photoUrls = photoUrls;
+        return this;
     }
 
     /** Returns the user ID. */

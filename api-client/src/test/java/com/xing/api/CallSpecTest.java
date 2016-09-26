@@ -41,6 +41,7 @@ import okio.Buffer;
 import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
+import rx.singles.BlockingSingle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -131,13 +132,18 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .header("Test1", "hello")
               .header("Test2", "hm");
-        builder.build();
+        CallSpec spec = builder.build();
+        spec.header("Test3", "world");
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
-        assertThat(request.headers().names()).contains("Test1").contains("Test2");
+        assertThat(request.headers().names())
+              .contains("Test1")
+              .contains("Test2")
+              .contains("Test3");
         assertThat(request.headers().values("Test1")).isNotEmpty().hasSize(1).contains("hello");
         assertThat(request.headers().values("Test2")).isNotEmpty().hasSize(1).contains("hm");
+        assertThat(request.headers().values("Test3")).isNotEmpty().hasSize(1).contains("world");
     }
 
     @Test
@@ -261,9 +267,12 @@ public class CallSpecTest {
     public void builderAttachesFormFields() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
               .responseAs(Object.class)
-              .formField("f", "true");
+              .formField("a", "true")
+              .formField("b", 1);
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().formField("e", "false");
+        builder.build()
+              .formField("c", "false")
+              .formField("d", true);
 
         Request request = builder.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
@@ -275,7 +284,35 @@ public class CallSpecTest {
 
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
-        assertThat(buffer.readUtf8()).isEqualTo("f=true&e=false");
+        assertThat(buffer.readUtf8()).isEqualTo("a=true&b=1&c=false&d=true");
+    }
+
+    @Test
+    public void builderEncodesStringFromFields() throws Exception {
+        CallSpec.Builder builder = builder(HttpMethod.PUT, "", true)
+              .responseAs(Object.class)
+              .formField("a", "some_value", true)
+              .formField("b", "second/value");
+        // Build the CallSpec so that we don't test this behaviour twice.
+        builder.build()
+              .formField("c", "https://www.xing.com/some_path/20533046", true)
+              .formField("d", "fourth/value");
+
+        Request request = builder.request();
+        assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
+        assertThat(request.url()).isEqualTo(httpUrl);
+        assertThat(request.body()).isNotNull();
+
+        RequestBody body = request.body();
+        assertThat(body.contentType()).isEqualTo(MediaType.parse("application/x-www-form-urlencoded"));
+
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        assertThat(buffer.readUtf8())
+              .isEqualTo("a=some_value"
+                    + "&b=second%2Fvalue"
+                    + "&c=https%253A%252F%252Fwww.xing.com%252Fsome_path%252F20533046"
+                    + "&d=fourth%2Fvalue");
     }
 
     @Test
@@ -958,6 +995,176 @@ public class CallSpecTest {
                   .isInstanceOf(IOException.class)
                   .hasMessage("401 Unauthorized");
         }
+    }
+
+    @Test
+    public void specSingleStreamsSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"Hey!\",\n"
+              + "  \"code\": 42\n"
+              + '}'));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        BlockingSingle<TestMsg> blocking = spec.singleStream().toBlocking();
+        TestMsg result = blocking.value();
+
+        assertThat(result.msg).isEqualTo("Hey!");
+        assertThat(result.code).isEqualTo(42);
+    }
+
+    @Test
+    public void specSingleStreamsErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR2\",\n"
+              + "  \"message\": \"Yet another error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"some_field\",\n"
+              + "      \"reason\": \"FIELD_DEPRECATED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + '}'));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.DELETE, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingSingle<Object> blocking = spec.singleStream().toBlocking();
+        try {
+            blocking.value();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(HttpException.class);
+
+            HttpException exception = (HttpException) t.getCause();
+            assertThat(exception.code()).isEqualTo(405);
+            assertThat(exception.message()).isEqualTo("Client Error");
+
+            HttpError error = (HttpError) exception.error();
+            assertThat(error.name()).isEqualTo("TEST_ERROR2");
+            assertThat(error.message()).isEqualTo("Yet another error.");
+            assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+        }
+    }
+
+    @Test
+    public void specSingleStreamsError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.PUT, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingSingle<Object> blocking = spec.singleStream().toBlocking();
+        try {
+            blocking.value();
+            fail("Observable should throw.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specSingleStreamErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        BlockingSingle<Object> blocking = spec.singleStream().toBlocking();
+        try {
+            blocking.value();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause())
+                  .isInstanceOf(IOException.class)
+                  .hasMessage("401 Unauthorized");
+        }
+    }
+
+    @Test
+    public void specCompletableStreamsSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"Hey!\",\n"
+              + "  \"code\": 42\n"
+              + '}'));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        TestSubscriber subscriber = new TestSubscriber();
+        spec.completableStream().subscribe(subscriber);
+
+        subscriber.assertCompleted();
+        subscriber.assertNoErrors();
+    }
+
+    @Test
+    public void specCompletableStreamsErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR2\",\n"
+              + "  \"message\": \"Yet another error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"some_field\",\n"
+              + "      \"reason\": \"FIELD_DEPRECATED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + '}'));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.DELETE, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        TestSubscriber subscriber = new TestSubscriber();
+        spec.completableStream().subscribe(subscriber);
+
+        subscriber.assertError(HttpException.class);
+
+        HttpException exception = (HttpException) subscriber.getOnErrorEvents().get(0);
+        assertThat(exception.code()).isEqualTo(405);
+        assertThat(exception.message()).isEqualTo("Client Error");
+
+        HttpError error = (HttpError) exception.error();
+        assertThat(error.name()).isEqualTo("TEST_ERROR2");
+        assertThat(error.message()).isEqualTo("Yet another error.");
+        assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+    }
+
+    @Test
+    public void specCompletableStreamsError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.PUT, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        TestSubscriber subscriber = new TestSubscriber();
+        spec.completableStream().subscribe(subscriber);
+
+        subscriber.assertError(IOException.class);
+    }
+
+    @Test
+    public void specCompletableStreamErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        TestSubscriber subscriber = new TestSubscriber();
+        spec.completableStream().subscribe(subscriber);
+
+        subscriber.assertError(IOException.class);
+
+        IOException exception = (IOException) subscriber.getOnErrorEvents().get(0);
+        assertThat(exception).hasMessage("401 Unauthorized");
     }
 
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {

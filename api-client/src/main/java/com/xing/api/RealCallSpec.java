@@ -19,6 +19,7 @@ package com.xing.api;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;
+import com.xing.api.internal.Experimental;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,9 +34,11 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
+import rx.Completable;
 import rx.Observable;
 import rx.Observable.Operator;
 import rx.Producer;
+import rx.Single;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.exceptions.Exceptions;
@@ -142,6 +145,17 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
+    public Single<RT> singleStream() {
+        return stream().toSingle();
+    }
+
+    @Experimental
+    @Override
+    public Completable completableStream() {
+        return stream().toCompletable();
+    }
+
+    @Override
     public synchronized boolean isExecuted() {
         return executed;
     }
@@ -156,6 +170,12 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         canceled = true;
         Call rawCall = this.rawCall;
         if (rawCall != null) rawCall.cancel();
+    }
+
+    @Override
+    public CallSpec<RT, ET> header(String name, String value) {
+        builder.header(name, value);
+        return this;
     }
 
     @Override
@@ -183,7 +203,19 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
+    public CallSpec<RT, ET> formField(String name, String value, boolean encode) {
+        builder.formField(name, value, encode);
+        return this;
+    }
+
+    @Override
     public CallSpec<RT, ET> formField(String name, String value) {
+        builder.formField(name, value);
+        return this;
+    }
+
+    @Override
+    public CallSpec<RT, ET> formField(String name, Object value) {
         builder.formField(name, value);
         return this;
     }
@@ -206,7 +238,8 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
-    @SuppressWarnings("MagicNumber") // These codes are specific to this method and to the http protocol.
+    @SuppressWarnings("MagicNumber")
+    // These codes are specific to this method and to the http protocol.
     Response<RT, ET> parseResponse(okhttp3.Response rawResponse) throws IOException {
         ResponseBody rawBody = rawResponse.body();
 
