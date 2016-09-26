@@ -22,14 +22,14 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion versions.COMPILE_SDK_VERSION
-    buildToolsVersion versions.BUILD_TOOLS_VERSION
+    compileSdkVersion versions.androidCompileSdk
+    buildToolsVersion versions.androidBuildTools
 
     defaultConfig {
         applicationId GROUP_ID + ".sample"
 
-        minSdkVersion versions.MIN_SDK_VERSION
-        targetSdkVersion versions.TARGET_SDK_VERSION
+        minSdkVersion versions.androidMinSdk
+        targetSdkVersion versions.androidTargetSdk
 
         versionCode = VERSION_CODE
         versionName = VERSION
