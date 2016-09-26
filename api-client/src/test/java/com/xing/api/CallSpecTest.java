@@ -38,7 +38,6 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
 import okio.Buffer;
-import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
 import rx.singles.BlockingSingle;
@@ -47,9 +46,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author serj.lotutovici
- */
 @SuppressWarnings({"MagicNumber", "ConstantConditions"})
 public class CallSpecTest {
     @Rule
