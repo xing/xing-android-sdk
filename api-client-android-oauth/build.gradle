@@ -16,11 +16,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion versions.COMPILE_SDK_VERSION
-    buildToolsVersion versions.BUILD_TOOLS_VERSION
+    compileSdkVersion versions.androidCompileSdk
+    buildToolsVersion versions.androidBuildTools
 
     defaultConfig {
-        minSdkVersion versions.MIN_SDK_VERSION
+        minSdkVersion versions.androidMinSdk
 
         versionCode = VERSION_CODE
         versionName = VERSION
