@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2015 XING AG (http://xing.com/)
+ * Copyright (С) 2016 XING AG (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,22 @@ import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.stateNull;
 
 /**
- * TODO docs.
+ * Main access point for the XING API. Creates and holds instances of {@linkplain Response resources} that provide access
+ * points and response/error handling for XING APIs.
+ * <p>
+ * Usage:
+ * <pre>{@code
+ *           // Will instantiate ContactsResource.
+ *          ContactsResource resource = xingApi.resource(ContactsResource.class);
+ *     }</pre>
+ * <p>
+ * Two states of XingApi are supported:
+ * <dl>
+ * <li>Logged in - Requires a user's access token and token secret (See {@linkplain XingApi.Builder}.)</li>
+ * <li>Logged out - See {@linkplain Builder#loggedOut()}</li>
+ * </dl>
  *
- * @author serj.lotutovici
+ * @since 2.0.0
  */
 public final class XingApi {
     @SuppressWarnings("CollectionWithoutInitialCapacity")
@@ -142,7 +155,14 @@ public final class XingApi {
     }
 
     /**
-     * TODO docs.
+     * Build a new {@link XingApi}.
+     * <p>
+     * Calling {@link Builder#consumerKey(String)}, {@link Builder#consumerSecret(String)},
+     * {@link Builder#accessSecret(String)} and {@link Builder#accessToken(String)} is required to allow access
+     * to logged in only content. To create a {@link XingApi} in a logged out state call {@link Builder#loggedOut()}.
+     * Other methods are optional.
+     *
+     * @since 2.0.0
      */
     public static final class Builder {
         private final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
@@ -157,41 +177,53 @@ public final class XingApi {
             loggedOut = false;
         }
 
+        /** Sets the consumer key. Value must not be {@code null}. */
         public Builder consumerKey(String consumerKey) {
             oauth1Builder.consumerKey(consumerKey);
             return this;
         }
 
+        /** Sets the consumer secret. Value must not be {@code null}. */
         public Builder consumerSecret(String consumerSecret) {
             oauth1Builder.consumerSecret(consumerSecret);
             return this;
         }
 
+        /** Sets the access token. Value must not be {@code null}. */
         public Builder accessToken(String accessToken) {
             oauth1Builder.accessToken(accessToken);
             return this;
         }
 
+        /** Sets the access secret. Value must not be {@code null}. */
         public Builder accessSecret(String accessSecret) {
             oauth1Builder.accessSecret(accessSecret);
             return this;
         }
 
+        /** Notifies the builder that the {@link XingApi} will run in logout mode. */
         public Builder loggedOut() {
             loggedOut = true;
             return this;
         }
 
+        /** Adds an {@linkplain Interceptor interceptor} to the underlying {@linkplain OkHttpClient client}. */
         public Builder addInterceptor(Interceptor interceptor) {
             clientBuilder.addInterceptor(checkNotNull(interceptor, "interceptor == null"));
             return this;
         }
 
+        /** Adds an {@linkplain Interceptor network interceptor} to the underlying {@linkplain OkHttpClient client}. */
         public Builder addNetworkInterceptor(Interceptor interceptor) {
             clientBuilder.addNetworkInterceptor(checkNotNull(interceptor, "interceptor == null"));
             return this;
         }
 
+        /**
+         * Change the api endpoint.
+         * <p>
+         * Should be used only for testing and if the <strong>consumer</strong>  has access to a staging endpoint.
+         */
         public Builder apiEndpoint(String apiEndpoint) {
             HttpUrl httpUrl = HttpUrl.parse(checkNotNull(apiEndpoint, "apiEndpoint == null"));
             if (httpUrl == null) {
@@ -200,11 +232,17 @@ public final class XingApi {
             return apiEndpoint(httpUrl);
         }
 
+        /**
+         * Change the api endpoint.
+         * <p>
+         * Should be used only for testing and if the <strong>consumer</strong>  has access to a staging endpoint.
+         */
         public Builder apiEndpoint(HttpUrl baseUrl) {
             apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
             return this;
         }
 
+        /** Sets a {@link Cache} to the underlying  {@linkplain OkHttpClient client}. */
         public Builder cache(Cache cache) {
             clientBuilder.cache(checkNotNull(cache, "cache == null"));
             return this;
@@ -236,6 +274,7 @@ public final class XingApi {
             return this;
         }
 
+        /** Create a {@link XingApi} instance using the provided values. */
         public XingApi build() {
             // If the api is build in logged out mode, no need to build oauth interceptor.
             if (!loggedOut) {
