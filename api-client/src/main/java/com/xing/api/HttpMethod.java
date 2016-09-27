@@ -16,9 +16,8 @@
 package com.xing.api;
 
 /**
- * TODO docs.
- *
- * @author serj.lotutovici
+ * Method to use in a {@linkplain CallSpec}.
+ * Each method accept the method name and a boolean indicating whether it has a body or not
  */
 enum HttpMethod {
     GET("GET", false),

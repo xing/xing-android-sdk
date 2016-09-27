@@ -20,7 +20,12 @@ import okhttp3.Headers;
 
 import static com.xing.api.Utils.checkNotNull;
 
-/** TODO docs. */
+/**
+ * Response from executing a request with {@linkplain CallSpec#execute()} or {@linkplain CallSpec#rawStream()}.
+ *
+ * @param <RT> Successful response body type.
+ * @param <ET> Error response body type.
+ */
 public final class Response<RT, ET> {
     /** Returns a successful {@link Response} with a {@code null} error body. */
     static <RT, ET> Response<RT, ET> success(RT body, okhttp3.Response rawResponse) {

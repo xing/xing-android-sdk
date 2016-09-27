@@ -17,11 +17,7 @@ package com.xing.api;
 
 import java.lang.reflect.Type;
 
-/**
- * TODO docs.
- *
- * @author serj.lotutovici
- */
+/** Base class for all resources that provide access to various XING api endpoints. */
 public abstract class Resource {
     protected static final String ME = "me";
 
