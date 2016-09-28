@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonReader;
 import com.xing.api.internal.Experimental;
 
 import java.io.EOFException;
@@ -256,7 +254,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
                 }
 
                 // Buffer the entire body to avoid future I/O.
-                ET errorBody = parseBody(errorType, catchingBody);
+                ET errorBody = api.converter().convertFromBody(errorType, catchingBody);
                 return Response.error(errorBody, rawResponse);
             } catch (EOFException eofe) {
                 return Response.error(null, rawResponse);
@@ -277,7 +275,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         }
 
         try {
-            RT body = parseBody(responseType, catchingBody);
+            RT body = api.converter().convertFromBody(responseType, catchingBody);
             String contentRange = rawResponse.header(ContentRange.HEADER_NAME);
             return Response.success(body, ContentRange.parse(contentRange), rawResponse);
         } catch (RuntimeException e) {
@@ -288,24 +286,6 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         } finally {
             // FIXME I don't think we need to close the body twice.
             closeQuietly(catchingBody);
-        }
-    }
-
-    @SuppressWarnings("unchecked") // Type is declared on CallSpec creation. Type matching is the caller responsibility.
-    private <PT> PT parseBody(Type type, ResponseBody body) throws IOException {
-        if (body == null) return null;
-
-        try {
-            // Don't parse the response body, if the caller doesn't expect a json.
-            if (type == Void.class) return null;
-            if (type == String.class) return (PT) body.string();
-            if (type == ResponseBody.class) return (PT) buffer(body);
-
-            JsonAdapter<PT> adapter = CompositeType.findAdapter(api.converter(), type);
-            JsonReader reader = JsonReader.of(body.source());
-            return adapter.fromJson(reader);
-        } finally {
-            closeQuietly(body);
         }
     }
 

@@ -15,15 +15,21 @@
  */
 package com.xing.api;
 
+import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
-import com.xing.api.CompositeType.Structure;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okio.Buffer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
@@ -33,12 +39,25 @@ import static org.junit.Assert.fail;
  * @author daniel.hartwich
  */
 @SuppressWarnings({"ConstantConditions", "MagicNumber", "NullArgumentToVariableArgMethod"})
-public class CompositeTypeTest {
-    private final Moshi moshi = new Moshi.Builder().build();
+public class ConverterTest {
+    private Moshi moshi = new Moshi.Builder().build();
+    private Converter converter = new Converter(moshi);
+
+    @Before
+    public void setUp() throws Exception {
+        moshi = new Moshi.Builder().build();
+        converter = new Converter(moshi);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        converter = null;
+        moshi = null;
+    }
 
     @Test
     public void singleObjects() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE);
+        Type type = Converter.single(TestData.class);
         TestData fromJson = fromJson(type, "{\n"
               + "  \"str\": \"test\",\n"
               + "  \"val\": 42\n"
@@ -54,7 +73,7 @@ public class CompositeTypeTest {
 
     @Test
     public void singleObjectsWithRoots() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, "findMe");
+        Type type = Converter.single(TestData.class, "findMe");
         TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"str\": \"test1\",\n"
@@ -72,7 +91,7 @@ public class CompositeTypeTest {
 
     @Test
     public void singleObjectsWithMultipleRoots() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        Type type = Converter.single(TestData.class, "findMe", "andMe");
         TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -92,7 +111,7 @@ public class CompositeTypeTest {
 
     @Test
     public void singleObjectsWithNullObjectInside() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, "findMe", "andMe");
+        Type type = Converter.single(TestData.class, "findMe", "andMe");
         TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -104,13 +123,13 @@ public class CompositeTypeTest {
         assertThat(fromJson.str).isNullOrEmpty();
         assertThat(fromJson.val).isEqualTo(0);
 
-        String toJson = toJson(compose(Object.class, Structure.SINGLE, "findMe", "andMe"), new Object());
+        String toJson = toJson(Converter.single(Object.class, "findMe", "andMe"), new Object());
         assertThat(toJson).isEqualTo("{\"findMe\":{\"andMe\":{}}}");
     }
 
     @Test
     public void singleObjectsWithRootsNull() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, (String[]) null);
+        Type type = Converter.single(TestData.class, (String[]) null);
         TestData fromJson = fromJson(type, "{\n"
               + "  \"findMe\": {\n"
               + "    \"andMe\": {\n"
@@ -128,7 +147,7 @@ public class CompositeTypeTest {
 
     @Test
     public void listObject() throws Exception {
-        Type type = compose(TestData.class, Structure.LIST, "content");
+        Type type = Converter.list(TestData.class, "content");
         List<TestData> fromJson = fromJson(type, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
@@ -165,7 +184,7 @@ public class CompositeTypeTest {
 
     @Test
     public void listObjectWrongRoots() throws Exception {
-        Type type = compose(TestData.class, Structure.LIST, "asdasdasd");
+        Type type = Converter.list(TestData.class, "asdasdasd");
         try {
             fromJson(type, "{\n"
                   + "  \"content\": []\n"
@@ -179,7 +198,7 @@ public class CompositeTypeTest {
 
     @Test(expected = JsonDataException.class)
     public void listObjectWithoutRoot() throws Exception {
-        Type type = compose(TestData.class, Structure.LIST);
+        Type type = Converter.list(TestData.class);
         fromJson(type, "{\n"
               + "  \"content\": []\n"
               + '}');
@@ -187,7 +206,7 @@ public class CompositeTypeTest {
 
     @Test(expected = JsonDataException.class)
     public void listObjectMultipleRoots() throws Exception {
-        Type type = compose(TestData.class, Structure.LIST, "users", "companies");
+        Type type = Converter.list(TestData.class, "users", "companies");
         fromJson(type, "{\n"
               + "  \"users\": [\n"
               + "    {\n"
@@ -212,7 +231,7 @@ public class CompositeTypeTest {
 
     @Test
     public void objectWithNull() throws Exception {
-        Type type = compose(TestData.class, Structure.SINGLE, "root");
+        Type type = Converter.single(TestData.class, "root");
         TestData fromJson = fromJson(type, "{\n"
               + "  \"root\": null\n"
               + '}');
@@ -221,7 +240,7 @@ public class CompositeTypeTest {
 
     @Test
     public void firstInList() throws Exception {
-        Type compositeType = compose(TestData.class, Structure.FIRST, "content");
+        Type compositeType = Converter.first(TestData.class, "content");
         TestData data = fromJson(compositeType, "{\n"
               + "  \"content\": [\n"
               + "    {\n"
@@ -246,12 +265,12 @@ public class CompositeTypeTest {
 
     @Test
     public void firstAsNullIfListEmpty() throws Exception {
-        Type compositeType1 = compose(TestData.class, Structure.FIRST, "empty");
+        Type compositeType1 = Converter.first(TestData.class, "empty");
         assertNull(fromJson(compositeType1, "{\n"
               + "  \"empty\": null\n"
               + '}'));
 
-        Type compositeType2 = compose(TestData.class, Structure.FIRST, "empty");
+        Type compositeType2 = Converter.first(TestData.class, "empty");
         assertNull(fromJson(compositeType2, "{\n"
               + "  \"empty\": []\n"
               + '}'));
@@ -259,8 +278,8 @@ public class CompositeTypeTest {
 
     @Test
     public void listOfCompositeType() throws Exception {
-        Type innerType = compose(TestData.class, Structure.SINGLE, "secondDegree");
-        Type type = compose(innerType, Structure.LIST, "firstDegree");
+        Type innerType = Converter.single(TestData.class, "secondDegree");
+        Type type = Converter.list(innerType, "firstDegree");
 
         List<TestData> fromJson = fromJson(type, "{\n"
               + "  \"firstDegree\": [\n"
@@ -293,18 +312,25 @@ public class CompositeTypeTest {
               + "]}");
     }
 
+    @Test
+    public void cachingJsonAdapters() throws Exception {
+        Type type = Converter.list(String.class, "one", "two");
+        JsonAdapter<String> adapter1 = converter.findAdapter(type);
+        JsonAdapter<String> adapter2 = converter.findAdapter(type);
+        assertThat(adapter1).isSameAs(adapter2);
+    }
+
     @SuppressWarnings("unchecked") // This is the callers responsibility.
     private <T> T fromJson(Type type, String json) throws Exception {
         if (json == null) return null;
-        return (T) CompositeType.findAdapter(moshi, type).fromJson(json);
+        return (T) converter.convertFromBody(type, ResponseBody.create(Converter.MEDIA_TYPE_JSON, json));
     }
 
     private <T> String toJson(Type type, T value) throws Exception {
-        return CompositeType.findAdapter(moshi, type).toJson(value);
-    }
-
-    private static Type compose(Type searchFor, Structure structure, String... roots) {
-        return new CompositeType(searchFor, structure, roots);
+        RequestBody requestBody = converter.convertToBody(type, value);
+        Buffer buffer = new Buffer();
+        requestBody.writeTo(buffer);
+        return buffer.readUtf8();
     }
 
     static class TestData {

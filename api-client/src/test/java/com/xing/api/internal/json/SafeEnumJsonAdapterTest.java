@@ -25,7 +25,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class SafeEnumJsonAdapterTest {
-    private final Moshi moshi = new XingApi.Builder().loggedOut().build().converter();
+    private final Moshi moshi = new XingApi.Builder().loggedOut().build().moshi();
 
     @Test
     public void enumAdapter() throws Exception {

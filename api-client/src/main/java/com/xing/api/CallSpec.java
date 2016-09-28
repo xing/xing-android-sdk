@@ -16,7 +16,6 @@
  */
 package com.xing.api;
 
-import com.squareup.moshi.JsonAdapter;
 import com.xing.api.internal.Experimental;
 
 import java.io.IOException;
@@ -31,10 +30,8 @@ import java.util.regex.Pattern;
 
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okio.Buffer;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -202,8 +199,6 @@ public interface CallSpec<RT, ET> extends Cloneable {
         private static final Pattern PARAM_NAME_REGEX = Pattern.compile(PARAM);
         private static final Pattern PARAM_URL_REGEX = Pattern.compile("\\{(" + PARAM + ")\\}");
 
-        static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
-
         private final HttpMethod httpMethod;
         private final HttpUrl apiEndpoint;
         private final Request.Builder requestBuilder;
@@ -327,14 +322,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
 
         //TODO Avoid converting response body on main thread?
         public <U> Builder<RT, ET> body(Type type, U body) {
-            Buffer buffer = new Buffer();
-            JsonAdapter<U> jsonAdapter = CompositeType.findAdapter(api.converter(), type);
-            try {
-                jsonAdapter.toJson(buffer, body);
-            } catch (IOException ignored) {
-                // Doesn't need to be handled. Buffer should not throw in this case.
-            }
-            return body(RequestBody.create(MEDIA_TYPE_JSON, buffer.readByteArray()));
+            return body(api.converter().convertToBody(type, body));
         }
 
         public Builder<RT, ET> header(String name, String value) {
