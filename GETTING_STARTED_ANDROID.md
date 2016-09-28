@@ -94,5 +94,4 @@ Depending on your use case, you can execute the underlying request in several wa
         });
 ```
 
-For more information visit the `XingApi` documentation [page](). 
-[//]: # (TODO generate java docs.) 
+For more information visit the `XingApi` documentation [page](http://xing.github.io/xing-android-sdk/javadocs/2.0.0/).
