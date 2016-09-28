@@ -34,7 +34,7 @@ public class Award implements Serializable {
     /** Name of the award. */
     @Json(name = "name")
     private final String name;
-    /** XWS returns only the year, but for compatibility with possible future changes we use Calendar. */
+    /** The XING API returns only the year, but for compatibility with possible future changes we use Calendar. */
     @Json(name = "date_awarded")
     private final SafeCalendar dateAwarded;
     /** URL of the award. */

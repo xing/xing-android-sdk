@@ -92,7 +92,7 @@ public final class BirthDateJsonAdapter extends JsonAdapter<SafeCalendar> {
           throws IOException {
         writer.name(name);
         if (calendar.isSet(field)) {
-            // Calendar and XWS understand month differently.
+            // Calendar and the XING API understand month differently.
             int value = calendar.get(field);
             writer.value(field == Calendar.MONTH ? value + 1 : value);
         } else {

@@ -18,7 +18,7 @@ package com.xing.api.data.profile;
 import com.squareup.moshi.Json;
 
 /**
- * Possible instant messaging account values returned/accepted by XWS.
+ * Possible instant messaging account values returned/accepted by the XING API.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */

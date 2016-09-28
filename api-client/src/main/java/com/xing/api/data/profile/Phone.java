@@ -20,8 +20,9 @@ import java.io.Serializable;
 /**
  * Java representation of a {@linkplain XingUser user's} phone number.
  * <p>
- * XWS returns and accepts phone values only as a string formatted '[country_code]|[area_code]|[number]'. This class
- * simplifies working with these values. The internal api will ensure the conversion form/to json is done properly.
+ * The XING API returns and accepts phone values only as a string formatted '[country_code]|[area_code]|[number]'.
+ * This class simplifies working with these values. The internal api will ensure the conversion form/to json is done
+ * properly.
  *
  * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/put/users/me/private_address">Private Address Resource</a>

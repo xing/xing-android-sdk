@@ -92,7 +92,7 @@ public class JsonSerializationTest {
         assertThat(user.languages()).containsExactly(
               MapEntry.entry(Language.DE, LanguageSkill.NATIVE), MapEntry.entry(Language.EN, LanguageSkill.FLUENT),
               MapEntry.entry(Language.FR, null), MapEntry.entry(Language.ZH, LanguageSkill.BASIC));
-        assertThat(user.legalInformation().previewContent())
+        assertThat(user.legalInformationPreview().previewContent())
               .isEqualTo("Max Mustermann\nMuster AG\nMusterstraße 123\n22992 Musterdorf");
 
 
