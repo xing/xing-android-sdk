@@ -18,7 +18,6 @@ package com.xing.api;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.Types;
 import com.xing.api.internal.Experimental;
 
 import java.io.EOFException;
@@ -298,12 +297,11 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
 
         try {
             // Don't parse the response body, if the caller doesn't expect a json.
-            Class<?> rawType = Types.getRawType(type);
-            if (rawType == Void.class) return null;
-            if (rawType == String.class) return (PT) body.string();
-            if (rawType == ResponseBody.class) return (PT) buffer(body);
+            if (type == Void.class) return null;
+            if (type == String.class) return (PT) body.string();
+            if (type == ResponseBody.class) return (PT) buffer(body);
 
-            JsonAdapter<PT> adapter = api.converter().adapter(type);
+            JsonAdapter<PT> adapter = CompositeType.findAdapter(api.converter(), type);
             JsonReader reader = JsonReader.of(body.source());
             return adapter.fromJson(reader);
         } finally {
