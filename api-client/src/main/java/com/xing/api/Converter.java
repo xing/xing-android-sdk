@@ -160,9 +160,9 @@ final class Converter {
 
             CompositeType compareTo = (CompositeType) obj;
 
-            if (searchFor != null
-                  ? !searchFor.equals(compareTo.searchFor)
-                  : compareTo.searchFor != null) { return false; }
+            if (searchFor != null ? !searchFor.equals(compareTo.searchFor) : compareTo.searchFor != null) {
+                return false;
+            }
             // We need a strict order comparison.
             return Arrays.equals(roots, compareTo.roots);
         }
