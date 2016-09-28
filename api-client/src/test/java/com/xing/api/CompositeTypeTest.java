@@ -33,9 +33,8 @@ import static org.junit.Assert.fail;
  * @author daniel.hartwich
  */
 @SuppressWarnings({"ConstantConditions", "MagicNumber", "NullArgumentToVariableArgMethod"})
-public class CompositeTypeJsonAdapterTest {
-    // We can leverage form CompositeType only if it's tied with moshi.
-    private final Moshi moshi = new Moshi.Builder().add(CompositeTypeJsonAdapter.FACTORY).build();
+public class CompositeTypeTest {
+    private final Moshi moshi = new Moshi.Builder().build();
 
     @Test
     public void singleObjects() throws Exception {
@@ -297,15 +296,15 @@ public class CompositeTypeJsonAdapterTest {
     @SuppressWarnings("unchecked") // This is the callers responsibility.
     private <T> T fromJson(Type type, String json) throws Exception {
         if (json == null) return null;
-        return (T) moshi.adapter(type).fromJson(json);
+        return (T) CompositeType.findAdapter(moshi, type).fromJson(json);
     }
 
     private <T> String toJson(Type type, T value) throws Exception {
-        return moshi.adapter(type).toJson(value);
+        return CompositeType.findAdapter(moshi, type).toJson(value);
     }
 
     private static Type compose(Type searchFor, Structure structure, String... roots) {
-        return new CompositeType(null, searchFor, structure, roots);
+        return new CompositeType(searchFor, structure, roots);
     }
 
     static class TestData {
