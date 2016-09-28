@@ -15,8 +15,15 @@
  */
 package com.xing.api;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.Moshi;
+
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +53,35 @@ import java.util.List;
  * @author daniel.hartwich
  * @author serj.lotutovici
  */
-final class CompositeType implements ParameterizedType {
+final class CompositeType implements Type {
+    // TODO(2.1.0) we need our own way of caching for CompositeType adapters.
+
+    /**
+     * Finds the appropriate adapter for the provided type.
+     * <p>
+     * Note: This bypasses Moshi's adapter construction if the input is a {@link CompositeType}. This is required
+     * du to the fact that Moshi doesn't accept custom types.
+     */
+    static <T> JsonAdapter<T> findAdapter(Moshi moshi, Type type) {
+        if (type instanceof CompositeType) {
+            CompositeType compositeType = (CompositeType) type;
+            JsonAdapter<T> delegate = findAdapter(moshi, compositeType.toFind());
+            CompositeType.Structure structure = compositeType.structure();
+            String[] roots = compositeType.roots();
+
+            return new CompositeJsonAdapter<>(delegate, structure, roots);
+        }
+
+        if (type instanceof ListTypeImpl) {
+            ListTypeImpl listType = (ListTypeImpl) type;
+            JsonAdapter<?> delegate = findAdapter(moshi, listType.getActualTypeArguments()[0]);
+            //noinspection unchecked
+            return (JsonAdapter<T>) new ListTypeImplJsonAdapter<>(delegate);
+        }
+
+        return moshi.adapter(type);
+    }
+
     static final String[] NO_ROOTS = new String[0];
 
     /**
@@ -63,31 +98,14 @@ final class CompositeType implements ParameterizedType {
         FIRST
     }
 
-    final Type ownerType;
-    final Type searchFor;
-    final String[] roots;
-    final Structure structure;
+    private final Type searchFor;
+    private final String[] roots;
+    private final Structure structure;
 
-    CompositeType(Type ownerType, Type searchFor, Structure structure, String... roots) {
-        this.ownerType = ownerType;
+    CompositeType(Type searchFor, Structure structure, String... roots) {
         this.searchFor = searchFor;
         this.structure = structure;
         this.roots = roots;
-    }
-
-    @Override
-    public Type[] getActualTypeArguments() {
-        return new Type[]{toFind()};
-    }
-
-    @Override
-    public Type getOwnerType() {
-        return ownerType;
-    }
-
-    @Override
-    public Type getRawType() {
-        return CompositeType.class;
     }
 
     @Override
@@ -118,8 +136,8 @@ final class CompositeType implements ParameterizedType {
     /** Return the actual parse type. */
     Type toFind() {
         return structure == Structure.SINGLE
-              ? normalize(searchFor, this)
-              : new ListTypeImpl(normalize(searchFor, List.class));
+              ? searchFor
+              : new ListTypeImpl(searchFor);
     }
 
     /** Return the composite structure. */
@@ -132,21 +150,8 @@ final class CompositeType implements ParameterizedType {
         return roots != null ? roots : NO_ROOTS;
     }
 
-    /** Make sure that the required type will be processed as expected. */
-    private static Type normalize(Type type, Type ownerType) {
-        if (type instanceof CompositeType) {
-            CompositeType composite = (CompositeType) type;
-            // The caller is not aware of type ownership.
-            if (composite.ownerType != ownerType) {
-                return new CompositeType(ownerType, composite.searchFor, composite.structure, composite.roots);
-            }
-        }
-
-        return type;
-    }
-
     /** Helps to avoid going through Moshi's ParameterizedTypeImpl so that {@code argType} is not wrapped by it. */
-    static final class ListTypeImpl implements ParameterizedType {
+    private static final class ListTypeImpl implements ParameterizedType {
         private final Type[] typeArguments;
 
         ListTypeImpl(Type argType) {
@@ -171,6 +176,124 @@ final class CompositeType implements ParameterizedType {
         @Override
         public String toString() {
             return "ParameterizedType[List[" + typeArguments[0] + "]]";
+        }
+    }
+
+    private static final class ListTypeImplJsonAdapter<T> extends JsonAdapter<List<T>> {
+        private final JsonAdapter<T> elementAdapter;
+
+        ListTypeImplJsonAdapter(JsonAdapter<T> elementAdapter) {
+            this.elementAdapter = elementAdapter;
+        }
+
+        @Override
+        public List<T> fromJson(JsonReader reader) throws IOException {
+            //noinspection CollectionWithoutInitialCapacity We don't know the size of the array.
+            List<T> result = new ArrayList<>();
+            reader.beginArray();
+            while (reader.hasNext()) {
+                result.add(elementAdapter.fromJson(reader));
+            }
+            reader.endArray();
+            return result;
+        }
+
+        @Override
+        public void toJson(JsonWriter writer, List<T> value) throws IOException {
+            writer.beginArray();
+            for (int i = 0; i < value.size(); i++) {
+                T element = value.get(i);
+                elementAdapter.toJson(writer, element);
+            }
+            writer.endArray();
+        }
+    }
+
+    private static final class CompositeJsonAdapter<T> extends JsonAdapter<T> {
+        private final JsonAdapter<T> adapter;
+        private final CompositeType.Structure structure;
+        private final String[] roots;
+
+        CompositeJsonAdapter(JsonAdapter<T> adapter, CompositeType.Structure structure, String[] roots) {
+            this.adapter = adapter;
+            this.structure = structure;
+            this.roots = roots;
+        }
+
+        @Override
+        public T fromJson(JsonReader reader) throws IOException {
+            Object result = readRootLeafs(adapter, reader, roots, 0);
+
+            if (structure == CompositeType.Structure.FIRST) {
+                //noinspection unchecked This puts full responsibility on the caller.
+                List<T> list = (List<T>) result;
+                return list != null && !list.isEmpty() ? list.get(0) : null;
+            }
+
+            //noinspection unchecked
+            return (T) result;
+        }
+
+        @Override
+        public void toJson(JsonWriter writer, T value) {
+            try {
+                writeRootLeafs(adapter, writer, value, roots, 0);
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return String.format("JsonAdapter[%s][%s](%s)", structure, Arrays.asList(roots), adapter);
+        }
+
+        /** Recursively goes through the JSON and finds the given root. Returns the object(s) found in provided roots. */
+        private static <T> T readRootLeafs(JsonAdapter<T> adapter, JsonReader reader, String[] roots, int index)
+              throws IOException {
+            if (roots == null || index == roots.length) {
+                //noinspection unchecked This puts full responsibility on the caller.
+                return adapter.fromJson(reader);
+            } else {
+                reader.beginObject();
+                try {
+                    String root = roots[index];
+                    while (reader.hasNext()) {
+                        if (reader.nextName().equals(root)) {
+                            if (reader.peek() == JsonReader.Token.NULL) {
+                                return reader.nextNull();
+                            }
+                            return readRootLeafs(adapter, reader, roots, ++index);
+                        } else {
+                            reader.skipValue();
+                        }
+                    }
+                } finally {
+                    // If the json has an additional key, that was not red, we ignore it.
+                    while (reader.hasNext()) {
+                        reader.skipValue();
+                    }
+                    reader.endObject();
+                }
+                throw new IOException(String.format(
+                      "Json does not match expected structure for roots %s.",
+                      Arrays.asList(roots)));
+            }
+        }
+
+        /**
+         * Recursively writes the respective roots forming a json object that resembles the {@code roots} and {@code
+         * structure} of the {@linkplain CompositeType}.
+         */
+        private static <T> void writeRootLeafs(JsonAdapter<T> adapter, JsonWriter writer, T value,
+              String[] roots, int index) throws IOException {
+            if (roots == null || index == roots.length) {
+                adapter.toJson(writer, value);
+            } else {
+                writer.beginObject();
+                writeRootLeafs(adapter, writer.name(roots[index]), value, roots, ++index);
+                writer.endObject();
+            }
         }
     }
 }

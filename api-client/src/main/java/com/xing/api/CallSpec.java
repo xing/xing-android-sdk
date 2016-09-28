@@ -328,7 +328,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
         //TODO Avoid converting response body on main thread?
         public <U> Builder<RT, ET> body(Type type, U body) {
             Buffer buffer = new Buffer();
-            JsonAdapter<U> jsonAdapter = api.converter().adapter(type);
+            JsonAdapter<U> jsonAdapter = CompositeType.findAdapter(api.converter(), type);
             try {
                 jsonAdapter.toJson(buffer, body);
             } catch (IOException ignored) {

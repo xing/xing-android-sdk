@@ -284,7 +284,6 @@ public final class XingApi {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
-            moshiBuilder.add(CompositeTypeJsonAdapter.FACTORY);
             moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
             moshiBuilder.add(NullIntJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
