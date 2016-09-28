@@ -44,7 +44,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * {@link JsonAdapter} that parses all types of dates received form XWS and converts them into a {@link SafeCalendar}.
+ * {@link JsonAdapter} that parses all types of dates received form the XING API and converts them into a
+ * {@link SafeCalendar}.
  */
 public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapter<T> {
 

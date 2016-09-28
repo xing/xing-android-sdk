@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * Represents the content range data of the response. This is useful when a paginated response is being accepted.
  * Contains information about the current content offset, range and total available values.
  * <p>
- * XWS returns a <strong>Xing-Content-Range</strong> header for all paginated requests. The format is as follows:
+ * The XING API returns a <strong>Xing-Content-Range</strong> header for all paginated requests. The format is as follows:
  * <ul>
  * <li><i>"Xing-Content-Range: items [offset]-[last]/[total]"</i> - if the total number is <strong>known</strong>.</li>
  * <li><i>"Xing-Content-Range: items [offset]-[last]/*"</i> - if the total number is <strong>unknown</strong>.</li>

@@ -12,8 +12,7 @@ import java.io.Serializable;
  * {@link UserProfilesResource#getUserLegalInformation(String)}
  */
 @SuppressWarnings("unused")
-public class LegalInformation implements Serializable {
-    // TODO: FIX ME. Better name would be LegalInformationPreview
+public class LegalInformationPreview implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "preview_content")
@@ -23,7 +22,7 @@ public class LegalInformation implements Serializable {
         return previewContent;
     }
 
-    public LegalInformation previewContent(String previewContent) {
+    public LegalInformationPreview previewContent(String previewContent) {
         this.previewContent = previewContent;
         return this;
     }
@@ -36,15 +35,16 @@ public class LegalInformation implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof LegalInformation)) return false;
+        if (!(obj instanceof LegalInformationPreview)) return false;
 
-        LegalInformation that = (LegalInformation) obj;
-        return previewContent != null ? previewContent.equals(that.previewContent) : that.previewContent == null;
+        LegalInformationPreview legalInformationPreview = (LegalInformationPreview) obj;
+        return previewContent != null ? previewContent.equals(legalInformationPreview.previewContent)
+              : legalInformationPreview.previewContent == null;
     }
 
     @Override
     public String toString() {
-        return "LegalInformation{"
+        return "LegalInformationPreview{"
               + "previewContent='" + previewContent + '\''
               + '}';
     }

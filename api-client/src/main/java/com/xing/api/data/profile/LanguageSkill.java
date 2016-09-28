@@ -16,7 +16,7 @@
 package com.xing.api.data.profile;
 
 /**
- * Possible language skill values returned/accepted by XWS.
+ * Possible language skill values returned/accepted by the XING API.
  *
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages Resource</a>
  */

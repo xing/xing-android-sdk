@@ -46,7 +46,7 @@ import static com.xing.api.Utils.stateError;
 import static com.xing.api.Utils.stateNotNull;
 
 /**
- * An invocation of a {@linkplain Resource resource method} that sends a request to XWS and returns a response.
+ * An invocation of a {@linkplain Resource resource method} that sends a request to the XING API and returns a response.
  * Each call yields its own HTTP request and response pair. Use {@link #clone} to make multiple
  * calls with the same parameters to the same {@linkplain Resource resource call}; this may be used to implement polling or
  * to retry a failed call.

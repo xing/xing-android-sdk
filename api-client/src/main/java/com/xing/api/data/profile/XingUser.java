@@ -101,13 +101,13 @@ public class XingUser implements Serializable {
     @Json(name = "photo_urls")
     private PhotoUrls photoUrls;
     @Json(name = "legal_information")
-    private LegalInformation legalInformation;
+    private LegalInformationPreview legalInformationPreview;
 
     /**
      * Create an instance of {@linkplain XingUser}.
      *
      * @deprecated A user can not exist without an {@linkplain #id()}. Use {@linkplain XingUser#XingUser(String)}. The
-     * user id can be returned {@code null} by XWS only if the user is blacklisted, see {@linkplain #isBlacklisted()}.
+     * user id can be returned {@code null} by the API only if the user is blacklisted, see {@linkplain #isBlacklisted()}.
      */
     @Deprecated
     public XingUser() {
@@ -180,8 +180,8 @@ public class XingUser implements Serializable {
               : xingUser.educationBackground != null) {
             return false;
         }
-        if (legalInformation != null ? !legalInformation.equals(xingUser.legalInformation)
-              : xingUser.legalInformation != null) {
+        if (legalInformationPreview != null ? !legalInformationPreview.equals(xingUser.legalInformationPreview)
+              : xingUser.legalInformationPreview != null) {
             return false;
         }
 
@@ -217,7 +217,7 @@ public class XingUser implements Serializable {
         result = 31 * result + (professionalExperience != null ? professionalExperience.hashCode() : 0);
         result = 31 * result + (educationBackground != null ? educationBackground.hashCode() : 0);
         result = 31 * result + (photoUrls != null ? photoUrls.hashCode() : 0);
-        result = 31 * result + (legalInformation != null ? legalInformation.hashCode() : 0);
+        result = 31 * result + (legalInformationPreview != null ? legalInformationPreview.hashCode() : 0);
         return result;
     }
 
@@ -251,7 +251,7 @@ public class XingUser implements Serializable {
               + ", educationBackground=" + educationBackground
               + ", professionalExperience=" + professionalExperience
               + ", photoUrls=" + photoUrls
-              + ", legalInformation=" + legalInformation
+              + ", legalInformationPreview=" + legalInformationPreview
               + '}';
     }
 
@@ -632,12 +632,12 @@ public class XingUser implements Serializable {
         return this;
     }
 
-    public LegalInformation legalInformation() {
-        return legalInformation;
+    public LegalInformationPreview legalInformationPreview() {
+        return legalInformationPreview;
     }
 
-    public XingUser legalInformation(LegalInformation legalInformation) {
-        this.legalInformation = legalInformation;
+    public XingUser legalInformationPreview(LegalInformationPreview legalInformationPreview) {
+        this.legalInformationPreview = legalInformationPreview;
         return this;
     }
 
@@ -699,7 +699,7 @@ public class XingUser implements Serializable {
 
     /**
      * Returns {@code true} if the user is blacklisted, otherwise {@code false}. The assumption on which this method is
-     * based, is that XWS will always return a user id if the user not blocked or blacklisted.
+     * based, is that the XING API will always return a <strong>user id</strong> if the user is not blocked or blacklisted.
      */
     public boolean isBlacklisted() {
         return id == null || id.isEmpty();

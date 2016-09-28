@@ -20,7 +20,7 @@ import com.squareup.moshi.Json;
 import java.io.Serializable;
 
 /**
- * Java representation of a {@linkplain XingUser user's} picture/photo container. XWS scales the user's profile
+ * Java representation of a {@linkplain XingUser user's} picture/photo container. The XING API scales the user's profile
  * picture in a different variety of sizes. This object allows the <strong>user</strong> to use any of the
  * {@linkplain XingUser user's} profile picture without scaling on the client side.
  *

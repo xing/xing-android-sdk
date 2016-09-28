@@ -20,7 +20,7 @@ import com.squareup.moshi.Json;
 import java.util.List;
 
 /**
- * Generic HTTP Error Object that maps the error response of XWS.
+ * Generic HTTP Error Object that maps the error response of the XING API.
  *
  * This is the default object that is returned when the request is successful but the server returned an error request.
  *

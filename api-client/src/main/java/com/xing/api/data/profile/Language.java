@@ -18,7 +18,7 @@ package com.xing.api.data.profile;
 import com.squareup.moshi.Json;
 
 /**
- * Possible language values returned/accepted by XWS.
+ * Possible language values returned/accepted by the XING API.
  *
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages Resource</a>
  */
