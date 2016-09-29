@@ -118,9 +118,7 @@ final class Converter {
             }
 
             JsonAdapter<T> delegate = findAdapter(compositeType.searchFor);
-            String[] roots = compositeType.roots;
-
-            JsonAdapter<T> adapter = new CompositeJsonAdapter<>(delegate, roots);
+            JsonAdapter<T> adapter = new CompositeJsonAdapter<>(delegate, compositeType.roots);
             synchronized (adapterCache) {
                 adapterCache.put(compositeType, adapter);
             }
@@ -130,11 +128,18 @@ final class Converter {
 
         if (type instanceof ListTypeImpl) {
             ListTypeImpl listType = (ListTypeImpl) type;
+            synchronized (adapterCache) {
+                JsonAdapter<?> adapter = adapterCache.get(listType);
+                if (adapter != null) return (JsonAdapter<T>) adapter;
+            }
+
             JsonAdapter<?> delegate = findAdapter(listType.type);
-            // No need to cache a ListTypeImplJsonAdapter
-            // because it's always wrapped with a CompositeJsonAdapter
-            //noinspection unchecked
-            return (JsonAdapter<T>) new ListTypeImplJsonAdapter<>(delegate, listType.isFirst);
+            JsonAdapter<T> adapter = (JsonAdapter<T>) new ListTypeImplJsonAdapter<>(delegate, listType.isFirst);
+            synchronized (adapterCache) {
+                adapterCache.put(type, adapter);
+            }
+
+            return adapter;
         }
 
         // Moshi has it's own adapter cache, no need to do anything here
