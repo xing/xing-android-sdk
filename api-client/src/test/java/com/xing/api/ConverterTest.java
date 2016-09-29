@@ -40,8 +40,8 @@ import static org.junit.Assert.fail;
  */
 @SuppressWarnings({"ConstantConditions", "MagicNumber", "NullArgumentToVariableArgMethod"})
 public class ConverterTest {
-    private Moshi moshi = new Moshi.Builder().build();
-    private Converter converter = new Converter(moshi);
+    private Moshi moshi;
+    private Converter converter;
 
     @Before
     public void setUp() throws Exception {

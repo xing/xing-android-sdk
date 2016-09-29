@@ -104,10 +104,7 @@ public final class XingApi {
         return apiEndpoint;
     }
 
-    /**
-     * Returns the json moshi ({@linkplain Moshi} instance) associated with <strong>this</strong> client
-     * instance.
-     */
+    /** Returns the json {@linkplain Moshi} instance associated with <strong>this</strong> client instance. */
     public Moshi moshi() {
         return converter.moshi();
     }
