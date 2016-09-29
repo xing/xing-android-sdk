@@ -68,11 +68,11 @@ public final class XingApi {
 
     private final OkHttpClient client;
     private final HttpUrl apiEndpoint;
-    private final Moshi converter;
+    private final Converter converter;
     private final CallbackAdapter callbackAdapter;
     private final Executor callbackExecutor;
 
-    XingApi(OkHttpClient client, HttpUrl apiEndpoint, Moshi converter, CallbackAdapter callbackAdapter,
+    XingApi(OkHttpClient client, HttpUrl apiEndpoint, Converter converter, CallbackAdapter callbackAdapter,
           Executor callbackExecutor) {
         this.client = client;
         this.apiEndpoint = apiEndpoint;
@@ -104,12 +104,9 @@ public final class XingApi {
         return apiEndpoint;
     }
 
-    /**
-     * Returns the json converter ({@linkplain Moshi} instance) associated with <strong>this</strong> client
-     * instance.
-     */
-    public Moshi converter() {
-        return converter;
+    /** Returns the json {@linkplain Moshi} instance associated with <strong>this</strong> client instance. */
+    public Moshi moshi() {
+        return converter.moshi();
     }
 
     /** Returns the executor throw which the callbacks will be invoked. */
@@ -136,6 +133,10 @@ public final class XingApi {
 
     CallbackAdapter callbackAdapter() {
         return callbackAdapter;
+    }
+
+    Converter converter() {
+        return converter;
     }
 
     /** Notify all callbacks that the server returned an auth error. */
@@ -295,8 +296,9 @@ public final class XingApi {
 
             // Select adapter by platform.
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);
+            Converter converter = new Converter(moshiBuilder.build());
 
-            return new XingApi(clientBuilder.build(), apiEndpoint, moshiBuilder.build(), adapter, callbackExecutor);
+            return new XingApi(clientBuilder.build(), apiEndpoint, converter, adapter, callbackExecutor);
         }
     }
 }

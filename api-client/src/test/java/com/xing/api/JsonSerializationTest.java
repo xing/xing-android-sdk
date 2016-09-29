@@ -63,7 +63,7 @@ public class JsonSerializationTest {
 
     @Test
     public void user() throws Exception {
-        JsonAdapter<XingUser> adapter = api.converter().adapter(XingUser.class);
+        JsonAdapter<XingUser> adapter = api.moshi().adapter(XingUser.class);
         String json = file("user.json");
 
         // Test that the user object reflects the json.
@@ -140,7 +140,7 @@ public class JsonSerializationTest {
 
     @Test
     public void profileVisit() throws Exception {
-        JsonAdapter<ProfileVisit> adapter = api.converter().adapter(ProfileVisit.class);
+        JsonAdapter<ProfileVisit> adapter = api.moshi().adapter(ProfileVisit.class);
         String json = file("visit.json");
 
         // Test that the visit reflects the json
