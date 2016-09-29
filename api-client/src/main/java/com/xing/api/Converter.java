@@ -136,7 +136,7 @@ final class Converter {
             JsonAdapter<?> delegate = findAdapter(listType.type);
             JsonAdapter<T> adapter = (JsonAdapter<T>) new ListTypeImplJsonAdapter<>(delegate, listType.isFirst);
             synchronized (adapterCache) {
-                adapterCache.put(type, adapter);
+                adapterCache.put(listType, adapter);
             }
 
             return adapter;
@@ -259,7 +259,7 @@ final class Converter {
 
         @Override
         public String toString() {
-            return String.format("JsonAdapter(%s).atPath(%s)", adapter, Arrays.asList(roots));
+            return adapter + String.format(".compositeAt(%s)", Arrays.asList(roots));
         }
     }
 
