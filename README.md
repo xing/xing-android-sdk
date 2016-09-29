@@ -10,13 +10,6 @@ This library provides a java implementation of a network layer infrastructure re
 It's center class the `XingApi` allows users to access resources that reflect the XING API public, documentation for 
 which can be found [here](https://dev.xing.com/docs/resources).
 
-## DISCLAIMER
-
-__This library is an evolution of so called "XING Android SDK". The library was rewritten to adapt modern 
-approaches of software development and bring a simple and straight forward api. The previous implementation was 
-DEPRECATED and is no longer under support. If you are in need for a changes or a bug fix, and for some reason can not 
-switch to the new api, feel free to fork this repo and checkout the [1.x branch](https://github.com/xing/xing-android-sdk/tree/1.x).__
-
 How to get Started
 ==========
 
