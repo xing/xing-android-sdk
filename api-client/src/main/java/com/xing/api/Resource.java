@@ -53,12 +53,12 @@ public abstract class Resource {
 
     /** Returns a {@link Type} that will expect a single object in the root json tree. */
     protected static Type single(Type searchFor, String... roots) {
-        return new CompositeType(searchFor, CompositeType.Structure.SINGLE, roots);
+        return Converter.single(searchFor, roots);
     }
 
     /** Returns a {@link Type} that will expect a list of objects in the root json tree. */
     protected static Type list(Type searchFor, String... roots) {
-        return new CompositeType(searchFor, CompositeType.Structure.LIST, roots);
+        return Converter.list(searchFor, roots);
     }
 
     /**
@@ -66,6 +66,6 @@ public abstract class Resource {
      * the root json tree.
      */
     protected static Type first(Type searchFor, String... roots) {
-        return new CompositeType(searchFor, CompositeType.Structure.FIRST, roots);
+        return Converter.first(searchFor, roots);
     }
 }
