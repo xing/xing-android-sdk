@@ -16,6 +16,7 @@
 package com.xing.api;
 
 import com.squareup.moshi.Moshi;
+import com.xing.api.internal.Experimental;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -34,9 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import okhttp3.Cache;
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 
@@ -158,66 +157,105 @@ public final class XingApi {
     /**
      * Build a new {@link XingApi}.
      * <p>
-     * Calling {@link Builder#consumerKey(String)}, {@link Builder#consumerSecret(String)},
-     * {@link Builder#accessSecret(String)} and {@link Builder#accessToken(String)} is required to allow access
-     * to logged in only content. To create a {@link XingApi} in a logged out state call {@link Builder#loggedOut()}.
-     * Other methods are optional.
+     * TODO
      *
      * @since 2.0.0
      */
     public static final class Builder {
-        private final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-        private final OAuth1SigningInterceptor.Builder oauth1Builder = new OAuth1SigningInterceptor.Builder();
-        private HttpUrl apiEndpoint;
-        private Moshi.Builder moshiBuilder;
-        private boolean loggedOut;
-        private Executor callbackExecutor;
+        public OAuth1Step oauth1() {
+            return new OAuth1Step();
+        }
 
-        public Builder() {
-            apiEndpoint = HttpUrl.parse("https://api.xing.com/");
-            loggedOut = false;
+        public LoggedOutStep loggedOut() {
+            return new LoggedOutStep();
+        }
+
+        @Experimental
+        public CustomStep custom() {
+            return new CustomStep();
+        }
+    }
+
+    /**
+     * // TODO
+     *
+     * Calling {@link OAuth1Step#consumerKey(String)}, {@link OAuth1Step#consumerSecret(String)},
+     * {@link OAuth1Step#accessSecret(String)} and {@link OAuth1Step#accessToken(String)} is required to allow access
+     * to logged in only content.
+     *
+     * @since 2.1.0
+     */
+    public static final class OAuth1Step extends BuildStep<OAuth1Step> {
+        private final OAuth1SigningInterceptor.Builder oauth1Builder = new OAuth1SigningInterceptor.Builder();
+
+        OAuth1Step() {
         }
 
         /** Sets the consumer key. Value must not be {@code null}. */
-        public Builder consumerKey(String consumerKey) {
+        public OAuth1Step consumerKey(String consumerKey) {
             oauth1Builder.consumerKey(consumerKey);
             return this;
         }
 
         /** Sets the consumer secret. Value must not be {@code null}. */
-        public Builder consumerSecret(String consumerSecret) {
+        public OAuth1Step consumerSecret(String consumerSecret) {
             oauth1Builder.consumerSecret(consumerSecret);
             return this;
         }
 
         /** Sets the access token. Value must not be {@code null}. */
-        public Builder accessToken(String accessToken) {
+        public OAuth1Step accessToken(String accessToken) {
             oauth1Builder.accessToken(accessToken);
             return this;
         }
 
         /** Sets the access secret. Value must not be {@code null}. */
-        public Builder accessSecret(String accessSecret) {
+        public OAuth1Step accessSecret(String accessSecret) {
             oauth1Builder.accessSecret(accessSecret);
             return this;
         }
 
-        /** Notifies the builder that the {@link XingApi} will run in logout mode. */
-        public Builder loggedOut() {
-            loggedOut = true;
-            return this;
+        @Override
+        OkHttpClient.Builder clientBuilder() {
+            OkHttpClient.Builder builder = super.clientBuilder();
+            builder.addInterceptor(oauth1Builder.build());
+            return builder;
         }
+    }
 
-        /** Adds an {@linkplain Interceptor interceptor} to the underlying {@linkplain OkHttpClient client}. */
-        public Builder addInterceptor(Interceptor interceptor) {
-            clientBuilder.addInterceptor(checkNotNull(interceptor, "interceptor == null"));
-            return this;
+    /**
+     * TODO.
+     *
+     * @since 2.1.0
+     */
+    public static final class LoggedOutStep extends BuildStep<LoggedOutStep> {
+        LoggedOutStep() {
         }
+    }
 
-        /** Adds an {@linkplain Interceptor network interceptor} to the underlying {@linkplain OkHttpClient client}. */
-        public Builder addNetworkInterceptor(Interceptor interceptor) {
-            clientBuilder.addNetworkInterceptor(checkNotNull(interceptor, "interceptor == null"));
-            return this;
+    /**
+     * TODO.
+     *
+     * @since 2.1.0
+     */
+    public static final class CustomStep extends BuildStep<CustomStep> {
+        CustomStep() {
+        }
+    }
+
+    /**
+     * TODO.
+     *
+     * @since 2.1.0
+     */
+    public static class BuildStep<T extends BuildStep> {
+        private OkHttpClient.Builder clientBuilder;
+        private Moshi.Builder moshiBuilder;
+        private Executor callbackExecutor;
+        private HttpUrl apiEndpoint;
+
+        BuildStep() {
+            apiEndpoint = HttpUrl.parse("https://api.xing.com/");
         }
 
         /**
@@ -225,7 +263,7 @@ public final class XingApi {
          * <p>
          * Should be used only for testing and if the <strong>consumer</strong>  has access to a staging endpoint.
          */
-        public Builder apiEndpoint(String apiEndpoint) {
+        public final T apiEndpoint(String apiEndpoint) {
             HttpUrl httpUrl = HttpUrl.parse(checkNotNull(apiEndpoint, "apiEndpoint == null"));
             if (httpUrl == null) {
                 throw new IllegalArgumentException("Illegal endpoint URL: " + apiEndpoint);
@@ -238,15 +276,9 @@ public final class XingApi {
          * <p>
          * Should be used only for testing and if the <strong>consumer</strong>  has access to a staging endpoint.
          */
-        public Builder apiEndpoint(HttpUrl baseUrl) {
+        public final T apiEndpoint(HttpUrl baseUrl) {
             apiEndpoint = checkNotNull(baseUrl, "apiEndpoint == null");
-            return this;
-        }
-
-        /** Sets a {@link Cache} to the underlying  {@linkplain OkHttpClient client}. */
-        public Builder cache(Cache cache) {
-            clientBuilder.cache(checkNotNull(cache, "cache == null"));
-            return this;
+            return self();
         }
 
         /**
@@ -263,25 +295,33 @@ public final class XingApi {
          *
          * @throws java.lang.IllegalStateException If the internal builder was already initialized.
          */
-        public Builder moshi(Moshi moshi) {
+        public final T moshi(Moshi moshi) {
             stateNull(moshiBuilder, "Only one instance of Moshi is allowed");
             moshiBuilder = checkNotNull(moshi, "moshi == null").newBuilder();
-            return this;
+            return self();
         }
 
         /** Sets the executor which will determine the thread on which callback will be invoked. */
-        public Builder callbackExecutor(Executor callbackExecutor) {
+        public final T callbackExecutor(Executor callbackExecutor) {
             this.callbackExecutor = checkNotNull(callbackExecutor, "callbackExecutor == null");
-            return this;
+            return self();
         }
 
-        /** Create a {@link XingApi} instance using the provided values. */
-        public XingApi build() {
-            // If the api is build in logged out mode, no need to build oauth interceptor.
-            if (!loggedOut) {
-                clientBuilder.addInterceptor(oauth1Builder.build());
-            }
+        public final T client(OkHttpClient client) {
+            clientBuilder = checkNotNull(client, "client == null").newBuilder();
+            return self();
+        }
 
+        OkHttpClient.Builder clientBuilder() {
+            return clientBuilder != null ? clientBuilder : new OkHttpClient.Builder();
+        }
+
+        private T self() {
+            //noinspection unchecked Protected by class definition.
+            return (T) this;
+        }
+
+        public final XingApi build() {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
@@ -298,7 +338,7 @@ public final class XingApi {
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);
             Converter converter = new Converter(moshiBuilder.build());
 
-            return new XingApi(clientBuilder.build(), apiEndpoint, converter, adapter, callbackExecutor);
+            return new XingApi(clientBuilder().build(), apiEndpoint, converter, adapter, callbackExecutor);
         }
     }
 }

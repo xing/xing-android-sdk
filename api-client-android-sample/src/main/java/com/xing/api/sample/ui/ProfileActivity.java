@@ -176,6 +176,7 @@ public class ProfileActivity extends BaseActivity {
         @Override
         protected XingUser doInBackground(Activity... params) {
             XingApi api = new XingApi.Builder()
+                  .oauth1()
                   .consumerKey(BuildConfig.OAUTH_CONSUMER_KEY)
                   .consumerSecret(BuildConfig.OAUTH_CONSUMER_SECRET)
                   .accessToken(Prefs.getInstance(ProfileActivity.this).getOauthToken())

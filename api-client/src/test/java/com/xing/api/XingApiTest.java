@@ -17,21 +17,16 @@ package com.xing.api;
 
 import com.squareup.moshi.Moshi;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import okhttp3.Cache;
 import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -104,103 +99,40 @@ public class XingApiTest {
 
     @SuppressWarnings("ConstantConditions") // Passes nulls intentionally.
     @Test
-    public void builder() throws Exception {
-        XingApi.Builder builder = new XingApi.Builder();
+    public void builderOAuth1() throws Exception {
+        XingApi.OAuth1Step oAuth1Step = new XingApi.Builder().oauth1();
+        assertBuildStep(oAuth1Step);
 
         try {
-            builder.apiEndpoint((String) null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
-        }
-
-        try {
-            builder.apiEndpoint((HttpUrl) null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
-        }
-
-        try {
-            builder.apiEndpoint("http/invalid-url.org");
-            fail("Builder should throw on invalid endpoints.");
-        } catch (IllegalArgumentException expected) {
-            assertThat(expected.getMessage()).isEqualTo("Illegal endpoint URL: http/invalid-url.org");
-        }
-
-        try {
-            builder.accessSecret(null);
+            oAuth1Step.accessSecret(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
             assertThat(expected.getMessage()).isEqualTo("accessSecret == null");
         }
 
         try {
-            builder.accessToken(null);
+            oAuth1Step.accessToken(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
             assertThat(expected.getMessage()).isEqualTo("accessToken == null");
         }
 
         try {
-            builder.consumerKey(null);
+            oAuth1Step.consumerKey(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
             assertThat(expected.getMessage()).isEqualTo("consumerKey == null");
         }
 
         try {
-            builder.consumerSecret(null);
+            oAuth1Step.consumerSecret(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
             assertThat(expected.getMessage()).isEqualTo("consumerSecret == null");
         }
 
         try {
-            builder.addInterceptor(null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("interceptor == null");
-        }
-
-        try {
-            builder.addNetworkInterceptor(null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("interceptor == null");
-        }
-
-        try {
-            builder.cache(null);
-            Assert.fail();
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("cache == null");
-        }
-
-        try {
-            builder.callbackExecutor(null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected).hasMessage("callbackExecutor == null");
-        }
-
-        try {
-            builder.moshi(null);
-            fail("Builder should throw on null values.");
-        } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("moshi == null");
-        }
-
-        builder.moshi(new Moshi.Builder().build());
-        try {
-            builder.moshi(new Moshi.Builder().build());
-            fail("Only one Moshi should be allowed.");
-        } catch (IllegalStateException expected) {
-            assertThat(expected.getMessage()).isEqualTo("Only one instance of Moshi is allowed");
-        }
-
-        try {
-            builder.build();
+            oAuth1Step.build();
             fail("Build should throw if oauth is not set.");
         } catch (IllegalStateException expected) {
             assertThat(expected.getMessage()).contains("not set");
@@ -208,53 +140,15 @@ public class XingApiTest {
     }
 
     @Test
-    public void allInterceptorsArePropagated() throws Exception {
-        XingApi tested = new XingApi.Builder()
-              .addInterceptor(new Interceptor() {
-                  @Override
-                  public okhttp3.Response intercept(Chain chain) {
-                      return null;
-                  }
-
-                  @Override
-                  public String toString() {
-                      return "one";
-                  }
-              })
-              .addInterceptor(new Interceptor() {
-                  @Override
-                  public okhttp3.Response intercept(Chain chain) {
-                      return null;
-                  }
-
-                  @Override
-                  public String toString() {
-                      return "two";
-                  }
-              })
-              .consumerKey("consumer")
-              .consumerSecret("secret")
-              .accessToken("token")
-              .accessSecret("secret")
-              .build();
-
-        OkHttpClient client = tested.client();
-
-        assertThat(client.interceptors()).hasSize(3);
-        assertThat(client.interceptors().get(0).toString()).isEqualTo("one");
-        assertThat(client.interceptors().get(1).toString()).isEqualTo("two");
-        assertThat(client.interceptors().get(2)).isInstanceOf(OAuth1SigningInterceptor.class);
+    public void builderLoggedOut() throws Exception {
+        XingApi.LoggedOutStep loggedOutStep = new XingApi.Builder().loggedOut();
+        assertBuildStep(loggedOutStep);
     }
 
     @Test
-    public void cacheIsPorpagated() throws Exception {
-        Cache cache = new Cache(new File("test"), 42);
-        XingApi tested = new XingApi.Builder()
-              .cache(cache)
-              .loggedOut()
-              .build();
-
-        assertThat(tested.client().cache()).isSameAs(cache);
+    public void builderCustom() throws Exception {
+        XingApi.CustomStep customStep = new XingApi.Builder().custom();
+        assertBuildStep(customStep);
     }
 
     @Test
@@ -266,14 +160,14 @@ public class XingApiTest {
     @Test
     public void apiEndpointPropagated() throws Exception {
         XingApi api1 = new XingApi.Builder()
+              .custom()
               .apiEndpoint(HttpUrl.parse("http://test.com/"))
-              .loggedOut()
               .build();
         assertThat(api1.apiEndpoint().toString()).isEqualTo("http://test.com/");
 
         XingApi api2 = new XingApi.Builder()
+              .custom()
               .apiEndpoint("https://test2.com/")
-              .loggedOut()
               .build();
         assertThat(api2.apiEndpoint().toString()).isEqualTo("https://test2.com/");
     }
@@ -288,7 +182,7 @@ public class XingApiTest {
     public void callbackExecutorPropagated() throws Exception {
         Executor executor = mock(Executor.class);
         XingApi api = new XingApi.Builder()
-              .loggedOut()
+              .custom()
               .callbackExecutor(executor)
               .build();
         assertThat(api.callbackExecutor()).isSameAs(executor);
@@ -303,9 +197,9 @@ public class XingApiTest {
             }
         });
         XingApi api = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
-              .loggedOut()
               .build();
 
         LegalTestResource resource = api.resource(LegalTestResource.class);
@@ -340,9 +234,9 @@ public class XingApiTest {
             }
         });
         XingApi api = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
-              .loggedOut()
               .build();
         LegalTestResource resource = api.resource(LegalTestResource.class);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
@@ -376,9 +270,9 @@ public class XingApiTest {
             }
         });
         XingApi api = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
-              .loggedOut()
               .build();
         LegalTestResource resource = api.resource(LegalTestResource.class);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
@@ -402,9 +296,9 @@ public class XingApiTest {
             }
         });
         XingApi api = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
-              .loggedOut()
               .build();
         LegalTestResource resource = api.resource(LegalTestResource.class);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
@@ -438,8 +332,8 @@ public class XingApiTest {
     @Test
     public void allowsMultipleErrorCallbacks() throws Exception {
         XingApi api = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
-              .loggedOut()
               .build();
 
         LegalTestResource resource = api.resource(LegalTestResource.class);
@@ -477,6 +371,51 @@ public class XingApiTest {
 
     private static XingApi buildDefaultApi() {
         return new XingApi.Builder().loggedOut().build();
+    }
+
+    private static <T extends XingApi.BuildStep> void assertBuildStep(T buildStep) throws Exception {
+        try {
+            buildStep.apiEndpoint((String) null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
+        }
+
+        try {
+            buildStep.apiEndpoint((HttpUrl) null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
+        }
+
+        try {
+            buildStep.apiEndpoint("http/invalid-url.org");
+            fail("Builder should throw on invalid endpoints.");
+        } catch (IllegalArgumentException expected) {
+            assertThat(expected.getMessage()).isEqualTo("Illegal endpoint URL: http/invalid-url.org");
+        }
+
+        try {
+            buildStep.callbackExecutor(null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected).hasMessage("callbackExecutor == null");
+        }
+
+        try {
+            buildStep.moshi(null);
+            fail("Builder should throw on null values.");
+        } catch (NullPointerException expected) {
+            assertThat(expected.getMessage()).isEqualTo("moshi == null");
+        }
+
+        buildStep.moshi(new Moshi.Builder().build());
+        try {
+            buildStep.moshi(new Moshi.Builder().build());
+            fail("Only one Moshi should be allowed.");
+        } catch (IllegalStateException expected) {
+            assertThat(expected.getMessage()).isEqualTo("Only one instance of Moshi is allowed");
+        }
     }
 
     static final class LegalTestResource extends Resource {
