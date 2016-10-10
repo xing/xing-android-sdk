@@ -60,8 +60,8 @@ public class CallSpecTest {
     public void setUp() throws Exception {
         httpUrl = server.url("/");
         mockApi = new XingApi.Builder()
+              .custom()
               .apiEndpoint(httpUrl)
-              .loggedOut()
               .build();
     }
 

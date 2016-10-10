@@ -15,8 +15,6 @@
  */
 package com.xing.api.resources;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import com.xing.api.CallSpec;
 import com.xing.api.HttpError;
 import com.xing.api.Resource;
@@ -28,6 +26,9 @@ import org.junit.Rule;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,8 +49,8 @@ public class ResourceTestCase<T extends Resource> {
     public void setUp() throws Exception {
         validateResource();
         mockApi = new XingApi.Builder()
+              .custom()
               .apiEndpoint(server.url("/"))
-              .loggedOut()
               .build();
         resource = mockApi.resource(resourceClass);
     }
