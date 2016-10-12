@@ -17,17 +17,12 @@
 package com.xing.api;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -38,6 +33,7 @@ import okhttp3.Response;
 import okio.Buffer;
 import okio.ByteString;
 
+import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.stateNotNull;
 
@@ -57,7 +53,6 @@ final class OAuth1SigningInterceptor implements Interceptor {
     private static final String OAUTH_ACCESS_TOKEN = "oauth_token";
     private static final String OAUTH_VERSION = "oauth_version";
     private static final String OAUTH_VERSION_VALUE = "1.0";
-    private static final String ENCRYPTION_TYPE = "HmacSHA1";
     private static final MediaType FORM_ENCODED_CONTENT_TYPE = MediaType.parse("application/x-www-form-urlencoded");
 
     private final String consumerKey;
@@ -97,8 +92,8 @@ final class OAuth1SigningInterceptor implements Interceptor {
         String oauthNonce = CHARACTER_PATTERN.matcher(ByteString.of(nonce).base64()).replaceAll("");
         String oauthTimestamp = clock.millis();
 
-        String consumerKeyValue = UrlEscapeUtils.escape(consumerKey);
-        String accessTokenValue = UrlEscapeUtils.escape(accessToken);
+        String consumerKeyValue = escape(consumerKey);
+        String accessTokenValue = escape(accessToken);
 
         SortedMap<String, String> parameters = new TreeMap<>();
         parameters.put(OAUTH_CONSUMER_KEY, consumerKeyValue);
@@ -110,8 +105,8 @@ final class OAuth1SigningInterceptor implements Interceptor {
 
         HttpUrl url = request.url();
         for (int i = 0; i < url.querySize(); i++) {
-            parameters.put(UrlEscapeUtils.escape(url.queryParameterName(i)),
-                  UrlEscapeUtils.escape(url.queryParameterValue(i)));
+            parameters.put(escape(url.queryParameterName(i)),
+                  escape(url.queryParameterValue(i)));
         }
 
         Buffer body = new Buffer();
@@ -138,35 +133,30 @@ final class OAuth1SigningInterceptor implements Interceptor {
         String method = request.method();
         base.writeUtf8(method);
         base.writeByte('&');
-        base.writeUtf8(UrlEscapeUtils.escape(request.url().newBuilder().query(null).build().toString()));
+        base.writeUtf8(escape(request.url()
+              .newBuilder()
+              .query(null)
+              .build()
+              .toString()));
         base.writeByte('&');
 
         boolean first = true;
         //noinspection SSBasedInspection
         for (Entry<String, String> entry : parameters.entrySet()) {
-            if (!first) base.writeUtf8(UrlEscapeUtils.escape("&"));
+            if (!first) base.writeUtf8(escape("&"));
             first = false;
-            base.writeUtf8(UrlEscapeUtils.escape(entry.getKey()));
-            base.writeUtf8(UrlEscapeUtils.escape("="));
-            base.writeUtf8(UrlEscapeUtils.escape(entry.getValue()));
+            base.writeUtf8(escape(entry.getKey()));
+            base.writeUtf8(escape("="));
+            base.writeUtf8(escape(entry.getValue()));
         }
 
-        String signingKey = UrlEscapeUtils.escape(consumerSecret) + '&' + UrlEscapeUtils.escape(accessSecret);
-        SecretKeySpec keySpec = new SecretKeySpec(signingKey.getBytes(), ENCRYPTION_TYPE);
-        Mac mac;
-        try {
-            mac = Mac.getInstance(ENCRYPTION_TYPE);
-            mac.init(keySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new IllegalStateException(e);
-        }
-        byte[] result = mac.doFinal(base.readByteArray());
-        String signature = ByteString.of(result).base64();
+        String signingKey = escape(consumerSecret) + '&' + escape(accessSecret);
+        String signature = base.hmacSha1(ByteString.encodeUtf8(signingKey)).base64();
 
         String authorization = "OAuth "
               + OAUTH_CONSUMER_KEY + "=\"" + consumerKeyValue + "\", "
               + OAUTH_NONCE + "=\"" + oauthNonce + "\", "
-              + OAUTH_SIGNATURE + "=\"" + UrlEscapeUtils.escape(signature) + "\", "
+              + OAUTH_SIGNATURE + "=\"" + escape(signature) + "\", "
               + OAUTH_SIGNATURE_METHOD + "=\"" + OAUTH_SIGNATURE_METHOD_VALUE + "\", "
               + OAUTH_TIMESTAMP + "=\"" + oauthTimestamp + "\", "
               + OAUTH_ACCESS_TOKEN + "=\"" + accessTokenValue + "\", "
