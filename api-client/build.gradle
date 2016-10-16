@@ -43,6 +43,8 @@ dependencies {
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.moshi
+    compile libraries.autoValue
+    compile libraries.autoValueMoshi
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
