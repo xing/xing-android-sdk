@@ -21,8 +21,6 @@ import java.util.Collections;
 
 import static org.apache.commons.lang3.StringUtils.leftPad;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /** Only test methods that represent some functionality. */
@@ -82,18 +80,18 @@ public class CompanyTest {
     @Test
     public void companyReadyToBeAdded() throws Exception {
         Company company = new Company();
-        assertFalse(company.isFilledForAddCompany());
+        assertThat(company.isFilledForAddCompany()).isFalse();
 
         company.name("Test Name");
-        assertFalse(company.isFilledForAddCompany());
+        assertThat(company.isFilledForAddCompany()).isFalse();
 
         company.title("Test Title");
-        assertFalse(company.isFilledForAddCompany());
+        assertThat(company.isFilledForAddCompany()).isFalse();
 
         company.industries(Collections.singletonList(new Industry(22202, "TEST_IND")));
-        assertFalse(company.isFilledForAddCompany());
+        assertThat(company.isFilledForAddCompany()).isFalse();
 
         company.formOfEmployment(FormOfEmployment.PARTNER);
-        assertTrue(company.isFilledForAddCompany());
+        assertThat(company.isFilledForAddCompany()).isTrue();
     }
 }

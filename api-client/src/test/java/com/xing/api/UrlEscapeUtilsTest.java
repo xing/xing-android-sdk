@@ -18,9 +18,7 @@ package com.xing.api;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -66,10 +64,10 @@ public class UrlEscapeUtilsTest {
         assertUnicodeEscaping("%F0%90%80%80", '\uD800', '\uDC00');
         assertUnicodeEscaping("%F4%8F%BF%BF", '\uDBFF', '\uDFFF');
 
-        assertEquals("", UrlEscapeUtils.escape(""));
-        assertEquals("safestring", UrlEscapeUtils.escape("safestring"));
-        assertEquals("embedded%00null", UrlEscapeUtils.escape("embedded\0null"));
-        assertEquals("max%EF%BF%BFchar", UrlEscapeUtils.escape("max\uffffchar"));
+        assertThat(UrlEscapeUtils.escape("")).isEqualTo("");
+        assertThat(UrlEscapeUtils.escape("safestring")).isEqualTo("safestring");
+        assertThat(UrlEscapeUtils.escape("embedded\0null")).isEqualTo("embedded%00null");
+        assertThat(UrlEscapeUtils.escape("max\uffffchar")).isEqualTo("max%EF%BF%BFchar");
 
         // Specified as safe by RFC 2396 but not by java.net.URLEncoder.
         assertEscaping("%21", '!');
@@ -82,8 +80,8 @@ public class UrlEscapeUtilsTest {
         assertEscaping("%20", ' ');
         assertEscaping("%2B", '+');
 
-        assertEquals("safe%20with%20spaces", UrlEscapeUtils.escape("safe with spaces"));
-        assertEquals("foo%40bar.com", UrlEscapeUtils.escape("foo@bar.com"));
+        assertThat(UrlEscapeUtils.escape("safe with spaces")).isEqualTo("safe%20with%20spaces");
+        assertThat(UrlEscapeUtils.escape("foo@bar.com")).isEqualTo("foo%40bar.com");
     }
 
     /**
@@ -94,8 +92,9 @@ public class UrlEscapeUtilsTest {
      */
     private static void assertEscaping(String expected, char c) {
         String escaped = computeReplacement(c);
-        assertNotNull(escaped);
-        assertEquals(expected, escaped);
+        assertThat(escaped)
+              .isNotNull()
+              .isEqualTo(expected);
     }
 
     /**
@@ -104,7 +103,7 @@ public class UrlEscapeUtilsTest {
      * @param c the character to test
      */
     private static void assertUnescaped(char c) {
-        assertNull(computeReplacement(c));
+        assertThat(computeReplacement(c)).isNull();
     }
 
     /**
@@ -118,8 +117,9 @@ public class UrlEscapeUtilsTest {
     private static void assertUnicodeEscaping(String expected, char hi, char lo) {
         int cp = Character.toCodePoint(hi, lo);
         String escaped = computeReplacement(cp);
-        assertNotNull(escaped);
-        assertEquals(expected, escaped);
+        assertThat(escaped)
+              .isNotNull()
+              .isEqualTo(expected);
     }
 
     private static String computeReplacement(char c) {

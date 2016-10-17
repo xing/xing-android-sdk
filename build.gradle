@@ -98,7 +98,7 @@ subprojects { project ->
     task checkstyle(type: Checkstyle) {
         group 'verification'
         configFile rootProject.file('checkstyle.xml')
-        source = ['src/main/java', 'src/test/java']
+        source = ['src']
 
         ignoreFailures false
         showViolations true
