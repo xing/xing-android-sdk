@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'net.ltgt.apt'
 apply plugin: 'java'
 apply plugin: 'checkstyle'
 
@@ -37,12 +38,18 @@ checkstyle {
 }
 
 dependencies {
+    compileOnly libraries.autoValue
+
     provided libraries.rxjava
     provided libraries.android
+    provided libraries.autoValueMoshi
 
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.moshi
+
+    apt libraries.autoValue
+    apt libraries.autoValueMoshi
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit

@@ -16,9 +16,13 @@
 
 package com.xing.api.data.messages;
 
+import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.XingUser;
+import com.xing.api.internal.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,135 +30,43 @@ import java.util.List;
 /**
  * Java representation of a Conversation.
  */
-public class Conversation implements Serializable {
+@AutoValue
+public abstract class Conversation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "id")
-    private String id;
+    public abstract String id();
     @Json(name = "subject")
-    private String subject;
+    public abstract String subject();
     @Json(name = "message_count")
-    private int totalMsgCount;
+    public abstract int totalMsgCount();
     @Json(name = "unread_message_count")
-    private int unreadMessageCount;
+    public abstract int unreadMessageCount();
     @Json(name = "updated_at")
-    private SafeCalendar updatedAt;
+    public abstract SafeCalendar updatedAt();
     @Json(name = "read_only")
-    private boolean isReadOnly;
+    public abstract boolean isReadOnly();
     @Json(name = "participants")
-    private List<XingUser> participants;
-    @Json(name = "latest_messages")
-    public List<ConversationMessage> latestMessages;
+    public abstract List<XingUser> participants();
+    @Json(name = "latest_messages") @Nullable
+    public abstract List<ConversationMessage> latestMessages();
 
     @Override
     public boolean equals(Object obj) {
-        Conversation c;
-        if (obj instanceof Conversation) {
-            c = (Conversation) obj;
-        } else {
+        if (!(obj instanceof Conversation)) {
             return false;
         }
 
-        return (id.equals(c.id));
+        Conversation c = (Conversation) obj;
+        return id().equals(c.id());
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id() != null ? id().hashCode() : 0;
     }
 
-    @Override
-    public String toString() {
-        return "Conversation{"
-              + "id='" + id + '\''
-              + ", subject='" + subject + '\''
-              + ", totalMsgCount='" + totalMsgCount + '\''
-              + ", unreadMessageCount='" + unreadMessageCount + '\''
-              + ", updatedAt='" + updatedAt + '\''
-              + ", isReadOnly='" + isReadOnly + '\''
-              + ", participants='" + participants + '\''
-              + ", latestMessages='" + latestMessages + '\''
-              + '}';
-    }
-
-    public String id() {
-        return id;
-    }
-
-    public Conversation id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public String subject() {
-        return subject;
-    }
-
-    public Conversation subject(String subject) {
-        this.subject = subject;
-        return this;
-    }
-
-    public int totalMsgCount() {
-        return totalMsgCount;
-    }
-
-    public Conversation totalMsgCount(int totalMsgCount) {
-        this.totalMsgCount = totalMsgCount;
-        return this;
-    }
-
-    public int unreadMessageCount() {
-        return unreadMessageCount;
-    }
-
-    public Conversation unreadMessageCount(int unreadMessageCount) {
-        this.unreadMessageCount = unreadMessageCount;
-        return this;
-    }
-
-    public SafeCalendar updatedAt() {
-        return updatedAt;
-    }
-
-    public Conversation updatedAt(SafeCalendar updatedAt) {
-        this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public boolean isReadOnly() {
-        return isReadOnly;
-    }
-
-    public Conversation isReadOnly(boolean isReadOnly) {
-        this.isReadOnly = isReadOnly;
-        return this;
-    }
-
-    public List<XingUser> participants() {
-        return participants;
-    }
-
-    public Conversation participants(List<XingUser> participants) {
-        this.participants = participants;
-        return this;
-    }
-
-    public boolean readOnly() {
-        return isReadOnly;
-    }
-
-    public Conversation readOnly(boolean readOnly) {
-        isReadOnly = readOnly;
-        return this;
-    }
-
-    public List<ConversationMessage> latestMessages() {
-        return latestMessages;
-    }
-
-    public Conversation latestMessages(List<ConversationMessage> latestMessages) {
-        this.latestMessages = latestMessages;
-        return this;
+    public static JsonAdapter<Conversation> jsonAdapter(Moshi moshi) {
+        return new AutoValue_Conversation.MoshiJsonAdapter(moshi);
     }
 }
