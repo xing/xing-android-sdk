@@ -32,7 +32,6 @@ import okhttp3.ResponseBody;
 import okio.Buffer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -266,14 +265,14 @@ public class ConverterTest {
     @Test
     public void firstAsNullIfListEmpty() throws Exception {
         Type compositeType1 = Converter.first(TestData.class, "empty");
-        assertNull(fromJson(compositeType1, "{\n"
+        assertThat(fromJson(compositeType1, "{\n"
               + "  \"empty\": null\n"
-              + '}'));
+              + '}')).isNull();
 
         Type compositeType2 = Converter.first(TestData.class, "empty");
-        assertNull(fromJson(compositeType2, "{\n"
+        assertThat(fromJson(compositeType2, "{\n"
               + "  \"empty\": []\n"
-              + '}'));
+              + '}')).isNull();
     }
 
     @Test

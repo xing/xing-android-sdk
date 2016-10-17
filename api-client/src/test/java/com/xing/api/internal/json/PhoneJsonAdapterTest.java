@@ -27,7 +27,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -41,13 +40,13 @@ public class PhoneJsonAdapterTest {
     public void ignoresOtherTypes() throws Exception {
         JsonAdapter<?> adapter1 = PhoneJsonAdapter.FACTORY.create(
               String.class, Collections.<Annotation>emptySet(), moshi);
-        assertNull(adapter1);
+        assertThat(adapter1).isNull();
 
         Set<Annotation> annotations = new LinkedHashSet<>(1);
         annotations.add(mock(Annotation.class));
         JsonAdapter<?> adapter2 = PhoneJsonAdapter.FACTORY.create(
               Phone.class, annotations, moshi);
-        assertNull(adapter2);
+        assertThat(adapter2).isNull();
     }
 
     @Test

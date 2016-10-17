@@ -34,7 +34,6 @@ import okhttp3.mockwebserver.SocketPolicy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -219,7 +218,7 @@ public class XingApiTest {
                 t.printStackTrace();
             }
         });
-        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         verify(executor).execute(any(Runnable.class));
         verifyNoMoreInteractions(executor);
@@ -255,7 +254,7 @@ public class XingApiTest {
                 latch.countDown();
             }
         });
-        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertThat(latch.await(2, TimeUnit.SECONDS)).isTrue();
 
         verify(executor).execute(any(Runnable.class));
         verifyNoMoreInteractions(executor);

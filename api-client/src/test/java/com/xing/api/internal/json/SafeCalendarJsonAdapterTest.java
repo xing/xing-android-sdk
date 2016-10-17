@@ -34,10 +34,6 @@ import java.util.TimeZone;
 
 import static com.xing.api.internal.json.SafeCalendarJsonAdapter.ZULU_TIME_ZONE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
@@ -63,18 +59,18 @@ public final class SafeCalendarJsonAdapterTest {
     public void ignoresOtherTypes() throws Exception {
         JsonAdapter<?> adapter1 = SafeCalendarJsonAdapter.FACTORY.create(
               String.class, Collections.<Annotation>emptySet(), moshi);
-        assertNull(adapter1);
+        assertThat(adapter1).isNull();
 
         Set<Annotation> annotations = new LinkedHashSet<>(1);
         annotations.add(mock(Annotation.class));
         JsonAdapter<?> adapter2 = SafeCalendarJsonAdapter.FACTORY.create(
               Calendar.class, annotations, moshi);
-        assertNull(adapter2);
+        assertThat(adapter2).isNull();
     }
 
     @Test
     public void nullIfEmpty() throws Exception {
-        assertNull(calendarAdapter().fromJson("\"\""));
+        assertThat(calendarAdapter().fromJson("\"\"")).isNull();
     }
 
     @Test
@@ -97,11 +93,11 @@ public final class SafeCalendarJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"2031\"");
 
         Calendar fromJson = calendarAdapter().fromJson("\"1956\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertFalse(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertFalse(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isFalse();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isFalse();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(1956);
     }
@@ -116,11 +112,11 @@ public final class SafeCalendarJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"1987-08\"");
 
         Calendar fromJson = calendarAdapter().fromJson("\"1945-05\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertFalse(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isFalse();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(1945);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.MAY);
@@ -136,11 +132,11 @@ public final class SafeCalendarJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"10-14\"");
 
         Calendar fromJson = calendarAdapter().fromJson("\"03-05\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertFalse(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isFalse();
 
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.MARCH);
         assertThat(fromJson.get(Calendar.DAY_OF_MONTH)).isEqualTo(5);
@@ -157,11 +153,11 @@ public final class SafeCalendarJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"1991-12-31\"");
 
         Calendar fromJson = calendarAdapter().fromJson("\"1988-03-04\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(1988);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.MARCH);
@@ -183,14 +179,14 @@ public final class SafeCalendarJsonAdapterTest {
         assertThat(toJson).isEqualTo("\"2011-01-23T20:20:17Z\"");
 
         Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23Z\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.SECOND));
-        assertTrue(fromJson.isSet(Calendar.MINUTE));
-        assertTrue(fromJson.isSet(Calendar.HOUR_OF_DAY));
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson.isSet(Calendar.HOUR_OF_DAY)).isTrue();
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
@@ -203,14 +199,14 @@ public final class SafeCalendarJsonAdapterTest {
     @Test
     public void iso8601withTimeZone() throws Exception {
         Calendar fromJson = calendarAdapter().fromJson("\"2000-02-27T23:00:23+0200\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.SECOND));
-        assertTrue(fromJson.isSet(Calendar.MINUTE));
-        assertTrue(fromJson.isSet(Calendar.HOUR));
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson.isSet(Calendar.HOUR)).isTrue();
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2000);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.FEBRUARY);
@@ -226,22 +222,22 @@ public final class SafeCalendarJsonAdapterTest {
         Calendar fromJson1 = calendarAdapter().fromJson("\"2003-04-21T16:42:11+02:00\"");
         Calendar fromJson2 = calendarAdapter().fromJson("\"2016-07-21T17:59:59-04:00\"");
 
-        assertNotNull(fromJson1);
-        assertNotNull(fromJson2);
+        assertThat(fromJson1).isNotNull();
+        assertThat(fromJson2).isNotNull();
 
-        assertTrue(fromJson1.isSet(Calendar.SECOND));
-        assertTrue(fromJson1.isSet(Calendar.MINUTE));
-        assertTrue(fromJson1.isSet(Calendar.HOUR));
-        assertTrue(fromJson1.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson1.isSet(Calendar.MONTH));
-        assertTrue(fromJson1.isSet(Calendar.YEAR));
+        assertThat(fromJson1.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson1.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson1.isSet(Calendar.HOUR)).isTrue();
+        assertThat(fromJson1.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson1.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson1.isSet(Calendar.YEAR)).isTrue();
 
-        assertTrue(fromJson2.isSet(Calendar.SECOND));
-        assertTrue(fromJson2.isSet(Calendar.MINUTE));
-        assertTrue(fromJson2.isSet(Calendar.HOUR));
-        assertTrue(fromJson2.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson2.isSet(Calendar.MONTH));
-        assertTrue(fromJson2.isSet(Calendar.YEAR));
+        assertThat(fromJson2.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson2.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson2.isSet(Calendar.HOUR)).isTrue();
+        assertThat(fromJson2.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson2.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson2.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson1.get(Calendar.YEAR)).isEqualTo(2003);
         assertThat(fromJson1.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
@@ -263,14 +259,14 @@ public final class SafeCalendarJsonAdapterTest {
     @Test
     public void iso8601withMilliseconds() throws Exception {
         Calendar fromJson = calendarAdapter().fromJson("\"2016-01-15T07:42:01.000Z\"");
-        assertNotNull(fromJson);
+        assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.SECOND));
-        assertTrue(fromJson.isSet(Calendar.MINUTE));
-        assertTrue(fromJson.isSet(Calendar.HOUR));
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson.isSet(Calendar.HOUR)).isTrue();
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2016);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.JANUARY);
@@ -285,13 +281,13 @@ public final class SafeCalendarJsonAdapterTest {
         Calendar fromJson = calendarAdapter().fromJson("\"2014-04-30T10:53:48.000+02:00\"");
         assertThat(fromJson).isNotNull();
 
-        assertTrue(fromJson.isSet(Calendar.MILLISECOND));
-        assertTrue(fromJson.isSet(Calendar.SECOND));
-        assertTrue(fromJson.isSet(Calendar.MINUTE));
-        assertTrue(fromJson.isSet(Calendar.HOUR));
-        assertTrue(fromJson.isSet(Calendar.DAY_OF_MONTH));
-        assertTrue(fromJson.isSet(Calendar.MONTH));
-        assertTrue(fromJson.isSet(Calendar.YEAR));
+        assertThat(fromJson.isSet(Calendar.MILLISECOND)).isTrue();
+        assertThat(fromJson.isSet(Calendar.SECOND)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MINUTE)).isTrue();
+        assertThat(fromJson.isSet(Calendar.HOUR)).isTrue();
+        assertThat(fromJson.isSet(Calendar.DAY_OF_MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.MONTH)).isTrue();
+        assertThat(fromJson.isSet(Calendar.YEAR)).isTrue();
 
         assertThat(fromJson.get(Calendar.YEAR)).isEqualTo(2014);
         assertThat(fromJson.get(Calendar.MONTH)).isEqualTo(Calendar.APRIL);
@@ -312,7 +308,7 @@ public final class SafeCalendarJsonAdapterTest {
 
         //noinspection SSBasedInspection
         for (TimeZone currentTimeZone : parsedTimeZones) {
-            assertTrue(ZULU_TIME_ZONE.equals(currentTimeZone));
+            assertThat(ZULU_TIME_ZONE.equals(currentTimeZone)).isTrue();
         }
     }
 

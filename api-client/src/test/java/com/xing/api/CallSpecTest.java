@@ -44,7 +44,6 @@ import rx.singles.BlockingSingle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings({"MagicNumber", "ConstantConditions"})
 public class CallSpecTest {
@@ -815,7 +814,7 @@ public class CallSpecTest {
         BlockingObservable<Response<TestMsg, Object>> blocking = spec.rawStream().toBlocking();
         Response<TestMsg, Object> response = blocking.first();
 
-        assertNotNull(response.body());
+        assertThat(response.body()).isNotNull();
         assertThat(response.body().code).isEqualTo(200);
         assertThat(response.body().msg).isEqualTo("success");
     }
@@ -841,7 +840,7 @@ public class CallSpecTest {
         Response<Object, HttpError> response = blocking.first();
 
         assertThat(response.isSuccessful()).isFalse();
-        assertNotNull(response.error());
+        assertThat(response.error()).isNotNull();
         assertThat(response.error().message()).isEqualTo("Terrible Error.");
         assertThat(response.error().name()).isEqualTo("TEST_ERROR");
         assertThat(response.error().errors().get(0))
@@ -1172,7 +1171,7 @@ public class CallSpecTest {
         assertThat(response.headers()).isNotNull();
 
         TestMsg msg = response.body();
-        assertNotNull(msg);
+        assertThat(msg).isNotNull();
         assertThat(msg.msg).isEqualTo(expected.msg);
         assertThat(msg.code).isEqualTo(expected.code);
     }
@@ -1183,7 +1182,7 @@ public class CallSpecTest {
         assertThat(response.body()).isNull();
 
         TestMsg body = response.error();
-        assertNotNull(body);
+        assertThat(body).isNotNull();
         assertThat(body.msg).isEqualTo(expected.msg);
         assertThat(body.code).isEqualTo(expected.code);
     }

@@ -26,8 +26,6 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("ConstantConditions")
 public final class GeoCodeJsonAdapterTest {
@@ -35,9 +33,9 @@ public final class GeoCodeJsonAdapterTest {
 
     @Test
     public void ignoresOtherTypes() throws Exception {
-        assertNull(geoCodeAdapter(String.class));
-        assertNull(geoCodeAdapter(Double.class));
-        assertNotNull(geoCodeAdapter(GeoCode.class));
+        assertThat(geoCodeAdapter(String.class)).isNull();
+        assertThat(geoCodeAdapter(Double.class)).isNull();
+        assertThat(geoCodeAdapter(GeoCode.class)).isNotNull();
     }
 
     @Test
@@ -61,11 +59,11 @@ public final class GeoCodeJsonAdapterTest {
     public void ignoresInvalidGeoCode() throws Exception {
         JsonAdapter<GeoCode> adapter = geoCodeAdapter(GeoCode.class);
 
-        assertNull(adapter.fromJson("{\"accuracy\":12,\"latitude\":null,\"longitude\":null}"));
-        assertNull(adapter.fromJson("{\"latitude\":34.2,\"longitude\":null}"));
-        assertNull(adapter.fromJson("{\"latitude\":null,\"longitude\":24.45}"));
-        assertNull(adapter.fromJson("{\"unknown\":null,\"longitude\":24.45}"));
-        assertNull(adapter.fromJson("{}"));
+        assertThat(adapter.fromJson("{\"accuracy\":12,\"latitude\":null,\"longitude\":null}")).isNull();
+        assertThat(adapter.fromJson("{\"latitude\":34.2,\"longitude\":null}")).isNull();
+        assertThat(adapter.fromJson("{\"latitude\":null,\"longitude\":24.45}")).isNull();
+        assertThat(adapter.fromJson("{\"unknown\":null,\"longitude\":24.45}")).isNull();
+        assertThat(adapter.fromJson("{}")).isNull();
     }
 
     @SuppressWarnings("unchecked") // It's the callers responsibility.

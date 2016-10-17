@@ -26,17 +26,15 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public final class TimeZoneJsonAdapterTest {
     private final Moshi moshi = new Moshi.Builder().build();
 
     @Test
     public void ignoresOtherTypes() throws Exception {
-        assertNull(timeZoneAdapter(String.class));
-        assertNull(timeZoneAdapter(Double.class));
-        assertNotNull(timeZoneAdapter(TimeZone.class));
+        assertThat(timeZoneAdapter(String.class)).isNull();
+        assertThat(timeZoneAdapter(Double.class)).isNull();
+        assertThat(timeZoneAdapter(TimeZone.class)).isNotNull();
     }
 
     @Test
@@ -58,10 +56,10 @@ public final class TimeZoneJsonAdapterTest {
     public void ignoresInvalidTimeZone() throws Exception {
         JsonAdapter<TimeZone> adapter = timeZoneAdapter(TimeZone.class);
 
-        assertNull(adapter.fromJson("{\"name\":\"hey\",\"utc_offset\":null}"));
-        assertNull(adapter.fromJson("{\"name\":null,\"utc_offset\":null}"));
-        assertNull(adapter.fromJson("{\"latitude\":null,\"longitude\":24.45}"));
-        assertNull(adapter.fromJson("{}"));
+        assertThat(adapter.fromJson("{\"name\":\"hey\",\"utc_offset\":null}")).isNull();
+        assertThat(adapter.fromJson("{\"name\":null,\"utc_offset\":null}")).isNull();
+        assertThat(adapter.fromJson("{\"latitude\":null,\"longitude\":24.45}")).isNull();
+        assertThat(adapter.fromJson("{}")).isNull();
     }
 
     @SuppressWarnings("unchecked") // It's the callers responsibility.
