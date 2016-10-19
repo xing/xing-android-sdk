@@ -15,7 +15,10 @@
  */
 package com.xing.api.data.contact;
 
+import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.xing.api.data.profile.XingUser;
 import com.xing.api.internal.json.ContactPath;
 
@@ -29,64 +32,24 @@ import java.util.List;
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths">'Contact Paths' resource
  * page.</a>
  */
-public class ContactPaths implements Serializable {
-    private static final long serialVersionUID = 1L;
+@AutoValue
+public abstract class ContactPaths implements Serializable {
+    private static final long serialVersionUID = 2L;
 
-    @Json(name = "paths")
-    @ContactPath // TODO may be it makes sense to put this burden on CompositeType and add a complimentary annotation.
-    private final List<List<XingUser>> paths;
-    @Json(name = "distance")
-    private final int distance;
-    @Json(name = "total")
-    private final int total;
-
-    public ContactPaths(List<List<XingUser>> paths, int distance, int total) {
-        this.paths = paths;
-        this.distance = distance;
-        this.total = total;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ContactPaths other = (ContactPaths) o;
-
-        return distance == other.distance
-              && total == other.total
-              && (paths != null ? paths.equals(other.paths) : other.paths == null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = paths != null ? paths.hashCode() : 0;
-        result = 31 * result + distance;
-        result = 31 * result + total;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ContactPaths{"
-              + "paths=" + paths
-              + ", distance=" + distance
-              + ", total=" + total
-              + '}';
+    public static JsonAdapter<ContactPaths> jsonAdapter(Moshi moshi) {
+        return AutoValue_ContactPaths.jsonAdapter(moshi);
     }
 
     /** Returns a list of available paths, which are represented as a list of {@linkplain XingUser users}. */
-    public List<List<XingUser>> paths() {
-        return paths;
-    }
+    @Json(name = "paths")
+    @ContactPath
+    public abstract List<List<XingUser>> paths();
 
     /** Returns the smallest distance between the users. */
-    public int distance() {
-        return distance;
-    }
+    @Json(name = "distance")
+    public abstract int distance();
 
     /** Returns the total number of available paths. */
-    public int total() {
-        return total;
-    }
+    @Json(name = "total")
+    public abstract int total();
 }

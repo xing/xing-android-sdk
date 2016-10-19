@@ -15,7 +15,10 @@
  */
 package com.xing.api.data.contact;
 
+import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 
 import java.io.Serializable;
 
@@ -26,52 +29,23 @@ import java.io.Serializable;
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/contact_requests/sent">'Pending Contact Request' resource
  * page.</a>
  */
-public class PendingContactRequest implements Serializable {
-    private static final long serialVersionUID = 1L;
+@AutoValue
+public abstract class PendingContactRequest implements Serializable {
+    private static final long serialVersionUID = 2L;
 
-    @Json(name = "sender_id")
-    private final String senderId;
-    @Json(name = "recipient_id")
-    private final String recipientId;
-
-    public PendingContactRequest(String senderId, String recipientId) {
-        this.senderId = senderId;
-        this.recipientId = recipientId;
+    public static JsonAdapter<PendingContactRequest> jsonAdapter(Moshi moshi) {
+        return AutoValue_PendingContactRequest.jsonAdapter(moshi);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PendingContactRequest other = (PendingContactRequest) o;
-
-        return (senderId != null ? senderId.equals(other.senderId) : other.senderId == null)
-              && (recipientId != null ? recipientId.equals(other.recipientId) : other.recipientId == null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = senderId != null ? senderId.hashCode() : 0;
-        result = 31 * result + (recipientId != null ? recipientId.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PendingContactRequest{"
-              + "senderId='" + senderId + '\''
-              + ", recipientId='" + recipientId + '\''
-              + '}';
+    public static PendingContactRequest create(String senderId, String recipientId) {
+        return new AutoValue_PendingContactRequest(senderId, recipientId);
     }
 
     /** Returns the id of the user who sent the contact request. */
-    public String senderId() {
-        return senderId;
-    }
+    @Json(name = "sender_id")
+    public abstract String senderId();
 
     /** Returns the contact request recipient. */
-    public String recipientId() {
-        return recipientId;
-    }
+    @Json(name = "recipient_id")
+    public abstract String recipientId();
 }
