@@ -201,12 +201,18 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         // If no exception was thrown then the spec is build correctly.
         SafeCalendar safeCalendar = new SafeCalendar(2010, Calendar.NOVEMBER, 17, 10, 56, 16);
         safeCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertThat(response.body()).containsExactly(
-              new ContactRequest()
-                    .message("Sehr geehrter Herr Irgendwas, ich würde Sie gern zu meinen Kontakten hinzufügen")
-                    .senderId("6055623_5cf823")
-                    .receivedAt(safeCalendar)
-                    .sender(new XingUser("6055623_5cf823").displayName("John Doe")));
+
+        assertThat(response.body()).hasSize(1);
+
+        ContactRequest contactRequest = response.body().get(0);
+        assertThat(contactRequest.message())
+              .isEqualTo("Sehr geehrter Herr Irgendwas, ich würde Sie gern zu meinen Kontakten hinzufügen");
+        assertThat(contactRequest.receivedAt())
+              .isEqualTo(safeCalendar);
+        assertThat(contactRequest.senderId())
+              .isEqualTo("6055623_5cf823");
+        assertThat(contactRequest.sender())
+              .isEqualTo(new XingUser("6055623_5cf823").displayName("John Doe"));
     }
 
     @Test
@@ -231,9 +237,9 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         Response<List<PendingContactRequest>, HttpError> response = resource.getPendingContactRequests().execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body()).containsExactly(
-              new PendingContactRequest("19828488_2f3282", "8957208_181cf4"),
-              new PendingContactRequest("19828488_2f3282", "20195666_868fe8"),
-              new PendingContactRequest("19828488_2f3282", "12022726_a0415b"));
+              PendingContactRequest.create("19828488_2f3282", "8957208_181cf4"),
+              PendingContactRequest.create("19828488_2f3282", "20195666_868fe8"),
+              PendingContactRequest.create("19828488_2f3282", "12022726_a0415b"));
     }
 
     @Test

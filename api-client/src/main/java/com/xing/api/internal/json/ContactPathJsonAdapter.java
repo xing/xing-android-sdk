@@ -89,6 +89,6 @@ public final class ContactPathJsonAdapter extends JsonAdapter<List<List<XingUser
 
     @Override
     public void toJson(JsonWriter writer, List<List<XingUser>> value) throws IOException {
-
+        throw new AssertionError("Not implemented.");
     }
 }
