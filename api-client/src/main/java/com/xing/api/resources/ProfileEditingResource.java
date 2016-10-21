@@ -894,7 +894,7 @@ public class ProfileEditingResource extends Resource {
      * <td><b>public</b></td>
      * <td>Specifies whether the profile message should be visible to everyone (true) or just the user’s direct
      * contacts
-     * (false). The default is true. This parameter corresponds to the “only visible to direct contacts” checkbox on a
+     * (false). The default is true. This parameter corresponds to the "only visible to direct contacts" checkbox on a
      * user’s profile page.</td>
      * </tr>
      * </table>

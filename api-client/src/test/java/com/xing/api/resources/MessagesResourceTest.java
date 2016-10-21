@@ -86,7 +86,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
     }
 
     @Test
-    public void markConverastionAsUnread() throws Exception {
+    public void markConversationAsUnread() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(HttpURLConnection.HTTP_OK));
 
         Response<Void, HttpError> response = resource.markConverastionAsUnread("123", "123").execute();
@@ -94,7 +94,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
     }
 
     @Test
-    public void getConverationMessages() throws Exception {
+    public void getConversationMessages() throws Exception {
         server.enqueue(new MockResponse().setBody(file("messages/conversation_messages.json")));
 
         Response<List<ConversationMessage>, HttpError> response = resource.getConversationMessages("123", "123").execute();

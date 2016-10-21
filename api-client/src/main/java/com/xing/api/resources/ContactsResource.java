@@ -72,8 +72,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>order_by</b></td>
-     * <td>Field that determines the ascending order of the returned list. Currently only <b>“last_name”</b> is
-     * supported. Defaults to “id”</td>
+     * <td>Field that determines the ascending order of the returned list. Currently only <b>"last_name"</b> is
+     * supported. Defaults to "id"</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
@@ -130,8 +130,8 @@ public class ContactsResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>order_by</b></td>
-     * <td>Field that determines the ascending order of the returned list. Currently only <b>“last_name”</b> is
-     * supported. Defaults to “id”</td>
+     * <td>Field that determines the ascending order of the returned list. Currently only <b>"last_name"</b> is
+     * supported. Defaults to "id"</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
@@ -219,9 +219,9 @@ public class ContactsResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>order_by</b></td>
-     * <td>Field that determines the ascending order of the returned list. Currently only supports “last_name”.
+     * <td>Field that determines the ascending order of the returned list. Currently only supports "last_name".
      * Defaults
-     * to “id”</td>
+     * to "id"</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
