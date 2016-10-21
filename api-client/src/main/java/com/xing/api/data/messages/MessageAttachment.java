@@ -16,7 +16,10 @@
 
 package com.xing.api.data.messages;
 
+import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
 
 import java.io.Serializable;
@@ -24,24 +27,25 @@ import java.io.Serializable;
 /**
  * Java representation of an Attachment on the Message.
  */
-public class MessageAttachment implements Serializable {
+@AutoValue
+public abstract class MessageAttachment implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Json(name = "id")
-    private String id;
+    public abstract String id();
     @Json(name = "created_at")
-    private SafeCalendar createdAt;
+    public abstract SafeCalendar createdAt();
     @Json(name = "filename")
-    private String fileName;
+    public abstract String fileName();
     @Json(name = "mime_type")
-    private String mimeType;
+    public abstract String mimeType();
     @Json(name = "size")
-    private int fileSize;
+    public abstract int fileSize();
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof MessageAttachment) {
-            if (((MessageAttachment) obj).id.equals(id)) {
+            if (((MessageAttachment) obj).id().equals(id())) {
                 return true;
             }
         }
@@ -50,62 +54,10 @@ public class MessageAttachment implements Serializable {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id().hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "MessageAttachment{"
-              + "id='" + id + '\''
-              + ", createdAt='" + createdAt + '\''
-              + ", fileName='" + fileName + '\''
-              + ", mimeType='" + mimeType + '\''
-              + ", fileSize='" + fileSize + '\''
-              + '}';
-    }
-
-    public String id() {
-        return id;
-    }
-
-    public MessageAttachment id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public SafeCalendar createdAt() {
-        return createdAt;
-    }
-
-    public MessageAttachment createdAt(SafeCalendar createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public String fileName() {
-        return fileName;
-    }
-
-    public MessageAttachment fileName(String fileName) {
-        this.fileName = fileName;
-        return this;
-    }
-
-    public String mimeType() {
-        return mimeType;
-    }
-
-    public MessageAttachment mimeType(String mimeType) {
-        this.mimeType = mimeType;
-        return this;
-    }
-
-    public int fileSize() {
-        return fileSize;
-    }
-
-    public MessageAttachment fileSize(int fileSize) {
-        this.fileSize = fileSize;
-        return this;
+    public static JsonAdapter<MessageAttachment> jsonAdapter(Moshi moshi) {
+        return new AutoValue_MessageAttachment.MoshiJsonAdapter(moshi);
     }
 }
