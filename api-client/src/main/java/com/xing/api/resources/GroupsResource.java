@@ -52,8 +52,8 @@ public class GroupsResource extends Resource {
      * </tr>
      * <tr>
      * <td><strong>order_by</strong></td>
-     * <td>Parameter that determines the ascending order of the returned list. Currently only supports “latest_post”.
-     * Defaults to “id”</td>
+     * <td>Parameter that determines the ascending order of the returned list. Currently only supports "latest_post".
+     * Defaults to "id"</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
@@ -101,8 +101,8 @@ public class GroupsResource extends Resource {
      * </tr>
      * <tr>
      * <td><strong>order_by</strong></td>
-     * <td>Parameter that determines the ascending order of the returned list. Currently only supports “latest_post”.
-     * Defaults to “id”</td>
+     * <td>Parameter that determines the ascending order of the returned list. Currently only supports "latest_post".
+     * Defaults to "id"</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>
@@ -389,7 +389,7 @@ public class GroupsResource extends Resource {
      * </tr>
      * <tr>
      * <td><strong>sort_direction</strong></td>
-     * <td>Sort the comment by oldest first (“asc”) or by latest first (“desc”). Oldest first is the default behavior.</td>
+     * <td>Sort the comment by oldest first ("asc") or by latest first ("desc"). Oldest first is the default behavior.</td>
      * </tr>
      * <tr>
      * <td><b>user_fields</b></td>

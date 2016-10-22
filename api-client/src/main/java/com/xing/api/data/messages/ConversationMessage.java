@@ -16,9 +16,13 @@
 
 package com.xing.api.data.messages;
 
+import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.xing.api.data.SafeCalendar;
 import com.xing.api.data.profile.XingUser;
+import com.xing.api.internal.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,21 +30,22 @@ import java.util.List;
 /**
  * Java representation of a Message in a Conversation.
  */
-public class ConversationMessage implements Serializable {
+@AutoValue
+public abstract class ConversationMessage implements Serializable {
     private static final long serialVersionUID = -4307893362880528921L;
 
     @Json(name = "id")
-    private String messageId;
+    public abstract String messageId();
     @Json(name = "created_at")
-    private SafeCalendar createdAt;
+    public abstract SafeCalendar createdAt();
     @Json(name = "content")
-    private String content;
+    public abstract String content();
     @Json(name = "read")
-    private boolean isRead;
+    public abstract boolean isRead();
     @Json(name = "sender")
-    private XingUser sender;
-    @Json(name = "attachments")
-    private List<MessageAttachment> attachments;
+    public abstract XingUser sender();
+    @Json(name = "attachments") @Nullable
+    public abstract List<MessageAttachment> attachments();
 
     @Override
     public boolean equals(Object obj) {
@@ -51,77 +56,15 @@ public class ConversationMessage implements Serializable {
             return false;
         }
 
-        return (messageId.equals(m.messageId));
+        return (messageId().equals(m.messageId()));
     }
 
     @Override
     public int hashCode() {
-        return messageId != null ? messageId.hashCode() : 0;
+        return messageId().hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "ConversationMessage{"
-              + "messageId='" + messageId + '\''
-              + ", createdAt='" + createdAt + '\''
-              + ", content='" + content + '\''
-              + ", isRead='" + isRead + '\''
-              + ", sender='" + sender + '\''
-              + ", attachments='" + attachments + '\''
-              + '}';
-    }
-
-    public String messageId() {
-        return messageId;
-    }
-
-    public ConversationMessage messageId(String messageId) {
-        this.messageId = messageId;
-        return this;
-    }
-
-    public SafeCalendar createdAt() {
-        return createdAt;
-    }
-
-    public ConversationMessage createdAt(SafeCalendar createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public String content() {
-        return content;
-    }
-
-    public ConversationMessage content(String content) {
-        this.content = content;
-        return this;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public ConversationMessage isRead(boolean isRead) {
-        this.isRead = isRead;
-        return this;
-    }
-
-    public XingUser sender() {
-        return sender;
-    }
-
-    public ConversationMessage sender(XingUser sender) {
-        this.sender = sender;
-        return this;
-    }
-
-    public List<MessageAttachment> attachments() {
-        return attachments;
-    }
-
-    public ConversationMessage attachments(List<MessageAttachment> attachments) {
-        this.attachments = attachments;
-        return this;
+    public static JsonAdapter<ConversationMessage> jsonAdapter(Moshi moshi) {
+        return new AutoValue_ConversationMessage.MoshiJsonAdapter(moshi);
     }
 }

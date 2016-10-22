@@ -63,7 +63,7 @@ public abstract class Conversation implements Serializable {
 
     @Override
     public int hashCode() {
-        return id() != null ? id().hashCode() : 0;
+        return id().hashCode();
     }
 
     public static JsonAdapter<Conversation> jsonAdapter(Moshi moshi) {
