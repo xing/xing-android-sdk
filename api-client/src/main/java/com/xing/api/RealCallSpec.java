@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
@@ -63,6 +64,11 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     public CallSpec<RT, ET> clone() {
         // When called from CallSpec we don't need to go through the validation process.
         return new RealCallSpec<>(builder.newBuilder());
+    }
+
+    @Override
+    public Request request() {
+        return builder.request();
     }
 
     @Override
