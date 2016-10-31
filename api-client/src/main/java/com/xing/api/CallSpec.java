@@ -175,6 +175,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
     /** Creates and returns a copy of <strong>this</strong> object losing the executable state. */
     CallSpec<RT, ET> clone();
 
+    /** Returns the underlying {@linkplain Request}. */
+    Request request();
+
     /**
      * Serves two purposes, to build the {@linkplain CallSpec} and the underlying {@linkplain Request}.
      * Only the {@linkplain CallSpec} building is exposed to the caller.

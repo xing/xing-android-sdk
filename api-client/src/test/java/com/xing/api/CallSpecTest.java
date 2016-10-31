@@ -85,9 +85,9 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .pathParam("param1", "test1")
               .pathParam("param2", "test2");
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "test1/test2");
         assertThat(request.body()).isNull();
@@ -98,9 +98,9 @@ public class CallSpecTest {
         CallSpec.Builder builder = builder(HttpMethod.GET, "/{params}", false)
               .responseAs(Object.class)
               .pathParam("params", "one", "two", "three");
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "one,two,three");
         assertThat(request.body()).isNull();
@@ -116,9 +116,9 @@ public class CallSpecTest {
         CallSpec.Builder builder = builder(HttpMethod.GET, "/{params}", false)
               .responseAs(Object.class)
               .pathParam("params", params);
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "one,two,three");
         assertThat(request.body()).isNull();
@@ -133,7 +133,7 @@ public class CallSpecTest {
         CallSpec spec = builder.build();
         spec.header("Test3", "world");
 
-        Request request = builder.request();
+        Request request = spec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.headers().names())
               .contains("Test1")
@@ -148,9 +148,9 @@ public class CallSpecTest {
     public void builderSetsAcceptHeader() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.GET, "/", false)
               .responseAs(Object.class);
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.headers().values("Accept")).containsExactly("application/json");
     }
 
@@ -159,9 +159,9 @@ public class CallSpecTest {
         CallSpec.Builder builder = builder(HttpMethod.GET, "/", false)
               .responseAs(Object.class)
               .header("Accept", "some.value");
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.headers().values("Accept")).containsExactly("some.value");
     }
 
@@ -221,9 +221,9 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .queryParam("q", "test1");
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().queryParam("w", "test2");
+        CallSpec callSpec = builder.build().queryParam("w", "test2");
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=test1&w=test2");
         assertThat(request.body()).isNull();
@@ -235,9 +235,9 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .queryParam("q", "testL", "testL");
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().queryParam("w", "testL", "testL");
+        CallSpec callSpec = builder.build().queryParam("w", "testL", "testL");
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
@@ -253,9 +253,9 @@ public class CallSpecTest {
               .responseAs(Object.class)
               .queryParam("q", query);
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build().queryParam("w", query);
+        CallSpec callSpec = builder.build().queryParam("w", query);
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.GET.method());
         assertThat(request.url().toString()).isEqualTo(httpUrl + "?q=testL%2CtestL&w=testL%2CtestL");
         assertThat(request.body()).isNull();
@@ -268,11 +268,11 @@ public class CallSpecTest {
               .formField("a", "true")
               .formField("b", 1);
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build()
+        CallSpec callSpec = builder.build()
               .formField("c", "false")
               .formField("d", true);
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
         assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
@@ -292,11 +292,11 @@ public class CallSpecTest {
               .formField("a", "some_value", true)
               .formField("b", "second/value");
         // Build the CallSpec so that we don't test this behaviour twice.
-        builder.build()
+        CallSpec callSpec = builder.build()
               .formField("c", "https://www.xing.com/some_path/20533046", true)
               .formField("d", "fourth/value");
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
         assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
@@ -322,9 +322,9 @@ public class CallSpecTest {
         List<String> field = new ArrayList<>(2);
         field.add("test3");
         field.add("test4");
-        builder.build().formField("e", field).formField("d", "test5", "test6");
+        CallSpec callSpec = builder.build().formField("e", field).formField("d", "test5", "test6");
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
         assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
@@ -341,9 +341,9 @@ public class CallSpecTest {
     public void builderEnsuresEmptyBody() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", false).responseAs(Object.class);
         // Build the CallSpec so that we can build the request.
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.method()).isEqualTo(HttpMethod.PUT.method());
         assertThat(request.url()).isEqualTo(httpUrl);
         assertThat(request.body()).isNotNull();
@@ -362,9 +362,9 @@ public class CallSpecTest {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", false).responseAs(Object.class)
               .body(RequestBody.create(MediaType.parse("application/text"), "Hey!"));
         // Build the CallSpec so that we can build the request.
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         RequestBody body = request.body();
         assertThat(body.contentLength()).isEqualTo(4);
         assertThat(body.contentType().subtype()).isEqualTo("text");
@@ -380,17 +380,17 @@ public class CallSpecTest {
         CallSpec.Builder builder = builder(HttpMethod.PUT, "", false).responseAs(Object.class)
               .body(TestMsg.class, expectedBody);
         // Build the CallSpec so that we can build the request.
-        builder.build();
-        assertRequestHasBody(builder.request(), expectedBody, 24);
+        CallSpec callSpec = builder.build();
+        assertRequestHasBody(callSpec.request(), expectedBody, 24);
     }
 
     @Test
     public void builderEnsuresDeleteRequestDoesNotHaveABody() throws Exception {
         CallSpec.Builder builder = builder(HttpMethod.DELETE, "", false).responseAs(Object.class);
         // Build the CallSpec so that we can build the request.
-        builder.build();
+        CallSpec callSpec = builder.build();
 
-        Request request = builder.request();
+        Request request = callSpec.request();
         assertThat(request.body()).isNull();
     }
 
