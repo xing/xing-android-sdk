@@ -38,18 +38,17 @@ checkstyle {
 }
 
 dependencies {
-    compileOnly libraries.autoValue
+    apt libraries.autoValue
+    compileOnly libraries.autoValueAnnotations
+    apt libraries.autoValueMoshi
+    compileOnly libraries.autoValueMoshiAnnotations
 
     provided libraries.rxjava
     provided libraries.android
-    provided libraries.autoValueMoshi
 
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.moshi
-
-    apt libraries.autoValue
-    apt libraries.autoValueMoshi
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
