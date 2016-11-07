@@ -81,6 +81,6 @@ public final class SafeEnumJsonAdapter<T extends Enum<T>> extends JsonAdapter<T>
 
     @Override
     public String toString() {
-        return "SafeJsonAdapter(" + enumType.getName() + ')';
+        return "SafeEnumJsonAdapter(" + enumType.getName() + ')';
     }
 }

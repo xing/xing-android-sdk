@@ -49,6 +49,7 @@ dependencies {
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.moshi
+    compile libraries.moshiLazyAdapters
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
