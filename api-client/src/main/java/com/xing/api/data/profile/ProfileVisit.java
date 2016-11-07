@@ -15,9 +15,9 @@
  */
 package com.xing.api.data.profile;
 
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Json;
 import com.xing.api.data.SafeCalendar;
-import com.xing.api.internal.json.NullInt;
 
 import java.io.Serializable;
 import java.util.List;
@@ -50,8 +50,8 @@ public class ProfileVisit implements Serializable {
     @Json(name = "job_title")
     private String jobTitle;
     /** Number of visits. */
-    @NullInt
     @Json(name = "visit_count")
+    @FallbackOnNull(fallbackInt = -1)
     private int visitCount;
     /** Gender of user. */
     @Json(name = "gender")
@@ -69,8 +69,8 @@ public class ProfileVisit implements Serializable {
     @Json(name = "reason")
     private Reason reason;
     /** Distance from the visitor to the user. */
-    @NullInt
     @Json(name = "distance")
+    @FallbackOnNull(fallbackInt = -1)
     private int distance;
     /** Visit type. */
     @Json(name = "type")

@@ -15,6 +15,7 @@
  */
 package com.xing.api;
 
+import com.serjltt.moshi.adapters.FallbackOnNullJsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.internal.json.AutoValueFactory;
 import com.xing.api.internal.Experimental;
@@ -22,7 +23,6 @@ import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
 import com.xing.api.internal.json.GeoCodeJsonAdapter;
-import com.xing.api.internal.json.NullIntJsonAdapter;
 import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
 import com.xing.api.internal.json.SafeEnumJsonAdapter;
@@ -325,9 +325,9 @@ public final class XingApi {
         public final XingApi build() {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
+            moshiBuilder.add(FallbackOnNullJsonAdapter.FACTORY);
             moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
             moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
-            moshiBuilder.add(NullIntJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
             moshiBuilder.add(SafeCalendarJsonAdapter.FACTORY);
             moshiBuilder.add(PhoneJsonAdapter.FACTORY);
