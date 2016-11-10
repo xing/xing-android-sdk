@@ -31,6 +31,12 @@ import java.util.List;
  * @author daniel.hartwich
  */
 public class RecommendationsResource extends Resource {
+    public static final Resource.Factory FACTORY = new Resource.Factory(RecommendationsResource.class) {
+        @Override public Resource create(XingApi api) {
+            return new RecommendationsResource(api);
+        }
+    };
+
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     RecommendationsResource(XingApi api) {
         super(api);

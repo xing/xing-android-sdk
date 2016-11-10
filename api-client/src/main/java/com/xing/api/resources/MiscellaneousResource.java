@@ -33,6 +33,12 @@ import static com.squareup.moshi.Types.newParameterizedType;
  * @author daniel.hartwich
  */
 public class MiscellaneousResource extends Resource {
+    public static final Resource.Factory FACTORY = new Resource.Factory(MiscellaneousResource.class) {
+        @Override public Resource create(XingApi api) {
+            return new MiscellaneousResource(api);
+        }
+    };
+
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     MiscellaneousResource(XingApi api) {
         super(api);

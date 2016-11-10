@@ -32,6 +32,12 @@ import java.util.List;
  * Provides methods which allow access to user's {@linkplain Conversation conversations}.
  */
 public class MessagesResource extends Resource {
+    public static final Resource.Factory FACTORY = new Resource.Factory(MessagesResource.class) {
+        @Override public Resource create(XingApi api) {
+            return new MessagesResource(api);
+        }
+    };
+
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     MessagesResource(XingApi api) {
         super(api);

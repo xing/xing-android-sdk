@@ -21,9 +21,13 @@ import java.util.List;
  * @author dhartwich1991
  */
 public class GroupsResource extends Resource {
-    /**
-     * Creates a resource instance. This should be the only constructor declared by child classes.
-     */
+    public static final Resource.Factory FACTORY = new Resource.Factory(GroupsResource.class) {
+        @Override public Resource create(XingApi api) {
+            return new GroupsResource(api);
+        }
+    };
+
+    /** Creates a resource instance. This should be the only constructor declared by child classes. */
     protected GroupsResource(XingApi api) {
         super(api);
     }
