@@ -15,6 +15,7 @@
  */
 package com.xing.api.data.profile;
 
+import com.serjltt.moshi.adapters.FallbackEnum;
 import com.squareup.moshi.Json;
 
 /**
@@ -22,6 +23,7 @@ import com.squareup.moshi.Json;
  *
  * @see <a href="https://dev.xing.com/docs/put/users/me/languages/:language">Languages Resource</a>
  */
+@FallbackEnum(name = "UNKNOWN")
 public enum Language {
     @Json(name = "en")
     EN("en"),
@@ -68,7 +70,8 @@ public enum Language {
     @Json(name = "ar")
     AR("ar"),
     @Json(name = "he")
-    HE("he");
+    HE("he"),
+    UNKNOWN("unknown");
 
     private final String value;
 

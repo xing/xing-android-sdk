@@ -15,16 +15,20 @@
  */
 package com.xing.api.data.profile;
 
+import com.serjltt.moshi.adapters.FallbackEnum;
+
 /**
  * Possible values for XING badges a user may have.
  *
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
+@FallbackEnum(name = "UNKNOWN")
 public enum Badge {
     AMBASSADOR,
     EXPERT,
     MODERATOR,
     PREMIUM,
     WORK_LIFE,
-    INSIDER
+    INSIDER,
+    UNKNOWN
 }
