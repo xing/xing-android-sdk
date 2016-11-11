@@ -16,6 +16,7 @@
 package com.xing.api;
 
 import com.squareup.moshi.Moshi;
+import com.xing.api.Resource.Factory;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,6 +54,22 @@ public class XingApiTest {
         assertThat(resource).isInstanceOf(LegalTestResource.class);
 
         LegalTestResource testResource = api.resource(LegalTestResource.class);
+        assertThat(testResource).isSameAs(resource);
+    }
+
+    @Test
+    public void getResourceViaFactory() throws Exception {
+        XingApi api = new XingApi.Builder()
+              .custom()
+              .addResourceFactory(new Factory(FactoryResource.class) {
+                  @Override public Resource create(XingApi api) {
+                      return new FactoryResource(api, "test");
+                  }
+              }).build();
+        Resource resource = api.resource(FactoryResource.class);
+        assertThat(resource).isInstanceOf(FactoryResource.class);
+
+        FactoryResource testResource = api.resource(FactoryResource.class);
         assertThat(testResource).isSameAs(resource);
     }
 
@@ -377,21 +394,21 @@ public class XingApiTest {
             buildStep.apiEndpoint((String) null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
+            assertThat(expected).hasMessage("apiEndpoint == null");
         }
 
         try {
             buildStep.apiEndpoint((HttpUrl) null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("apiEndpoint == null");
+            assertThat(expected).hasMessage("apiEndpoint == null");
         }
 
         try {
             buildStep.apiEndpoint("http/invalid-url.org");
             fail("Builder should throw on invalid endpoints.");
         } catch (IllegalArgumentException expected) {
-            assertThat(expected.getMessage()).isEqualTo("Illegal endpoint URL: http/invalid-url.org");
+            assertThat(expected).hasMessage("Illegal endpoint URL: http/invalid-url.org");
         }
 
         try {
@@ -405,7 +422,7 @@ public class XingApiTest {
             buildStep.moshi(null);
             fail("Builder should throw on null values.");
         } catch (NullPointerException expected) {
-            assertThat(expected.getMessage()).isEqualTo("moshi == null");
+            assertThat(expected).hasMessage("moshi == null");
         }
 
         buildStep.moshi(new Moshi.Builder().build());
@@ -413,7 +430,14 @@ public class XingApiTest {
             buildStep.moshi(new Moshi.Builder().build());
             fail("Only one Moshi should be allowed.");
         } catch (IllegalStateException expected) {
-            assertThat(expected.getMessage()).isEqualTo("Only one instance of Moshi is allowed");
+            assertThat(expected).hasMessage("Only one instance of Moshi is allowed");
+        }
+
+        try {
+            buildStep.addResourceFactory(null);
+            fail("Should fail on null factory");
+        } catch (NullPointerException expected) {
+            assertThat(expected).hasMessage("factory == null");
         }
     }
 
@@ -424,6 +448,18 @@ public class XingApiTest {
 
         public CallSpec<String, HttpError> simpleSpec() {
             return Resource.<String, HttpError>newGetSpec(api, "/").responseAs(String.class).build();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    static class FactoryResource extends Resource {
+        FactoryResource(XingApi api, String someValue) {
+            super(api);
+        }
+
+        FactoryResource(XingApi api) {
+            super(api);
+            throw new AssertionError("Resource should be created via factory");
         }
     }
 

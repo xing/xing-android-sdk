@@ -48,6 +48,12 @@ import okhttp3.RequestBody;
  * @author serj.lotutovici
  */
 public class ProfileEditingResource extends Resource {
+    public static final Resource.Factory FACTORY = new Resource.Factory(ProfileEditingResource.class) {
+        @Override public Resource create(XingApi api) {
+            return new ProfileEditingResource(api);
+        }
+    };
+
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
     ProfileEditingResource(XingApi api) {
         super(api);

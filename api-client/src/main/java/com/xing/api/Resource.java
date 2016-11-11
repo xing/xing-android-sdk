@@ -68,4 +68,29 @@ public abstract class Resource {
     protected static Type first(Type searchFor, String... roots) {
         return Converter.first(searchFor, roots);
     }
+
+    /** Allows {@link Resource} creation via a non reflective api. */
+    public abstract static class Factory {
+        private final Class<? extends Resource> resourceCls;
+
+        public Factory(Class<? extends Resource> resourceCls) {
+            this.resourceCls = resourceCls;
+        }
+
+        /**
+         * Attempts to create a resource of {@code cls}. This returns the resource if one was created, or {@code null} if
+         * this factory isn't capable of creating such a resource.
+         */
+        final Resource create(Class<? extends Resource> cls, XingApi api) {
+            return cls == resourceCls ? create(api) : null;
+        }
+
+        /**
+         * Creates a {@linkplain Resource resource} instance of the class which <strong>this</strong> factory is attached
+         * to.
+         *
+         * <p>Implementations should <b>not</b> use {@link XingApi#resource(Class)} since it may result in an infinite loop.
+         */
+        public abstract Resource create(XingApi api);
+    }
 }
