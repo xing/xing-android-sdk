@@ -80,17 +80,16 @@ public abstract class Resource {
         /**
          * Attempts to create a resource of {@code cls}. This returns the resource if one was created, or {@code null} if
          * this factory isn't capable of creating such a resource.
-         *
-         * <p>Implementations should <b>not</b> use {@link XingApi#resource(Class)} since it may result in an infinite loop.
          */
         final Resource create(Class<? extends Resource> cls, XingApi api) {
             return cls == resourceCls ? create(api) : null;
         }
 
         /**
-         * Creates a resource of type {@code T}.
+         * Creates a {@linkplain Resource resource} instance of the class which <strong>this</strong> factory is attached
+         * to.
          *
-         * <p>This is an internal api, and should not be called directly.
+         * <p>Implementations should <b>not</b> use {@link XingApi#resource(Class)} since it may result in an infinite loop.
          */
         public abstract Resource create(XingApi api);
     }
