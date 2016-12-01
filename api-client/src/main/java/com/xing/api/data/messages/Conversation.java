@@ -59,7 +59,7 @@ public abstract class Conversation implements Serializable {
     @Nullable
     public abstract List<ConversationMessage> latestMessages();
 
-    static Builder builder() {
+    public static Builder builder() {
         return new AutoValue_Conversation.Builder();
     }
 
