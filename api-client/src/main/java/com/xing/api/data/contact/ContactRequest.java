@@ -53,4 +53,21 @@ public abstract class ContactRequest implements Serializable {
     /** Returns the date the contact request was sent. */
     @Json(name = "received_at")
     public abstract SafeCalendar receivedAt();
+
+    static Builder builder() {
+        return new AutoValue_ContactRequest.Builder();
+    }
+
+    @AutoValue.Builder
+    abstract static class Builder {
+        abstract Builder senderId(String senderId);
+
+        abstract Builder sender(XingUser sender);
+
+        abstract Builder message(String message);
+
+        abstract Builder receivedAt(SafeCalendar receivedAt);
+
+        abstract ContactRequest build();
+    }
 }
