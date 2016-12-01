@@ -51,18 +51,18 @@ public abstract class MessageAttachment implements Serializable {
     }
 
     @AutoValue.Builder
-    abstract static class Builder {
-        abstract Builder id(String id);
+    public interface Builder {
+        Builder id(String id);
 
-        abstract Builder createdAt(SafeCalendar createdAt);
+        Builder createdAt(SafeCalendar createdAt);
 
-        abstract Builder fileName(String fileName);
+        Builder fileName(String fileName);
 
-        abstract Builder mimeType(String mimeType);
+        Builder mimeType(String mimeType);
 
-        abstract Builder fileSize(int fileSize);
+        Builder fileSize(int fileSize);
 
-        abstract MessageAttachment build();
+        MessageAttachment build();
     }
 
     @Override

@@ -58,20 +58,20 @@ public abstract class ConversationMessage implements Serializable {
     }
 
     @AutoValue.Builder
-    abstract static class Builder {
-        abstract Builder messageId(String messageId);
+    public interface Builder {
+        Builder messageId(String messageId);
 
-        abstract Builder createdAt(SafeCalendar createdAt);
+        Builder createdAt(SafeCalendar createdAt);
 
-        abstract Builder content(String content);
+        Builder content(String content);
 
-        abstract Builder isRead(boolean isRead);
+        Builder isRead(boolean isRead);
 
-        abstract Builder sender(XingUser xingUser);
+        Builder sender(XingUser xingUser);
 
-        abstract Builder attachments(List<MessageAttachment> attachments);
+        Builder attachments(List<MessageAttachment> attachments);
 
-        abstract ConversationMessage build();
+        ConversationMessage build();
     }
 
     @Override

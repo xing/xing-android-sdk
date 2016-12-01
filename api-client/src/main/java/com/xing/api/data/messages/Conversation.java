@@ -64,24 +64,24 @@ public abstract class Conversation implements Serializable {
     }
 
     @AutoValue.Builder
-    abstract static class Builder {
-        abstract Builder id(String id);
+    public interface Builder {
+        Builder id(String id);
 
-        abstract Builder subject(String subject);
+        Builder subject(String subject);
 
-        abstract Builder totalMsgCount(int totalMsgCount);
+        Builder totalMsgCount(int totalMsgCount);
 
-        abstract Builder unreadMessageCount(int unreadMessageCount);
+        Builder unreadMessageCount(int unreadMessageCount);
 
-        abstract Builder updatedAt(SafeCalendar updatedAt);
+        Builder updatedAt(SafeCalendar updatedAt);
 
-        abstract Builder isReadOnly(boolean isReadOnly);
+        Builder isReadOnly(boolean isReadOnly);
 
-        abstract Builder participants(List<XingUser> participants);
+        Builder participants(List<XingUser> participants);
 
-        abstract Builder latestMessages(List<ConversationMessage> latestMessages);
+        Builder latestMessages(List<ConversationMessage> latestMessages);
 
-        abstract Conversation build();
+        Conversation build();
     }
 
     @Override
