@@ -36,16 +36,43 @@ public abstract class ConversationMessage implements Serializable {
 
     @Json(name = "id")
     public abstract String messageId();
+
     @Json(name = "created_at")
     public abstract SafeCalendar createdAt();
+
     @Json(name = "content")
     public abstract String content();
+
     @Json(name = "read")
     public abstract boolean isRead();
+
     @Json(name = "sender")
     public abstract XingUser sender();
-    @Json(name = "attachments") @Nullable
+
+    @Json(name = "attachments")
+    @Nullable
     public abstract List<MessageAttachment> attachments();
+
+    static Builder builder() {
+        return new AutoValue_ConversationMessage.Builder();
+    }
+
+    @AutoValue.Builder
+    abstract static class Builder {
+        abstract Builder messageId(String messageId);
+
+        abstract Builder createdAt(SafeCalendar createdAt);
+
+        abstract Builder content(String content);
+
+        abstract Builder isRead(boolean isRead);
+
+        abstract Builder sender(XingUser xingUser);
+
+        abstract Builder attachments(List<MessageAttachment> attachments);
+
+        abstract ConversationMessage build();
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -33,14 +33,37 @@ public abstract class MessageAttachment implements Serializable {
 
     @Json(name = "id")
     public abstract String id();
+
     @Json(name = "created_at")
     public abstract SafeCalendar createdAt();
+
     @Json(name = "filename")
     public abstract String fileName();
+
     @Json(name = "mime_type")
     public abstract String mimeType();
+
     @Json(name = "size")
     public abstract int fileSize();
+
+    static Builder builder() {
+        return new AutoValue_MessageAttachment.Builder();
+    }
+
+    @AutoValue.Builder
+    abstract static class Builder {
+        abstract Builder id(String id);
+
+        abstract Builder createdAt(SafeCalendar createdAt);
+
+        abstract Builder fileName(String fileName);
+
+        abstract Builder mimeType(String mimeType);
+
+        abstract Builder fileSize(int fileSize);
+
+        abstract MessageAttachment build();
+    }
 
     @Override
     public boolean equals(Object obj) {
