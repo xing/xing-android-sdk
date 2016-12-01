@@ -54,7 +54,7 @@ public abstract class ContactRequest implements Serializable {
     @Json(name = "received_at")
     public abstract SafeCalendar receivedAt();
 
-    static Builder builder() {
+    public static Builder builder() {
         return new AutoValue_ContactRequest.Builder();
     }
 

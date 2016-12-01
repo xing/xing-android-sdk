@@ -46,7 +46,7 @@ public abstract class MessageAttachment implements Serializable {
     @Json(name = "size")
     public abstract int fileSize();
 
-    static Builder builder() {
+    public static Builder builder() {
         return new AutoValue_MessageAttachment.Builder();
     }
 

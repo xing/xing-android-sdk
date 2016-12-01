@@ -53,7 +53,7 @@ public abstract class ConversationMessage implements Serializable {
     @Nullable
     public abstract List<MessageAttachment> attachments();
 
-    static Builder builder() {
+    public static Builder builder() {
         return new AutoValue_ConversationMessage.Builder();
     }
 
