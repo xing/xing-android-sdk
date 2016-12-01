@@ -59,15 +59,15 @@ public abstract class ContactRequest implements Serializable {
     }
 
     @AutoValue.Builder
-    abstract static class Builder {
-        abstract Builder senderId(String senderId);
+    public interface Builder {
+        Builder senderId(String senderId);
 
-        abstract Builder sender(XingUser sender);
+        Builder sender(XingUser sender);
 
-        abstract Builder message(String message);
+        Builder message(String message);
 
-        abstract Builder receivedAt(SafeCalendar receivedAt);
+        Builder receivedAt(SafeCalendar receivedAt);
 
-        abstract ContactRequest build();
+        ContactRequest build();
     }
 }
