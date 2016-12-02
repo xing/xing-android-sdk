@@ -36,10 +36,6 @@ import java.util.List;
 public abstract class ContactPaths implements Serializable {
     private static final long serialVersionUID = 2L;
 
-    public static JsonAdapter<ContactPaths> jsonAdapter(Moshi moshi) {
-        return AutoValue_ContactPaths.jsonAdapter(moshi);
-    }
-
     /** Returns a list of available paths, which are represented as a list of {@linkplain XingUser users}. */
     @Json(name = "paths")
     @ContactPath
@@ -52,4 +48,24 @@ public abstract class ContactPaths implements Serializable {
     /** Returns the total number of available paths. */
     @Json(name = "total")
     public abstract int total();
+
+    public static Builder builder() {
+        return new AutoValue_ContactPaths.Builder();
+    }
+
+    @AutoValue.Builder
+    public interface Builder {
+        Builder paths(List<List<XingUser>> paths);
+
+        Builder distance(int distance);
+
+        Builder total(int total);
+
+        ContactPaths build();
+    }
+
+    public static JsonAdapter<ContactPaths> jsonAdapter(Moshi moshi) {
+        return AutoValue_ContactPaths.jsonAdapter(moshi);
+    }
+
 }
