@@ -88,20 +88,36 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final String ISO_DATE_FORMAT_WEIRD_AND_ZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
-    private static final Map<Pattern, DateFormat> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
+    private static final Map<Pattern, ThreadLocal<SimpleDateFormat>> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
 
     static {
-        DATE_FORMAT_MAP.put(REG_EX_YEAR, new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH, new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_MONTH_DAY, new SimpleDateFormat(MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY, new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z, new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME, new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR,
+                asThreadLocal(new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH,
+                asThreadLocal(new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_MONTH_DAY,
+                asThreadLocal(new SimpleDateFormat(MONTH_DAY_DATE_FORMAT, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY,
+                asThreadLocal(new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z,
+                asThreadLocal(new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME,
+                asThreadLocal(new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH)));
         DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
-              new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH));
-        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD, new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH));
+                asThreadLocal(new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH)));
+        DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD,
+                asThreadLocal(new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH)));
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD_AND_ZONE,
-              new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD_AND_ZONE, Locale.ENGLISH));
+                asThreadLocal(new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD_AND_ZONE, Locale.ENGLISH)));
+    }
+
+    static ThreadLocal<SimpleDateFormat> asThreadLocal(final SimpleDateFormat simpleDateFormat) {
+        return new ThreadLocal<SimpleDateFormat>() {
+            @Override
+            protected SimpleDateFormat initialValue() {
+                return simpleDateFormat;
+            }
+        };
     }
 
     SafeCalendarJsonAdapter() {
@@ -174,10 +190,10 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
         // Read the format entry
         DateFormat format = null;
-        for (Map.Entry<Pattern, DateFormat> entry : DATE_FORMAT_MAP.entrySet()) {
+        for (Map.Entry<Pattern, ThreadLocal<SimpleDateFormat>> entry : DATE_FORMAT_MAP.entrySet()) {
             Matcher matcher = entry.getKey().matcher(dateStr);
             if (matcher.matches()) {
-                format = entry.getValue();
+                format = entry.getValue().get();
                 break;
             }
         }
