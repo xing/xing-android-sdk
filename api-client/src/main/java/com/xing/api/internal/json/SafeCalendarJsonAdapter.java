@@ -64,7 +64,7 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
 
     static final TimeZone ZULU_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
-    private static final Pattern REG_EX_YEAR = Pattern.compile("^(19|20)\\d{2}");
+    static final Pattern REG_EX_YEAR = Pattern.compile("^(19|20)\\d{2}");
     private static final Pattern REG_EX_YEAR_MONTH = Pattern.compile("^(19|20)\\d{2}-\\d{2}$");
     private static final Pattern REG_EX_MONTH_DAY = Pattern.compile("\\d{2}-\\d{2}$");
     private static final Pattern REG_EX_YEAR_MONTH_DAY = Pattern.compile("^(19|20)\\d{2}-\\d{2}-\\d{2}$");
@@ -88,36 +88,72 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
     private static final String ISO_DATE_FORMAT_WEIRD_AND_ZONE = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     private static final NumberFormat TWO_DIGITS_FORMATTER = new DecimalFormat("00");
-    private static final Map<Pattern, ThreadLocal<SimpleDateFormat>> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
+    static final Map<Pattern, ThreadLocal<SimpleDateFormat>> DATE_FORMAT_MAP = new LinkedHashMap<>(5);
 
     static {
         DATE_FORMAT_MAP.put(REG_EX_YEAR,
-                asThreadLocal(new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(YEAR_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH,
-                asThreadLocal(new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(YEAR_MONTH_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_MONTH_DAY,
-                asThreadLocal(new SimpleDateFormat(MONTH_DAY_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(MONTH_DAY_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_YEAR_MONTH_DAY,
-                asThreadLocal(new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(YEAR_MONTH_DAY_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_Z,
-                asThreadLocal(new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new ZuluDateFormat(ISO_DATE_FORMAT_Z, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_TIME,
-                asThreadLocal(new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_THREE_LETTER_ISO8601_DATE_FORMAT,
-                asThreadLocal(new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new ThreeLetterDateFormat(ISO_DATE_FORMAT, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD,
-                asThreadLocal(new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH)));
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new ZuluDateFormat(ISO_DATE_FORMAT_WEIRD, Locale.ENGLISH);
+                    }
+                });
         DATE_FORMAT_MAP.put(REG_EX_ISO_DATE_WEIRD_AND_ZONE,
-                asThreadLocal(new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD_AND_ZONE, Locale.ENGLISH)));
-    }
-
-    static ThreadLocal<SimpleDateFormat> asThreadLocal(final SimpleDateFormat simpleDateFormat) {
-        return new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                return simpleDateFormat;
-            }
-        };
+                new ThreadLocal<SimpleDateFormat>() {
+                    @Override
+                    protected SimpleDateFormat initialValue() {
+                        return new SimpleDateFormat(ISO_DATE_FORMAT_WEIRD_AND_ZONE, Locale.ENGLISH);
+                    }
+                });
     }
 
     SafeCalendarJsonAdapter() {

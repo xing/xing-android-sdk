@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,6 +32,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 import static com.xing.api.internal.json.SafeCalendarJsonAdapter.ZULU_TIME_ZONE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +54,9 @@ import static org.mockito.Mockito.mock;
  * </p>
  */
 public final class SafeCalendarJsonAdapterTest {
-    /** Run all tests in Central European Time. */
+    /**
+     * Run all tests in Central European Time.
+     */
     @Rule
     public final TimeZoneRule rule = new TimeZoneRule(TimeZone.getTimeZone("CET"));
     public final Moshi moshi = new Moshi.Builder().build();
@@ -58,13 +64,13 @@ public final class SafeCalendarJsonAdapterTest {
     @Test
     public void ignoresOtherTypes() throws Exception {
         JsonAdapter<?> adapter1 = SafeCalendarJsonAdapter.FACTORY.create(
-              String.class, Collections.<Annotation>emptySet(), moshi);
+                String.class, Collections.<Annotation>emptySet(), moshi);
         assertThat(adapter1).isNull();
 
         Set<Annotation> annotations = new LinkedHashSet<>(1);
         annotations.add(mock(Annotation.class));
         JsonAdapter<?> adapter2 = SafeCalendarJsonAdapter.FACTORY.create(
-              Calendar.class, annotations, moshi);
+                Calendar.class, annotations, moshi);
         assertThat(adapter2).isNull();
     }
 
@@ -80,7 +86,7 @@ public final class SafeCalendarJsonAdapterTest {
             fail();
         } catch (Throwable e) {
             assertThat(e).isInstanceOf(AssertionError.class)
-                  .hasMessage("Unsupported date format! Expecting ISO 8601, but found: 2010-MAY-13");
+                    .hasMessage("Unsupported date format! Expecting ISO 8601, but found: 2010-MAY-13");
         }
     }
 
@@ -335,9 +341,70 @@ public final class SafeCalendarJsonAdapterTest {
         return calendar.getTimeZone();
     }
 
+    @Test
+    public void allThreadMustHaveTheirOwnThreadLocalSimpleDateFormat() {
+        int numberOfParties = 10;
+        final CyclicBarrier barrier = new CyclicBarrier(numberOfParties + 1);
+        final List<SimpleDateFormat> list = Collections.synchronizedList(new ArrayList<SimpleDateFormat>());
+        class Worker implements Runnable {
+            @Override
+            public void run() {
+                try {
+                    list.add(SafeCalendarJsonAdapter.DATE_FORMAT_MAP.get(SafeCalendarJsonAdapter.REG_EX_YEAR).get());
+                    barrier.await();
+                } catch (InterruptedException | BrokenBarrierException ex) {
+                    fail("InterruptedException or BrokenBarrierException thrown");
+                }
+            }
+        }
+        for (int index = 0; index < numberOfParties; ++index) {
+            new Thread(new Worker()).start();
+        }
+        try {
+            barrier.await();
+        } catch (InterruptedException | BrokenBarrierException ex) {
+            fail("InterruptedException or BrokenBarrierException thrown");
+        }
+        for (int i = 0; i < numberOfParties; ++i) {
+            for (int j = 0; j < numberOfParties; ++j) {
+                if (i == j) {
+                    continue;
+                }
+                SimpleDateFormat simpleDateFormatToCheck = list.get(i);
+                SimpleDateFormat simpleDateFormatToVerify = list.get(j);
+                if (simpleDateFormatToCheck == simpleDateFormatToVerify) {
+                    fail("Each thread should have it own instanse of thread SimpleDateFormat local variable");
+                    return;
+                }
+            }
+        }
+    }
+
+    @Test
+    public void oneThreadShouldReuseThreadLocalVariable() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final List<SimpleDateFormat> list = new ArrayList<>();
+        class Worker implements Runnable {
+            @Override
+            public void run() {
+                list.add(SafeCalendarJsonAdapter.DATE_FORMAT_MAP.get(SafeCalendarJsonAdapter.REG_EX_YEAR).get());
+                list.add(SafeCalendarJsonAdapter.DATE_FORMAT_MAP.get(SafeCalendarJsonAdapter.REG_EX_YEAR).get());
+                list.add(SafeCalendarJsonAdapter.DATE_FORMAT_MAP.get(SafeCalendarJsonAdapter.REG_EX_YEAR).get());
+                latch.countDown();
+            }
+        }
+        new Thread(new Worker()).start();
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            fail("InterruptedException thrown");
+        }
+        assertThat(list.get(0)).isEqualTo(list.get(1)).isEqualTo(list.get(2));
+    }
+
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     private <T extends Calendar> JsonAdapter<T> calendarAdapter() {
         return (JsonAdapter<T>) SafeCalendarJsonAdapter.FACTORY.create(
-              SafeCalendar.class, Collections.<Annotation>emptySet(), moshi).lenient();
+                SafeCalendar.class, Collections.<Annotation>emptySet(), moshi).lenient();
     }
 }
