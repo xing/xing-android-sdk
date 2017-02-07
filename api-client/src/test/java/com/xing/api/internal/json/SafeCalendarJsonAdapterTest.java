@@ -366,7 +366,7 @@ public final class SafeCalendarJsonAdapterTest {
             fail("InterruptedException or BrokenBarrierException thrown");
         }
         for (int i = 0; i < numberOfParties; ++i) {
-            for (int j = 0; j < numberOfParties; ++j) {
+            for (int j = i; j < numberOfParties; ++j) {
                 if (i == j) {
                     continue;
                 }
