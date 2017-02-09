@@ -53,8 +53,8 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     private volatile Call rawCall;
     private boolean executed; // Guarded by this.
     private volatile boolean canceled;
-    private int connectTimeout = -1;
-    private int readTimeout = -1;
+    private int connectTimeout;
+    private int readTimeout;
 
     RealCallSpec(CallSpec.Builder<RT, ET> builder) {
         this.builder = builder;
@@ -237,6 +237,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
+    /** timeouts in seconds >0 */
     @Override public CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout) {
         this.connectTimeout = connectTimeout;
         this.readTimeout = readTimeout;
@@ -246,7 +247,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
         OkHttpClient client = api.client();
-        if (readTimeout != -1 && connectTimeout != -1) {
+        if (readTimeout > 0 && connectTimeout > 0) {
             client = client.newBuilder()
                   .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                   .readTimeout(readTimeout, TimeUnit.SECONDS)

@@ -330,8 +330,8 @@ public interface CallSpec<RT, ET> extends Cloneable {
         }
 
         public Builder<RT, ET> timeouts(int connectTimeout, int readTimeout) {
-            if (connectTimeout < 0 || readTimeout < 0) {
-                throw new IllegalArgumentException("timeouts must be positive");
+            if (connectTimeout <= 0 || readTimeout <= 0) {
+                throw new IllegalArgumentException("timeouts must be > 0");
             }
             this.connectTimeout = connectTimeout;
             this.readTimeout = readTimeout;

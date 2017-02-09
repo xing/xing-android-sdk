@@ -1206,14 +1206,12 @@ public class CallSpecTest {
     }
 
     @Test
-    public void disallowNegativeTimeouts() throws Exception {
+    public void disallowZeroOrNegativeTimeouts() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
         builder(HttpMethod.GET, "", false)
               .responseAs(Object.class)
-              .timeouts(-1, -1);
+              .timeouts(0, -1);
     }
-
-    // region - assertions
 
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {
         assertThat(response.code()).isEqualTo(200);
@@ -1299,15 +1297,9 @@ public class CallSpecTest {
         assertNoBodySuccessResponse(responseRef.get(), code);
     }
 
-    // endregion
-
-    // region - creators
-
     private <RT, ET> CallSpec.Builder<RT, ET> builder(HttpMethod httpMethod, String path, boolean formEncoded) {
         return new CallSpec.Builder<>(mockApi, httpMethod, path, formEncoded);
     }
-
-    // endregion
 
     static final class TestMsg {
         final String msg;
