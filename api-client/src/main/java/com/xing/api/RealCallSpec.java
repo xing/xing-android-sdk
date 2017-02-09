@@ -237,7 +237,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
-    /** timeouts in seconds >0 */
+    /** Timeouts in seconds >0. */
     @Override public CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout) {
         this.connectTimeout = connectTimeout;
         this.readTimeout = readTimeout;
