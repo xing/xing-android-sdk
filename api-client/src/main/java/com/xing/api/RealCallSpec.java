@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -51,12 +53,16 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     private volatile Call rawCall;
     private boolean executed; // Guarded by this.
     private volatile boolean canceled;
+    private int connectTimeout = -1;
+    private int readTimeout = -1;
 
     RealCallSpec(CallSpec.Builder<RT, ET> builder) {
         this.builder = builder;
         api = builder.api;
         responseType = builder.responseType;
         errorType = builder.errorType;
+        readTimeout = builder.readTimeout;
+        connectTimeout = builder.connectTimeout;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
@@ -231,9 +237,22 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
+    @Override public CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout) {
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
+        return this;
+    }
+
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
-        return api.client().newCall(builder.request());
+        OkHttpClient client = api.client();
+        if (readTimeout != -1 && connectTimeout != -1) {
+            client = client.newBuilder()
+                  .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                  .readTimeout(readTimeout, TimeUnit.SECONDS)
+                  .build();
+        }
+        return client.newCall(builder.request());
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
