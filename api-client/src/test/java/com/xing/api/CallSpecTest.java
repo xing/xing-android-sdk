@@ -15,14 +15,17 @@
  */
 package com.xing.api;
 
+import com.xing.api.CallSpec.Builder;
 import com.xing.api.HttpError.Error.Reason;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -34,10 +37,13 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import okhttp3.mockwebserver.SocketPolicy;
 import okio.Buffer;
+import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
 import rx.singles.BlockingSingle;
@@ -51,6 +57,8 @@ public class CallSpecTest {
     public final MockWebServer server = new MockWebServer();
     @Rule
     public final RecordingSubscriber.Rule subscriberRule = new RecordingSubscriber.Rule();
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
 
     public XingApi mockApi;
     public HttpUrl httpUrl;
@@ -574,7 +582,7 @@ public class CallSpecTest {
               .build();
 
         Response<Object, TestMsg> response = spec.execute();
-        assertEnmptyErrorResponse(response, 300);
+        assertEmptyErrorResponse(response, 300);
     }
 
     @Test
@@ -1164,6 +1172,47 @@ public class CallSpecTest {
         assertThat(exception).hasMessage("401 Unauthorized");
     }
 
+    @Test
+    public void canOverrideReadAndConnectTimeoutPerCall() throws Exception {
+        // we cannot test the connect timeout, because MockWebServer immediately accepts connections
+        // and provides no callback to delay this, but we can emulate a read timeout by stalling the response
+        // indefinitely
+        server.setDispatcher(new Dispatcher() {
+            @Override public MockResponse dispatch(RecordedRequest request) {
+                return new MockResponse().setResponseCode(200).setSocketPolicy(SocketPolicy.NO_RESPONSE);
+            }
+        });
+
+        // all in seconds
+        int readTimeout = 1;
+        int ignoredConnectTimeout = 10;
+        // the estimated execution time on the client side, plus a buffer
+        // of some milliseconds in case we're slower
+        int executionTime = 200;
+
+        Builder<ResponseBody, Object> builder = builder(HttpMethod.GET, "", false);
+        Observable<Response<ResponseBody, Object>> stream =
+              builder.responseAs(ResponseBody.class).timeouts(ignoredConnectTimeout, readTimeout)
+                    .build().rawStream();
+
+        TestSubscriber<Response<ResponseBody, Object>> testSubscriber = new TestSubscriber<>();
+
+        long before = System.currentTimeMillis();
+        stream.subscribe(testSubscriber);
+        long diff = System.currentTimeMillis() - before;
+
+        testSubscriber.assertError(SocketTimeoutException.class);
+        assertThat(diff).isLessThan((readTimeout * 1000) + executionTime);
+    }
+
+    @Test
+    public void disallowZeroOrNegativeTimeouts() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .timeouts(0, -1);
+    }
+
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.error()).isNull();
@@ -1187,7 +1236,7 @@ public class CallSpecTest {
         assertThat(body.code).isEqualTo(expected.code);
     }
 
-    private static void assertEnmptyErrorResponse(Response<Object, TestMsg> response, int code) {
+    private static void assertEmptyErrorResponse(Response<Object, TestMsg> response, int code) {
         assertThat(response.isSuccessful()).isFalse();
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.body()).isNull();

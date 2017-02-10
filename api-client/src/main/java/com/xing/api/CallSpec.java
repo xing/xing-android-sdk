@@ -172,6 +172,13 @@ public interface CallSpec<RT, ET> extends Cloneable {
      */
     CallSpec<RT, ET> formField(String name, List<String> values);
 
+    /**
+     * Overrides the connection's default timeouts for this particular call.
+     *
+     * All timeouts in seconds.
+     */
+    CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout);
+
     /** Creates and returns a copy of <strong>this</strong> object losing the executable state. */
     CallSpec<RT, ET> clone();
 
@@ -215,6 +222,8 @@ public interface CallSpec<RT, ET> extends Cloneable {
         final XingApi api;
         Type responseType;
         Type errorType;
+        int connectTimeout;
+        int readTimeout;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
@@ -241,6 +250,8 @@ public interface CallSpec<RT, ET> extends Cloneable {
             body = builder.body;
             responseType = builder.responseType;
             errorType = builder.errorType;
+            readTimeout = builder.readTimeout;
+            connectTimeout = builder.connectTimeout;
         }
 
         /** Replaces path parameter {@code name} with provided {@code values}. */
@@ -315,6 +326,15 @@ public interface CallSpec<RT, ET> extends Cloneable {
         public Builder<RT, ET> formField(String name, List<String> values) {
             stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
             formBodyBuilder.add(name, toCsv(values, true));
+            return this;
+        }
+
+        public Builder<RT, ET> timeouts(int connectTimeout, int readTimeout) {
+            if (connectTimeout <= 0 || readTimeout <= 0) {
+                throw new IllegalArgumentException("timeouts must be > 0");
+            }
+            this.connectTimeout = connectTimeout;
+            this.readTimeout = readTimeout;
             return this;
         }
 
