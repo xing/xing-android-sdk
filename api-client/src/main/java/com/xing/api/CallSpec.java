@@ -345,7 +345,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return this;
         }
 
-        /** connect timeout in seconds */
+        /** Connect timeout in seconds. */
         public Builder<RT, ET> connectTimeout(int connectTimeout) {
             if (connectTimeout < 0) {
                 throw new IllegalArgumentException("timeout must be >= 0");
@@ -354,7 +354,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return this;
         }
 
-        /** read timeout in seconds */
+        /** Read timeout in seconds. */
         public Builder<RT, ET> readTimeout(int readTimeout) {
             if (readTimeout < 0) {
                 throw new IllegalArgumentException("timeout must be >= 0");
@@ -363,7 +363,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return this;
         }
 
-        /** write timeout in seconds */
+        /** Write timeout in seconds. */
         public Builder<RT, ET> writeTimeout(int writeTimeout) {
             if (writeTimeout < 0) {
                 throw new IllegalArgumentException("timeout must be >= 0");
