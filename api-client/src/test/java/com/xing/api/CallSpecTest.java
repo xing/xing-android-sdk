@@ -1235,7 +1235,7 @@ public class CallSpecTest {
         int writeTimeout = 1;
         // the estimated execution time on the client side, plus a buffer
         // of some milliseconds in case we're slower
-        int executionTime = 200;
+        int executionTime = 500;
 
         Builder<ResponseBody, Object> builder = builder(HttpMethod.POST, "", false);
         Observable<ResponseBody> stream =
