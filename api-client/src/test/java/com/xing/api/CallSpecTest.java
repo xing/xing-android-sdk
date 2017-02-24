@@ -47,7 +47,6 @@ import okio.BufferedSink;
 import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 import rx.singles.BlockingSingle;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -1240,12 +1239,12 @@ public class CallSpecTest {
         Builder<ResponseBody, Object> builder = builder(HttpMethod.POST, "", false);
         Observable<ResponseBody> stream =
               builder.body(streamingBody).responseAs(ResponseBody.class).writeTimeout(writeTimeout)
-                    .build().stream().subscribeOn(Schedulers.newThread());
+                    .build().stream();
 
         TestSubscriber<ResponseBody> testSubscriber = new TestSubscriber<>();
 
         long before = System.currentTimeMillis();
-        stream.toBlocking().subscribe(testSubscriber);
+        stream.subscribe(testSubscriber);
         long diff = System.currentTimeMillis() - before;
 
         testSubscriber.assertError(SocketTimeoutException.class);
