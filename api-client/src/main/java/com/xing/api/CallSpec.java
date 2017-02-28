@@ -173,11 +173,25 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> formField(String name, List<String> values);
 
     /**
-     * Overrides the connection's default timeouts for this particular call.
+     * Overrides the connection's default connection timeout, i.e. the time until a connection is established.
      *
-     * All timeouts in seconds.
+     * Positive number in seconds, where 0 means no timeout.
      */
-    CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout);
+    CallSpec<RT, ET> connectTimeout(int connectTimeout);
+
+    /**
+     * Overrides the connection's default read timeout, i.e. the time until an unfinished read operation is cancelled.
+     *
+     * Positive number in seconds, where 0 means no timeout.
+     */
+    CallSpec<RT, ET> readTimeout(int readTimeout);
+
+    /**
+     * Overrides the connection's default write timeout, i.e. the time until an unfinished write operation is cancelled.
+     *
+     * Positive number in seconds, where 0 means no timeout.
+     */
+    CallSpec<RT, ET> writeTimeout(int writeTimeout);
 
     /** Creates and returns a copy of <strong>this</strong> object losing the executable state. */
     CallSpec<RT, ET> clone();
@@ -222,8 +236,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
         final XingApi api;
         Type responseType;
         Type errorType;
-        int connectTimeout;
-        int readTimeout;
+        int connectTimeout = -1;
+        int readTimeout = -1;
+        int writeTimeout = -1;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
@@ -250,8 +265,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
             body = builder.body;
             responseType = builder.responseType;
             errorType = builder.errorType;
-            readTimeout = builder.readTimeout;
             connectTimeout = builder.connectTimeout;
+            readTimeout = builder.readTimeout;
+            writeTimeout = builder.writeTimeout;
         }
 
         /** Replaces path parameter {@code name} with provided {@code values}. */
@@ -329,12 +345,30 @@ public interface CallSpec<RT, ET> extends Cloneable {
             return this;
         }
 
-        public Builder<RT, ET> timeouts(int connectTimeout, int readTimeout) {
-            if (connectTimeout <= 0 || readTimeout <= 0) {
-                throw new IllegalArgumentException("timeouts must be > 0");
+        /** Connect timeout in seconds. */
+        public Builder<RT, ET> connectTimeout(int connectTimeout) {
+            if (connectTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
             }
             this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        /** Read timeout in seconds. */
+        public Builder<RT, ET> readTimeout(int readTimeout) {
+            if (readTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
+            }
             this.readTimeout = readTimeout;
+            return this;
+        }
+
+        /** Write timeout in seconds. */
+        public Builder<RT, ET> writeTimeout(int writeTimeout) {
+            if (writeTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
+            }
+            this.writeTimeout = writeTimeout;
             return this;
         }
 

@@ -53,8 +53,9 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     private volatile Call rawCall;
     private boolean executed; // Guarded by this.
     private volatile boolean canceled;
-    private int connectTimeout;
-    private int readTimeout;
+    private int connectTimeout = -1;
+    private int readTimeout = -1;
+    private int writeTimeout = -1;
 
     RealCallSpec(CallSpec.Builder<RT, ET> builder) {
         this.builder = builder;
@@ -63,6 +64,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         errorType = builder.errorType;
         readTimeout = builder.readTimeout;
         connectTimeout = builder.connectTimeout;
+        writeTimeout = builder.writeTimeout;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
@@ -237,23 +239,43 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
-    /** Timeouts in seconds >0. */
-    @Override public CallSpec<RT, ET> timeouts(int connectTimeout, int readTimeout) {
+    @Override public CallSpec<RT, ET> connectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    @Override public CallSpec<RT, ET> readTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
+        return this;
+    }
+
+    @Override public CallSpec<RT, ET> writeTimeout(int writeTimeout) {
+        this.writeTimeout = writeTimeout;
         return this;
     }
 
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
         OkHttpClient client = api.client();
-        if (readTimeout > 0 && connectTimeout > 0) {
-            client = client.newBuilder()
-                  .connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                  .readTimeout(readTimeout, TimeUnit.SECONDS)
-                  .build();
-        }
+        client = applyTimeouts(client);
         return client.newCall(builder.request());
+    }
+
+    private OkHttpClient applyTimeouts(OkHttpClient client) {
+        if (connectTimeout >= 0 || readTimeout >= 0 || writeTimeout >= 0) {
+            OkHttpClient.Builder builder = client.newBuilder();
+            if (connectTimeout >= 0) {
+                builder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
+            }
+            if (readTimeout >= 0) {
+                builder.readTimeout(readTimeout, TimeUnit.SECONDS);
+            }
+            if (writeTimeout >= 0) {
+                builder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+            }
+            return builder.build();
+        }
+        return client;
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */

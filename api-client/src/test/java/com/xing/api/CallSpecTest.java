@@ -43,6 +43,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import okhttp3.mockwebserver.SocketPolicy;
 import okio.Buffer;
+import okio.BufferedSink;
 import rx.Observable;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
@@ -50,6 +51,9 @@ import rx.singles.BlockingSingle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assume.assumeThat;
 
 @SuppressWarnings({"MagicNumber", "ConstantConditions"})
 public class CallSpecTest {
@@ -1172,11 +1176,12 @@ public class CallSpecTest {
         assertThat(exception).hasMessage("401 Unauthorized");
     }
 
+    // we cannot test the connect timeout, because MockWebServer immediately accepts connections
+    // and provides no callback to delay this, but we can emulate a read timeout by stalling the response
+    // indefinitely
     @Test
-    public void canOverrideReadAndConnectTimeoutPerCall() throws Exception {
-        // we cannot test the connect timeout, because MockWebServer immediately accepts connections
-        // and provides no callback to delay this, but we can emulate a read timeout by stalling the response
-        // indefinitely
+    public void canOverrideReadTimeoutPerCall() throws Exception {
+
         server.setDispatcher(new Dispatcher() {
             @Override public MockResponse dispatch(RecordedRequest request) {
                 return new MockResponse().setResponseCode(200).setSocketPolicy(SocketPolicy.NO_RESPONSE);
@@ -1185,17 +1190,16 @@ public class CallSpecTest {
 
         // all in seconds
         int readTimeout = 1;
-        int ignoredConnectTimeout = 10;
         // the estimated execution time on the client side, plus a buffer
         // of some milliseconds in case we're slower
         int executionTime = 200;
 
         Builder<ResponseBody, Object> builder = builder(HttpMethod.GET, "", false);
-        Observable<Response<ResponseBody, Object>> stream =
-              builder.responseAs(ResponseBody.class).timeouts(ignoredConnectTimeout, readTimeout)
-                    .build().rawStream();
+        Observable<ResponseBody> stream =
+              builder.responseAs(ResponseBody.class).readTimeout(readTimeout)
+                    .build().stream();
 
-        TestSubscriber<Response<ResponseBody, Object>> testSubscriber = new TestSubscriber<>();
+        TestSubscriber<ResponseBody> testSubscriber = new TestSubscriber<>();
 
         long before = System.currentTimeMillis();
         stream.subscribe(testSubscriber);
@@ -1206,11 +1210,69 @@ public class CallSpecTest {
     }
 
     @Test
-    public void disallowZeroOrNegativeTimeouts() throws Exception {
+    public void canOverrideWriteTimeoutPerCall() throws Exception {
+        // for some unknown reason the timeout is not applied properly when run on Travis CI
+        // so we skip this test on the CI and only execute it locally
+        assumeThat(System.getenv("TRAVIS"), not(equalTo("true")));
+
+        // throttle the server request reading to one byte per second
+        server.enqueue(new MockResponse().throttleBody(1, 1, TimeUnit.SECONDS));
+
+        RequestBody streamingBody = new RequestBody() {
+            @Override public MediaType contentType() {
+                return MediaType.parse("*/*");
+            }
+
+            @Override public void writeTo(BufferedSink sink) throws IOException {
+                // write two megabytes at once
+                byte[] data = new byte[2 * 1024 * 1024];
+                sink.write(data);
+            }
+        };
+
+        // all in seconds
+        int writeTimeout = 1;
+        // the estimated execution time on the client side, plus a buffer
+        // of some milliseconds in case we're slower
+        int executionTime = 500;
+
+        Builder<ResponseBody, Object> builder = builder(HttpMethod.POST, "", false);
+        Observable<ResponseBody> stream =
+              builder.body(streamingBody).responseAs(ResponseBody.class).writeTimeout(writeTimeout)
+                    .build().stream();
+
+        TestSubscriber<ResponseBody> testSubscriber = new TestSubscriber<>();
+
+        long before = System.currentTimeMillis();
+        stream.subscribe(testSubscriber);
+        long diff = System.currentTimeMillis() - before;
+
+        testSubscriber.assertError(SocketTimeoutException.class);
+        assertThat(diff).isLessThan((writeTimeout * 1000) + executionTime);
+    }
+
+    @Test
+    public void disallowNegativeConnectTimeout() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
         builder(HttpMethod.GET, "", false)
               .responseAs(Object.class)
-              .timeouts(0, -1);
+              .connectTimeout(-1);
+    }
+
+    @Test
+    public void disallowNegativeReadTimeout() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .readTimeout(-1);
+    }
+
+    @Test
+    public void disallowNegativeWriteTimeout() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .writeTimeout(-1);
     }
 
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {
