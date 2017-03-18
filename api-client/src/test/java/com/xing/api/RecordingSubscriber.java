@@ -24,16 +24,16 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import rx.Notification;
-import rx.Subscriber;
+import io.reactivex.Notification;
+import io.reactivex.subscribers.ResourceSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * A test {@link Subscriber} and JUnit rule which guarantees all events are asserted.
+ * A test {@link ResourceSubscriber} and JUnit rule which guarantees all events are asserted.
  * Forked from <a href="https://github.com/square/retrofit/">Retrofit repo</a>.
  */
-final class RecordingSubscriber<T> extends Subscriber<T> {
+final class RecordingSubscriber<T> extends ResourceSubscriber<T> {
     private final long initialRequest;
     private final Deque<Notification<T>> events = new ArrayDeque<>();
 
@@ -52,8 +52,8 @@ final class RecordingSubscriber<T> extends Subscriber<T> {
     }
 
     @Override
-    public void onCompleted() {
-        events.add(Notification.<T>createOnCompleted());
+    public void onComplete() {
+        events.add(Notification.<T>createOnComplete());
     }
 
     @Override
@@ -82,7 +82,7 @@ final class RecordingSubscriber<T> extends Subscriber<T> {
         assertThat(notification.isOnError())
               .overridingErrorMessage("Expected onError event but was %s", notification)
               .isTrue();
-        return notification.getThrowable();
+        return notification.getError();
     }
 
     public RecordingSubscriber<T> assertAnyValue() {
@@ -97,7 +97,7 @@ final class RecordingSubscriber<T> extends Subscriber<T> {
 
     public void assertCompleted() {
         Notification<T> notification = takeNotification();
-        assertThat(notification.isOnCompleted())
+        assertThat(notification.isOnComplete())
               .overridingErrorMessage("Expected onCompleted event but was %s", notification)
               .isTrue();
         assertNoEvents();

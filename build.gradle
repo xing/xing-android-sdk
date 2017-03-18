@@ -69,7 +69,7 @@ allprojects {
               glide                    : 'com.github.bumptech.glide:glide:3.6.0',
 
               // ReactiveX
-              rxjava                   : 'io.reactivex:rxjava:1.2.0',
+              rxjava                   : 'io.reactivex.rxjava2:rxjava:2.0.7',
 
               // Other utils
               autoValue                : "com.google.auto.value:auto-value:$versions.autoValue",

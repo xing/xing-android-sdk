@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import com.xing.api.internal.Experimental;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -25,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -34,10 +33,6 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
-import rx.Subscriber;
 
 import static com.xing.api.Utils.buffer;
 import static com.xing.api.Utils.closeQuietly;
@@ -141,25 +136,14 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
-    public Observable<Response<RT, ET>> rawStream() {
-        return Observable.fromCallable(new ResponseCallable<>(this));
+    public Single<Response<RT, ET>> singleRawResponse() {
+        return Single.fromCallable(new ResponseCallable<>(this));
     }
 
     @Override
-    public Observable<RT> stream() {
+    public Single<RT> singleResponse() {
         ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
-        return Observable.fromCallable(new BodyCallable<>(responseCallable));
-    }
-
-    @Override
-    public Single<RT> singleStream() {
-        return stream().toSingle();
-    }
-
-    @Experimental
-    @Override
-    public Completable completableStream() {
-        return stream().toCompletable();
+        return Single.fromCallable(new BodyCallable<>(responseCallable));
     }
 
     @Override
@@ -239,17 +223,20 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
-    @Override public CallSpec<RT, ET> connectTimeout(int connectTimeout) {
+    @Override
+    public CallSpec<RT, ET> connectTimeout(int connectTimeout) {
         this.connectTimeout = connectTimeout;
         return this;
     }
 
-    @Override public CallSpec<RT, ET> readTimeout(int readTimeout) {
+    @Override
+    public CallSpec<RT, ET> readTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
         return this;
     }
 
-    @Override public CallSpec<RT, ET> writeTimeout(int writeTimeout) {
+    @Override
+    public CallSpec<RT, ET> writeTimeout(int writeTimeout) {
         this.writeTimeout = writeTimeout;
         return this;
     }
@@ -406,17 +393,17 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         }
     }
 
-    /** Callable that returns the successful response body to {@linkplain Subscriber#onNext(Object)}. */
+    /** Callable that returns the successful response body or throws an {@linkplain HttpException}. */
     static final class BodyCallable<RT, ET> implements Callable<RT> {
-        private final Callable<Response<RT, ET>> responseCallable;
+        private final Callable<Response<RT, ET>> callable;
 
-        BodyCallable(Callable<Response<RT, ET>> responseCallable) {
-            this.responseCallable = responseCallable;
+        BodyCallable(Callable<Response<RT, ET>> callable) {
+            this.callable = callable;
         }
 
         @Override
         public RT call() throws Exception {
-            Response<RT, ET> response = responseCallable.call();
+            Response<RT, ET> response = callable.call();
             if (response.isSuccessful()) {
                 return response.body();
             }

@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import com.xing.api.internal.Experimental;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -28,13 +26,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.reactivex.Single;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -78,28 +74,17 @@ public interface CallSpec<RT, ET> extends Cloneable {
     void enqueue(Callback<RT, ET> callback);
 
     /**
-     * Executes the underlying call as an observable. The observable will try to return an
+     * Executes the underlying call as a {@linkplain Single}. This method will try to populate the success response object
+     * of a {@link Response}. In case of an error an {@link HttpException} will be thrown.
+     * For a more richer and controllable api consider calling {@link #singleRawResponse()} ()}.
+     */
+    Single<RT> singleResponse();
+
+    /**
+     * Executes the underlying call as an {@linkplain Single}. The method will try to return a
      * {@link Response} object from which the http result may be obtained.
      */
-    Observable<Response<RT, ET>> rawStream();
-
-    /**
-     * Executes the underlying call as an observable. This method will try to populate the success response object of
-     * a {@link Response}. In case of an error an {@link HttpException} will be thrown.
-     * For a more richer and controllable api consider calling {@link #rawStream()}.
-     */
-    Observable<RT> stream();
-
-    /**
-     * Same as {@linkplain #stream()} but returning a {@linkplain Single}.
-     */
-    Single<RT> singleStream();
-
-    /**
-     * Same as {@linkplain #stream()} but returning a {@linkplain Completable}.
-     */
-    @Experimental
-    Completable completableStream();
+    Single<Response<RT, ET>> singleRawResponse();
 
     /**
      * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain #enqueue(Callback)
