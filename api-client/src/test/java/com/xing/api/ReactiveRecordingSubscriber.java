@@ -24,20 +24,20 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import rx.Notification;
-import rx.Subscriber;
+import io.reactivex.Notification;
+import io.reactivex.subscribers.ResourceSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * A test {@link Subscriber} and JUnit rule which guarantees all events are asserted.
+ * A test {@link ResourceSubscriber} and JUnit rule which guarantees all events are asserted.
  * Forked from <a href="https://github.com/square/retrofit/">Retrofit repo</a>.
  */
-final class RxRecordingSubscriber<T> extends Subscriber<T> {
+final class ReactiveRecordingSubscriber<T> extends ResourceSubscriber<T> {
     private final long initialRequest;
     private final Deque<Notification<T>> events = new ArrayDeque<>();
 
-    private RxRecordingSubscriber(long initialRequest) {
+    private ReactiveRecordingSubscriber(long initialRequest) {
         this.initialRequest = initialRequest;
     }
 
@@ -52,8 +52,8 @@ final class RxRecordingSubscriber<T> extends Subscriber<T> {
     }
 
     @Override
-    public void onCompleted() {
-        events.add(Notification.<T>createOnCompleted());
+    public void onComplete() {
+        events.add(Notification.<T>createOnComplete());
     }
 
     @Override
@@ -72,34 +72,34 @@ final class RxRecordingSubscriber<T> extends Subscriber<T> {
     public T takeValue() {
         Notification<T> notification = takeNotification();
         assertThat(notification.isOnNext())
-                .overridingErrorMessage("Expected onNext event but was %s", notification)
-                .isTrue();
+              .overridingErrorMessage("Expected onNext event but was %s", notification)
+              .isTrue();
         return notification.getValue();
     }
 
     public Throwable takeError() {
         Notification<T> notification = takeNotification();
         assertThat(notification.isOnError())
-                .overridingErrorMessage("Expected onError event but was %s", notification)
-                .isTrue();
-        return notification.getThrowable();
+              .overridingErrorMessage("Expected onError event but was %s", notification)
+              .isTrue();
+        return notification.getError();
     }
 
-    public RxRecordingSubscriber<T> assertAnyValue() {
+    public ReactiveRecordingSubscriber<T> assertAnyValue() {
         takeValue();
         return this;
     }
 
-    public RxRecordingSubscriber<T> assertValue(T value) {
+    public ReactiveRecordingSubscriber<T> assertValue(T value) {
         assertThat(takeValue()).isEqualTo(value);
         return this;
     }
 
     public void assertCompleted() {
         Notification<T> notification = takeNotification();
-        assertThat(notification.isOnCompleted())
-                .overridingErrorMessage("Expected onCompleted event but was %s", notification)
-                .isTrue();
+        assertThat(notification.isOnComplete())
+              .overridingErrorMessage("Expected onCompleted event but was %s", notification)
+              .isTrue();
         assertNoEvents();
     }
 
@@ -129,14 +129,14 @@ final class RxRecordingSubscriber<T> extends Subscriber<T> {
     }
 
     public static final class Rule implements TestRule {
-        final List<RxRecordingSubscriber<?>> subscribers = new ArrayList<>();
+        final List<ReactiveRecordingSubscriber<?>> subscribers = new ArrayList<>();
 
-        public <T> RxRecordingSubscriber<T> create() {
+        public <T> ReactiveRecordingSubscriber<T> create() {
             return createWithInitialRequest(Long.MAX_VALUE);
         }
 
-        public <T> RxRecordingSubscriber<T> createWithInitialRequest(long initialRequest) {
-            RxRecordingSubscriber<T> subscriber = new RxRecordingSubscriber<>(initialRequest);
+        public <T> ReactiveRecordingSubscriber<T> createWithInitialRequest(long initialRequest) {
+            ReactiveRecordingSubscriber<T> subscriber = new ReactiveRecordingSubscriber<>(initialRequest);
             subscribers.add(subscriber);
             return subscriber;
         }
@@ -147,7 +147,7 @@ final class RxRecordingSubscriber<T> extends Subscriber<T> {
                 @Override
                 public void evaluate() throws Throwable {
                     base.evaluate();
-                    for (RxRecordingSubscriber<?> subscriber : subscribers) {
+                    for (ReactiveRecordingSubscriber<?> subscriber : subscribers) {
                         subscriber.assertNoEvents();
                     }
                 }
