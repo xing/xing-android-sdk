@@ -50,6 +50,7 @@ dependencies {
     compileOnly libraries.autoValueMoshiAnnotations
 
     provided libraries.rxjava
+    provided libraries.rxjava2
     provided libraries.android
 
     compile libraries.okio
