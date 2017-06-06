@@ -318,9 +318,6 @@ public class JsonSerializationTest {
     }
 
     private static Company buildPrimaryCompany() {
-        SafeCalendar calendar = new SafeCalendar(2010, Calendar.JANUARY);
-        calendar.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-
         return new Company()
               .id("1_abcdef")
               .name("XING AG")
@@ -328,7 +325,7 @@ public class JsonSerializationTest {
               .companySize(CompanySize.SIZE_201_500)
               .url("http://www.xing.com")
               .careerLevel(CareerLevel.PROFESSIONAL_EXPERIENCED)
-              .beginDate(calendar)
+              .beginDate(new SafeCalendar(2010, Calendar.JANUARY))
               .industries(Collections.singletonList(new Industry(90700, "Internet and online media")))
               .formOfEmployment(FormOfEmployment.FULL_TIME_EMPLOYEE)
               .untilNow(true)
