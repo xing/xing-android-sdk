@@ -30,5 +30,6 @@ public enum Badge {
     PREMIUM,
     WORK_LIFE,
     INSIDER,
+    EXECUTIVE,
     UNKNOWN
 }

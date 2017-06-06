@@ -16,8 +16,6 @@
  */
 package com.xing.api;
 
-import com.xing.api.internal.Experimental;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -28,13 +26,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.reactivex.Single;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
 
 import static com.xing.api.UrlEscapeUtils.escape;
 import static com.xing.api.Utils.assertionError;
@@ -81,25 +77,37 @@ public interface CallSpec<RT, ET> extends Cloneable {
      * Executes the underlying call as an observable. The observable will try to return an
      * {@link Response} object from which the http result may be obtained.
      */
-    Observable<Response<RT, ET>> rawStream();
+    rx.Observable<Response<RT, ET>> rawStream();
 
     /**
      * Executes the underlying call as an observable. This method will try to populate the success response object of
      * a {@link Response}. In case of an error an {@link HttpException} will be thrown.
      * For a more richer and controllable api consider calling {@link #rawStream()}.
      */
-    Observable<RT> stream();
+    rx.Observable<RT> stream();
 
     /**
      * Same as {@linkplain #stream()} but returning a {@linkplain Single}.
      */
-    Single<RT> singleStream();
+    rx.Single<RT> singleStream();
 
     /**
-     * Same as {@linkplain #stream()} but returning a {@linkplain Completable}.
+     * Same as {@linkplain #stream()} but returning a {@linkplain rx.Completable}.
      */
-    @Experimental
-    Completable completableStream();
+    rx.Completable completableStream();
+
+    /**
+     * Executes the underlying call as a {@linkplain Single}. This method will try to populate the success response object
+     * of a {@link Response}. In case of an error an {@link HttpException} will be thrown.
+     * For a more richer and controllable api consider calling {@link #singleRawResponse()} ()}.
+     */
+    Single<RT> singleResponse();
+
+    /**
+     * Executes the underlying call as an {@linkplain Single}. The method will try to return a
+     * {@link Response} object from which the http result may be obtained.
+     */
+    Single<Response<RT, ET>> singleRawResponse();
 
     /**
      * Returns true if this call has been either {@linkplain #execute() executed} or {@linkplain #enqueue(Callback)
@@ -172,6 +180,27 @@ public interface CallSpec<RT, ET> extends Cloneable {
      */
     CallSpec<RT, ET> formField(String name, List<String> values);
 
+    /**
+     * Overrides the connection's default connection timeout, i.e. the time until a connection is established.
+     *
+     * Positive number in seconds, where 0 means no timeout.
+     */
+    CallSpec<RT, ET> connectTimeout(int connectTimeout);
+
+    /**
+     * Overrides the connection's default read timeout, i.e. the time until an unfinished read operation is cancelled.
+     *
+     * Positive number in seconds, where 0 means no timeout.
+     */
+    CallSpec<RT, ET> readTimeout(int readTimeout);
+
+    /**
+     * Overrides the connection's default write timeout, i.e. the time until an unfinished write operation is cancelled.
+     *
+     * Positive number in seconds, where 0 means no timeout.
+     */
+    CallSpec<RT, ET> writeTimeout(int writeTimeout);
+
     /** Creates and returns a copy of <strong>this</strong> object losing the executable state. */
     CallSpec<RT, ET> clone();
 
@@ -215,6 +244,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
         final XingApi api;
         Type responseType;
         Type errorType;
+        int connectTimeout = -1;
+        int readTimeout = -1;
+        int writeTimeout = -1;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
@@ -241,6 +273,9 @@ public interface CallSpec<RT, ET> extends Cloneable {
             body = builder.body;
             responseType = builder.responseType;
             errorType = builder.errorType;
+            connectTimeout = builder.connectTimeout;
+            readTimeout = builder.readTimeout;
+            writeTimeout = builder.writeTimeout;
         }
 
         /** Replaces path parameter {@code name} with provided {@code values}. */
@@ -315,6 +350,33 @@ public interface CallSpec<RT, ET> extends Cloneable {
         public Builder<RT, ET> formField(String name, List<String> values) {
             stateNotNull(formBodyBuilder, "form fields are not accepted by this request.");
             formBodyBuilder.add(name, toCsv(values, true));
+            return this;
+        }
+
+        /** Connect timeout in seconds. */
+        public Builder<RT, ET> connectTimeout(int connectTimeout) {
+            if (connectTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
+            }
+            this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        /** Read timeout in seconds. */
+        public Builder<RT, ET> readTimeout(int readTimeout) {
+            if (readTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
+            }
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
+        /** Write timeout in seconds. */
+        public Builder<RT, ET> writeTimeout(int writeTimeout) {
+            if (writeTimeout < 0) {
+                throw new IllegalArgumentException("timeout must be >= 0");
+            }
+            this.writeTimeout = writeTimeout;
             return this;
         }
 

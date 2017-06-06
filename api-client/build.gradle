@@ -37,6 +37,12 @@ checkstyle {
     ]
 }
 
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
 dependencies {
     apt libraries.autoValue
     compileOnly libraries.autoValueAnnotations
@@ -44,6 +50,7 @@ dependencies {
     compileOnly libraries.autoValueMoshiAnnotations
 
     provided libraries.rxjava
+    provided libraries.rxjava2
     provided libraries.android
 
     compile libraries.okio
