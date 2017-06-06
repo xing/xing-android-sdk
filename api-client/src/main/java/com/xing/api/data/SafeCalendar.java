@@ -134,4 +134,9 @@ public final class SafeCalendar extends GregorianCalendar {
               && ((SafeCalendar) obj).isSet(MONTH) == isSet(MONTH)
               && ((SafeCalendar) obj).isSet(DAY_OF_MONTH) == isSet(DAY_OF_MONTH);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
