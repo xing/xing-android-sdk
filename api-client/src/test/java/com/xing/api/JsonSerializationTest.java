@@ -139,6 +139,16 @@ public class JsonSerializationTest {
     }
 
     @Test
+    public void userNoBirthday() throws Exception {
+        JsonAdapter<XingUser> adapter = api.moshi().adapter(XingUser.class);
+        String json = file("user_no_birthdate.json");
+
+        // Test that the user object reflects the json.
+        XingUser user = adapter.fromJson(json);
+        assertThat(user.birthDate()).isNotEqualTo(new SafeCalendar(1970, Calendar.JANUARY, 1));
+    }
+
+    @Test
     public void profileVisit() throws Exception {
         JsonAdapter<ProfileVisit> adapter = api.moshi().adapter(ProfileVisit.class);
         String json = file("visit.json");

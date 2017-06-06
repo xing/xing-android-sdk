@@ -126,4 +126,17 @@ public final class SafeCalendar extends GregorianCalendar {
             super.complete();
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+              && ((SafeCalendar) obj).isSet(YEAR) == isSet(YEAR)
+              && ((SafeCalendar) obj).isSet(MONTH) == isSet(MONTH)
+              && ((SafeCalendar) obj).isSet(DAY_OF_MONTH) == isSet(DAY_OF_MONTH);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
