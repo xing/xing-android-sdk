@@ -33,7 +33,7 @@ import java.util.TimeZone;
 @SuppressWarnings("unused") // Public api.
 public final class SafeCalendar extends GregorianCalendar {
     private static final long serialVersionUID = 1L;
-    public static SafeCalendar EMPTY = new SafeCalendar();
+    public static final SafeCalendar EMPTY = new SafeCalendar();
 
     /** Creates an empty calendar, all the fields are not set. */
     public SafeCalendar() {
