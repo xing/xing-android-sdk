@@ -15,6 +15,9 @@ jdk:
 script:
   - ./gradlew clean check --stacktrace
 
+before_install:
+  - export TZ=Europe/Germany
+
 after_success:
   - .buildscript/deploy_snapshot.sh
 
