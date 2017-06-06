@@ -95,7 +95,6 @@ public class JsonSerializationTest {
         assertThat(user.legalInformationPreview().previewContent())
               .isEqualTo("Max Mustermann\nMuster AG\nMusterstraße 123\n22992 Musterdorf");
 
-
         // Addresses.
         assertPrivateAddress(user);
         assertBusinessAddress(user);
@@ -136,6 +135,15 @@ public class JsonSerializationTest {
         assertThat(clone).isEqualTo(user);
         assertThat(clone.hashCode()).isEqualTo(user.hashCode());
         assertThat(clone.toString()).isEqualTo(user.toString());
+    }
+
+    @Test
+    public void birthdayNotSet() throws Exception {
+        JsonAdapter<XingUser> adapter = api.moshi().adapter(XingUser.class);
+        String json = file("user_no_birthday.json");
+
+        XingUser user = adapter.fromJson(json);
+        assertThat(user.birthDate().isEmpty()).isTrue();
     }
 
     @Test
