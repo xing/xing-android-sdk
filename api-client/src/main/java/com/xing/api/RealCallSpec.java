@@ -16,26 +16,23 @@
  */
 package com.xing.api;
 
-import com.xing.api.internal.Experimental;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
-import rx.Subscriber;
 
 import static com.xing.api.Utils.buffer;
 import static com.xing.api.Utils.closeQuietly;
@@ -51,12 +48,18 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     private volatile Call rawCall;
     private boolean executed; // Guarded by this.
     private volatile boolean canceled;
+    private int connectTimeout = -1;
+    private int readTimeout = -1;
+    private int writeTimeout = -1;
 
     RealCallSpec(CallSpec.Builder<RT, ET> builder) {
         this.builder = builder;
         api = builder.api;
         responseType = builder.responseType;
         errorType = builder.errorType;
+        readTimeout = builder.readTimeout;
+        connectTimeout = builder.connectTimeout;
+        writeTimeout = builder.writeTimeout;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
@@ -133,25 +136,35 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
-    public Observable<Response<RT, ET>> rawStream() {
-        return Observable.fromCallable(new ResponseCallable<>(this));
+    public rx.Observable<Response<RT, ET>> rawStream() {
+        return rx.Observable.fromCallable(new ResponseCallable<>(this));
     }
 
     @Override
-    public Observable<RT> stream() {
+    public rx.Observable<RT> stream() {
         ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
-        return Observable.fromCallable(new BodyCallable<>(responseCallable));
+        return rx.Observable.fromCallable(new BodyCallable<>(responseCallable));
     }
 
     @Override
-    public Single<RT> singleStream() {
+    public rx.Single<RT> singleStream() {
         return stream().toSingle();
     }
 
-    @Experimental
     @Override
-    public Completable completableStream() {
+    public rx.Completable completableStream() {
         return stream().toCompletable();
+    }
+
+    @Override
+    public Single<Response<RT, ET>> singleRawResponse() {
+        return Single.fromCallable(new ResponseCallable<>(this));
+    }
+
+    @Override
+    public Single<RT> singleResponse() {
+        ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
+        return Single.fromCallable(new BodyCallable<>(responseCallable));
     }
 
     @Override
@@ -231,9 +244,46 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
+    @Override
+    public CallSpec<RT, ET> connectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    @Override
+    public CallSpec<RT, ET> readTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+        return this;
+    }
+
+    @Override
+    public CallSpec<RT, ET> writeTimeout(int writeTimeout) {
+        this.writeTimeout = writeTimeout;
+        return this;
+    }
+
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
-        return api.client().newCall(builder.request());
+        OkHttpClient client = api.client();
+        client = applyTimeouts(client);
+        return client.newCall(builder.request());
+    }
+
+    private OkHttpClient applyTimeouts(OkHttpClient client) {
+        if (connectTimeout >= 0 || readTimeout >= 0 || writeTimeout >= 0) {
+            OkHttpClient.Builder builder = client.newBuilder();
+            if (connectTimeout >= 0) {
+                builder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
+            }
+            if (readTimeout >= 0) {
+                builder.readTimeout(readTimeout, TimeUnit.SECONDS);
+            }
+            if (writeTimeout >= 0) {
+                builder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+            }
+            return builder.build();
+        }
+        return client;
     }
 
     /** Parsers the OkHttp raw response and returns an response ready to be consumed by the caller. */
@@ -364,17 +414,17 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         }
     }
 
-    /** Callable that returns the successful response body to {@linkplain Subscriber#onNext(Object)}. */
+    /** Callable that returns the successful response body or throws an {@linkplain HttpException}. */
     static final class BodyCallable<RT, ET> implements Callable<RT> {
-        private final Callable<Response<RT, ET>> responseCallable;
+        private final Callable<Response<RT, ET>> callable;
 
-        BodyCallable(Callable<Response<RT, ET>> responseCallable) {
-            this.responseCallable = responseCallable;
+        BodyCallable(Callable<Response<RT, ET>> callable) {
+            this.callable = callable;
         }
 
         @Override
         public RT call() throws Exception {
-            Response<RT, ET> response = responseCallable.call();
+            Response<RT, ET> response = callable.call();
             if (response.isSuccessful()) {
                 return response.body();
             }

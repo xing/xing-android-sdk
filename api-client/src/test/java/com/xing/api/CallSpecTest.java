@@ -15,35 +15,46 @@
  */
 package com.xing.api;
 
+import com.xing.api.CallSpec.Builder;
 import com.xing.api.HttpError.Error.Reason;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.reactivex.Single;
+import io.reactivex.observers.TestObserver;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import okhttp3.mockwebserver.SocketPolicy;
 import okio.Buffer;
+import okio.BufferedSink;
 import rx.observables.BlockingObservable;
 import rx.observers.TestSubscriber;
 import rx.singles.BlockingSingle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assume.assumeThat;
 
 @SuppressWarnings({"MagicNumber", "ConstantConditions"})
 public class CallSpecTest {
@@ -51,6 +62,10 @@ public class CallSpecTest {
     public final MockWebServer server = new MockWebServer();
     @Rule
     public final RecordingSubscriber.Rule subscriberRule = new RecordingSubscriber.Rule();
+    @Rule
+    public final ReactiveRecordingSubscriber.Rule reactiveSubscriberRule = new ReactiveRecordingSubscriber.Rule();
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
 
     public XingApi mockApi;
     public HttpUrl httpUrl;
@@ -574,7 +589,7 @@ public class CallSpecTest {
               .build();
 
         Response<Object, TestMsg> response = spec.execute();
-        assertEnmptyErrorResponse(response, 300);
+        assertEmptyErrorResponse(response, 300);
     }
 
     @Test
@@ -1164,6 +1179,309 @@ public class CallSpecTest {
         assertThat(exception).hasMessage("401 Unauthorized");
     }
 
+    @Test
+    public void specSingleRawResponseRespectsBackpressure() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        ReactiveRecordingSubscriber<Response<String, Object>> subscriber =
+              reactiveSubscriberRule.createWithInitialRequest(0);
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(String.class)
+              .errorAs(Object.class)
+              .build();
+
+        spec.singleRawResponse().toFlowable().subscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertNoEvents();
+
+        subscriber.requestMore(1);
+        subscriber.assertAnyValue().assertCompleted();
+
+        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
+        assertThat(server.getRequestCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void specSingleRawResponseSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"success\",\n"
+              + "  \"code\": 200\n"
+              + '}'));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        Response<TestMsg, Object> response = spec.singleRawResponse().blockingGet();
+
+        assertThat(response.body()).isNotNull();
+        assertThat(response.body().code).isEqualTo(200);
+        assertThat(response.body().msg).isEqualTo("success");
+    }
+
+    @Test
+    public void specSingleRawResponseErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR\",\n"
+              + "  \"message\": \"Terrible Error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"no_field\",\n"
+              + "      \"reason\": \"UNEXPECTED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + '}'));
+
+        CallSpec<Object, HttpError> spec = this.<Object, HttpError>builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        Response<Object, HttpError> response = spec.singleRawResponse().blockingGet();
+
+        assertThat(response.isSuccessful()).isFalse();
+        assertThat(response.error()).isNotNull();
+        assertThat(response.error().message()).isEqualTo("Terrible Error.");
+        assertThat(response.error().name()).isEqualTo("TEST_ERROR");
+        assertThat(response.error().errors().get(0))
+              .isEqualTo(new HttpError.Error("no_field", Reason.UNEXPECTED));
+    }
+
+    @Test
+    public void specSingleRawResponseError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.singleRawResponse().blockingGet();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specSingleRawResponseErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.singleRawResponse().blockingGet();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause())
+                  .isInstanceOf(IOException.class)
+                  .hasMessage("401 Unauthorized");
+        }
+    }
+
+    @Test
+    public void specSingleResponseRespectsBackpressure() throws Exception {
+        server.enqueue(new MockResponse().setBody("Hi"));
+
+        ReactiveRecordingSubscriber<String> subscriber = reactiveSubscriberRule.createWithInitialRequest(0);
+
+        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(String.class)
+              .errorAs(Object.class)
+              .build();
+
+        spec.singleResponse().toFlowable().subscribe(subscriber);
+        assertThat(server.getRequestCount()).isEqualTo(1);
+        subscriber.assertNoEvents();
+
+        subscriber.requestMore(1);
+        subscriber.assertAnyValue().assertCompleted();
+
+        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
+        assertThat(server.getRequestCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void specSingleResponseSuccessResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
+              + "  \"msg\": \"Hey!\",\n"
+              + "  \"code\": 42\n"
+              + '}'));
+
+        CallSpec<TestMsg, Object> spec = this.<TestMsg, Object>builder(HttpMethod.GET, "/", false)
+              .responseAs(TestMsg.class)
+              .build();
+
+        TestMsg result = spec.singleResponse().blockingGet();
+
+        assertThat(result.msg).isEqualTo("Hey!");
+        assertThat(result.code).isEqualTo(42);
+    }
+
+    @Test
+    public void specSingleResponseErrorResponse() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("{\n"
+              + "  \"error_name\": \"TEST_ERROR2\",\n"
+              + "  \"message\": \"Yet another error.\",\n"
+              + "  \"errors\": [\n"
+              + "    {\n"
+              + "      \"field\": \"some_field\",\n"
+              + "      \"reason\": \"FIELD_DEPRECATED\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + '}'));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.DELETE, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.singleResponse().blockingGet();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(HttpException.class);
+
+            HttpException exception = (HttpException) t.getCause();
+            assertThat(exception.code()).isEqualTo(405);
+            assertThat(exception.message()).isEqualTo("Client Error");
+
+            HttpError error = (HttpError) exception.error();
+            assertThat(error.name()).isEqualTo("TEST_ERROR2");
+            assertThat(error.message()).isEqualTo("Yet another error.");
+            assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+        }
+    }
+
+    @Test
+    public void specSingleResponseError() throws Exception {
+        server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.PUT, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.singleResponse().blockingGet();
+            fail("Observable should throw.");
+        } catch (Throwable t) {
+            assertThat(t.getCause()).isInstanceOf(IOException.class);
+        }
+    }
+
+    @Test
+    public void specSingleResponseErrorUnauthorized() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(401));
+
+        CallSpec<Object, Object> spec = builder(HttpMethod.GET, "/", false)
+              .responseAs(Object.class)
+              .build();
+
+        try {
+            spec.singleResponse().blockingGet();
+            fail("This should throw an error.");
+        } catch (Throwable t) {
+            assertThat(t.getCause())
+                  .isInstanceOf(IOException.class)
+                  .hasMessage("401 Unauthorized");
+        }
+    }
+
+    // we cannot test the connect timeout, because MockWebServer immediately accepts connections
+    // and provides no callback to delay this, but we can emulate a read timeout by stalling the response
+    // indefinitely
+    @Test
+    public void canOverrideReadTimeoutPerCall() throws Exception {
+
+        server.setDispatcher(new Dispatcher() {
+            @Override public MockResponse dispatch(RecordedRequest request) {
+                return new MockResponse().setResponseCode(200).setSocketPolicy(SocketPolicy.NO_RESPONSE);
+            }
+        });
+
+        // all in seconds
+        int readTimeout = 1;
+        // the estimated execution time on the client side, plus a buffer
+        // of some milliseconds in case we're slower
+        int executionTime = 200;
+
+        Builder<ResponseBody, Object> builder = builder(HttpMethod.GET, "", false);
+        Single<ResponseBody> singleResponse =
+              builder.responseAs(ResponseBody.class).readTimeout(readTimeout)
+                    .build().singleResponse();
+
+        long before = System.currentTimeMillis();
+        TestObserver<ResponseBody> testObserver = singleResponse.test();
+        long diff = System.currentTimeMillis() - before;
+
+        testObserver.assertError(SocketTimeoutException.class);
+        assertThat(diff).isLessThan((readTimeout * 1000) + executionTime);
+    }
+
+    @Test
+    public void canOverrideWriteTimeoutPerCall() throws Exception {
+        // for some unknown reason the timeout is not applied properly when run on Travis CI
+        // so we skip this test on the CI and only execute it locally
+        assumeThat(System.getenv("TRAVIS"), not(equalTo("true")));
+
+        // throttle the server request reading to one byte per second
+        server.enqueue(new MockResponse().throttleBody(1, 1, TimeUnit.SECONDS));
+
+        RequestBody streamingBody = new RequestBody() {
+            @Override public MediaType contentType() {
+                return MediaType.parse("*/*");
+            }
+
+            @Override public void writeTo(BufferedSink sink) throws IOException {
+                // write two megabytes at once
+                byte[] data = new byte[2 * 1024 * 1024];
+                sink.write(data);
+            }
+        };
+
+        // all in seconds
+        int writeTimeout = 1;
+        // the estimated execution time on the client side, plus a buffer
+        // of some milliseconds in case we're slower
+        int executionTime = 500;
+
+        Builder<ResponseBody, Object> builder = builder(HttpMethod.POST, "", false);
+        Single<ResponseBody> singleResponse =
+              builder.body(streamingBody).responseAs(ResponseBody.class).writeTimeout(writeTimeout)
+                    .build().singleResponse();
+
+        long before = System.currentTimeMillis();
+        TestObserver<ResponseBody> testObserver = singleResponse.test();
+        long diff = System.currentTimeMillis() - before;
+
+        testObserver.assertError(SocketTimeoutException.class);
+        assertThat(diff).isLessThan((writeTimeout * 1000) + executionTime);
+    }
+
+    @Test
+    public void disallowNegativeConnectTimeout() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .connectTimeout(-1);
+    }
+
+    @Test
+    public void disallowNegativeReadTimeout() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .readTimeout(-1);
+    }
+
+    @Test
+    public void disallowNegativeWriteTimeout() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        builder(HttpMethod.GET, "", false)
+              .responseAs(Object.class)
+              .writeTimeout(-1);
+    }
+
     private static void assertSuccessResponse(Response<TestMsg, Object> response, TestMsg expected) {
         assertThat(response.code()).isEqualTo(200);
         assertThat(response.error()).isNull();
@@ -1187,7 +1505,7 @@ public class CallSpecTest {
         assertThat(body.code).isEqualTo(expected.code);
     }
 
-    private static void assertEnmptyErrorResponse(Response<Object, TestMsg> response, int code) {
+    private static void assertEmptyErrorResponse(Response<Object, TestMsg> response, int code) {
         assertThat(response.isSuccessful()).isFalse();
         assertThat(response.code()).isEqualTo(code);
         assertThat(response.body()).isNull();
@@ -1233,14 +1551,12 @@ public class CallSpecTest {
         final CountDownLatch latch = new CountDownLatch(1);
         //noinspection unchecked
         spec.enqueue(new Callback<Object, Object>() {
-            @Override
-            public void onResponse(Response<Object, Object> response) {
+            @Override public void onResponse(Response<Object, Object> response) {
                 responseRef.set(response);
                 latch.countDown();
             }
 
-            @Override
-            public void onFailure(Throwable t) {
+            @Override public void onFailure(Throwable t) {
                 fail("unexpected #onFailure() call");
             }
         });
