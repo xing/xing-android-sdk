@@ -109,6 +109,7 @@ subprojects { project ->
         include '**/*.java'
         exclude '**/R.java'
         exclude '**/BuildConfig.java'
+        exclude 'META-INF/rxjava.properties'
 
         classpath = files()
         configProperties = [
