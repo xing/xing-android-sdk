@@ -37,5 +37,8 @@ public class SafeCalendarTest {
 
         SafeCalendar emptyCalendar = SafeCalendar.EMPTY;
         assertThat(emptyCalendar.isEmpty()).isTrue();
+
+        SafeCalendar startOfEpoch = new SafeCalendar(1970, 0, 0);
+        assertThat(startOfEpoch.isEmpty()).isFalse();
     }
 }
