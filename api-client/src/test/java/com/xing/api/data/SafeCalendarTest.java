@@ -29,4 +29,16 @@ public class SafeCalendarTest {
         assertThat(calendar.get(Calendar.HOUR)).isEqualTo(0);
         assertThat(calendar.get(Calendar.YEAR)).isEqualTo(1970);
     }
+
+    @Test
+    public void testIsEmpty() throws Exception {
+        SafeCalendar notEmtyDate = new SafeCalendar(2016, 5, 15);
+        assertThat(notEmtyDate.isEmpty()).isFalse();
+
+        SafeCalendar emptyCalendar = SafeCalendar.EMPTY;
+        assertThat(emptyCalendar.isEmpty()).isTrue();
+
+        SafeCalendar startOfEpoch = new SafeCalendar(1970, 0, 0);
+        assertThat(startOfEpoch.isEmpty()).isFalse();
+    }
 }

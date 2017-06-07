@@ -33,6 +33,7 @@ import java.util.TimeZone;
 @SuppressWarnings("unused") // Public api.
 public final class SafeCalendar extends GregorianCalendar {
     private static final long serialVersionUID = 1L;
+    public static final SafeCalendar EMPTY = new SafeCalendar();
 
     /** Creates an empty calendar, all the fields are not set. */
     public SafeCalendar() {
@@ -99,6 +100,16 @@ public final class SafeCalendar extends GregorianCalendar {
               + "\"minute\": " + (isSet(MINUTE) ? get(MINUTE) : -1) + ", "
               + "\"second\": " + (isSet(SECOND) ? get(SECOND) : -1)
               + ']';
+    }
+
+    public boolean isEmpty() {
+        return equals(EMPTY)
+              && !isSet(YEAR)
+              && !isSet(MONTH)
+              && !isSet(DAY_OF_MONTH)
+              && !isSet(HOUR_OF_DAY)
+              && !isSet(MINUTE)
+              && !isSet(SECOND);
     }
 
     @Override
