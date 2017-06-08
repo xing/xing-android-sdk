@@ -1,7 +1,9 @@
-<!--- IF YOU REMOVE THIS TEMPLATE WE WILL CLOSE YOUR PULL REQUEST WITHOUT RESPONSE.
-Just read it.
+<!--- 
 First of all, thank you for contributing to our project. 
-Please make sure to fill out the form below so we can get a glimpse of what this PR does. -->
+Please make sure to fill out the form below so we can get a glimpse of what this PR does.
+Note that if you decide not to include this information we may close your PR. 
+-->
+
 _Add your summary here._
 <What has been changed?
 <Why has it been changed?
@@ -12,5 +14,5 @@ _Add your summary here._
 
 __Issue:__ <Github Issue>
 
-Dependencies:__
+__Dependencies:__
 - [ ] Unit Tests
