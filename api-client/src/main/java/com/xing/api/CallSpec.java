@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -102,6 +103,12 @@ public interface CallSpec<RT, ET> extends Cloneable {
      * For a more richer and controllable api consider calling {@link #singleRawResponse()} ()}.
      */
     Single<RT> singleResponse();
+
+    /**
+     * Executes the underlying call as a {@linkplain Completable}. This method will return a Completable that completes
+     * when the response is successful.In case of an error an {@link HttpException} will be thrown.
+     */
+    Completable completableResponse();
 
     /**
      * Executes the underlying call as an {@linkplain Single}. The method will try to return a
