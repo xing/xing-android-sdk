@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -165,6 +166,12 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     public Single<RT> singleResponse() {
         ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
         return Single.fromCallable(new BodyCallable<>(responseCallable));
+    }
+
+    @Override
+    public Completable completableResponse() {
+        ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
+        return Completable.fromCallable(new BodyCallable<>(responseCallable));
     }
 
     @Override
