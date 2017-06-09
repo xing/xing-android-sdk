@@ -1432,7 +1432,8 @@ public class CallSpecTest {
                           HttpError error = (HttpError) exception.error();
                           assertThat(error.name()).isEqualTo("TEST_ERROR2");
                           assertThat(error.message()).isEqualTo("Yet another error.");
-                          assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field", Reason.FIELD_DEPRECATED));
+                          assertThat(error.errors().get(0)).isEqualTo(new HttpError.Error("some_field",
+                                Reason.FIELD_DEPRECATED));
                           return true;
                       }
                       return false;
