@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING AG (http://xing.com/)
+ * Copyright (С) 2016 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class ProfileEditingResourceTest extends ResourceTestCase<ProfileEditingR
     private static final String BODY_COMPANY = "{\n"
           + "  \"company\": {\n"
           + "    \"id\": \"23_abcdef\",\n"
-          + "    \"name\": \"XING AG\",\n"
+          + "    \"name\": \"XING SE\",\n"
           + "    \"title\": \"Software Engineer\",\n"
           + "    \"form_of_employment\": \"FULL_TIME_EMPLOYEE\",\n"
           + "    \"industry\": \"INTERNET\",\n"

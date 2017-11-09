@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 XING AG (http://xing.com/)
+ * Copyright (C) 2016 XING SE (http://xing.com/)
  * Copyright (C) 2014 Square, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
