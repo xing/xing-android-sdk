@@ -22,7 +22,7 @@
     },
     {
       "id": "13_abcdefg",
-      "company_name": "XING AG",
+      "company_name": "XING SE",
       "visited_at_encrypted": "_Vu76Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK6lgs=",
       "reason": {
         "text": "Click on own contacts/bookmarks"
@@ -56,7 +56,7 @@
     },
     {
       "id": "13_abcdefgh",
-      "company_name": "XING AG",
+      "company_name": "XING SE",
       "visited_at_encrypted": "_NMB6Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nK68Hg=",
       "reason": {
         "text": "Click on contact path to <a href=\"https://www.xing.com/profile/Maria_Mueller/N7.04c521\">Maria Müller</a>"
@@ -111,7 +111,7 @@
     },
     {
       "id": "13_abcdefghi",
-      "company_name": "XING AG",
+      "company_name": "XING SE",
       "visited_at_encrypted": "_GhT3Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nKJJ52=",
       "reason": {
         "text": "Search for interests, city"

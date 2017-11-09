@@ -82,7 +82,7 @@
   "professional_experience": {
     "primary_company": {
       "id": "1_abcdef",
-      "name": "XING AG",
+      "name": "XING SE",
       "title": "Softwareentwickler",
       "company_size": "201-500",
       "tag": null,
@@ -108,7 +108,7 @@
     "companies": [
       {
         "id": "1_abcdef",
-        "name": "XING AG",
+        "name": "XING SE",
         "title": "Softwareentwickler",
         "company_size": "201-500",
         "tag": null,

@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING AG (http://xing.com/)
+ * Copyright (С) 2016 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ public class JsonSerializationTest {
         ProfileVisit visit = adapter.fromJson(json);
 
         assertThat(visit.userId()).isEqualTo("3205259_e868c1");
-        assertThat(visit.companyName()).isEqualTo("XING AG");
+        assertThat(visit.companyName()).isEqualTo("XING SE");
         assertThat(visit.visitedAtEncrypted()).isEqualTo("_GhT3Lr1lyqtubPe+TvRzKAHFmxgM34cii57r0nKJJ52=");
         assertThat(visit.reason()).isEqualTo(new ProfileVisit.Reason("Search for interests, city"));
         assertThat(visit.displayName()).isEqualTo("Matthias Männich");
@@ -318,7 +318,7 @@ public class JsonSerializationTest {
     private static Company buildPrimaryCompany() {
         return new Company()
               .id("1_abcdef")
-              .name("XING AG")
+              .name("XING SE")
               .title("Softwareentwickler")
               .companySize(CompanySize.SIZE_201_500)
               .url("http://www.xing.com")
