@@ -221,7 +221,7 @@ final class Converter {
                         }
                     }
                 } finally {
-                    // If the json has an additional key, that was not red, we ignore it.
+                    // If the json has an additional key, that was not read, we ignore it.
                     while (reader.hasNext()) {
                         reader.skipValue();
                     }
