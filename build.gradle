@@ -46,7 +46,8 @@ allprojects {
               androidSupportLib: '23.1.0',
               autoValue        : '1.3',
               autoValueMoshi   : '0.4.2',
-              okHttp           : '3.4.1'
+              okHttp           : '3.4.1',
+              kotlin_version   : '1.2.10'
         ]
 
         /** Used dependencies. */
@@ -59,6 +60,7 @@ allprojects {
               supportCardView          : "com.android.support:cardview-v7:$versions.androidSupportLib",
               supportRecyclerView      : "com.android.support:recyclerview-v7:$versions.androidSupportLib",
               android                  : 'com.google.android:android:4.1.1.4',
+              kotlin                   : "org.jetbrains.kotlin:kotlin:$kotlin_version",
 
               // Ok stack
               okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okHttp",
@@ -133,21 +135,5 @@ subprojects { project ->
             downloadJavadoc = true
             downloadSources = true
         }
-    }
-}
-repositories {
-    mavenCentral()
-}
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }

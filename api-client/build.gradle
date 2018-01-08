@@ -58,7 +58,7 @@ dependencies {
     compile libraries.okhttp
     compile libraries.moshi
     compile libraries.moshiLazyAdapters
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile libraries.kotlin
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit
@@ -78,25 +78,3 @@ ext {
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
-buildscript {
-    ext.kotlin_version = '1.2.10'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-repositories {
-    mavenCentral()
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
