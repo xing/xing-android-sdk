@@ -15,11 +15,7 @@
  */
 package com.xing.api.data.contact
 
-import com.google.auto.value.AutoValue
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-
 import java.io.Serializable
 
 /**
@@ -29,16 +25,15 @@ import java.io.Serializable
  * @see ['Pending Contact Request' resource
  * page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests/sent)
  */
-data class PendingContactRequest (
-
+data class PendingContactRequest(
         /** Returns the id of the user who sent the contact request.  */
         @Json(name = "sender_id")
         val senderId: String,
 
-/** Returns the contact request recipient.  */
-@Json(name = "recipient_id")
-val recipientId: String
-): Serializable {
+        /** Returns the contact request recipient.  */
+        @Json(name = "recipient_id")
+        val recipientId: String
+) : Serializable {
 
     companion object {
         private const val serialVersionUID = 2L
