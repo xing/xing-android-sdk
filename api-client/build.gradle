@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 apply plugin: 'net.ltgt.apt'
-apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'checkstyle'
 
@@ -45,10 +44,6 @@ test {
 }
 
 dependencies {
-    apt libraries.autoValue
-    compileOnly libraries.autoValueAnnotations
-    apt libraries.autoValueMoshi
-    compileOnly libraries.autoValueMoshiAnnotations
 
     provided libraries.rxjava
     provided libraries.rxjava2
@@ -58,7 +53,6 @@ dependencies {
     compile libraries.okhttp
     compile libraries.moshi
     compile libraries.moshiLazyAdapters
-    compile libraries.kotlin
 
     testCompile libraries.mockWebServer
     testCompile libraries.junit

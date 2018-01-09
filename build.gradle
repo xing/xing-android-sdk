@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 buildscript {
-    ext.kotlin_version = '1.2.10'
     repositories {
         jcenter()
         maven {
@@ -24,10 +23,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'net.ltgt.gradle:gradle-apt-plugin:0.9'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-apply plugin: 'kotlin'
 
 allprojects {
     repositories {
@@ -60,7 +57,7 @@ allprojects {
               supportCardView          : "com.android.support:cardview-v7:$versions.androidSupportLib",
               supportRecyclerView      : "com.android.support:recyclerview-v7:$versions.androidSupportLib",
               android                  : 'com.google.android:android:4.1.1.4',
-              kotlin                   : "org.jetbrains.kotlin:kotlin:$kotlin_version",
+//              kotlin                   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
 
               // Ok stack
               okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okHttp",
@@ -76,12 +73,6 @@ allprojects {
               // ReactiveX
               rxjava2                  : 'io.reactivex.rxjava2:rxjava:2.0.7',
               rxjava                   : 'io.reactivex:rxjava:1.2.0',
-
-              // Other utils
-              autoValue                : "com.google.auto.value:auto-value:$versions.autoValue",
-              autoValueAnnotations     : "com.jakewharton.auto.value:auto-value-annotations:$versions.autoValue",
-              autoValueMoshi           : "com.ryanharter.auto.value:auto-value-moshi:$versions.autoValueMoshi",
-              autoValueMoshiAnnotations: "com.ryanharter.auto.value:auto-value-moshi-annotations:$versions.autoValueMoshi",
 
               // Test
               junit                    : 'junit:junit:4.12',
