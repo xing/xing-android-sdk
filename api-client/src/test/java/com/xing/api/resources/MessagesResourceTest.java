@@ -54,8 +54,14 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
         server.enqueue(new MockResponse().setBody(file("messages/single_conversation.json")));
 
         Response<Conversation, HttpError> response = resource.getSingleConversation("conversationid", "myUserId").execute();
-        assertThat(response.body().id()).isEqualTo("51626_4be761");
-        assertThat(response.body().subject()).isEqualTo("Business opportunities");
+        Conversation conversation = response.body();
+        assertThat(conversation.getId()).isEqualTo("51626_4be761");
+        assertThat(conversation.getSubject()).isEqualTo("Business opportunities");
+        assertThat(conversation.getTotalMsgCount()).isEqualTo(2);
+        assertThat(conversation.getUnreadMessageCount()).isEqualTo(1);
+        assertThat(conversation.isReadOnly()).isFalse();
+        assertThat(conversation.getParticipants()).hasSize(2);
+        assertThat(conversation.getLatestMessages()).hasSize(2);
     }
 
     @Test
@@ -64,7 +70,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
 
         Response<List<MessageAttachment>, HttpError> response = resource.getAttachmentsOfConversation("123").execute();
         assertThat(response.body().size()).isEqualTo(1);
-        assertThat(response.body().get(0).id()).isEqualTo("4321_xyza");
+        assertThat(response.body().get(0).getId()).isEqualTo("4321_xyza");
     }
 
     @Test
@@ -99,7 +105,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
 
         Response<List<ConversationMessage>, HttpError> response = resource.getConversationMessages("123", "123").execute();
         assertThat(response.body().size()).isEqualTo(2);
-        assertThat(response.body().get(0).content()).isEqualTo("Yes of course!");
+        assertThat(response.body().get(0).getContent()).isEqualTo("Yes of course!");
     }
 
     @Test
@@ -108,7 +114,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
 
         Response<ConversationMessage, HttpError> response = resource.getSingleConversationMessage("123", "123", "123")
               .execute();
-        assertThat(response.body().content()).isEqualTo("Wait a minute");
+        assertThat(response.body().getContent()).isEqualTo("Wait a minute");
     }
 
     @Test
@@ -148,7 +154,7 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
         server.enqueue(new MockResponse().setBody(file("messages/conversation.json")));
 
         Response<Conversation, HttpError> response = resource.createConversation("", "", "", "").execute();
-        assertThat(response.body().subject()).isEqualTo("The subject!");
+        assertThat(response.body().getSubject()).isEqualTo("The subject!");
     }
 
     @Test
@@ -156,6 +162,6 @@ public final class MessagesResourceTest extends ResourceTestCase<MessagesResourc
         server.enqueue(new MockResponse().setBody(file("messages/conversation_message.json")));
 
         Response<ConversationMessage, HttpError> response = resource.sendMessageToConversation("", "", "").execute();
-        assertThat(response.body().content()).isEqualTo("New message");
+        assertThat(response.body().getContent()).isEqualTo("New message");
     }
 }

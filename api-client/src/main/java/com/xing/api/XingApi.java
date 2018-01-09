@@ -20,7 +20,6 @@ import com.serjltt.moshi.adapters.FallbackOnNullJsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.Resource.Factory;
 import com.xing.api.internal.Experimental;
-import com.xing.api.internal.json.AutoValueFactory;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -389,7 +388,6 @@ public final class XingApi {
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
             moshiBuilder.add(GeoCodeJsonAdapter.FACTORY);
             moshiBuilder.add(TimeZoneJsonAdapter.FACTORY);
-            moshiBuilder.add(AutoValueFactory.create());
 
             // Select adapter by platform.
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);

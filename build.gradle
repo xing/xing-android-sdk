@@ -57,7 +57,7 @@ allprojects {
               supportCardView          : "com.android.support:cardview-v7:$versions.androidSupportLib",
               supportRecyclerView      : "com.android.support:recyclerview-v7:$versions.androidSupportLib",
               android                  : 'com.google.android:android:4.1.1.4',
-//              kotlin                   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+              kotlin                   : "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin_version",
 
               // Ok stack
               okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okHttp",
