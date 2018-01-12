@@ -42,7 +42,7 @@ public class ProfileVisitsResource extends Resource {
 
     /**
      * Returns a list of users who recently visited the specified {@linkplain com.xing.api.data.profile.XingUser
-     * user’s} profile. Entries with {@code null} value for the <strong>user_id</strong> attribute indicate
+     * user's} profile. Entries with {@code null} value for the <strong>user_id</strong> attribute indicate
      * anonymous (non-XING) users (e.g. resulting from Google searches). Any blacklisted
      * users returned will contain {@code null} values in the same way as the
      * <a href="https://dev.xing.com/docs/user_profile#empty-user-profile">empty user profile</a>.
@@ -103,7 +103,7 @@ public class ProfileVisitsResource extends Resource {
 
     /**
      * Returns a list of users who recently visited the authorizing {@linkplain com.xing.api.data.profile.XingUser
-     * user’s} profile. Same as {@linkplain #getUsersProfileVisits(String)}.
+     * user's} profile. Same as {@linkplain #getUsersProfileVisits(String)}.
      * <p>
      * Possible optional <i>query</i> parameters:
      * <table>

@@ -73,7 +73,7 @@ public class UserProfilesResource extends Resource {
     }
 
     /**
-     * Gets a particular {@linkplain XingUser user’s} profile. The data returned by this call will be checked and
+     * Gets a particular {@linkplain XingUser user's} profile. The data returned by this call will be checked and
      * filtered on the basis of the privacy settings of the requested user.
      * <p>
      * Possible optional <i>query</i> parameters:

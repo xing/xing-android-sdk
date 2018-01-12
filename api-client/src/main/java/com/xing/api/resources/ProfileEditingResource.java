@@ -75,8 +75,8 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>employment_status</b></td>
-     * <td>Updates the users employment status. Must be one of ‘ENTREPRENEUR’, ‘FREELANCER’, ‘EMPLOYEE’, ‘EXECUTIVE’,
-     * ‘RECRUITER’, ‘PUBLIC_SERVANT’, ‘UNEMPLOYED’, ‘RETIRED’. See: {@link com.xing.api.data.profile.EmploymentStatus}
+     * <td>Updates the users employment status. Must be one of 'ENTREPRENEUR', 'FREELANCER', 'EMPLOYEE', 'EXECUTIVE',
+     * 'RECRUITER', 'PUBLIC_SERVANT', 'UNEMPLOYED', 'RETIRED'. See: {@link com.xing.api.data.profile.EmploymentStatus}
      * .</td>
      * </tr>
      * <tr>
@@ -422,7 +422,7 @@ public class ProfileEditingResource extends Resource {
      * background.
      * <p>
      * Fields that are not provided are considered as not to be updated. Sending an empty field will unset it.
-     * The <strong>subject</strong> field can’t be empty when the specified school is marked as primary school.
+     * The <strong>subject</strong> field can't be empty when the specified school is marked as primary school.
      * <p>
      * Possible optional <i>query</i> parameters:
      * <table>
@@ -475,7 +475,7 @@ public class ProfileEditingResource extends Resource {
      * Deletes the specified school from the authorizing {@linkplain XingUser user's} educational
      * background.
      * <p>
-     * A school that is marked as primary can’t be deleted.
+     * A school that is marked as primary can't be deleted.
      *
      * @param schoolId Id of the {@link School} to delete. Must NOT be {@code null} or empty.
      * @return A {@linkplain CallSpec callSpec object} ready to execute the request.
@@ -495,7 +495,7 @@ public class ProfileEditingResource extends Resource {
      * <p>
      * The specified school must have a subject.
      * <p>
-     * The {@code schoolId} must be existing. If it does not exists you’ll receive INVALID_PARAMETERS with an
+     * The {@code schoolId} must be existing. If it does not exists you'll receive INVALID_PARAMETERS with an
      * UNKNOWN_VALUE for the
      * field school_id.
      *
@@ -574,7 +574,7 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>until_now</b></td>
      * <td>If {@code true}, no <strong>end_date</strong> should be given. Instead of an end_date, this job will be
-     * displayed as ‘to present’ on the profile.</td>
+     * displayed as 'to present' on the profile.</td>
      * </tr>
      * <tr>
      * <td><b>url</b></td>
@@ -661,7 +661,7 @@ public class ProfileEditingResource extends Resource {
      * <tr>
      * <td><b>until_now</b></td>
      * <td>If {@code true}, no <strong>end_date</strong> should be given. Instead of an end_date, this job will be
-     * displayed as ‘to present’ on the profile.</td>
+     * displayed as 'to present' on the profile.</td>
      * </tr>
      * <tr>
      * <td><b>url</b></td>
@@ -896,10 +896,10 @@ public class ProfileEditingResource extends Resource {
      * </tr>
      * <tr>
      * <td><b>public</b></td>
-     * <td>Specifies whether the profile message should be visible to everyone (true) or just the user’s direct
+     * <td>Specifies whether the profile message should be visible to everyone (true) or just the user's direct
      * contacts
      * (false). The default is true. This parameter corresponds to the "only visible to direct contacts" checkbox on a
-     * user’s profile page.</td>
+     * user's profile page.</td>
      * </tr>
      * </table>
      *
