@@ -21,7 +21,9 @@ import com.xing.api.data.SafeCalendar
 import java.io.Serializable
 
 /**
- * Java representation of an Attachment on the Message.
+ * An Attachment of the Message.
+ *
+ * @see <a href="https://dev.xing.com/docs/resources#messages">Messages Resource</a>
  */
 data class MessageAttachment(
         @Json(name = "id")
@@ -40,7 +42,7 @@ data class MessageAttachment(
         val fileSize: Int
 ) : Serializable {
 
-    override fun equals(other: Any?):Boolean = other is MessageAttachment && id == other.id
+    override fun equals(other: Any?): Boolean = other is MessageAttachment && id == other.id
 
     override fun hashCode(): Int = id.hashCode()
 

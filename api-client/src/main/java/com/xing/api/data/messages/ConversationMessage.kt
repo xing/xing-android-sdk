@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.xing.api.data.messages
 
 import com.squareup.moshi.Json
@@ -22,7 +21,9 @@ import com.xing.api.data.profile.XingUser
 import java.io.Serializable
 
 /**
- * Java representation of a Message in a Conversation.
+ * A Message in a Conversation.
+ *
+ * @see <a href="https://dev.xing.com/docs/resources#messages">Messages Resource</a>
  */
 data class ConversationMessage(
         @Json(name = "id")
@@ -44,7 +45,7 @@ data class ConversationMessage(
         val attachments: List<MessageAttachment>?
 ) : Serializable {
 
-    override fun equals(other: Any?): Boolean  = other is ConversationMessage && messageId == other.messageId
+    override fun equals(other: Any?): Boolean = other is ConversationMessage && messageId == other.messageId
 
     override fun hashCode(): Int = messageId.hashCode()
 
