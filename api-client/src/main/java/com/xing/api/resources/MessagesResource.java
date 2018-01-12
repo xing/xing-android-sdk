@@ -117,7 +117,7 @@ public class MessagesResource extends Resource {
     }
 
     /**
-     * Check if it’s possible to send a message to the selected recipient.
+     * Check if it's possible to send a message to the selected recipient.
      * The call will return a 404 if the recipient is not valid.
      *
      * @param userId ID of the user that should be validated

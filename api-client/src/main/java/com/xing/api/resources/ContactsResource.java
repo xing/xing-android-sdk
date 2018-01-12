@@ -47,13 +47,13 @@ public class ContactsResource extends Resource {
     }
 
     /**
-     * Returns the requested {@linkplain XingUser user’s} contacts.
+     * Returns the requested {@linkplain XingUser user's} contacts.
      * <p>
      * No more than 100 contacts at once (see limit parameter) can be requested, but several requests in parallel can
      * be performed. If executed with {@code limit=0} only the number of contacts will be returned.
      * <p>
-     * If the authorizing {@linkplain XingUser user} does not have access to the requested user’s contacts, the value
-     * for the user’s key will be {@code null} (not an empty list!).
+     * If the authorizing {@linkplain XingUser user} does not have access to the requested user's contacts, the value
+     * for the user's key will be {@code null} (not an empty list!).
      * <p>
      * By default this call can <b>only</b> access the contacts of the authorizing user direct contacts, i.e.
      * second-level contacts. For further level access, please get <a href="api@xing.com">in touch with the support
@@ -98,13 +98,13 @@ public class ContactsResource extends Resource {
     }
 
     /**
-     * Returns the authorizing {@linkplain XingUser user’s} contacts.
+     * Returns the authorizing {@linkplain XingUser user's} contacts.
      * <p>
      * No more than 100 contacts at once (see limit parameter) can be requested, but several requests in parallel can
      * be performed. If executed with {@code limit=0} only the number of contacts will be returned.
      * <p>
-     * If the authorizing {@linkplain XingUser user} does not have access to the requested user’s contacts, the value
-     * for the user’s key will be {@code null} (not an empty list!).
+     * If the authorizing {@linkplain XingUser user} does not have access to the requested user's contacts, the value
+     * for the user's key will be {@code null} (not an empty list!).
      * <p>
      * By default this call can <b>only</b> access the contacts of the authorizing user direct contacts, i.e.
      * second-level contacts. For further level access, please get <a href="api@xing.com">in touch with the support
@@ -198,11 +198,11 @@ public class ContactsResource extends Resource {
      * Get shared contacts.
      *
      * Returns the list of contacts who are direct contacts of both the given and the current user. The nested user
-     * data this call returns are the same as the get user details call. You can’t request more than 100 shared
+     * data this call returns are the same as the get user details call. You can't request more than 100 shared
      * contacts at once (see limit parameter), but you can perform several requests in parallel. If you execute this
      * call with limit=0, it will tell you how many contacts the user has without returning any user data.
      * <p></p>
-     * If the current user doesn’t have access to the requested user’s contacts, he isn’t allowed to see how many
+     * If the current user doesn't have access to the requested user's contacts, he isn't allowed to see how many
      * contacts he has in common with the requested user. In contrast to the get contacts call, this call will fail
      * and return a 403 message instead.
      *
@@ -288,7 +288,7 @@ public class ContactsResource extends Resource {
      * <td><b>user_fields</b></td>
      * <td>List of user attributes to return. If this parameter is not used, only the ID will be returned. For a
      * list of available profile fields, please refer to the example response below. All top-level attributes (e.g.
-     * id, page_name, photo_urls,…) are valid fields. It is also possible to get an even more detailed response, e.g
+     * id, page_name, photo_urls, ...) are valid fields. It is also possible to get an even more detailed response, e.g
      * photo_urls.medium or professional_experience.primary_company.name {@link XingUser}</td>
      * </tr>
      * </table>
@@ -455,7 +455,7 @@ public class ContactsResource extends Resource {
      * </table>
      *
      * @param emails List of one or more comma-separated email addresses.
-     * NOTE: The current user’s email address will be filtered out.
+     * NOTE: The current user's email address will be filtered out.
      */
     public CallSpec<InvitationStats, HttpError> inviteByMail(String... emails) {
         return Resource.<InvitationStats, HttpError>newPostSpec(api, "/v1/users/invite", true)
