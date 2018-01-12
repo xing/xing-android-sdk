@@ -205,13 +205,13 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         assertThat(response.body()).hasSize(1);
 
         ContactRequest contactRequest = response.body().get(0);
-        assertThat(contactRequest.message())
+        assertThat(contactRequest.getMessage())
               .isEqualTo("Sehr geehrter Herr Irgendwas, ich würde Sie gern zu meinen Kontakten hinzufügen");
-        assertThat(contactRequest.receivedAt())
+        assertThat(contactRequest.getReceivedAt())
               .isEqualTo(safeCalendar);
-        assertThat(contactRequest.senderId())
+        assertThat(contactRequest.getSenderId())
               .isEqualTo("6055623_5cf823");
-        assertThat(contactRequest.sender())
+        assertThat(contactRequest.getSender())
               .isEqualTo(new XingUser("6055623_5cf823").displayName("John Doe"));
     }
 
@@ -237,9 +237,9 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         Response<List<PendingContactRequest>, HttpError> response = resource.getPendingContactRequests().execute();
         // If no exception was thrown then the spec is build correctly.
         assertThat(response.body()).containsExactly(
-              PendingContactRequest.create("19828488_2f3282", "8957208_181cf4"),
-              PendingContactRequest.create("19828488_2f3282", "20195666_868fe8"),
-              PendingContactRequest.create("19828488_2f3282", "12022726_a0415b"));
+              new PendingContactRequest("19828488_2f3282", "8957208_181cf4"),
+                new PendingContactRequest("19828488_2f3282", "20195666_868fe8"),
+                new PendingContactRequest("19828488_2f3282", "12022726_a0415b"));
     }
 
     @Test
@@ -302,8 +302,11 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
 
         Response<ContactPaths, HttpError> response = resource.getContactPaths("firstId", "secondId").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().paths().size()).isEqualTo(1);
-        assertThat(response.body().paths().get(0).size()).isEqualTo(4);
+        ContactPaths paths = response.body();
+        assertThat(paths.getPaths().size()).isEqualTo(1);
+        assertThat(paths.getPaths().get(0).getUsers().size()).isEqualTo(4);
+        assertThat(paths.getDistance()).isEqualTo(3);
+        assertThat(paths.getTotal()).isEqualTo(1);
     }
 
     @Test
@@ -335,10 +338,10 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
 
         Response<InvitationStats, HttpError> response = resource.inviteByMail("test@test.test", "email").execute();
         // If no exception was thrown then the spec is build correctly.
-        assertThat(response.body().totalAddresses()).isEqualTo(7);
-        assertThat(response.body().invitationsSent()).isEqualTo(3);
-        assertThat(response.body().alreadyInvited()).containsExactly("kven.sever@example.net");
-        assertThat(response.body().invalidAddresses()).containsExactly("@example.f");
-        assertThat(response.body().alreadyMember().size()).isEqualTo(2);
+        assertThat(response.body().getTotalAddresses()).isEqualTo(7);
+        assertThat(response.body().getInvitationsSent()).isEqualTo(3);
+        assertThat(response.body().getAlreadyInvited()).containsExactly("kven.sever@example.net");
+        assertThat(response.body().getInvalidAddresses()).containsExactly("@example.f");
+        assertThat(response.body().getAlreadyMember().size()).isEqualTo(2);
     }
 }

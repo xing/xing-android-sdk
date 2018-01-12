@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import java.util.List;
  * (almost)
  * all client error responses.
  *
- * @author daniel.hartwich
  * @see <a href="https://dev.xing.com/docs/error_responses">Xing API Error Responses</a>
  */
 public class HttpError {

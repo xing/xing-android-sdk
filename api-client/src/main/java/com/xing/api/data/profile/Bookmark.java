@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import java.io.Serializable;
 
 /**
  * Represents a bookmark response object. See {@linkplain com.xing.api.resources.BookmarksResource Bookmarks Resource}.
- *
- * @author serj.lotutovici
  */
 public class Bookmark implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,8 @@ import java.util.List;
 
 /**
  * Represents the <a href="https://dev.xing.com/docs/resources#profile-visits">'Profile Visits'</a> resource.
- * * <p>
- * Provides methods which allow access to a {@linkplain com.xing.api.data.profile.XingUser user's} profile visits.
  *
- * @author daniel.hartwich
+ * Provides methods which allow access to a {@linkplain com.xing.api.data.profile.XingUser user's} profile visits.
  */
 public class ProfileVisitsResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(ProfileVisitsResource.class) {

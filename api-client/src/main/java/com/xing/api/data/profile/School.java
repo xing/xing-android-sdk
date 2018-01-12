@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Java representation of a {@linkplain XingUser user} school/university.
+ * A {@linkplain XingUser user} school/university.
  *
- * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/post/users/me/educational_background/schools">School Resource</a>
  */
 @SuppressWarnings("unused")

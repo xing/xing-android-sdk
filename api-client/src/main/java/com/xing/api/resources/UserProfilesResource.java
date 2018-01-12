@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,8 @@ import java.util.List;
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#user-profiles">'User Profiles'</a> resource.
  * <p>
- * Provides methods which allow access a {@linkplain XingUser user's} profile information.
  *
- * @author serj.lotutovici
- * @author daniel.hartwich
+ * Provides methods which allow access a {@linkplain XingUser user's} profile information.
  */
 public class UserProfilesResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(UserProfilesResource.class) {

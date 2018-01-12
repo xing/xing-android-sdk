@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.serjltt.moshi.adapters.FallbackOnNullJsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.xing.api.Resource.Factory;
 import com.xing.api.internal.Experimental;
-import com.xing.api.internal.json.AutoValueFactory;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
 import com.xing.api.internal.json.CsvCollectionJsonAdapter;
@@ -389,7 +388,6 @@ public final class XingApi {
             moshiBuilder.add(CsvCollectionJsonAdapter.FACTORY);
             moshiBuilder.add(GeoCodeJsonAdapter.FACTORY);
             moshiBuilder.add(TimeZoneJsonAdapter.FACTORY);
-            moshiBuilder.add(AutoValueFactory.create());
 
             // Select adapter by platform.
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);

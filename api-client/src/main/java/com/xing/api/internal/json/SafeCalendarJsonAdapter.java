@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,7 +174,6 @@ public final class SafeCalendarJsonAdapter<T extends Calendar> extends JsonAdapt
      * @param calendar The calendar to clear
      * @param regEx The reg ex
      */
-    @SuppressWarnings("fallthrough")
     private static void clearCalendarByRegEx(Calendar calendar, String regEx) {
         switch (regEx) {
             case YEAR_DATE_FORMAT: {

@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,8 @@ import java.util.List;
 /**
  * Represents the <a href="https://dev.xing.com/docs/resources#recommendations">'Recommendations'</a> resource.
  * <p>
- * Allows access to the specified user's contacts recommendations.
  *
- * @author daniel.hartwich
+ * Allows access to the specified user's contacts recommendations.
  */
 public class RecommendationsResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(RecommendationsResource.class) {

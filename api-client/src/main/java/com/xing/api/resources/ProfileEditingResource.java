@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,8 @@ import okhttp3.RequestBody;
 /**
  * Represent the <a href="https://dev.xing.com/docs/resources#profile-editing">'Profile Editing'</a> resource.
  * <p>
- * Provides methods which allow to edit the authorizing {@linkplain XingUser user's} profile information.
  *
- * @author daniel.hartwich
- * @author serj.lotutovici
+ * Provides methods which allow to edit the authorizing {@linkplain XingUser user's} profile information.
  */
 public class ProfileEditingResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(ProfileEditingResource.class) {
