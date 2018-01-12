@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * Represent the industry contained in a {@link Company}.
  *
- * @author angelo.marchesin
  * @see <a href="https://dev.xing.com/docs/get/misc/industries">List of Industries Resource</a>
  */
 @SuppressWarnings("unused") // Public api.

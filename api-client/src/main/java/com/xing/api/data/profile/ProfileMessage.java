@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.io.Serializable;
 /**
  * Represents the profile message of a user.
  *
- * @author serj.lotutovici
  * @see <a href="https://dev.xing.com/docs/get/users/:user_id/profile_message">User Profile Message</a>
  */
 public class ProfileMessage implements Serializable {

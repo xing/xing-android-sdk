@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,6 @@ import java.util.List;
  * <p>
  * Provides methods which allow access a {@linkplain XingUser user's} contact list, as well as read, send and
  * respond to contact requests.
- *
- * @author daniel.hartwich
- * @author serj.lotutovici
  */
 public class ContactsResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(ContactsResource.class) {

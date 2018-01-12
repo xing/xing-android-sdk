@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.io.Serializable
 /**
  * Represents the invitation stats response for the invite by mail call.
  *
- * @author daniel.hartwich
  * @see ['Send Invitations' resource page.](https://dev.xing.com/docs/post/users/invite)
  */
 data class InvitationStats(

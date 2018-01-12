@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,6 @@ import java.util.List;
  * <p>
  * Provides methods which allow search for a {@linkplain Job}'s by id or search for a list of {@linkplain Job job's} by
  * criteria or recommended to a user by id.
- *
- * @author daniel.hartwich
- * @author cristian.monforte
  */
 public class JobsResource extends Resource {
     public static final Resource.Factory FACTORY = new Resource.Factory(JobsResource.class) {

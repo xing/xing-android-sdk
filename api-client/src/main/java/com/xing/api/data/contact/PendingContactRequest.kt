@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import java.io.Serializable
 /**
  * Represents a pending contact request of the authorizing user.
  *
- * @author daniel.hartwich
- * @see ['Pending Contact Request' resource
- * page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests/sent)
+ * @see ['Pending Contact Request' resource page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests/sent)
  */
 data class PendingContactRequest(
         /** Returns the id of the user who sent the contact request.  */

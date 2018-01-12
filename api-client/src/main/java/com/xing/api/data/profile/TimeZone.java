@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import com.squareup.moshi.Json;
 
 import java.io.Serializable;
 
-/** Java representation of the time zone in which the {@linkplain XingUser user} is located. */
+/**
+ * Time zone in which the {@linkplain XingUser user} is located.
+ */
 public class TimeZone implements Serializable {
     private static final long serialVersionUID = 1L;
 

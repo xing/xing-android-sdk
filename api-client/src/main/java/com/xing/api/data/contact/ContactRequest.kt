@@ -23,7 +23,6 @@ import java.io.Serializable
 /**
  * Represents a contact request.
  *
- * @author ciprian.ursu
  * @see ['Contact Request' resource page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests)
  */
 data class ContactRequest(

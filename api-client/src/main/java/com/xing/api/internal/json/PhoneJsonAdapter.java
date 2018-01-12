@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 
-/**
- * @author serj.lotutovici
- */
 public class PhoneJsonAdapter extends JsonAdapter<Phone> {
     public static final JsonAdapter.Factory FACTORY = new Factory() {
         @Override

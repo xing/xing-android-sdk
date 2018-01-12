@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.io.Serializable
 /**
  * Represents a data model for contact paths between two [XING users][XingUser].
  *
- * @author daniel.hartwich
  * @see ['Contact Paths' resource page.](https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths)
  */
 data class ContactPaths(

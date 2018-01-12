@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import java.util.List;
  * experience</strong> field as a <strong>primary_company</strong> or a list of pass companies. See {@link XingUser}
  * for more info.
  *
- * @author david.gonzalez
  * @see <a href="https://dev.xing.com/docs/get/users/:id">User Profile Resource</a>
  */
 @SuppressWarnings("unused") // Public api

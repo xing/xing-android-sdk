@@ -1,5 +1,5 @@
 /*
- * Copyright (С) 2016 XING SE (http://xing.com/)
+ * Copyright (С) 2018 XING SE (http://xing.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import java.util.TimeZone;
  * <p>
  * <b>DISCLAIMER: </b> Although this class is {@link java.io.Serializable} there is no guaranty that it will be
  * serialized/de-serialized properly.
- *
- * @author david.gonzalez
  */
 @SuppressWarnings("unused") // Public api.
 public final class SafeCalendar extends GregorianCalendar {
