@@ -47,4 +47,4 @@ data class ContactPaths(
     }
 }
 
-data class Users(@Json(name = "users") val users: List<XingUser>)
+data class Users(@Json(name = "users") val users: List<XingUser>): Serializable
