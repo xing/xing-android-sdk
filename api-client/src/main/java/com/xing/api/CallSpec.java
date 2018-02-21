@@ -75,29 +75,6 @@ public interface CallSpec<RT, ET> extends Cloneable {
     void enqueue(Callback<RT, ET> callback);
 
     /**
-     * Executes the underlying call as an observable. The observable will try to return an
-     * {@link Response} object from which the http result may be obtained.
-     */
-    rx.Observable<Response<RT, ET>> rawStream();
-
-    /**
-     * Executes the underlying call as an observable. This method will try to populate the success response object of
-     * a {@link Response}. In case of an error an {@link HttpException} will be thrown.
-     * For a more richer and controllable api consider calling {@link #rawStream()}.
-     */
-    rx.Observable<RT> stream();
-
-    /**
-     * Same as {@linkplain #stream()} but returning a {@linkplain Single}.
-     */
-    rx.Single<RT> singleStream();
-
-    /**
-     * Same as {@linkplain #stream()} but returning a {@linkplain rx.Completable}.
-     */
-    rx.Completable completableStream();
-
-    /**
      * Executes the underlying call as a {@linkplain Single}. This method will try to populate the success response object
      * of a {@link Response}. In case of an error an {@link HttpException} will be thrown.
      * For a more richer and controllable api consider calling {@link #singleRawResponse()} ()}.
