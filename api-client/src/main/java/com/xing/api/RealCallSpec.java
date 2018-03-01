@@ -137,27 +137,6 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     }
 
     @Override
-    public rx.Observable<Response<RT, ET>> rawStream() {
-        return rx.Observable.fromCallable(new ResponseCallable<>(this));
-    }
-
-    @Override
-    public rx.Observable<RT> stream() {
-        ResponseCallable<RT, ET> responseCallable = new ResponseCallable<>(this);
-        return rx.Observable.fromCallable(new BodyCallable<>(responseCallable));
-    }
-
-    @Override
-    public rx.Single<RT> singleStream() {
-        return stream().toSingle();
-    }
-
-    @Override
-    public rx.Completable completableStream() {
-        return stream().toCompletable();
-    }
-
-    @Override
     public Single<Response<RT, ET>> singleRawResponse() {
         return Single.fromCallable(new ResponseCallable<>(this));
     }

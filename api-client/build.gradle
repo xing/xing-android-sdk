@@ -46,7 +46,6 @@ test {
 
 dependencies {
 
-    provided libraries.rxjava
     provided libraries.rxjava2
     provided libraries.android
 
