@@ -31,7 +31,7 @@ android {
         minSdkVersion versions.androidMinSdk
         targetSdkVersion versions.androidTargetSdk
 
-        versionCode = VERSION_CODE
+        versionCode = Integer.parseInt(VERSION_CODE)
         versionName = VERSION
 
         /**

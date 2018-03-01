@@ -22,7 +22,7 @@ android {
     defaultConfig {
         minSdkVersion versions.androidMinSdk
 
-        versionCode = VERSION_CODE
+        versionCode = Integer.parseInt(VERSION_CODE)
         versionName = VERSION
     }
 
