@@ -29,5 +29,9 @@ public enum FormOfEmployment {
     OWNER,
     PARTNER,
     BOARD_MEMBER,
-    VOLUNTEER
+    VOLUNTEER,
+    SELF_EMPLOYED,
+    SHAREHOLDER,
+    CIVIL_SERVANT,
+    RECRUITER
 }
