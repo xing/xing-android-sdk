@@ -28,7 +28,7 @@ import java.io.Serializable
  */
 data class ContactPaths(
         /** Returns a list of available paths, which are represented as a list of [users][XingUser].  */
-        @Wrapped(value = ["paths", ""])
+        @Wrapped(path = ["paths", ""])
         @Json(name = "paths")
         @ContactPath
         val paths: List<Users>,

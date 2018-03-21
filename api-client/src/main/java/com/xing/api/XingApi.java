@@ -15,8 +15,8 @@
  */
 package com.xing.api;
 
-import com.serjltt.moshi.adapters.FallbackEnumJsonAdapter;
-import com.serjltt.moshi.adapters.FallbackOnNullJsonAdapter;
+import com.serjltt.moshi.adapters.FallbackEnum;
+import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Moshi;
 import com.xing.api.Resource.Factory;
 import com.xing.api.internal.Experimental;
@@ -378,8 +378,8 @@ public final class XingApi {
         public final XingApi build() {
             // Add the custom JSON Adapters to Moshi
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
-            moshiBuilder.add(FallbackOnNullJsonAdapter.FACTORY);
-            moshiBuilder.add(FallbackEnumJsonAdapter.FACTORY);
+            moshiBuilder.add(FallbackOnNull.ADAPTER_FACTORY);
+            moshiBuilder.add(FallbackEnum.ADAPTER_FACTORY);
             moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
             moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
