@@ -41,10 +41,9 @@ allprojects {
               androidTargetSdk : 23,
 
               androidSupportLib: '23.1.0',
-              autoValue        : '1.3',
-              autoValueMoshi   : '0.4.2',
               okHttp           : '3.4.1',
-              kotlin_version   : '1.2.10'
+              kotlin_version   : '1.2.10',
+              moshiVersion     : '1.5.0'
         ]
 
         /** Used dependencies. */
@@ -63,7 +62,8 @@ allprojects {
               okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okHttp",
               okhttpLoggingInterceptor : "com.squareup.okhttp3:logging-interceptor:$versions.okHttp",
               okio                     : 'com.squareup.okio:okio:1.11.0',
-              moshi                    : 'com.squareup.moshi:moshi:1.3.1',
+              moshi                    : "com.squareup.moshi:moshi:$versions.moshiVersion",
+              moshiKotlin              : "com.squareup.moshi:moshi-kotlin:$versions.moshiVersion",
               moshiLazyAdapters        : 'com.serjltt.moshi:moshi-lazy-adapters:2.2',
 
               // Additional network libraries
