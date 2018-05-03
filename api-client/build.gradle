@@ -52,6 +52,7 @@ dependencies {
     compile libraries.okio
     compile libraries.okhttp
     compile libraries.moshi
+    compile libraries.moshiKotlin
     compile libraries.moshiLazyAdapters
     compile libraries.kotlin
 
