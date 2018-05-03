@@ -304,7 +304,7 @@ public class ContactsResourceTest extends ResourceTestCase<ContactsResource> {
         // If no exception was thrown then the spec is build correctly.
         ContactPaths paths = response.body();
         assertThat(paths.getPaths().size()).isEqualTo(1);
-        assertThat(paths.getPaths().get(0).getUsers().size()).isEqualTo(4);
+        assertThat(paths.getPaths().get(0).size()).isEqualTo(4);
         assertThat(paths.getDistance()).isEqualTo(3);
         assertThat(paths.getTotal()).isEqualTo(1);
     }

@@ -15,7 +15,6 @@
  */
 package com.xing.api.data.contact
 
-import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Json
 import com.xing.api.data.profile.XingUser
 import com.xing.api.internal.json.ContactPath
@@ -28,10 +27,9 @@ import java.io.Serializable
  */
 data class ContactPaths(
         /** Returns a list of available paths, which are represented as a list of [users][XingUser].  */
-        @Wrapped(path = ["paths", ""])
         @Json(name = "paths")
         @ContactPath
-        val paths: List<Users>,
+        val paths: List<List<XingUser>>,
 
         /** Returns the smallest distance between the users.  */
         @Json(name = "distance")
@@ -46,5 +44,3 @@ data class ContactPaths(
         private const val serialVersionUID = 2L
     }
 }
-
-data class Users(@Json(name = "users") val users: List<XingUser>): Serializable
