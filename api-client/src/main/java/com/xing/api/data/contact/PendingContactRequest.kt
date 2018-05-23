@@ -16,6 +16,7 @@
 package com.xing.api.data.contact
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
 /**
@@ -23,6 +24,7 @@ import java.io.Serializable
  *
  * @see ['Pending Contact Request' resource page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests/sent)
  */
+@JsonClass(generateAdapter = true)
 data class PendingContactRequest(
         /** Returns the id of the user who sent the contact request.  */
         @Json(name = "sender_id")
