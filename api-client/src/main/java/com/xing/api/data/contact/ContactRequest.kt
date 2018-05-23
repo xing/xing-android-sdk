@@ -16,6 +16,7 @@
 package com.xing.api.data.contact
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.xing.api.data.SafeCalendar
 import com.xing.api.data.profile.XingUser
 import java.io.Serializable
@@ -25,6 +26,7 @@ import java.io.Serializable
  *
  * @see ['Contact Request' resource page.](https://dev.xing.com/docs/get/users/:user_id/contact_requests)
  */
+@JsonClass(generateAdapter = true)
 data class ContactRequest(
         /** Returns the sender id.  */
         @Json(name = "sender_id")

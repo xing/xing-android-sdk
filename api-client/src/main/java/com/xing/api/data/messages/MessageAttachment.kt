@@ -16,6 +16,7 @@
 package com.xing.api.data.messages
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.xing.api.data.SafeCalendar
 import java.io.Serializable
 
@@ -24,6 +25,7 @@ import java.io.Serializable
  *
  * @see <a href="https://dev.xing.com/docs/resources#messages">Messages Resource</a>
  */
+@JsonClass(generateAdapter = true)
 data class MessageAttachment(
         @Json(name = "id")
         val id: String,

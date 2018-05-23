@@ -16,6 +16,7 @@
 package com.xing.api.data.contact
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.xing.api.data.profile.XingUser
 import java.io.Serializable
 
@@ -24,6 +25,7 @@ import java.io.Serializable
  *
  * @see ['Send Invitations' resource page.](https://dev.xing.com/docs/post/users/invite)
  */
+@JsonClass(generateAdapter = true)
 data class InvitationStats(
         /** Returns the total number of addresses received by the api.  */
         @Json(name = "total_addresses")

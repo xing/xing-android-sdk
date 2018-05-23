@@ -16,6 +16,7 @@
 package com.xing.api.data.contact
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.xing.api.data.profile.XingUser
 import com.xing.api.internal.json.ContactPath
 import java.io.Serializable
@@ -25,6 +26,7 @@ import java.io.Serializable
  *
  * @see ['Contact Paths' resource page.](https://dev.xing.com/docs/get/users/:user_id/network/:other_user_id/paths)
  */
+@JsonClass(generateAdapter = true)
 data class ContactPaths(
         /** Returns a list of available paths, which are represented as a list of [users][XingUser].  */
         @Json(name = "paths")
