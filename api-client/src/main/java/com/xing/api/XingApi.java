@@ -17,7 +17,6 @@ package com.xing.api;
 
 import com.serjltt.moshi.adapters.FallbackEnum;
 import com.serjltt.moshi.adapters.FallbackOnNull;
-import com.squareup.moshi.KotlinJsonAdapterFactory;
 import com.squareup.moshi.Moshi;
 import com.xing.api.Resource.Factory;
 import com.xing.api.internal.Experimental;
@@ -381,7 +380,6 @@ public final class XingApi {
             if (moshiBuilder == null) moshiBuilder = new Moshi.Builder();
             moshiBuilder.add(FallbackOnNull.ADAPTER_FACTORY);
             moshiBuilder.add(FallbackEnum.ADAPTER_FACTORY);
-            moshiBuilder.add(new KotlinJsonAdapterFactory());
             moshiBuilder.add(SafeEnumJsonAdapter.FACTORY);
             moshiBuilder.add(ContactPathJsonAdapter.FACTORY);
             moshiBuilder.add(BirthDateJsonAdapter.FACTORY);
