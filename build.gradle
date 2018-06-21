@@ -79,7 +79,7 @@ allprojects {
               mockito                  : 'org.mockito:mockito-all:1.10.19',
               robolectric              : 'org.robolectric:robolectric:3.1.2',
               robolectircSupport       : 'org.robolectric:shadows-support-v4:3.1.2',
-              mockWebServer            : 'com.squareup.okhttp3:mockwebserver:3.2.0',
+              mockWebServer            : "com.squareup.okhttp3:mockwebserver:$versions.okHttp",
               commonsIo                : 'commons-io:commons-io:2.4',
               apacheCommons3           : 'org.apache.commons:commons-lang3:3.4'
         ]
