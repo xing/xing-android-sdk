@@ -55,6 +55,7 @@ dependencies {
     compile libraries.okhttp
     compile libraries.moshi
     compile libraries.moshiLazyAdapters
+
     kapt libraries.moshiKotlinCodegen
 
     testCompile libraries.mockWebServer
@@ -77,7 +78,7 @@ ext {
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.50'
     repositories {
         mavenCentral()
     }

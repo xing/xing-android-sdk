@@ -64,7 +64,8 @@ dependencies {
     }
 
     provided libraries.supportAnnotations
-    provided libraries.supportV4
+
+    compile libraries.supportV4
     compile libraries.singpost
 
     testCompile libraries.junit
