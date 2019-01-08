@@ -30,7 +30,6 @@ import javax.net.ssl.HostnameVerifier;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -189,7 +188,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
     CallSpec<RT, ET> writeTimeout(int writeTimeout);
 
     /**
-     * Overrides the HTTP client's hostname verifier
+     * Overrides the HTTP client's hostname verifier.
      */
     CallSpec<RT, ET> hostnameVerifier(HostnameVerifier hostnameVerifier);
 
