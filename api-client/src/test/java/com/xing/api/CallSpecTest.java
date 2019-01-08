@@ -32,6 +32,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
+
 import io.reactivex.Single;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
@@ -487,6 +491,60 @@ public class CallSpecTest {
 
         Response<TestMsg, Object> response = spec.execute();
         assertSuccessResponse(response, new TestMsg("success", 42));
+    }
+
+    @Test
+    public void specFailsWhenHostnameVerifierCannotVerify() {
+        // Custom url is required to have `https`
+        httpUrl = server.url("https://www.google.com");
+        mockApi = new XingApi.Builder().custom()
+                .apiEndpoint(httpUrl)
+                .build();
+
+        HostnameVerifier noGoogleVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String host, SSLSession sslSession) {
+                return !host.contains("google");
+            }
+        };
+
+        server.enqueue(new MockResponse().setResponseCode(200));
+
+        this.<Void, Void>builder(HttpMethod.GET, "/", false)
+                .responseAs(Void.class)
+                .errorAs(Void.class)
+                .hostnameVerifier(noGoogleVerifier)
+                .build()
+                .completableResponse()
+                .test()
+                .assertError(SSLPeerUnverifiedException.class);
+    }
+
+    @Test
+    public void specSucceedsWhenHostnameVerifierVerifies() {
+        // Custom url is required to have `https`
+        httpUrl = server.url("https://www.google.com");
+        mockApi = new XingApi.Builder().custom()
+                .apiEndpoint(httpUrl)
+                .build();
+
+        HostnameVerifier onlyGoogleVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String host, SSLSession sslSession) {
+                return host.contains("google");
+            }
+        };
+
+        server.enqueue(new MockResponse().setResponseCode(200));
+
+        this.<Void, Void>builder(HttpMethod.GET, "/", false)
+              .responseAs(Void.class)
+              .errorAs(Void.class)
+              .hostnameVerifier(onlyGoogleVerifier)
+              .build()
+              .completableResponse()
+              .test()
+              .assertNoErrors();
     }
 
     @Test
