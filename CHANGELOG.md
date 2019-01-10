@@ -1,11 +1,5 @@
 Change Log
 ==========
-
-Version 3.0.6 *2019-01-10*
-----------------------------
-
-* [Allow setting a hostname verifier](https://github.com/xing/xing-android-sdk/pull/242)
-
 Version 2.0.1 *(2016-11-16)*
 ----------------------------
 
