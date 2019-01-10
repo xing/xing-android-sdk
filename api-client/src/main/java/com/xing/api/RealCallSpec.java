@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import okhttp3.Call;
@@ -52,6 +54,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
     private int connectTimeout = -1;
     private int readTimeout = -1;
     private int writeTimeout = -1;
+    private HostnameVerifier hostnameVerifier;
 
     RealCallSpec(CallSpec.Builder<RT, ET> builder) {
         this.builder = builder;
@@ -61,6 +64,7 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         readTimeout = builder.readTimeout;
         connectTimeout = builder.connectTimeout;
         writeTimeout = builder.writeTimeout;
+        hostnameVerifier = builder.hostnameVerifier;
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone") // This is a final type & this saves clearing state.
@@ -248,10 +252,17 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
         return this;
     }
 
+    @Override
+    public CallSpec<RT, ET> hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
+        return this;
+    }
+
     /** Returns a raw {@link Call} pre-building the targeted request. */
     private Call createRawCall() {
         OkHttpClient client = api.client();
         client = applyTimeouts(client);
+        client = applyHostnameVerifier(client);
         return client.newCall(builder.request());
     }
 
@@ -267,6 +278,15 @@ final class RealCallSpec<RT, ET> implements CallSpec<RT, ET> {
             if (writeTimeout >= 0) {
                 builder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
             }
+            return builder.build();
+        }
+        return client;
+    }
+
+    private OkHttpClient applyHostnameVerifier(OkHttpClient client) {
+        if (hostnameVerifier != null) {
+            OkHttpClient.Builder builder = client.newBuilder();
+            builder.hostnameVerifier(hostnameVerifier);
             return builder.build();
         }
         return client;

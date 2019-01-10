@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HostnameVerifier;
+
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import okhttp3.FormBody;
@@ -185,6 +187,11 @@ public interface CallSpec<RT, ET> extends Cloneable {
      */
     CallSpec<RT, ET> writeTimeout(int writeTimeout);
 
+    /**
+     * Overrides the HTTP client's hostname verifier.
+     */
+    CallSpec<RT, ET> hostnameVerifier(HostnameVerifier hostnameVerifier);
+
     /** Creates and returns a copy of <strong>this</strong> object losing the executable state. */
     CallSpec<RT, ET> clone();
 
@@ -231,6 +238,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
         int connectTimeout = -1;
         int readTimeout = -1;
         int writeTimeout = -1;
+        HostnameVerifier hostnameVerifier;
 
         // For now block the possibility to build outside this package.
         Builder(XingApi api, HttpMethod httpMethod, String resourcePath, boolean isFormEncoded) {
@@ -260,6 +268,7 @@ public interface CallSpec<RT, ET> extends Cloneable {
             connectTimeout = builder.connectTimeout;
             readTimeout = builder.readTimeout;
             writeTimeout = builder.writeTimeout;
+            hostnameVerifier = builder.hostnameVerifier;
         }
 
         /** Replaces path parameter {@code name} with provided {@code values}. */
@@ -361,6 +370,11 @@ public interface CallSpec<RT, ET> extends Cloneable {
                 throw new IllegalArgumentException("timeout must be >= 0");
             }
             this.writeTimeout = writeTimeout;
+            return this;
+        }
+
+        public Builder<RT, ET> hostnameVerifier(HostnameVerifier hostnameVerifier) {
+            this.hostnameVerifier = hostnameVerifier;
             return this;
         }
 
