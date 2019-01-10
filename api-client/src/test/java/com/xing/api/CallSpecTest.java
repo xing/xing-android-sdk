@@ -501,10 +501,10 @@ public class CallSpecTest {
                 .apiEndpoint(httpUrl)
                 .build();
 
-        HostnameVerifier noGoogleVerifier = new HostnameVerifier() {
+        HostnameVerifier failingVerifier = new HostnameVerifier() {
             @Override
             public boolean verify(String host, SSLSession sslSession) {
-                return !host.contains("google");
+                return false;
             }
         };
 
@@ -513,7 +513,7 @@ public class CallSpecTest {
         this.<Void, Void>builder(HttpMethod.GET, "/", false)
                 .responseAs(Void.class)
                 .errorAs(Void.class)
-                .hostnameVerifier(noGoogleVerifier)
+                .hostnameVerifier(failingVerifier)
                 .build()
                 .completableResponse()
                 .test()
@@ -528,10 +528,10 @@ public class CallSpecTest {
                 .apiEndpoint(httpUrl)
                 .build();
 
-        HostnameVerifier onlyGoogleVerifier = new HostnameVerifier() {
+        HostnameVerifier succeedingVerifier = new HostnameVerifier() {
             @Override
             public boolean verify(String host, SSLSession sslSession) {
-                return host.contains("google");
+                return true;
             }
         };
 
@@ -540,7 +540,7 @@ public class CallSpecTest {
         this.<Void, Void>builder(HttpMethod.GET, "/", false)
               .responseAs(Void.class)
               .errorAs(Void.class)
-              .hostnameVerifier(onlyGoogleVerifier)
+              .hostnameVerifier(succeedingVerifier)
               .build()
               .completableResponse()
               .test()
