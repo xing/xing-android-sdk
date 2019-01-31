@@ -16,6 +16,7 @@ script:
   - ./gradlew clean check --stacktrace
 
 before_install:
+  - yes | sdkmanager "platforms;android-28"
   - export TZ=Europe/Berlin
 
 after_success:
