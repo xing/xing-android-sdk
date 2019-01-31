@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 3.0.7 *2019-01-31*
+
+* Update moshi to 1.8.0
+* Update minSdk to 21
+* Update targetSdk to 28
+* Update supportLib to 28.0.0
+* Update build tools to 28.0.3
+* Update kotlin version to 1.3.20
+
 Version 3.0.6 *2019-01-10*
 ----------------------------
 
