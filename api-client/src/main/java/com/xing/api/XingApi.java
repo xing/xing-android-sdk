@@ -115,9 +115,14 @@ public final class XingApi {
         this.resourceFactories = new LinkedHashSet<>(resourceFactories);
         this.resourceFactories.addAll(BUILT_IN_FACTORIES);
     }
-
-    /** Return a {@link Resource} instance specified by the provided class. */
-    @SuppressWarnings("unchecked")
+    
+    /**
+     * Return a {@link Resource} instance specified by the provided class.
+     *
+     * @deprecated This function might use reflection if the factory is not provided, 
+     * better pass this object to the resource to be created instead.
+     */
+    @Deprecated @SuppressWarnings("unchecked")
     public <T extends Resource> T resource(Class<T> resource) {
         Resource res = resourcesCache.get(checkNotNull(resource, "resource == null"));
         if (res == null) {
