@@ -51,7 +51,7 @@ data. For example, let's assume that you need to access the users profile data:
 ```java
 
     // First you need to select the resource you want to access.
-    UserProfileResource resource = xingApi.resource(UserProfileResource.class);
+    UserProfileResource resource = new UserProfileResource(xingApi);
       
     // Get the spec for the user profile request.
     CallSpec<XingUser, HttpError> spec = resource.getOwnProfile();

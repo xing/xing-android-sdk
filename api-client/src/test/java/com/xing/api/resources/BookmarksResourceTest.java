@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Test each resource method against a success server response. This test is a minimal safety major to ensure that each
  * method works as expected. In case if the json response changes on the server side, this test WILL NOT reflect that.
  */
-@SuppressWarnings({"ConstantConditions", "CollectionWithoutInitialCapacity"})
+@SuppressWarnings({"CollectionWithoutInitialCapacity"})
 public class BookmarksResourceTest extends ResourceTestCase<BookmarksResource> {
     public BookmarksResourceTest() {
         super(BookmarksResource.class);

@@ -29,14 +29,8 @@ import java.util.List;
  * Provides methods which allow access to a {@linkplain com.xing.api.data.profile.XingUser user's} profile visits.
  */
 public class ProfileVisitsResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(ProfileVisitsResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new ProfileVisitsResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    ProfileVisitsResource(XingApi api) {
+    public ProfileVisitsResource(XingApi api) {
         super(api);
     }
 

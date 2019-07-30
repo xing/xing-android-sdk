@@ -30,14 +30,8 @@ import java.util.List;
  * Allows access to the specified user's contacts recommendations.
  */
 public class RecommendationsResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(RecommendationsResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new RecommendationsResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    RecommendationsResource(XingApi api) {
+    public RecommendationsResource(XingApi api) {
         super(api);
     }
 

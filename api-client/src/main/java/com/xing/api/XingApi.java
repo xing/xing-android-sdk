@@ -18,7 +18,6 @@ package com.xing.api;
 import com.serjltt.moshi.adapters.FallbackEnum;
 import com.serjltt.moshi.adapters.FallbackOnNull;
 import com.squareup.moshi.Moshi;
-import com.xing.api.Resource.Factory;
 import com.xing.api.internal.Experimental;
 import com.xing.api.internal.json.BirthDateJsonAdapter;
 import com.xing.api.internal.json.ContactPathJsonAdapter;
@@ -28,26 +27,9 @@ import com.xing.api.internal.json.PhoneJsonAdapter;
 import com.xing.api.internal.json.SafeCalendarJsonAdapter;
 import com.xing.api.internal.json.SafeEnumJsonAdapter;
 import com.xing.api.internal.json.TimeZoneJsonAdapter;
-import com.xing.api.resources.BookmarksResource;
-import com.xing.api.resources.ContactsResource;
-import com.xing.api.resources.GroupsResource;
-import com.xing.api.resources.JobsResource;
-import com.xing.api.resources.MessagesResource;
-import com.xing.api.resources.MiscellaneousResource;
-import com.xing.api.resources.ProfileEditingResource;
-import com.xing.api.resources.ProfileVisitsResource;
-import com.xing.api.resources.RecommendationsResource;
-import com.xing.api.resources.UserProfilesResource;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executor;
 
 import okhttp3.HttpUrl;
@@ -58,16 +40,7 @@ import static com.xing.api.Utils.checkNotNull;
 import static com.xing.api.Utils.stateNull;
 
 /**
- * Main access point for the XING API. Creates and holds instances of {@linkplain Response resources} that provide access
- * points and response/error handling for XING APIs.
- * <p>
- * Usage:
- * <pre>{@code
- *           // Will instantiate ContactsResource.
- *          ContactsResource resource = xingApi.resource(ContactsResource.class);
- *     }</pre>
- * <p>
- * Two states of XingApi are supported:
+ * Main access point for the XING API. Two states of XingApi are supported:
  * <dl>
  * <li>Logged in - Requires a user's access token and token secret (See {@linkplain XingApi.Builder}.)</li>
  * <li>Logged out - See {@linkplain Builder#loggedOut()}</li>
@@ -76,27 +49,8 @@ import static com.xing.api.Utils.stateNull;
  * @since 2.0.0
  */
 public final class XingApi {
-    /** A list of built in factories for resources shipped with the library. */
-    private static final List<Resource.Factory> BUILT_IN_FACTORIES = new ArrayList<>();
-
-    static {
-        BUILT_IN_FACTORIES.add(BookmarksResource.FACTORY);
-        BUILT_IN_FACTORIES.add(ContactsResource.FACTORY);
-        BUILT_IN_FACTORIES.add(GroupsResource.FACTORY);
-        BUILT_IN_FACTORIES.add(JobsResource.FACTORY);
-        BUILT_IN_FACTORIES.add(MessagesResource.FACTORY);
-        BUILT_IN_FACTORIES.add(MiscellaneousResource.FACTORY);
-        BUILT_IN_FACTORIES.add(ProfileEditingResource.FACTORY);
-        BUILT_IN_FACTORIES.add(ProfileVisitsResource.FACTORY);
-        BUILT_IN_FACTORIES.add(RecommendationsResource.FACTORY);
-        BUILT_IN_FACTORIES.add(UserProfilesResource.FACTORY);
-    }
-
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final Map<Class<? extends Resource>, Resource> resourcesCache = new LinkedHashMap<>();
     private final List<AuthErrorCallback> authErrorCallbacks = new LinkedList<>();
 
-    private final Set<Resource.Factory> resourceFactories;
     private final OkHttpClient client;
     private final HttpUrl apiEndpoint;
     private final Converter converter;
@@ -104,50 +58,12 @@ public final class XingApi {
     private final Executor callbackExecutor;
 
     XingApi(OkHttpClient client, HttpUrl apiEndpoint, Converter converter, CallbackAdapter callbackAdapter,
-          Executor callbackExecutor, List<Resource.Factory> resourceFactories) {
+          Executor callbackExecutor) {
         this.client = client;
         this.apiEndpoint = apiEndpoint;
         this.converter = converter;
         this.callbackAdapter = callbackAdapter;
         this.callbackExecutor = callbackExecutor;
-
-        /* Initialise the factories and add custom ones. */
-        this.resourceFactories = new LinkedHashSet<>(resourceFactories);
-        this.resourceFactories.addAll(BUILT_IN_FACTORIES);
-    }
-    
-    /**
-     * Return a {@link Resource} instance specified by the provided class.
-     *
-     * @deprecated This function might use reflection if the factory is not provided, 
-     * better pass this object to the resource to be created instead.
-     */
-    @Deprecated @SuppressWarnings("unchecked")
-    public <T extends Resource> T resource(Class<T> resource) {
-        Resource res = resourcesCache.get(checkNotNull(resource, "resource == null"));
-        if (res == null) {
-            // First try to create the resource via a factory
-            for (Resource.Factory factory : resourceFactories) {
-                res = factory.create(resource, this);
-
-                if (res != null) { // yay!
-                    resourcesCache.put(resource, res);
-                    return (T) res;
-                }
-            }
-
-            // Fallback to the reflection path
-            checkResourceClassDeclaration(resource);
-            try {
-                Constructor<? extends Resource> constructor = resource.getDeclaredConstructor(XingApi.class);
-                constructor.setAccessible(true);
-                res = constructor.newInstance(this);
-                resourcesCache.put(resource, res);
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Resource class malformed.", ex);
-            }
-        }
-        return (T) res;
     }
 
     /** Returns the api endpoint for <strong>this</strong> client instance. */
@@ -195,14 +111,6 @@ public final class XingApi {
         for (int i = 0, size = authErrorCallbacks.size(); i < size; i++) {
             AuthErrorCallback callback = authErrorCallbacks.get(i);
             if (callback != null) callbackAdapter.adapt(callback).onAuthError(rawResponse);
-        }
-    }
-
-    /** Throws an exception if class was declared non-static or non-final. */
-    private static void checkResourceClassDeclaration(Class<? extends Resource> resource) {
-        int modifiers = resource.getModifiers();
-        if (resource.isLocalClass() || (resource.isMemberClass() && !Modifier.isStatic(modifiers))) {
-            throw new IllegalArgumentException("Resource class must be declared static.");
         }
     }
 
@@ -301,7 +209,6 @@ public final class XingApi {
      * @since 2.1.0
      */
     public static class BuildStep<T extends BuildStep> {
-        private final List<Factory> resourceFactory = new ArrayList<>();
         private OkHttpClient.Builder clientBuilder;
         private Moshi.Builder moshiBuilder;
         private Executor callbackExecutor;
@@ -309,12 +216,6 @@ public final class XingApi {
 
         BuildStep() {
             apiEndpoint = HttpUrl.parse("https://api.xing.com/");
-        }
-
-        /** Add a resource factory for a specific {@linkplain Resource resource}. */
-        public final T addResourceFactory(Resource.Factory factory) {
-            resourceFactory.add(checkNotNull(factory, "factory == null"));
-            return self();
         }
 
         /**
@@ -398,7 +299,7 @@ public final class XingApi {
             CallbackAdapter adapter = Platform.get().callbackAdapter(callbackExecutor);
             Converter converter = new Converter(moshiBuilder.build());
 
-            return new XingApi(clientBuilder().build(), apiEndpoint, converter, adapter, callbackExecutor, resourceFactory);
+            return new XingApi(clientBuilder().build(), apiEndpoint, converter, adapter, callbackExecutor);
         }
     }
 }

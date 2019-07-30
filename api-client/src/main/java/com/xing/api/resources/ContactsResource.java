@@ -35,14 +35,8 @@ import java.util.List;
  * respond to contact requests.
  */
 public class ContactsResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(ContactsResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new ContactsResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    ContactsResource(XingApi api) {
+    public ContactsResource(XingApi api) {
         super(api);
     }
 
