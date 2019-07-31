@@ -7,7 +7,7 @@ new application.
 ---
 
 [![Build Status](https://travis-ci.org/xing/xing-android-sdk.svg?branch=master)](https://travis-ci.org/xing/xing-android-sdk)
-[![Latest Build](https://img.shields.io/maven-central/v/com.xing.api/api-client.svg)](http://search.maven.org/#search%7Cga%7C1%7Ccom.xing.api) [![git-brag-stats](https://labs.turbo.run/git-brag?user=xing&repo=xing-android-sdk)](https://github.com/turbo/git-brag)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xing.api/api-client.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.xing.api%22%20AND%20a:%22api-client%22) 
 
 Add all the power of the XING platform to your app.
 
