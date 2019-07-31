@@ -182,7 +182,7 @@ public class ProfileActivity extends BaseActivity {
                   .accessToken(Prefs.getInstance(ProfileActivity.this).getOauthToken())
                   .accessSecret(Prefs.getInstance(ProfileActivity.this).getOauthSecret())
                   .build();
-            UserProfilesResource profilesResource = api.resource(UserProfilesResource.class);
+            UserProfilesResource profilesResource = new UserProfilesResource(api);
             Response<XingUser, HttpError> response = null;
             try {
                 response = profilesResource.getOwnProfile().execute();

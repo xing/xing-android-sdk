@@ -31,14 +31,8 @@ import java.util.List;
  * criteria or recommended to a user by id.
  */
 public class JobsResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(JobsResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new JobsResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    JobsResource(XingApi api) {
+    public JobsResource(XingApi api) {
         super(api);
     }
 

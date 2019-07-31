@@ -31,14 +31,8 @@ import static com.squareup.moshi.Types.newParameterizedType;
  * Represents the <a href="https://dev.xing.com/docs/resources#miscellaneous">Miscellaneous</a> resource.
  */
 public class MiscellaneousResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(MiscellaneousResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new MiscellaneousResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    MiscellaneousResource(XingApi api) {
+    public MiscellaneousResource(XingApi api) {
         super(api);
     }
 

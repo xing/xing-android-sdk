@@ -32,14 +32,8 @@ import java.util.List;
  * Provides methods which allow access a {@linkplain XingUser user's} profile information.
  */
 public class UserProfilesResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(UserProfilesResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new UserProfilesResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    UserProfilesResource(XingApi api) {
+    public UserProfilesResource(XingApi api) {
         super(api);
     }
 

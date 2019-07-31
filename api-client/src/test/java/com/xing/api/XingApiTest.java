@@ -16,7 +16,6 @@
 package com.xing.api;
 
 import com.squareup.moshi.Moshi;
-import com.xing.api.Resource.Factory;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,72 +45,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class XingApiTest {
     @Rule
     public final MockWebServer server = new MockWebServer();
-
-    @Test
-    public void getRightResourceImpl() throws Exception {
-        XingApi api = buildDefaultApi();
-        Resource resource = api.resource(LegalTestResource.class);
-        assertThat(resource).isInstanceOf(LegalTestResource.class);
-
-        LegalTestResource testResource = api.resource(LegalTestResource.class);
-        assertThat(testResource).isSameAs(resource);
-    }
-
-    @Test
-    public void getResourceViaFactory() throws Exception {
-        XingApi api = new XingApi.Builder()
-              .custom()
-              .addResourceFactory(new Factory(FactoryResource.class) {
-                  @Override public Resource create(XingApi api) {
-                      return new FactoryResource(api, "test");
-                  }
-              }).build();
-        Resource resource = api.resource(FactoryResource.class);
-        assertThat(resource).isInstanceOf(FactoryResource.class);
-
-        FactoryResource testResource = api.resource(FactoryResource.class);
-        assertThat(testResource).isSameAs(resource);
-    }
-
-    @Test
-    public void throwsForNonStaticResourceClass() throws Exception {
-        try {
-            buildDefaultApi().resource(IllegalTestResource2.class);
-            fail("Should fail on non-static class.");
-        } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("Resource class must be declared static.");
-        }
-    }
-
-    @Test
-    public void throwsForMethodInnerResourceClass() throws Exception {
-        final class InnerTestResource extends Resource {
-            InnerTestResource(XingApi api) {
-                super(api);
-            }
-        }
-
-        try {
-            buildDefaultApi().resource(InnerTestResource.class);
-            fail("Should fail on non-static class.");
-        } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("Resource class must be declared static.");
-        }
-    }
-
-    @Test
-    public void throwsForResourceClassOverridingConstructor() throws Exception {
-        try {
-            buildDefaultApi().resource(LegalTestResourceOverridesConstructor.class);
-            fail("Should fail on overridden constructor.");
-        } catch (Exception ex) {
-            assertThat(ex).isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("Resource class malformed.")
-                  .hasCauseInstanceOf(NoSuchMethodException.class);
-        }
-    }
 
     @SuppressWarnings("ConstantConditions") // Passes nulls intentionally.
     @Test
@@ -218,7 +151,7 @@ public class XingApiTest {
               .callbackExecutor(executor)
               .build();
 
-        LegalTestResource resource = api.resource(LegalTestResource.class);
+        LegalTestResource resource = new LegalTestResource(api);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
         server.enqueue(new MockResponse());
@@ -254,7 +187,7 @@ public class XingApiTest {
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
               .build();
-        LegalTestResource resource = api.resource(LegalTestResource.class);
+        LegalTestResource resource = new LegalTestResource(api);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
         server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
@@ -290,7 +223,7 @@ public class XingApiTest {
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
               .build();
-        LegalTestResource resource = api.resource(LegalTestResource.class);
+        LegalTestResource resource = new LegalTestResource(api);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
         server.enqueue(new MockResponse());
@@ -316,7 +249,7 @@ public class XingApiTest {
               .apiEndpoint(server.url("/"))
               .callbackExecutor(executor)
               .build();
-        LegalTestResource resource = api.resource(LegalTestResource.class);
+        LegalTestResource resource = new LegalTestResource(api);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
         final AtomicReference<Response<?, ResponseBody>> ref = new AtomicReference<>();
@@ -352,7 +285,7 @@ public class XingApiTest {
               .apiEndpoint(server.url("/"))
               .build();
 
-        LegalTestResource resource = api.resource(LegalTestResource.class);
+        LegalTestResource resource = new LegalTestResource(api);
         CallSpec<String, HttpError> spec = resource.simpleSpec();
 
         AuthErrorCallback callback1 = spy(AuthErrorCallback.class);
@@ -432,17 +365,10 @@ public class XingApiTest {
         } catch (IllegalStateException expected) {
             assertThat(expected).hasMessage("Only one instance of Moshi is allowed");
         }
-
-        try {
-            buildStep.addResourceFactory(null);
-            fail("Should fail on null factory");
-        } catch (NullPointerException expected) {
-            assertThat(expected).hasMessage("factory == null");
-        }
     }
 
     static final class LegalTestResource extends Resource {
-        LegalTestResource(XingApi api) {
+        public LegalTestResource(XingApi api) {
             super(api);
         }
 

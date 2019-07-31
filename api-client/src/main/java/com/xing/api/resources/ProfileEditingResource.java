@@ -46,14 +46,8 @@ import okhttp3.RequestBody;
  * Provides methods which allow to edit the authorizing {@linkplain XingUser user's} profile information.
  */
 public class ProfileEditingResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(ProfileEditingResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new ProfileEditingResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    ProfileEditingResource(XingApi api) {
+    public ProfileEditingResource(XingApi api) {
         super(api);
     }
 

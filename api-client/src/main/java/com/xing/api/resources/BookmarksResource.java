@@ -30,14 +30,8 @@ import java.util.List;
  * Provides methods which allow access to a {@linkplain com.xing.api.data.profile.XingUser user's} bookmarks.
  */
 public class BookmarksResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(BookmarksResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new BookmarksResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    BookmarksResource(XingApi api) {
+    public BookmarksResource(XingApi api) {
         super(api);
     }
 

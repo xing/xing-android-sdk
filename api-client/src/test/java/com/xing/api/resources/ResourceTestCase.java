@@ -52,7 +52,7 @@ public class ResourceTestCase<T extends Resource> {
               .custom()
               .apiEndpoint(server.url("/"))
               .build();
-        resource = mockApi.resource(resourceClass);
+        resource = resourceClass.getDeclaredConstructor(XingApi.class).newInstance(mockApi);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ResourceTestCase<T extends Resource> {
      * <p>
      * Each {@code public} method declared in the {@linkplain Resource} must return a {@linkplain CallSpec}.
      */
-    private void validateResource() throws Exception {
+    private void validateResource() {
         // All public methods must return a call spec.
         Method[] methods = resourceClass.getDeclaredMethods();
         //noinspection SSBasedInspection

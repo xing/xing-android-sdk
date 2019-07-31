@@ -34,14 +34,8 @@ import java.util.List;
  * Resource for all the possible groups calls.
  */
 public class GroupsResource extends Resource {
-    public static final Resource.Factory FACTORY = new Resource.Factory(GroupsResource.class) {
-        @Override public Resource create(XingApi api) {
-            return new GroupsResource(api);
-        }
-    };
-
     /** Creates a resource instance. This should be the only constructor declared by child classes. */
-    protected GroupsResource(XingApi api) {
+    public GroupsResource(XingApi api) {
         super(api);
     }
 
