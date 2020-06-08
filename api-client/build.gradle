@@ -47,23 +47,26 @@ test {
 
 dependencies {
 
-    provided libraries.rxjava2
-    provided libraries.android
+    compileOnly libraries.rxjava2
+    compileOnly libraries.android
 
-    compile libraries.kotlin
-    compile libraries.okio
-    compile libraries.okhttp
-    compile libraries.moshi
-    compile libraries.moshiLazyAdapters
+    testCompileOnly libraries.rxjava2
+    testCompileOnly libraries.android
+
+    implementation libraries.kotlin
+    implementation libraries.okio
+    implementation libraries.okhttp
+    implementation libraries.moshi
+    implementation libraries.moshiLazyAdapters
 
     kapt libraries.moshiKotlinCodegen
 
-    testCompile libraries.mockWebServer
-    testCompile libraries.junit
-    testCompile libraries.assertj
-    testCompile libraries.mockito
-    testCompile libraries.commonsIo
-    testCompile libraries.apacheCommons3
+    testImplementation libraries.mockWebServer
+    testImplementation libraries.junit
+    testImplementation libraries.assertj
+    testImplementation libraries.mockito
+    testImplementation libraries.commonsIo
+    testImplementation libraries.apacheCommons3
 }
 
 /*
