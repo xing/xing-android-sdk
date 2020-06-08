@@ -400,6 +400,48 @@ public class CallSpecTest {
     }
 
     @Test
+    public void builderEnsuresPatchRequestAcceptsHeaders() {
+        CallSpec.Builder builder = builder(HttpMethod.PATCH, "url", false)
+              .responseAs(Object.class)
+              .header("Authorization", "token");
+
+        Request request =  builder.build().request();
+        assertThat(request.method()).isEqualTo(HttpMethod.PATCH.method());
+        assertThat(request.headers().names()).contains("Authorization");
+        assertThat(request.headers().values("Authorization")).isNotEmpty().hasSize(1).contains("token");
+    }
+
+    @Test
+    public void builderEnsuresPatchRequestAllowsJsonBody() throws Exception {
+        TestMsg body = new TestMsg("New content to send!", 1);
+        CallSpec.Builder builder = builder(HttpMethod.PATCH, "url", false)
+              .responseAs(Object.class)
+              .body(TestMsg.class, body);
+        // Build the CallSpec so that we can build the request.
+        CallSpec callSpec = builder.build();
+        assertRequestHasBody(callSpec.request(), body, 39);
+    }
+
+    @Test
+    public void builderEnsuresPatchRequestAllowsRawBody() throws Exception {
+        String content = "content";
+        CallSpec.Builder builder = builder(HttpMethod.PATCH, "", false)
+              .responseAs(Object.class)
+              .body(RequestBody.create(MediaType.parse("application/offset+octet-stream"), content.getBytes()));
+        // Build the CallSpec so that we can build the request.
+        CallSpec callSpec = builder.build();
+
+        Request request = callSpec.request();
+        RequestBody body = request.body();
+        assertThat(body.contentLength()).isEqualTo(7);
+        assertThat(body.contentType().subtype()).isEqualTo("offset+octet-stream");
+
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        assertThat(buffer.readUtf8()).isEqualTo("content");
+    }
+
+    @Test
     public void builderEnsuresDeleteRequestDoesNotHaveABody() {
         CallSpec.Builder builder = builder(HttpMethod.DELETE, "", false).responseAs(Object.class);
         // Build the CallSpec so that we can build the request.

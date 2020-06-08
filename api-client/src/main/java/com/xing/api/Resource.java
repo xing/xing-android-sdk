@@ -51,6 +51,12 @@ public abstract class Resource {
         return new CallSpec.Builder<>(api, HttpMethod.DELETE, resourcePath, isFormEncoded);
     }
 
+    /** Returns a {@link CallSpec.Builder} for a PATCH request. */
+    protected static <RT, ET> CallSpec.Builder<RT, ET> newPatchSpec(XingApi api, String resourcePath,
+          boolean isFormEncoded) {
+        return new CallSpec.Builder<>(api, HttpMethod.PATCH, resourcePath, isFormEncoded);
+    }
+
     /** Returns a {@link Type} that will expect a single object in the root json tree. */
     protected static Type single(Type searchFor, String... roots) {
         return Converter.single(searchFor, roots);
