@@ -50,9 +50,6 @@ dependencies {
     compileOnly libraries.rxjava2
     compileOnly libraries.android
 
-    testCompileOnly libraries.rxjava2
-    testCompileOnly libraries.android
-
     implementation libraries.kotlin
     implementation libraries.okio
     implementation libraries.okhttp
@@ -67,6 +64,7 @@ dependencies {
     testImplementation libraries.mockito
     testImplementation libraries.commonsIo
     testImplementation libraries.apacheCommons3
+    testImplementation libraries.rxjava2
 }
 
 /*
