@@ -74,6 +74,9 @@ android {
 }
 
 dependencies {
+    implementation(project(':api-client')) {
+        exclude group: 'com.google.android', module: 'android'
+    }
     implementation project(':api-client-android-oauth')
 
     implementation libraries.okhttpLoggingInterceptor
