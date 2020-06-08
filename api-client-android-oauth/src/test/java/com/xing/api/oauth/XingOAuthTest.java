@@ -16,20 +16,12 @@
 package com.xing.api.oauth;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Intent;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.Shadows;
-import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowActivity.IntentForResult;
-import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -128,43 +120,45 @@ public final class XingOAuthTest {
         builder.callbackUrl("https://our.domain.com");
     }
 
-    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
-    @Test
-    public void loginWithXingCalledFromActivity() throws Exception {
-        Activity activity = Robolectric.buildActivity(Activity.class).create().start().visible().get();
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+    //TODO migrate tests to integration tests. Ticket: https://jira.xing.hh/browse/ANDROID-2368
 
-        XingOAuth xingOAuth = buildTestXingOauth();
-        xingOAuth.loginWithXing(activity);
-
-        IntentForResult intentForResult = shadowActivity.peekNextStartedActivityForResult();
-        assertStartedIntent(intentForResult.intent, activity);
-    }
-
-    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
-    @Test
-    public void loginWithXingCalledFromFragment() throws Exception {
-        Fragment fragment = Robolectric.buildFragment(Fragment.class).create().attach().start().visible().get();
-
-        XingOAuth xingOAuth = buildTestXingOauth();
-        xingOAuth.loginWithXing(fragment);
-
-        Intent nextStartedActivity = ShadowApplication.getInstance().getNextStartedActivity();
-        assertStartedIntent(nextStartedActivity, fragment.getActivity());
-    }
-
-    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
-    @Test
-    public void loginWithXingCalledFromSupportFragment() throws Exception {
-        android.support.v4.app.Fragment fragment = new android.support.v4.app.Fragment();
-        SupportFragmentTestUtil.startFragment(fragment);
-
-        XingOAuth xingOAuth = buildTestXingOauth();
-        xingOAuth.loginWithXing(fragment);
-
-        Intent nextStartedActivity = ShadowApplication.getInstance().getNextStartedActivity();
-        assertStartedIntent(nextStartedActivity, fragment.getActivity());
-    }
+//    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
+//    @Test
+//    public void loginWithXingCalledFromActivity() throws Exception {
+//        Activity activity = Robolectric.buildActivity(Activity.class).create().start().visible().get();
+//        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+//
+//        XingOAuth xingOAuth = buildTestXingOauth();
+//        xingOAuth.loginWithXing(activity);
+//
+//        IntentForResult intentForResult = shadowActivity.peekNextStartedActivityForResult();
+//        assertStartedIntent(intentForResult.intent, activity);
+//    }
+//
+//    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
+//    @Test
+//    public void loginWithXingCalledFromFragment() throws Exception {
+//        Fragment fragment = Robolectric.buildFragment(Fragment.class).create().attach().start().visible().get();
+//
+//        XingOAuth xingOAuth = buildTestXingOauth();
+//        xingOAuth.loginWithXing(fragment);
+//
+//        Intent nextStartedActivity = ShadowApplication.getInstance().getNextStartedActivity();
+//        assertStartedIntent(nextStartedActivity, fragment.getActivity());
+//    }
+//
+//    @Config(sdk = 21) // FIXME: Mover this to instrumentation tests
+//    @Test
+//    public void loginWithXingCalledFromSupportFragment() throws Exception {
+//        android.support.v4.app.Fragment fragment = new android.support.v4.app.Fragment();
+//        SupportFragmentTestUtil.startFragment(fragment);
+//
+//        XingOAuth xingOAuth = buildTestXingOauth();
+//        xingOAuth.loginWithXing(fragment);
+//
+//        Intent nextStartedActivity = ShadowApplication.getInstance().getNextStartedActivity();
+//        assertStartedIntent(nextStartedActivity, fragment.getActivity());
+//    }
 
     @Test
     public void onActivityResultHandlesSuccess() throws Exception {

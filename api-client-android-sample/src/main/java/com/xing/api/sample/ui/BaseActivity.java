@@ -15,8 +15,8 @@
  */
 package com.xing.api.sample.ui;
 
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 public abstract class BaseActivity extends AppCompatActivity {

@@ -20,7 +20,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import static com.xing.api.oauth.Shared.checkNotNull;
 import static com.xing.api.oauth.Shared.stateNotNull;
@@ -74,7 +74,7 @@ public final class XingOAuth {
      * <p>
      * This calls the {@linkplain Fragment#startActivityForResult} method.
      */
-    public void loginWithXing(android.support.v4.app.Fragment fragment) {
+    public void loginWithXing(androidx.fragment.app.Fragment fragment) {
         fragment.startActivityForResult(constructIntent(fragment.getActivity()), Shared.REQUEST_CODE);
     }
 
