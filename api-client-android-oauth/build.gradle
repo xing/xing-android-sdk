@@ -59,20 +59,19 @@ android {
 }
 
 dependencies {
-    compile(project(':api-client')) {
+    implementation(project(':api-client')) {
         exclude group: 'com.google.android', module: 'android'
     }
 
-    provided libraries.supportAnnotations
+    compileOnly libraries.supportAnnotations
 
-    compile libraries.supportV4
-    compile libraries.singpost
+    implementation libraries.supportV4
+    implementation libraries.singpost
 
-    testCompile libraries.junit
-    testCompile libraries.assertj
-    testCompile libraries.mockito
-    testCompile libraries.robolectric
-    testCompile libraries.robolectircSupport
+    testImplementation libraries.junit
+    testImplementation libraries.assertj
+    testImplementation libraries.mockito
+    testImplementation libraries.robolectric
 }
 /*
  *  ============== Artifacts publishing section ==============

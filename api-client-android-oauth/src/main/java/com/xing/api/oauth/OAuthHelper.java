@@ -16,7 +16,7 @@
 package com.xing.api.oauth;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import oauth.signpost.OAuth;

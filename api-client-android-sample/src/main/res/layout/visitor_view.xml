@@ -15,7 +15,7 @@
   -->
 
 <!-- A CardView that contains a TextView -->
-<android.support.v7.widget.CardView android:id="@+id/card_view"
+<androidx.cardview.widget.CardView android:id="@+id/card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -84,5 +84,5 @@
 
         </LinearLayout>
     </LinearLayout>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>
 

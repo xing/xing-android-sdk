@@ -47,23 +47,24 @@ test {
 
 dependencies {
 
-    provided libraries.rxjava2
-    provided libraries.android
+    compileOnly libraries.rxjava2
+    compileOnly libraries.android
 
-    compile libraries.kotlin
-    compile libraries.okio
-    compile libraries.okhttp
-    compile libraries.moshi
-    compile libraries.moshiLazyAdapters
+    implementation libraries.kotlin
+    implementation libraries.okio
+    implementation libraries.okhttp
+    implementation libraries.moshi
+    implementation libraries.moshiLazyAdapters
 
     kapt libraries.moshiKotlinCodegen
 
-    testCompile libraries.mockWebServer
-    testCompile libraries.junit
-    testCompile libraries.assertj
-    testCompile libraries.mockito
-    testCompile libraries.commonsIo
-    testCompile libraries.apacheCommons3
+    testImplementation libraries.mockWebServer
+    testImplementation libraries.junit
+    testImplementation libraries.assertj
+    testImplementation libraries.mockito
+    testImplementation libraries.commonsIo
+    testImplementation libraries.apacheCommons3
+    testImplementation libraries.rxjava2
 }
 
 /*
@@ -78,7 +79,7 @@ ext {
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.3.61'
     repositories {
         mavenCentral()
     }
