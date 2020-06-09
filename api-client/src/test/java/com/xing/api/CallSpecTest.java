@@ -849,28 +849,6 @@ public class CallSpecTest {
     }
 
     @Test
-    public void specSingleRawResponseRespectsBackpressure() {
-        server.enqueue(new MockResponse().setBody("Hi"));
-
-        ReactiveRecordingSubscriber<Response<String, Object>> subscriber =
-              reactiveSubscriberRule.createWithInitialRequest(0);
-        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
-              .responseAs(String.class)
-              .errorAs(Object.class)
-              .build();
-
-        spec.singleRawResponse().toFlowable().subscribe(subscriber);
-        assertThat(server.getRequestCount()).isEqualTo(1);
-        subscriber.assertNoEvents();
-
-        subscriber.requestMore(1);
-        subscriber.assertAnyValue().assertCompleted();
-
-        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
-        assertThat(server.getRequestCount()).isEqualTo(1);
-    }
-
-    @Test
     public void specSingleRawResponseSuccessResponse() {
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n"
               + "  \"msg\": \"success\",\n"
@@ -947,28 +925,6 @@ public class CallSpecTest {
                   .isInstanceOf(IOException.class)
                   .hasMessage("401 Unauthorized");
         }
-    }
-
-    @Test
-    public void specSingleResponseRespectsBackpressure() {
-        server.enqueue(new MockResponse().setBody("Hi"));
-
-        ReactiveRecordingSubscriber<String> subscriber = reactiveSubscriberRule.createWithInitialRequest(0);
-
-        CallSpec<String, Object> spec = this.<String, Object>builder(HttpMethod.GET, "/", false)
-              .responseAs(String.class)
-              .errorAs(Object.class)
-              .build();
-
-        spec.singleResponse().toFlowable().subscribe(subscriber);
-        assertThat(server.getRequestCount()).isEqualTo(1);
-        subscriber.assertNoEvents();
-
-        subscriber.requestMore(1);
-        subscriber.assertAnyValue().assertCompleted();
-
-        subscriber.requestMore(Long.MAX_VALUE); // Subsequent requests do not trigger HTTP requests.
-        assertThat(server.getRequestCount()).isEqualTo(1);
     }
 
     @Test

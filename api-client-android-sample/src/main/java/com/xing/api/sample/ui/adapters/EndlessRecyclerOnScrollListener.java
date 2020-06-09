@@ -15,8 +15,8 @@
  */
 package com.xing.api.sample.ui.adapters;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
     private static final int VISIBLE_THRESHOLD = 5;
