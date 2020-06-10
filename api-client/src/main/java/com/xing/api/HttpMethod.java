@@ -26,7 +26,9 @@ enum HttpMethod {
 
     PUT("PUT", true),
 
-    DELETE("DELETE", false);
+    DELETE("DELETE", false),
+
+    PATCH("PATCH", true);
 
     private final String method;
     private final boolean hasBody;
