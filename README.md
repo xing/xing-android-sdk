@@ -1,6 +1,8 @@
-# IMPORTANT: This API Client can only be used if you already have an application registered at dev.xing.com
-- Meaning you are already in posession of a ConsumerKey + ConsumerSecret pair since it is no longer possible to register a
-new application.
+# THIS REPO HAS BEEN ARCHIVED, MAINTENANCE OF THE SDK HAS BEEN DISCONTINUED
+
+If you want to keep using the SDK Client, even though it is not maintained, consider that it **can only be used if you already have an application registered at dev.xing.com**
+- Meaning you are already in posession of a ConsumerKey + ConsumerSecret pair since **it is no longer possible to register a
+new application**
 
 
 # XING API Client for Java/Android
